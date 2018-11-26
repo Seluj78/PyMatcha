@@ -40,3 +40,11 @@ pip install pre-commit
 ```bash
 python app.py
 ```
+
+## Running tests
+
+### MyPy
+
+```bash
+export MYPYPATH=. && mypy --ignore-missing-imports .
+```
