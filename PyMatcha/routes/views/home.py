@@ -28,4 +28,9 @@ home_bp = Blueprint('home', __name__)
 
 @home_bp.route('/')
 def home_view():
-    return "Hello World !"
+    return render_template("base.html")
+
+
+@home_bp.route('/notfound')
+def notfound_view():
+    return render_template("error/404.html")
