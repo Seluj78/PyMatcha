@@ -19,6 +19,8 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 """
 
+from flask import render_template
+
 from flask import Blueprint
 
 home_bp = Blueprint('home', __name__)
