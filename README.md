@@ -32,23 +32,3 @@ pip install -r requirements.txt
 ```bash
 python app.py
 ```
-
-## Temporary TODO List (Will be moved to issues)
-
-- Logging
-- Flake8
-- Mypy
-- nosetests/pytests
-- Pre commit hooks
-- Travis
-- EC2
-- API Doc
-- Issues with commits
-- PR workflow (suggestions, request reviews)
-- Projects github
-- Milestone github
-- Folders for flask (see https://github.com/Seluj78/juleslasne/tree/master/website)
-- Explain license and encoding header
-- Explain how imports are organized
-- Explain flake8 + mypy
-- Explain commit lenght is important. verbose FTW
