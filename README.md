@@ -41,7 +41,14 @@ pip install pre-commit
 python app.py
 ```
 
+
 ## Running tests
+
+### Flake8
+
+```bash
+flake8
+```
 
 ### MyPy
 
