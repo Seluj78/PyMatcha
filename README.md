@@ -35,6 +35,7 @@ python app.py
 
 ## Temporary TODO List (Will be moved to issues)
 
+- Decide wether we use environement variables or config file for secret variables
 - Logging
 - Flake8
 - Mypy
