@@ -21,6 +21,14 @@ Install the requirements
 pip install -r requirements.txt
 ```
 
+## Dev install
+
+Install pre-commit
+
+```bash
+pip install pre-commit
+```
+
 ## Running the server
 
 |        Key       | Value                           | Comment                                                                                   |

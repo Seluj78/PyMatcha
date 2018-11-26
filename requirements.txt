@@ -1,3 +1,4 @@
 Flask
 
+flake8
 mypy
