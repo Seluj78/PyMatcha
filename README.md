@@ -32,3 +32,12 @@ pip install -r requirements.txt
 ```bash
 python app.py
 ```
+
+
+## Running tests
+
+### Flake8
+
+```bash
+flake8
+```
