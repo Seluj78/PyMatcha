@@ -26,4 +26,4 @@ from PyMatcha import app_db
 
 class BaseModel(Model):
     class Meta:
-        database = app_db
+        database = app_db  # type: ignore
