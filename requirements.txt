@@ -1,4 +1,5 @@
 Flask
+Flask-Admin
 
 flake8
 mypy
