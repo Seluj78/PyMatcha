@@ -19,11 +19,11 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 """
 
-from flask import Blueprint
+from peewee import Model
 
-home_bp = Blueprint("home", __name__)
+from PyMatcha import app_db
 
 
-@home_bp.route("/")
-def home_view():
-    return 'Hello World ! <a href="/admin/">Click me to get to Admin!</a>'
+class BaseModel(Model):
+    class Meta:
+        database = app_db
