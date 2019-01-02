@@ -47,6 +47,6 @@ application.debug = os.environ.get("FLASK_DEBUG", 1)
 application.secret_key = os.environ.get("FLASK_SECRET_KEY", "ThisIsADevelopmentKey")
 
 application.config["FLASK_ADMIN_SWATCH"] = "simplex"
-admin = Admin(application, name="PyMatcha", template_mode="bootstrap3")
+admin = Admin(application, name="PyMatcha", template_mode="bootstrap4")
 
 application.register_blueprint(home_bp)
