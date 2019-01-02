@@ -22,7 +22,7 @@ script:
 #  - nosetests
   - flake8
   - export MYPYPATH=. && mypy --ignore-missing-imports .
-  - black --check
+  - black --check app.py PyMatcha/**/*.py
 
 notifications:
   email:

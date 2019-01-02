@@ -24,10 +24,10 @@ import os
 from PyMatcha import application
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     # Get the port defined in env if defined, otherwise sets it to 5000
-    port = int(os.environ.get('FLASK_PORT', '5000'))
+    port = int(os.environ.get("FLASK_PORT", "5000"))
     # Default debug is true
     debug = True
     # Runs the main loop
-    application.run(host='127.0.0.1', port=port, debug=debug)
+    application.run(host="127.0.0.1", port=port, debug=debug)
