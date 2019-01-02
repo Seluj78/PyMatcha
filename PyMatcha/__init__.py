@@ -60,7 +60,7 @@ app_db = peewee.MySQLDatabase(
 )
 
 application.config["FLASK_ADMIN_SWATCH"] = "simplex"
-admin = Admin(application, name="PyMatcha Admin", template_mode="bootstrap4")
+admin = Admin(application, name="PyMatcha Admin", template_mode="bootstrap3")
 
 from PyMatcha.models.user import User, UserAdmin
 
