@@ -22,4 +22,4 @@
 
 class TestFixtures:
     def test_config_secret_key(self, config):
-        assert config["SECRET_KEY"] == "secret"
+        assert config["SECRET_KEY"] == "ThisIsADevelopmentKey"
