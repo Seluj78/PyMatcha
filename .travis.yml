@@ -7,7 +7,7 @@ dist: xenial
 language: python
 
 python:
-  - 3.5
+#  - 3.5
   - 3.6
   - 3.7
   - 3.7-dev
@@ -22,6 +22,7 @@ script:
 #  - nosetests
   - flake8
   - export MYPYPATH=. && mypy --ignore-missing-imports .
+  - black --check app.py PyMatcha/**/*.py
 
 notifications:
   email:
