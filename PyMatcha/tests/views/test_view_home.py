@@ -22,9 +22,6 @@
 from flask import url_for
 
 
-class TestFixtures:
-    def test_config_access(self, config):
-        assert config["SECRET_KEY"] == "secret"
-
+class TestFixturesViewHome:
     def test_client_view_home(self, client):
         assert client.get(url_for("home.home_view")).status == "200 OK"

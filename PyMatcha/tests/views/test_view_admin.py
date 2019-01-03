@@ -22,6 +22,6 @@
 from flask import url_for
 
 
-class TestFixtures:
+class TestFixturesViewAdmin:
     def test_client_view_admin(self, client):
         assert client.get(url_for("admin.index")).status == "200 OK"
