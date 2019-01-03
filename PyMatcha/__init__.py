@@ -28,12 +28,15 @@ from flask import Flask
 
 from flask_admin import Admin
 
+
 if os.environ.get("FLASK_ENV", None) == "dev":
     os.environ["FLASK_DEBUG"] = "1"
     os.environ["FLASK_SECRET_KEY"] = "ThisIsADevelopmentKey"
 
 if "FLASK_DEBUG" not in os.environ:
-    raise EnvironmentError("FLASK_DEBUT is not set in the server's environment. Please fix and restart the server.")
+    raise EnvironmentError(
+        "FLASK_DEBUG is not set in the server's environment. Please fix and restart the server."
+    )
 
 if "FLASK_SECRET_KEY" not in os.environ:
     raise EnvironmentError(
