@@ -23,7 +23,6 @@ before_script:
 script:
   - export FLASK_DEBUG=1 && export FLASK_SECRET_KEY=ThisIsADevelopmentKey && pytest
   - flake8
-  - export MYPYPATH=. && mypy --ignore-missing-imports .
   - black --check app.py PyMatcha/**/*.py
 
 notifications:

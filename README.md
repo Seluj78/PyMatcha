@@ -55,12 +55,6 @@ python app.py
 flake8
 ```
 
-### MyPy
-
-```bash
-export MYPYPATH=. && mypy --ignore-missing-imports .
-```
-
 ```bash
 export FLASK_DEBUG=1 && export FLASK_SECRET_KEY=ThisIsADevelopmentKey && export DB_USER=pymatcharoot && export DB_PASSWORD=PASSWORD && export DB_HOST='pymatchadb-tests.cvesmjtn6kz7.eu-west-3.rds.amazonaws.com' && export CI=1 && python -m pytest
 ```
