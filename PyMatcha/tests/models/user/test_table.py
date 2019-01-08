@@ -18,3 +18,21 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 """
+
+from PyMatcha.models.user import User
+
+
+class TestFixturesViewAdmin:
+    def test_is_user_table_exists(self):
+        assert User.table_exists()
+
+    def test_is_user_table_empty(self):
+        assert User.select().count() == 0
+
+    def test_create_tmp_user(self):
+        User.create(username="tmp", first_name="tmp", last_name="tmp", email="tmp.tmp@tmp.tmp").save()
+        assert User.select().count() == 1
+
+    def test_delete_tmp_user(self):
+        User.delete_by_id(1)
+        assert User.select().count() == 0

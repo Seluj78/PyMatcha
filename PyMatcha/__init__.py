@@ -22,31 +22,64 @@
 
 import os
 
+import peewee
+
 from flask import Flask
 
 from flask_admin import Admin
 
-from PyMatcha.routes.views.home import home_bp
-from PyMatcha.routes.api.ping_pong import ping_pong_bp
 
 if os.environ.get("FLASK_ENV", None) == "dev":
     os.environ["FLASK_DEBUG"] = "1"
     os.environ["FLASK_SECRET_KEY"] = "ThisIsADevelopmentKey"
 
+if bool(int(os.environ.get("CI", 0))):
+    os.environ["DB_HOST"] = "pymatchadb-tests.cvesmjtn6kz7.eu-west-3.rds.amazonaws.com"
+
+
 if "FLASK_DEBUG" not in os.environ:
-    raise EnvironmentError("FLASK_DEBUT is not set in the server's environment. Please fix and restart the server.")
+    raise EnvironmentError("FLASK_DEBUG is not set in the server's environment. Please fix and restart the server.")
 
 if "FLASK_SECRET_KEY" not in os.environ:
     raise EnvironmentError(
         "FLASK_SECRET_KEY is not set in the server's environment. Please fix and restart the server."
     )
 
+if "DB_USER" not in os.environ:
+    raise EnvironmentError("DB_USER is not set in the server's environment. Please fix and restart the server.")
+
+if "DB_PASSWORD" not in os.environ:
+    raise EnvironmentError("DB_PASSWORD is not set in the server's environment. Please fix and restart the server.")
+
+if "DB_HOST" not in os.environ:
+    raise EnvironmentError("DB_HOST is not set in the server's environment. Please fix and restart the server.")
+
+
 application = Flask(__name__)
 application.debug = os.environ.get("FLASK_DEBUG", 1)
 application.secret_key = os.environ.get("FLASK_SECRET_KEY", "ThisIsADevelopmentKey")
 
+app_db = peewee.MySQLDatabase(
+    "PyMatcha",
+    password=os.environ.get("DB_PASSWORD", None),
+    user=os.environ.get("DB_USER", None),
+    host=os.environ.get("DB_HOST", None),
+    port=int(os.environ.get("DB_PORT", 3306)),
+)
+
 application.config["FLASK_ADMIN_SWATCH"] = "simplex"
-admin = Admin(application, name="PyMatcha", template_mode="bootstrap3")
+admin = Admin(application, name="PyMatcha Admin", template_mode="bootstrap3")
+
+from PyMatcha.models.user import User, UserAdmin
+
+admin.add_view(UserAdmin(User))
+
+from PyMatcha.routes.views.home import home_bp
+from PyMatcha.routes.api.ping_pong import ping_pong_bp
 
 application.register_blueprint(home_bp)
 application.register_blueprint(ping_pong_bp)
+
+if bool(int(os.environ.get("CI", 0))):
+    User.drop_table()
+    User.create_table()

@@ -32,11 +32,15 @@ pre-commit install
 
 ## Running the server
 
-|        Key       | Value                           | Comment                                                                                   |
-|:----------------:|---------------------------------|-------------------------------------------------------------------------------------------|
-| FLASK_ENV        | Either `prod` or `dev`          | If this variable is set to `dev`, then no need to supply FLASK_DEBUG and FLASK_SECRET_KEY |
-| FLASK_DEBUG      | True or False                   |                                                                                           |
-| FLASK_SECRET_KEY | A secret key to encrypt cookies |                                                                                           |
+|        Key       | Value                             | Comment                                                                                                                                                 |
+|:----------------:|-----------------------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------|
+| FLASK_ENV        | Either `prod` or `dev`            | If this variable is set to `dev`, then no need to supply FLASK_DEBUG and FLASK_SECRET_KEY                                                               |
+| FLASK_DEBUG      | True or False                     |                                                                                                                                                         |
+| FLASK_SECRET_KEY | A secret key to encrypt cookies   |                                                                                                                                                         |
+| DB_USER          | Database user                     |                                                                                                                                                         |
+| DB_PASSWORD      | Database password                 |                                                                                                                                                         |
+| DB_HOST          | Database host                     | must be `pymatchadb.cvesmjtn6kz7.eu-west-3.rds.amazonaws.com`  for production or `pymatchadb-tests.cvesmjtn6kz7.eu-west-3.rds.amazonaws.com`  for tests |
+| CI               | Is the server in a CI environment |  Must be set to 0 if on a prod environement. If set to 1, will erase the test DB.                                                                       |
 
 ```bash
 python app.py

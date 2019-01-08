@@ -26,4 +26,4 @@ home_bp = Blueprint("home", __name__)
 
 @home_bp.route("/")
 def home_view():
-    return "Hello World !"
+    return 'Hello World ! <a href="/admin/">Click me to get to Admin!</a>'

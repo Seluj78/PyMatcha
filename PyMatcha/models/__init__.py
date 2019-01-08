@@ -18,3 +18,12 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 """
+
+from peewee import Model
+
+from PyMatcha import app_db
+
+
+class BaseModel(Model):
+    class Meta:
+        database = app_db  # type: ignore

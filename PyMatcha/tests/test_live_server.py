@@ -19,7 +19,6 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 """
 
-import os
 
 import pytest
 
@@ -29,8 +28,6 @@ except ImportError:
     from urllib.request import urlopen
 
 from flask import url_for
-
-pytestmark = pytest.mark.skipif(not hasattr(os, "fork"), reason="needs fork")
 
 
 class TestLiveServer:
