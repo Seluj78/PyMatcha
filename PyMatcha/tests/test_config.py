@@ -20,6 +20,6 @@
 """
 
 
-class TestFixtures:
+class TestFixturesConfig:
     def test_config_secret_key(self, config):
         assert config["SECRET_KEY"] == "ThisIsADevelopmentKey"
