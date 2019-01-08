@@ -20,8 +20,13 @@
 """
 #!/bin/bash
 
+source venv/bin/activate
+
 export FLASK_DEBUG=1
 export FLASK_SECRET_KEY="ThisIsADevelopmentKey"
 export FLASK_ADMIN_SWATCH="simplex"
+export DB_USER=pymatcharoot
+export DB_PASSWORD=KyCeX74azyKH
+export DB_HOST=pymatchadb.cvesmjtn6kz7.eu-west-3.rds.amazonaws.com
 
-flask run
+python app.py runserver

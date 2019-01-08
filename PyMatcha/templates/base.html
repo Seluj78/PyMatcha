@@ -16,8 +16,8 @@
     <link href="#" rel="stylesheet">
 
     <!-- Custom styles for this template -->
-    <link rel="stylesheet" href="#">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <link rel="stylesheet" href="../static/css/main.css">
 </head>
 
 <body class="color-important">
@@ -26,51 +26,17 @@
     {% include "navbar.html" %}
     <div class="jumbotron">
         <div class="container">
-            {% block jumbotron %}
-            {% endblock %}
+
         </div>
     </div>
 
 
-    {% block content %}
-    {% endblock %}
+
+
+    {% include "footer.html" %}
 
 </main>
-<!-- Footer -->
-<footer class="page-footer font-small indigo">
 
-    <!-- Footer Links -->
-    <div class="container text-center text-md-left">
-
-      <!-- Grid row -->
-      <div class="row">
-
-        <!-- Grid column -->
-        <div class="col-md-3 mx-auto">
-
-          <!-- Links -->
-          <h5 class="font-weight-bold text-uppercase mt-3 mb-4">PyMatcha</h5>
-          <ul class="list-unstyled">
-              <li></li></ul>
-    <div class="footer-copyright text-center py-3">© 2019 PyMatcha
-        <a href="https://juleslasne.com127.0.0.1">PyMatcha</a>
-        <a href="mailto: jlasne@student.42.fr">jlasne@student.42.fr</a>
-    </div>
-
-    <div class="footer-copyright text-center py-3">© Jules Lasne
-<a href="https://juleslasne.com">Port Folio</a>
-        <a href="mailto: jlasne@student.42.fr">jlasne@student.42.fr</a>
-        <a href="https://github.com/Seluj78">Github</a>
-    </div>
-
-    <div class="footer-copyright text-center py-3">© Nicolas Beny
-        <a href="https://juleslasne.com">jlasne</a><a href="mailto: nbeny@student.42.fr">nbeny@student.42.fr</a>
-      <a href="https://github.com/nbeny">Github</a>
-    </div>
-        </div>
-      </div>
-    </div>
-</footer>
 
 <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>

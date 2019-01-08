@@ -1,9 +1,5 @@
-{% block navbarcss %}
-{% endblock %}
-
-{% block navbar %}
 <nav class="navbar navbar-expand-sm navbar-dark bg-dark fixed-top">
-    <a class="nav-link {% if request == index %}active{% endif %}" href="#">PyMatcha</a>
+    <a class="nav-link " href="#">PyMatcha</a>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
             aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
@@ -12,19 +8,19 @@
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
 
         <ul class="navbar-nav mr-auto">
-            <li class="nav-item {% if request == "/" %}active{% endif %}">
+            <li class="nav-item ">
                 <a class="nav-link" href="#">Home</a>
             </li>
-            <li class="nav-item {% if request == "About" %}active{% endif %}">
+            <li class="nav-item ">
                 <a class="nav-link" href="#">About</a>
             </li>
-            <li class="nav-item {% if request == "Contact" %}active{% endif %}">
+            <li class="nav-item ">
                 <a class="nav-link" href="#">Contact</a>
             </li>
-            <li class="nav-item {% if request == "Search" %}active{% endif %}">
+            <li class="nav-item ">
                 <a class="nav-link" href="#">Search</a>
             </li>
-            <li class="nav-item {% if request == "Chat" %}active{% endif %}">
+            <li class="nav-item ">
                 <a class="nav-link" href="#">Chat</a>
             </li>
         </ul>
@@ -32,20 +28,16 @@
             <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown"
                aria-haspopup="true" aria-expanded="false"> Account </a>
             <div class="dropdown-menu dropdown-right" aria-labelledby="navbarDropdown">
-{#                {% if not request.user.is_authenticated %}#}
+
                 <a class="dropdown-item" href="#">Signup</a>
                 <a class="dropdown-item" href="#">Login</a>
-{#                {% elif request.user.is_superuser %}#}
+
                 <a class="dropdown-item" href="#">Admin</a>
                 <a class="dropdown-item" href="#">Logout</a>
-{#                {% else %}#}
+
                 <a class="dropdown-item" href="#">Logout</a>
-{#                {% endif %}#}
+
             </div>
         </ul>
     </div>
 </nav>
-{% endblock %}
-
-{% block navbarjs %}
-{% endblock %}
