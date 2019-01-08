@@ -16,7 +16,7 @@ before_script:
   - export FLASK_ENV="dev"
 
 script:
-#  - nosetests
+  - export FLASK_DEBUG=1 && export FLASK_SECRET_KEY=ThisIsADevelopmentKey && pytest
   - flake8
   - black --check app.py PyMatcha/**/*.py
 
