@@ -1,15 +1,5 @@
 Flask
 Flask-Admin
-
-Flask-Admin
 wtf-peewee
-
 peewee
 pymysql
-
-pytest
-pytest-flask
-
-flake8
-mypy
-black
