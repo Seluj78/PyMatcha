@@ -7,11 +7,7 @@ dist: xenial
 language: python
 
 python:
-# 3.5 removed while black doesn't work on 3.5
-#  - 3.5
-  - 3.6
   - 3.7
-  - 3.7-dev
 
 install: pip install -r requirements-dev.txt
 
@@ -23,7 +19,6 @@ before_script:
 script:
   - export FLASK_DEBUG=1 && export FLASK_SECRET_KEY=ThisIsADevelopmentKey && pytest
   - flake8
-  - export MYPYPATH=. && mypy --ignore-missing-imports .
   - black --check app.py PyMatcha/**/*.py
 
 notifications:
