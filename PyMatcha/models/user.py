@@ -64,12 +64,7 @@ class User(BaseModel):
     dt_confirmed = DateTimeField(
         null=True, help_text="When the user confirmed his email adress", verbose_name="Date and Time Confirmed"
     )
-    confirmed_by = CharField(
-        null=True,
-        choices=[("server", "Server"), ("admin", "Admin")],
-        help_text="Who confirmed the user",
-        verbose_name="Confirmed By",
-    )
+    confirmed_by = CharField(null=True, help_text="Who confirmed the user", verbose_name="Confirmed By")
 
     def __unicode__(self):
         return self.username

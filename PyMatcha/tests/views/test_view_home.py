@@ -19,15 +19,9 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 """
 
-import os
-
-from PyMatcha import application
+from flask import url_for
 
 
-if __name__ == "__main__":
-    # Get the port defined in env if defined, otherwise sets it to 5000
-    port = int(os.environ.get("FLASK_PORT", "5000"))
-    # Default debug is true
-    debug = bool(os.environ.get("FLASK_DEBUG", False))
-    # Runs the main loop
-    application.run(host="127.0.0.1", port=port, debug=debug)
+class TestFixturesViewHome:
+    def test_client_view_home(self, client):
+        assert client.get(url_for("home.home_view")).status == "200 OK"

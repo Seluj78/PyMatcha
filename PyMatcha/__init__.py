@@ -34,9 +34,7 @@ if os.environ.get("FLASK_ENV", None) == "dev":
     os.environ["FLASK_SECRET_KEY"] = "ThisIsADevelopmentKey"
 
 if "FLASK_DEBUG" not in os.environ:
-    raise EnvironmentError(
-        "FLASK_DEBUG is not set in the server's environment. Please fix and restart the server."
-    )
+    raise EnvironmentError("FLASK_DEBUG is not set in the server's environment. Please fix and restart the server.")
 
 if "FLASK_SECRET_KEY" not in os.environ:
     raise EnvironmentError(
@@ -70,8 +68,11 @@ from PyMatcha.models.user import User, UserAdmin
 admin.add_view(UserAdmin(User))
 
 from PyMatcha.routes.views.home import home_bp
+from PyMatcha.routes.api.ping_pong import ping_pong_bp
 
 application.register_blueprint(home_bp)
+application.register_blueprint(ping_pong_bp)
 
+# TODO: Make this optional/on the test DB
 User.drop_table()
 User.create_table()
