@@ -37,6 +37,8 @@ pre-commit install
 | FLASK_ENV        | Either `prod` or `dev`          | If this variable is set to `dev`, then no need to supply FLASK_DEBUG and FLASK_SECRET_KEY |
 | FLASK_DEBUG      | True or False                   |                                                                                           |
 | FLASK_SECRET_KEY | A secret key to encrypt cookies |                                                                                           |
+| DB_USER          | Database user                   |                                                                                           |
+| DB_PASSWORD      | Database password               |                                                                                           |
 
 ```bash
 python app.py
@@ -55,4 +57,8 @@ flake8
 
 ```bash
 export MYPYPATH=. && mypy --ignore-missing-imports .
+```
+
+```bash
+export FLASK_DEBUG=1 && export FLASK_SECRET_KEY=ThisIsADevelopmentKey && export DB_USER=pymatcharoot && export DB_PASSWORD=PASSWORD && python -m pytest
 ```
