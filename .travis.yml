@@ -21,7 +21,6 @@ before_script:
 script:
 #  - nosetests
   - flake8
-  - export MYPYPATH=. && mypy --ignore-missing-imports .
   - black --check app.py PyMatcha/**/*.py
 
 notifications:
