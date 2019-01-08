@@ -19,11 +19,12 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 """
 
-from flask import Blueprint
+from flask import Blueprint, render_template
 
 home_bp = Blueprint("home", __name__)
 
 
 @home_bp.route("/")
 def home_view():
-    return 'Hello World ! <a href="/admin/">Click me to get to Admin!</a>'
+    path = [{"request": "/"}]
+    return render_template("index.html", path=path)
