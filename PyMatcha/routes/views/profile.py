@@ -31,7 +31,7 @@ profile_bp = Blueprint("profile", __name__)
 @profile_bp.route('/profile', methods=['GET', 'POST'])
 @login_required
 def profile():
-    return('profile page')
+    return 'profile page'
 
 @profile_bp.route('/login', methods=['GET', 'POST'])
 def login():
