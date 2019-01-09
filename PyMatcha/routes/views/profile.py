@@ -23,8 +23,10 @@ from flask import Blueprint, render_template, redirect, url_for, flash
 
 from flask_login import current_user, login_user, logout_user, login_required
 
+from PyMatcha import app_db
 from PyMatcha.models.user import User
 from PyMatcha.forms.user import LoginForm
+from PyMatcha.forms.user import RegistrationForm
 
 profile_bp = Blueprint("profile", __name__)
 
@@ -32,6 +34,20 @@ profile_bp = Blueprint("profile", __name__)
 @login_required
 def profile():
     return 'profile page'
+
+@profile_bp.route('/register', methods=['GET', 'POST'])
+def register():
+    if current_user.is_authenticated:
+        return redirect(url_for('main.index'))
+    form = RegistrationForm()
+    if form.validate_on_submit():
+        user = User(username=form.username.data, email=form.email.data)
+        user.set_password(form.password.data)
+        app_db.session.add(user)
+        app_db.session.commit()
+        flash(_('Congratulations, you are now a registered user!'))
+        return redirect(url_for('auth.login'))
+    return render_template('register.html', title='Register', form=form)
 
 @profile_bp.route('/login', methods=['GET', 'POST'])
 def login():
@@ -46,7 +62,6 @@ def login():
         login_user(user, remember=form.remember_me.data)
         return redirect(url_for('profile'))
     return render_template('login.html', title='Sign In', form=form)
-
 
 @profile_bp.route('/logout')
 @login_required
