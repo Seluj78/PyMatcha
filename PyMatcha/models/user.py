@@ -23,6 +23,7 @@ import uuid
 import datetime
 
 from peewee import CharField, DateTimeField, TextField, BooleanField
+from werkzeug.security import generate_password_hash, check_password_hash
 
 from flask_admin.contrib.peewee import ModelView
 from flask_login import UserMixin
@@ -42,6 +43,8 @@ class User(UserMixin, BaseModel):
     last_name = CharField(help_text="The user's last name", verbose_name="Last Name")
     email = CharField(help_text="The user's email address", verbose_name="Email Address")
     username = CharField(max_length=80, help_text="User's Username", verbose_name="Username")
+    password_hash = CharField(max_length=80, help_text="User's Password", verbose_name="Password")
+
     profile_picture_url = CharField(
         default="https://moonvillageassociation.org/wp-content/uploads/2018/06/default-profile-picture1-744x744.jpg",
         help_text="The user's profile picture image link",
@@ -73,10 +76,16 @@ class User(UserMixin, BaseModel):
     def __str__(self):
         return self.username
 
+    def set_password(self, password):
+        self.password_hash = generate_password_hash(password)
+
+    def check_password(self, password):
+        return check_password_hash(self.password_hash, password)
+
 
 @login.user_loader
 def load_user(client_id):
-    return User.query.get(int(client_id))
+    return User.query.get(client_id)
 
 class UserAdmin(ModelView):
     pass
