@@ -12,7 +12,7 @@
                 <a class="nav-link" href="{{ url_for('home.home_view') }}">Home</a>
             </li>
             <li class="nav-item ">
-                <a class="nav-link" href="#">About</a>
+                <a class="nav-link" href="{{ url_for('profile.profile_views') }}">About</a>
             </li>
             <li class="nav-item ">
                 <a class="nav-link" href="#">Contact</a>
@@ -28,15 +28,10 @@
             <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown"
                aria-haspopup="true" aria-expanded="false"> Account </a>
             <div class="dropdown-menu dropdown-right" aria-labelledby="navbarDropdown">
-
-                <a class="dropdown-item" href="#">Signup</a>
-                <a class="dropdown-item" href="{{ url_for('admin.index') }}">Login</a>
-
+                <a class="dropdown-item" href="{{ url_for('profile.register') }}">Signup</a>
+                <a class="dropdown-item" href="{{ url_for('profile.login_view') }}">Login</a>
                 <a class="dropdown-item" href="{{ url_for('admin.index') }}">Admin</a>
-                <a class="dropdown-item" href="#">Logout</a>
-
-                <a class="dropdown-item" href="#">Logout</a>
-
+                <a class="dropdown-item" href="{{ url_for('profile.logout') }}">Logout</a>
             </div>
         </ul>
     </div>

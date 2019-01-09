@@ -31,12 +31,12 @@ from PyMatcha.forms.user import RegistrationForm
 profile_bp = Blueprint("profile", __name__)
 
 @profile_bp.route('/profile', methods=['GET', 'POST'])
-@login_required
-def profile():
+#@login_required
+def profile_view():
     return 'profile page'
 
 @profile_bp.route('/register', methods=['GET', 'POST'])
-def register():
+def register_view():
     if current_user.is_authenticated:
         return redirect(url_for('main.index'))
     form = RegistrationForm()
@@ -50,7 +50,7 @@ def register():
     return render_template('register.html', title='Register', form=form)
 
 @profile_bp.route('/login', methods=['GET', 'POST'])
-def login():
+def login_view():
     if current_user.is_authenticated:
         return redirect(url_for('index'))
     form = LoginForm()
@@ -65,6 +65,6 @@ def login():
 
 @profile_bp.route('/logout')
 @login_required
-def logout():
+def logout_view():
     logout_user()
     return redirect(url_for('index'))
