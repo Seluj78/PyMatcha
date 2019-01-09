@@ -25,11 +25,12 @@ import datetime
 from peewee import CharField, DateTimeField, TextField, BooleanField
 
 from flask_admin.contrib.peewee import ModelView
+from flask_login import UserMixin
+from PyMatcha import login
 
 from PyMatcha.models import BaseModel
 
-
-class User(BaseModel):
+class User(UserMixin, BaseModel):
     """
     This is the user model used in the DB
     """
@@ -72,6 +73,10 @@ class User(BaseModel):
     def __str__(self):
         return self.username
 
+
+@login.user_loader
+def load_user(client_id):
+    return User.query.get(int(client_id))
 
 class UserAdmin(ModelView):
     pass

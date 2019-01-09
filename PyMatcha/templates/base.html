@@ -27,12 +27,13 @@
     {% include "navbar.html" %}
     <div class="jumbotron">
         <div class="container">
-
+            {% block jumbotron %}
+            {% endblock %}
         </div>
     </div>
 
-
-
+    {% block content %}
+    {% endblock %}
 
     {% include "footer.html" %}
 

@@ -27,7 +27,7 @@ import peewee
 from flask import Flask
 
 from flask_admin import Admin
-
+from flask_login import LoginManager
 
 if os.environ.get("FLASK_ENV", None) == "dev":
     os.environ["FLASK_DEBUG"] = "1"
@@ -58,6 +58,8 @@ if "DB_HOST" not in os.environ:
 application = Flask(__name__)
 application.debug = os.environ.get("FLASK_DEBUG", 1)
 application.secret_key = os.environ.get("FLASK_SECRET_KEY", "ThisIsADevelopmentKey")
+login = LoginManager(application)
+login.login_view = 'login'
 
 app_db = peewee.MySQLDatabase(
     "PyMatcha",
@@ -76,9 +78,11 @@ admin.add_view(UserAdmin(User))
 
 from PyMatcha.routes.views.home import home_bp
 from PyMatcha.routes.api.ping_pong import ping_pong_bp
+from PyMatcha.routes.views.profile import profile_bp
 
 application.register_blueprint(home_bp)
 application.register_blueprint(ping_pong_bp)
+application.register_blueprint(profile_bp)
 
 if bool(int(os.environ.get("CI", 0))):
     User.drop_table()

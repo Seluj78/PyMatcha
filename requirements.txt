@@ -1,5 +1,8 @@
 Flask
 Flask-Admin
+flask-login
+flask-wtf
 wtf-peewee
 peewee
 pymysql
+Flask-Bootstrap
