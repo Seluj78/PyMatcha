@@ -62,9 +62,3 @@ def login_view():
         login_user(user, remember=form.remember_me.data)
         return redirect(url_for('profile'))
     return render_template('login.html', title='Sign In', form=form)
-
-@profile_bp.route('/logout')
-@login_required
-def logout_view():
-    logout_user()
-    return redirect(url_for('index'))
