@@ -28,6 +28,7 @@ from flask import Flask
 
 from flask_admin import Admin
 from flask_login import LoginManager
+from flask_bootstrap import Bootstrap
 
 if os.environ.get("FLASK_ENV", None) == "dev":
     os.environ["FLASK_DEBUG"] = "1"
@@ -83,6 +84,7 @@ from PyMatcha.routes.views.profile import profile_bp
 application.register_blueprint(home_bp)
 application.register_blueprint(ping_pong_bp)
 application.register_blueprint(profile_bp)
+bootstrap = Bootstrap(application)
 
 if bool(int(os.environ.get("CI", 0))):
     User.drop_table()
