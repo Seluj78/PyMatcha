@@ -1,14 +1,16 @@
-<html>
-    <head>
-        <title>Flask-SocketIO-Chat</title>
-    </head>
-    <body>
-        <h1>Flask-SocketIO-Chat</h1>
-        <form method="POST">
-            {{ form.hidden_tag() }}
-            {{ form.name.label }}: {{ form.name() }} {% for error in form.name.errors %}{{ error }}{% endfor %}<br>
-            {{ form.room.label }}: {{ form.room() }} {% for error in form.room.errors %}{{ error }}{% endfor %}<br>
-            {{ form.submit() }}
-        </form>
-    </body>
+{% extends "base.html" %}
+{% import 'bootstrap/wtf.html' as wtf %}
+
+{% block title %}
+    <title>PyMatcha Chat</title>
+{% endblock %}
+
+{% block content %}
+    <h1>Flask-SocketIO-Chat</h1>
+    <div class="row">
+        <div class="col-md-4">
+            {{ wtf.quick_form(form) }}
+        </div>
+    </div>
+{% endblock %}
 </html>
