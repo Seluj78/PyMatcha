@@ -18,10 +18,3 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 """
-
-from flask import Blueprint
-
-socket_bp = Blueprint("socket", __name__)
-
-from PyMatcha.routes.events import socket
-from PyMatcha.routes.views import socket

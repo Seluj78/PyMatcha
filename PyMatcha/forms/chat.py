@@ -19,9 +19,12 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 """
 
-from flask import Blueprint
+from flask_wtf import Form
+from wtforms.fields import StringField, SubmitField
+from wtforms.validators import DataRequired
 
-socket_bp = Blueprint("socket", __name__)
-
-from PyMatcha.routes.events import socket
-from PyMatcha.routes.views import socket
+class ChatForm(Form):
+    """Accepts a nickname and a room."""
+    name = StringField('Name', validators=[DataRequired()])
+    room = StringField('Room', validators=[DataRequired()])
+    submit = SubmitField('Enter Chatroom')

@@ -2,6 +2,7 @@ Flask
 Flask-Admin
 flask-login
 flask-wtf
+flask-socketio
 wtf-peewee
 Flask-Bootstrap
 

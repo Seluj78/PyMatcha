@@ -29,6 +29,7 @@ from flask import Flask
 from flask_admin import Admin
 from flask_login import LoginManager
 from flask_bootstrap import Bootstrap
+from flask_socketio import SocketIO
 
 if os.environ.get("FLASK_ENV", None) == "dev":
     os.environ["FLASK_DEBUG"] = "1"
@@ -56,11 +57,15 @@ if "DB_HOST" not in os.environ:
     raise EnvironmentError("DB_HOST is not set in the server's environment. Please fix and restart the server.")
 
 
+
 application = Flask(__name__)
 application.debug = os.environ.get("FLASK_DEBUG", 1)
 application.secret_key = os.environ.get("FLASK_SECRET_KEY", "ThisIsADevelopmentKey")
 login = LoginManager(application)
 login.login_view = 'login'
+bootstrap = Bootstrap(application)
+socketio = SocketIO(app=application)
+socketio.init_app(application)
 
 app_db = peewee.MySQLDatabase(
     "PyMatcha",
@@ -75,16 +80,17 @@ admin = Admin(application, name="PyMatcha Admin", template_mode="bootstrap3")
 
 from PyMatcha.models.user import User, UserAdmin
 
-admin.add_view(UserAdmin(User))
+admin.add_view(UserAdmin(User, app_db.database))
 
 from PyMatcha.routes.views.home import home_bp
 from PyMatcha.routes.api.ping_pong import ping_pong_bp
 from PyMatcha.routes.views.profile import profile_bp
+from PyMatcha.routes import socket_bp
 
 application.register_blueprint(home_bp)
 application.register_blueprint(ping_pong_bp)
 application.register_blueprint(profile_bp)
-bootstrap = Bootstrap(application)
+application.register_blueprint(socket_bp)
 
 if bool(int(os.environ.get("CI", 0))):
     User.drop_table()

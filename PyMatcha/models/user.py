@@ -43,7 +43,7 @@ class User(UserMixin, BaseModel):
     last_name = CharField(help_text="The user's last name", verbose_name="Last Name")
     email = CharField(help_text="The user's email address", verbose_name="Email Address")
     username = CharField(max_length=80, help_text="User's Username", verbose_name="Username")
-    password_hash = CharField(max_length=80, help_text="User's Password", verbose_name="Password")
+    password = CharField(max_length=80, help_text="User's Password", verbose_name="Password")
 
     profile_picture_url = CharField(
         default="https://moonvillageassociation.org/wp-content/uploads/2018/06/default-profile-picture1-744x744.jpg",
@@ -80,10 +80,10 @@ class User(UserMixin, BaseModel):
         return '<User {}>'.format(self.username)
 
     def set_password(self, password):
-        self.password_hash = generate_password_hash(password)
+        self.password = generate_password_hash(password)
 
     def check_password(self, password):
-        return check_password_hash(self.password_hash, password)
+        return check_password_hash(self.password, password)
 
 
 @login.user_loader
