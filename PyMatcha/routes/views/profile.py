@@ -47,7 +47,7 @@ def register_view():
         app_db.session.commit()
         flash(_('Congratulations, you are now a registered user!'))
         return redirect(url_for('auth.login'))
-    return render_template('register.html', title='Register', form=form)
+    return render_template('auth/register.html', title='Register', form=form)
 
 @profile_bp.route('/login', methods=['GET', 'POST'])
 def login_view():
@@ -61,4 +61,4 @@ def login_view():
             return redirect(url_for('login'))
         login_user(user, remember=form.remember_me.data)
         return redirect(url_for('profile'))
-    return render_template('login.html', title='Sign In', form=form)
+    return render_template('auth/login.html', title='Sign In', form=form)
