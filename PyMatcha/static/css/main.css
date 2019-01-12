@@ -5,3 +5,10 @@
 .blue2 {
     background-color: #66b3ff;
 }
+
+.image-background {
+    background-image: url('/static/img/smiley_background.png');
+    background-position: center;
+    background-size: cover;
+    padding: 4rem 2rem;
+}

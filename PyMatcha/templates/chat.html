@@ -10,32 +10,38 @@
     <section class="form-dark mb-5">
 
         <!--Form without header-->
-        <div class="card card-image"
-             style="background-image: url('https://mdbootstrap.com/img/Photos/Others/pricing-table%20(7).jpg');">
+        <div class="card card-image image-background">
             <div class="text-white rgba-stylish-strong py-5 px-5 z-depth-4">
 
                 <!--Header-->
                 <div class="text-center">
-                    <h3 class="white-text mb-5 mt-4 font-weight-bold text-uppercase"><strong>Chat: {{ room }}</strong></h3>
+                    <h3 class="white-text mb-5 mt-4 font-weight-bold text-uppercase"><strong>Chat: {{ room }}</strong>
+                    </h3>
                 </div>
 
 
-                <div class="md-form">
-                    <textarea type="text" id="chat" class="md-textarea form-control" rows="5"
+                <div class="row d-flex align-items-center">
+                    <div class="md-form text-center col-md-5">
+                    <textarea type="text" id="chat" class="md-textarea form-control" rows="10"
                               placeholder="Enter your message here"></textarea>
-                    <label for="form103">conversation</label>
+                        <label for="form103">conversation</label>
+                    </div>
                 </div>
 
-                <div class="md-form">
-                    <input type="text" id="text" class="form-control">
-                    <label for="form100">Message</label>
+                <div class="row d-flex align-items-center">
+                    <div class="md-form text-center col-md-5">
+                        <div class="md-form">
+                            <input type="text" id="text" class="form-control">
+                            <label for="form100">Message</label>
+                        </div>
+                    </div>
                 </div>
 
                 <!--Grid row-->
                 <div class="row d-flex align-items-center">
 
                     <!--Grid column-->
-                    <div class="text-center col-md-12 mt-3 mb-2">
+                    <div class="text-center col-md-3 mt-3 mb-2">
                         <button id="send" type="button" class="btn btn-success btn-block btn-rounded z-depth-1">Send
                         </button>
                     </div>
@@ -46,7 +52,7 @@
                 <div class="row d-flex align-items-center">
 
                     <!--Grid column-->
-                    <div class="text-center col-md-12 mt-3 mb-2">
+                    <div class="text-center col-md-3 mt-3 mb-2">
                         <button type="button" onclick="leave_room();"
                                 class="btn btn-success btn-block btn-rounded z-depth-1">Leave this room
                         </button>
