@@ -56,8 +56,6 @@ if "DB_PASSWORD" not in os.environ:
 if "DB_HOST" not in os.environ:
     raise EnvironmentError("DB_HOST is not set in the server's environment. Please fix and restart the server.")
 
-
-
 application = Flask(__name__)
 application.debug = os.environ.get("FLASK_DEBUG", 1)
 application.secret_key = os.environ.get("FLASK_SECRET_KEY", "ThisIsADevelopmentKey")

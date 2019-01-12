@@ -31,6 +31,7 @@ from PyMatcha import login
 
 from PyMatcha.models import BaseModel
 
+
 class User(UserMixin, BaseModel):
     """
     This is the user model used in the DB
@@ -89,6 +90,7 @@ class User(UserMixin, BaseModel):
 @login.user_loader
 def load_user(client_id):
     return User.query.get(client_id)
+
 
 class UserAdmin(ModelView):
     pass

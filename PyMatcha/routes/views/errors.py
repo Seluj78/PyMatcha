@@ -22,9 +22,11 @@
 from flask import render_template
 from PyMatcha import application, app_db
 
+
 @application.errorhandler(404)
 def not_found_error():
     return render_template('errors/404.html'), 404
+
 
 @application.errorhandler(500)
 def internal_error():

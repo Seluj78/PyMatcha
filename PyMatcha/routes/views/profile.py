@@ -21,7 +21,7 @@
 
 from flask import Blueprint, render_template, redirect, url_for, flash
 
-from flask_login import current_user, login_user, logout_user, login_required
+from flask_login import current_user, login_user
 
 from PyMatcha import app_db
 from PyMatcha.models.user import User
@@ -30,10 +30,11 @@ from PyMatcha.forms.user import RegistrationForm
 
 profile_bp = Blueprint("profile", __name__)
 
+
 @profile_bp.route('/profile', methods=['GET', 'POST'])
-#@login_required
 def profile_view():
     return 'profile page'
+
 
 @profile_bp.route('/register', methods=['GET', 'POST'])
 def register_view():
@@ -45,9 +46,10 @@ def register_view():
         user.set_password(form.password.data)
         app_db.session.add(user)
         app_db.session.commit()
-        flash(_('Congratulations, you are now a registered user!'))
+        flash('Congratulations, you are now a registered user!')
         return redirect(url_for('auth.login'))
     return render_template('auth/register.html', title='Register', form=form)
+
 
 @profile_bp.route('/login', methods=['GET', 'POST'])
 def login_view():

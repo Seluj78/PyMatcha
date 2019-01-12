@@ -23,6 +23,7 @@ from flask import session, redirect, url_for, render_template, request
 from PyMatcha.routes import socket_bp
 from PyMatcha.forms.chat import ChatForm
 
+
 @socket_bp.route('/connection', methods=['GET', 'POST'])
 def index():
     """Login form to enter a room."""

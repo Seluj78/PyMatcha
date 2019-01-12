@@ -21,7 +21,7 @@
 
 import os
 
-from PyMatcha import application, socketio
+from PyMatcha import application
 
 
 if __name__ == "__main__":
@@ -29,7 +29,5 @@ if __name__ == "__main__":
     port = int(os.environ.get("FLASK_PORT", "5000"))
     # Default debug is true
     debug = bool(os.environ.get("FLASK_DEBUG", False))
-    # Runs the SocketIO solution chat
-    #socketio.run(application, host="127.0.0.1", port="port", debug=debug)
     # Runs the main loop
     application.run(host="127.0.0.1", port=port, debug=debug)
