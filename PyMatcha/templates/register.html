@@ -6,10 +6,18 @@
 {% endblock %}
 
 {% block content %}
-    <h1>Register</h1>
-    <div class="row">
-        <div class="col-md-4">
-            {{ wtf.quick_form(form) }}
+    <section class="form-dark mb-5">
+
+        <!--Form without header-->
+        <div class="card card-image image-background">
+            <div class="text-white rgba-stylish-strong py-5 px-5 z-depth-4">
+                <h1>Register</h1>
+                <div class="row">
+                    <div class="col-md-4">
+                        {{ wtf.quick_form(form) }}
+                    </div>
+                </div>
+            </div>
         </div>
-    </div>
+    </section>
 {% endblock %}
