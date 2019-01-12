@@ -34,7 +34,7 @@ def index():
     elif request.method == 'GET':
         form.name.data = session.get('name', '')
         form.room.data = session.get('room', '')
-    return render_template('sockets/connection.html', form=form)
+    return render_template('socket/connection.html', form=form)
 
 
 @socket_bp.route('/chat')
@@ -45,4 +45,4 @@ def chat():
     room = session.get('room', '')
     if name == '' or room == '':
         return redirect(url_for('.index'))
-    return render_template('sockets/chat.html', name=name, room=room)
+    return render_template('socket/chat.html', name=name, room=room)
