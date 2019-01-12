@@ -5,10 +5,60 @@
 {% endblock %}
 
 {% block content %}
-    <h1>Flask-SocketIO-Chat: {{ room }}</h1>
-    <textarea id="chat" cols="80" rows="20"></textarea><br><br>
-    <input id="text" size="80" placeholder="Enter your message here"><br><br>
-    <a href="#" onclick="leave_room();">Leave this room</a>
+    <!-- Section: form gradient -->
+    <!-- Section: form dark -->
+    <section class="form-dark mb-5">
+
+        <!--Form without header-->
+        <div class="card card-image"
+             style="background-image: url('https://mdbootstrap.com/img/Photos/Others/pricing-table%20(7).jpg');">
+            <div class="text-white rgba-stylish-strong py-5 px-5 z-depth-4">
+
+                <!--Header-->
+                <div class="text-center">
+                    <h3 class="white-text mb-5 mt-4 font-weight-bold text-uppercase"><strong>Chat: {{ room }}</strong></h3>
+                </div>
+
+
+                <div class="md-form">
+                    <textarea type="text" id="chat" class="md-textarea form-control" rows="5"
+                              placeholder="Enter your message here"></textarea>
+                    <label for="form103">conversation</label>
+                </div>
+
+                <div class="md-form">
+                    <input type="text" id="text" class="form-control">
+                    <label for="form100">Message</label>
+                </div>
+
+                <!--Grid row-->
+                <div class="row d-flex align-items-center">
+
+                    <!--Grid column-->
+                    <div class="text-center col-md-12 mt-3 mb-2">
+                        <button id="send" type="button" class="btn btn-success btn-block btn-rounded z-depth-1">Send
+                        </button>
+                    </div>
+                    <!--Grid column-->
+                </div>
+                <!--Grid row-->
+                <!--Grid row-->
+                <div class="row d-flex align-items-center">
+
+                    <!--Grid column-->
+                    <div class="text-center col-md-12 mt-3 mb-2">
+                        <button type="button" onclick="leave_room();"
+                                class="btn btn-success btn-block btn-rounded z-depth-1">Leave this room
+                        </button>
+                    </div>
+                    <!--Grid column-->
+                </div>
+            </div>
+        </div>
+        <!--/Form without header-->
+
+    </section>
+    <!-- Section: form dark -->
 {% endblock %}
 
 {% block jsblock %}
