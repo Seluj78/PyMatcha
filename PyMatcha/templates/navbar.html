@@ -23,16 +23,16 @@
             <li class="nav-item ">
                 <a class="nav-link" href="{{ url_for('socket.index') }}">Chat</a>
             </li>
-        </ul>
-        <ul class="navbar-nav navbar-right">
-            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown"
-               aria-haspopup="true" aria-expanded="false"> Account </a>
-            <div class="dropdown-menu dropdown-right" aria-labelledby="navbarDropdown">
-                <a class="dropdown-item" href="{{ url_for('profile.register_view') }}">Signup</a>
-                <a class="dropdown-item" href="{{ url_for('profile.login_view') }}">Login</a>
-                <a class="dropdown-item" href="{{ url_for('admin.index') }}">Admin</a>
-                <a class="dropdown-item" href="#">Logout</a>
-            </div>
+            <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown"
+                   aria-haspopup="true" aria-expanded="false"> Account </a>
+                <div class="dropdown-menu dropdown-right" aria-labelledby="navbarDropdown">
+                    <a class="dropdown-item" href="{{ url_for('profile.register_view') }}">Signup</a>
+                    <a class="dropdown-item" href="{{ url_for('profile.login_view') }}">Login</a>
+                    <a class="dropdown-item" href="{{ url_for('admin.index') }}">Admin</a>
+                    <a class="dropdown-item" href="#">Logout</a>
+                </div>
+            </li>
         </ul>
     </div>
 </nav>
