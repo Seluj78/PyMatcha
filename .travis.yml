@@ -17,6 +17,7 @@ before_script:
   - export CI=1
 
 script:
+  - cd backend
   - export FLASK_DEBUG=1 && export FLASK_SECRET_KEY=ThisIsADevelopmentKey && pytest
   - flake8
   - black --check backend/app.py backend/PyMatcha/**/*.py
