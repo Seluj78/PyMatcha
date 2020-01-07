@@ -25,7 +25,13 @@ dev: install
 	npm run start --prefix $(FRONTEND) &
 	# TODO: Run the whole server for dev
 
-prod: build
+prod:
+	export DB_USER=EWARSESTHJ; \
+	export DB_PASSWORD=EWARSESTHJ; \
+	export FLASK_SECRET_KEY=EWARSESTHJ; \
+	export FLASK_DEBUG=EWARSESTHJ; \
+	source $(VENV)/bin/activate && \
+	python $(BACKEND)/app.py
 	# TODO: Run the whole server for prod
 
 tests: build

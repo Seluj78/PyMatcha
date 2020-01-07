@@ -19,11 +19,17 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 """
 
-from flask import Blueprint, render_template
+import os
+from flask import Blueprint, send_from_directory
 
 home_bp = Blueprint("home", __name__)
 
 
-@home_bp.route("/")
-def home_view():
-    return render_template("index.html")
+# Serve React App
+@home_bp.route('/', defaults={'path': ''})
+@home_bp.route('/<path:path>')
+def serve(path):
+    if path != "" and os.path.exists(home_bp.static_folder + '/' + path):
+        return send_from_directory(home_bp.static_folder, path)
+    else:
+        return send_from_directory(home_bp.static_folder, 'index.html')
