@@ -1,3 +1,4 @@
+SHELL := /bin/bash
 VENV = $(PWD)/venv
 PIP = $(VENV)/bin/pip
 PYTHON = $(VENV)/bin/python
