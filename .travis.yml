@@ -12,19 +12,19 @@ python:
 install: pip install -r requirements-dev.txt
 
 before_script:
-  - export FLASK_APP="$TRAVIS_BUILD_DIR/app.py"
+  - export FLASK_APP="$TRAVIS_BUILD_DIR/backend/app.py"
   - export FLASK_ENV="dev"
   - export CI=1
 
 script:
   - export FLASK_DEBUG=1 && export FLASK_SECRET_KEY=ThisIsADevelopmentKey && pytest
   - flake8
-  - black --check app.py PyMatcha/**/*.py
+  - black --check backend/app.py backend/PyMatcha/**/*.py
 
 notifications:
   email:
     recipients:
       - jlasne@student.42.fr
-      - nbeny@student.42.fr
+      - gmorer@student.42.fr
     on_success: change
 on_failure: always
