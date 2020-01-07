@@ -33,9 +33,6 @@ if os.environ.get("FLASK_ENV", None) == "dev":
     os.environ["FLASK_DEBUG"] = "1"
     os.environ["FLASK_SECRET_KEY"] = "ThisIsADevelopmentKey"
 
-if bool(int(os.environ.get("CI", 0))):
-    os.environ["DB_HOST"] = "pymatchadb-tests.cvesmjtn6kz7.eu-west-3.rds.amazonaws.com"
-
 
 if "FLASK_DEBUG" not in os.environ:
     raise EnvironmentError("FLASK_DEBUG is not set in the server's environment. Please fix and restart the server.")
@@ -50,9 +47,6 @@ if "DB_USER" not in os.environ:
 
 if "DB_PASSWORD" not in os.environ:
     raise EnvironmentError("DB_PASSWORD is not set in the server's environment. Please fix and restart the server.")
-
-if "DB_HOST" not in os.environ:
-    raise EnvironmentError("DB_HOST is not set in the server's environment. Please fix and restart the server.")
 
 
 application = Flask(__name__)
