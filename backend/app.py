@@ -21,7 +21,7 @@
 
 import os
 
-from PyMatcha import application
+from pymatcha import application
 
 
 if __name__ == "__main__":
