@@ -1,7 +1,7 @@
 SHELL := /bin/bash
 VENV = $(PWD)/venv
 PIP = $(VENV)/bin/pip
-PYTHON = $(VENV)/bin/python
+PYTHON = $(VENV)/bin/python3
 FLASK = $(VENV)/bin/flask
 PYTEST = $(VENV)/bin/pytest
 FRONTEND = $(PWD)/frontend
@@ -31,7 +31,7 @@ prod:
 	export FLASK_SECRET_KEY=EWARSESTHJ; \
 	export FLASK_DEBUG=EWARSESTHJ; \
 	source $(VENV)/bin/activate && \
-	python $(BACKEND)/app.py
+	python3 $(BACKEND)/app.py
 	# TODO: Run the whole server for prod
 
 tests: build
