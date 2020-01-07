@@ -12,6 +12,7 @@ all: build
 install:
 	# TODO: Separate python and nodejs install rules
 	test -d $(VENV) || python3 -m venv $(VENV)
+	source $(VENV)/bin/activate
 	$(PIP) install -r $(BACKEND)/requirements.txt
 	npm run install --prefix $(FRONTEND)
 	# TODO: Create envs, install everything
