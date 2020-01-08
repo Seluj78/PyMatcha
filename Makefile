@@ -12,8 +12,8 @@ all: build
 
 install:
 	# TODO: Separate python and nodejs install rules
-	test -d $(VENV) || python3 -m venv $(VENV)
-	source $(VENV)/bin/activate
+	test -d $(VENV) || python3.7 -m venv $(VENV)
+	source $(VENV)/bin/activate && \
 	$(PIP) install -r $(BACKEND)/requirements.txt
 	npm install --prefix $(FRONTEND)
 	# TODO: Create envs, install everything
@@ -35,6 +35,7 @@ prod: build
 	# TODO: Run the whole server for prod
 
 tests: build
+	source $(VENV)/bin/activate && \
 	pip install -r $(BACKEND)/requirements-dev.txt
 	# TODO: Run the tests
 
