@@ -19,7 +19,7 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 """
 
-from pymatcha.models.user import User
+from PyMatcha.models.user import User
 
 
 class TestFixturesViewAdmin:

@@ -21,7 +21,7 @@
 
 from peewee import Model
 
-from pymatcha import app_db
+from PyMatcha import app_db
 
 
 class BaseModel(Model):

@@ -26,7 +26,7 @@ from peewee import CharField, DateTimeField, TextField, BooleanField
 
 from flask_admin.contrib.peewee import ModelView
 
-from pymatcha.models import BaseModel
+from PyMatcha.models import BaseModel
 
 
 class User(BaseModel):

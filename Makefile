@@ -28,17 +28,21 @@ dev: install
 	# TODO: Run the whole server for dev
 
 prod: build
-	export DB_USER=EWARSESTHJ; \
-	export DB_PASSWORD=EWARSESTHJ; \
-	export FLASK_SECRET_KEY=EWARSESTHJ; \
-	export FLASK_DEBUG=EWARSESTHJ; \
-	source $(VENV)/bin/activate && \
-	python3 $(BACKEND)/app.py
+	( \
+		export DB_USER=EWARSESTHJ; \
+		export DB_PASSWORD=EWARSESTHJ; \
+		export FLASK_SECRET_KEY=EWARSESTHJ; \
+		export FLASK_DEBUG=EWARSESTHJ; \
+		source $(VENV)/bin/activate && \
+		python3 $(BACKEND)/app.py \
+	)
 	# TODO: Run the whole server for prod
 
 tests: build
-	source $(VENV)/bin/activate && \
-	pip install -r $(BACKEND)/requirements-dev.txt
+	( \
+		source $(VENV)/bin/activate; \
+		$(PIP) install -r $(BACKEND)/requirements-dev.txt \
+	)
 	# TODO: Run the tests
 
 docker:

@@ -65,11 +65,11 @@ app_db = peewee.MySQLDatabase(
 application.config["FLASK_ADMIN_SWATCH"] = "simplex"
 admin = Admin(application, name="PyMatcha Admin", template_mode="bootstrap3")
 
-from pymatcha.models.user import User, UserAdmin
+from PyMatcha.models.user import User, UserAdmin
 
 admin.add_view(UserAdmin(User))
 
-from pymatcha.routes.api.ping_pong import ping_pong_bp
+from PyMatcha.routes.api.ping_pong import ping_pong_bp
 
 application.register_blueprint(ping_pong_bp)
 
