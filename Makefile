@@ -39,10 +39,6 @@ prod: install build
 	# TODO: Run the whole server for prod
 
 tests: build
-	( \
-		source $(VENV)/bin/activate; \
-		$(PIP) install -r $(BACKEND)/requirements-dev.txt \
-	)
 	# TODO: Run the tests
 
 docker:
