@@ -11,11 +11,13 @@ all: install build prod
 	# TODO: Build and run the server
 
 install_python:
-	test -d $(VENV) || python3.7 -m venv $(VENV)
-	( \
-		source $(VENV)/bin/activate; \
-		$(PIP) install -r $(BACKEND)/requirements.txt \
-	)
+ifndef TRAVIS
+		test -d $(VENV) || python3.7 -m venv $(VENV)
+		( \
+			source $(VENV)/bin/activate; \
+			$(PIP) install -r $(BACKEND)/requirements.txt \
+		)
+endif
 	# TODO: Create envs, install everything
 
 install_react:
@@ -23,14 +25,14 @@ install_react:
 
 install: install_python install_react
 
-build: install_react
+build: install
 	npm run build --prefix $(FRONTEND)
 
 dev: install
 	npm run start --prefix $(FRONTEND) &
 	# TODO: Run the whole server for dev
 
-prod: install build
+prod: build
 	( \
 		export DB_USER=EWARSESTHJ; \
 		export DB_PASSWORD=EWARSESTHJ; \
