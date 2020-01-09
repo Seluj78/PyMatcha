@@ -7,7 +7,7 @@ PYTEST = $(VENV)/bin/pytest
 FRONTEND = $(PWD)/frontend
 BACKEND = $(PWD)/backend
 
-all: build
+all: install build prod
 	# TODO: Build and run the server
 
 install:
@@ -20,14 +20,14 @@ install:
 	npm install --prefix $(FRONTEND)
 	# TODO: Create envs, install everything
 
-build: install
+build:
 	npm run build --prefix $(FRONTEND)
 
 dev: install
 	npm run start --prefix $(FRONTEND) &
 	# TODO: Run the whole server for dev
 
-prod: build
+prod: install build
 	( \
 		export DB_USER=EWARSESTHJ; \
 		export DB_PASSWORD=EWARSESTHJ; \
