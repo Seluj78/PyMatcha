@@ -22,7 +22,7 @@ import os
 
 import peewee
 
-from flask import Flask, send_from_directory
+from flask import Flask, send_from_directory, url_for, jsonify
 
 from flask_admin import Admin
 
@@ -30,6 +30,9 @@ from flask_cors import CORS
 
 from dotenv import load_dotenv
 
+if os.environ.get("FLASK_ENV", None) == "dev":
+    os.environ["FLASK_DEBUG"] = "1"
+    os.environ["FLASK_SECRET_KEY"] = "ThisIsADevelopmentKey"
 
 PYMATCHA_ROOT = os.path.join(os.path.dirname(__file__), '../..')   # refers to application_top
 dotenv_path = os.path.join(PYMATCHA_ROOT, '.env')
@@ -55,6 +58,8 @@ application = Flask(__name__, static_folder=os.getenv("FRONT_STATIC_FOLDER"))
 application.debug = os.getenv("FLASK_DEBUG")
 application.secret_key = os.getenv("FLASK_SECRET_KEY")
 
+CORS(application)
+
 app_db = peewee.MySQLDatabase(
     "PyMatcha",
     host=os.getenv("DB_HOST"),
@@ -63,10 +68,19 @@ app_db = peewee.MySQLDatabase(
     user=os.getenv("DB_USER")
 )
 
-application.config["FLASK_ADMIN_SWATCH"] = "simplex"
-admin = Admin(application, name="PyMatcha Admin", template_mode="bootstrap3")
 
-CORS(application)
+# Serve React App
+@application.route('/', defaults={'path': ''})
+@application.route('/<path:path>')
+def serve(path):
+    if path != "" and os.path.exists(application.static_folder + '/' + path):
+        return send_from_directory(application.static_folder, path)
+    else:
+        return send_from_directory(application.static_folder, 'index.html')
+
+
+application.config["FLASK_ADMIN_SWATCH"] = "cyborg"
+admin = Admin(application, name="PyMatcha Admin", template_mode="bootstrap3")
 
 from PyMatcha.models.user import User, UserAdmin
 
@@ -81,11 +95,20 @@ if bool(int(os.environ.get("CI", 0))):
     User.create_table()
 
 
-# Serve React App
-@application.route('/', defaults={'path': ''})
-@application.route('/<path:path>')
-def serve(path):
-    if path != "" and os.path.exists(application.static_folder + '/' + path):
-        return send_from_directory(application.static_folder, path)
-    else:
-        return send_from_directory(application.static_folder, 'index.html')
+def has_no_empty_params(rule):
+    defaults = rule.defaults if rule.defaults is not None else ()
+    arguments = rule.arguments if rule.arguments is not None else ()
+    return len(defaults) >= len(arguments)
+
+
+@application.route("/site-map")
+def site_map():
+    links = []
+    for rule in application.url_map.iter_rules():
+        # Filter out rules we can't navigate to in a browser
+        # and rules that require parameters
+        if "GET" in rule.methods and has_no_empty_params(rule):
+            url = url_for(rule.endpoint, **(rule.defaults or {}))
+            links.append((url, rule.endpoint))
+    # links is now a list of url, endpoint tuples
+    return jsonify(links), 200
