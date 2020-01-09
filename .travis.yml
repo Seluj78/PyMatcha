@@ -9,8 +9,10 @@ language: python
 python:
   - 3.7
 
-before_script:
-  - make build
+install: pip install -r requirements-dev.txt
+
+#before_script:
+#  - make build
 #  - export FLASK_APP="$TRAVIS_BUILD_DIR/backend/app.py"
 #  - export FLASK_ENV="dev"
 #  - export CI=1
