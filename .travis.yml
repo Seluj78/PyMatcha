@@ -9,17 +9,20 @@ language: python
 python:
   - 3.7
 
-install: pip install -r requirements-dev.txt
+install: pip install -r backend/requirements-dev.txt
 
-before_script:
-  - export FLASK_APP="$TRAVIS_BUILD_DIR/backend/app.py"
-  - export FLASK_ENV="dev"
-  - export CI=1
+#before_script:
+#  - make build
+#  - export FLASK_APP="$TRAVIS_BUILD_DIR/backend/app.py"
+#  - export FLASK_ENV="dev"
+#  - export CI=1
 
 script:
-  - export FLASK_DEBUG=1 && export FLASK_SECRET_KEY=ThisIsADevelopmentKey && pytest
-  - flake8
-  - black --check backend/app.py backend/PyMatcha/**/*.py
+  - make tests
+#  - cd backend
+#  - export FLASK_DEBUG=1 && export FLASK_SECRET_KEY=ThisIsADevelopmentKey && pytest
+#  - flake8
+#  - black --check backend/app.py backend/PyMatcha/**/*.py
 
 notifications:
   email:

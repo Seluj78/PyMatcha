@@ -3,3 +3,5 @@ Flask-Admin
 wtf-peewee
 peewee
 pymysql
+
+flask-cors

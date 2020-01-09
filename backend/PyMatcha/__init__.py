@@ -24,9 +24,11 @@ import os
 
 import peewee
 
-from flask import Flask
+from flask import Flask, send_from_directory
 
 from flask_admin import Admin
+
+from flask_cors import CORS
 
 
 if os.environ.get("FLASK_ENV", None) == "dev":
@@ -49,7 +51,8 @@ if "DB_PASSWORD" not in os.environ:
     raise EnvironmentError("DB_PASSWORD is not set in the server's environment. Please fix and restart the server.")
 
 
-application = Flask(__name__)
+# TODO: Set static folder to env var or conf
+application = Flask(__name__, static_folder='../../frontend/build')
 application.debug = os.environ.get("FLASK_DEBUG", 1)
 application.secret_key = os.environ.get("FLASK_SECRET_KEY", "ThisIsADevelopmentKey")
 
@@ -64,16 +67,26 @@ app_db = peewee.MySQLDatabase(
 application.config["FLASK_ADMIN_SWATCH"] = "simplex"
 admin = Admin(application, name="PyMatcha Admin", template_mode="bootstrap3")
 
+CORS(application)
+
 from PyMatcha.models.user import User, UserAdmin
 
 admin.add_view(UserAdmin(User))
 
-from PyMatcha.routes.views.home import home_bp
 from PyMatcha.routes.api.ping_pong import ping_pong_bp
 
-application.register_blueprint(home_bp)
 application.register_blueprint(ping_pong_bp)
 
 if bool(int(os.environ.get("CI", 0))):
     User.drop_table()
     User.create_table()
+
+
+# Serve React App
+@application.route('/', defaults={'path': ''})
+@application.route('/<path:path>')
+def serve(path):
+    if path != "" and os.path.exists(application.static_folder + '/' + path):
+        return send_from_directory(application.static_folder, path)
+    else:
+        return send_from_directory(application.static_folder, 'index.html')
