@@ -52,7 +52,7 @@ if "DB_PASSWORD" not in os.environ:
 
 
 # TODO: Set static folder to env var or conf
-application = Flask(__name__, static_folder='frontend/build')
+application = Flask(__name__, static_folder='../../frontend/build')
 application.debug = os.environ.get("FLASK_DEBUG", 1)
 application.secret_key = os.environ.get("FLASK_SECRET_KEY", "ThisIsADevelopmentKey")
 
