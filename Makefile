@@ -33,7 +33,7 @@ dev: install
 	npm run start --prefix $(FRONTEND) &
 	# TODO: Run the whole server for dev
 
-prod: build
+run: build
 	( \
 		export DB_USER=EWARSESTHJ; \
 		export DB_PASSWORD=EWARSESTHJ; \
