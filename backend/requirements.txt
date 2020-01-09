@@ -3,7 +3,5 @@ Flask-Admin
 wtf-peewee
 peewee
 pymysql
-pip
-wheel
 
 flask-cors

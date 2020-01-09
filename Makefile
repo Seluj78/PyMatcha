@@ -15,6 +15,7 @@ ifndef TRAVIS
 		test -d $(VENV) || python3.7 -m venv $(VENV)
 		( \
 			source $(VENV)/bin/activate; \
+			pip install wheel; \
 			$(PIP) install -r $(BACKEND)/requirements.txt \
 		)
 endif
