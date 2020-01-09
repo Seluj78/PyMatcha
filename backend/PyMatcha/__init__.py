@@ -28,6 +28,8 @@ from flask import Flask, send_from_directory
 
 from flask_admin import Admin
 
+from flask_cors import CORS
+
 
 if os.environ.get("FLASK_ENV", None) == "dev":
     os.environ["FLASK_DEBUG"] = "1"
@@ -64,6 +66,8 @@ app_db = peewee.MySQLDatabase(
 
 application.config["FLASK_ADMIN_SWATCH"] = "simplex"
 admin = Admin(application, name="PyMatcha Admin", template_mode="bootstrap3")
+
+CORS(application)
 
 from PyMatcha.models.user import User, UserAdmin
 

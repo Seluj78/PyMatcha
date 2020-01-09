@@ -5,6 +5,8 @@ wtf-peewee
 peewee
 pymysql
 
+flask-cors
+
 pytest
 pytest-flask
 
