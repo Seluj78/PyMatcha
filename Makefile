@@ -10,17 +10,20 @@ BACKEND = $(PWD)/backend
 all: install build prod
 	# TODO: Build and run the server
 
-install:
-	# TODO: Separate python and nodejs install rules
+install_python:
 	test -d $(VENV) || python3.7 -m venv $(VENV)
 	( \
 		source $(VENV)/bin/activate; \
 		$(PIP) install -r $(BACKEND)/requirements.txt \
 	)
-	npm install --prefix $(FRONTEND)
 	# TODO: Create envs, install everything
 
-build:
+install_react:
+	npm install --prefix $(FRONTEND)
+
+install: install_python install_react
+
+build: install_react
 	npm run build --prefix $(FRONTEND)
 
 dev: install
