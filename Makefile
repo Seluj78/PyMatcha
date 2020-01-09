@@ -42,6 +42,8 @@ prod: install build
 	# TODO: Run the whole server for prod
 
 tests: build
+	test -d frontend/build
+	# TODO: Maybe move this to the build stage ? so if the build fails and the folder isn't here it fails immediatly and not at the test stage
 	# TODO: Run the tests
 
 docker:
