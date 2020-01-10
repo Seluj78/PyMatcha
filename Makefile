@@ -25,7 +25,7 @@ PYTEST = $(VENV)/bin/pytest
 FRONTEND = $(PWD)/frontend
 BACKEND = $(PWD)/backend
 
-all: install build prod
+all: install build run
 	# TODO: Build and run the server
 
 install_python:
