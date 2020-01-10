@@ -5,3 +5,4 @@ peewee
 pymysql
 
 flask-cors
+python-dotenv
