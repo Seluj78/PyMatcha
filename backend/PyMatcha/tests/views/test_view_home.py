@@ -1,9 +1,7 @@
-# coding=utf-8
-
 """
     PyMatcha - A Python Dating Website
-    Copyright (C) 2018-2019 jlasne/ynacache
-    <jlasne@student.42.fr> - <ynacache@student.42.fr>
+    Copyright (C) 2018-2019 jlasne/gmorer
+    <jlasne@student.42.fr> - <gmorer@student.42.fr>
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -18,6 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 """
+
 
 from flask import url_for
 
