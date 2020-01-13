@@ -12,7 +12,23 @@ const apiCall = options => {
 
 const getToken = () => sessionStorage.getItem('token')
 
+const onChange = (setValue) /* maybe more later */ => e => {
+	setValue(e.nativeEvent.target.value);
+}
+
+const sleep = ms => new Promise(resolve => setTimeout(resolve, ms))
+
+const effectDuration = time => ({
+	WebkitTransition: `${time}s`,
+	MozTransition: `${time}s`,
+	MsTransition: `${time}s`,
+	OTransition: `${time}s`,
+	transition: `${time}s`,
+})
+
 export {
 	getToken,
-	apiCall
+	onChange,
+	sleep,
+	effectDuration
 }
