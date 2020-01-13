@@ -45,7 +45,16 @@ install_react:
 install: install_python install_react
 
 build: install
+	# TODO: add test -d or something similar to ignore or update existing files
+	mkdir www
+	mkdir www/frontend
+	mkdir www/backend
+
 	npm run build --prefix $(FRONTEND)
+	cp -R $(FRONTEND)/build www/frontend
+
+	# TODO: Add obfuscation/compilation step
+	cp -R $(BACKEND) www/
 
 dev: install
 	npm run start --prefix $(FRONTEND) &
@@ -67,15 +76,17 @@ tests: build
 	# TODO: Maybe move this to the build stage? so if the build fails and the folder isn't here it fails immediatly and not at the test stage
 	# TODO: Run the tests
 
-docker:
-	# TODO
+docker: build
+	docker build -t pymatcha:latest .
 
 clean:
 	rm -rf $(FRONTEND)/node_modules
+	rm -rf $(VENV)
 
 fclean: clean
 	rm -rf $(FRONTEND)/build
 	rm -rf $(VENV)
+	rm -rf www
 
 re: clean all
 
