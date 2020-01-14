@@ -25,7 +25,7 @@ PYTEST = $(VENV)/bin/pytest
 FRONTEND = $(PWD)/frontend
 BACKEND = $(PWD)/backend
 
-all: install build prod
+all: install build run
 	# TODO: Build and run the server
 
 install_python:
@@ -79,4 +79,4 @@ fclean: clean
 
 re: clean all
 
-.PHONY : build backend frontend prod dev clean tests fclean all re
+.PHONY : all install_python install_react install build dev run tests docker clean fclean re
