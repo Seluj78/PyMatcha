@@ -65,7 +65,8 @@ run: build
 		source $(VENV)/bin/activate && \
 		python3 $(BACKEND)/app.py \
 	)
-	# TODO: Run the whole server for prod
+	# TODO: Run the whole server for prodhero
+	# TODO Change vars to be elsewhere
 
 lint:
 ifdef TRAVIS
