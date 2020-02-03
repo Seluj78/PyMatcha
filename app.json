@@ -33,7 +33,10 @@
   "image": "heroku/python",
   "buildpacks": [
     {
-      "url": "http://github.com/dollar/heroku-buildpack-multi.git"
+      "url": "https://github.com/colonyamerican/heroku-buildpack-make"
+    },
+    {
+      "url": "heroku/python"
     }
   ]
 }
