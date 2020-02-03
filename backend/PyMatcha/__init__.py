@@ -28,38 +28,39 @@ from flask_admin import Admin
 
 from flask_cors import CORS
 
-
-if os.environ.get("FLASK_ENV", None) == "dev":
-    os.environ["FLASK_DEBUG"] = "1"
-    os.environ["FLASK_SECRET_KEY"] = "ThisIsADevelopmentKey"
+from dotenv import load_dotenv
 
 
-if "FLASK_DEBUG" not in os.environ:
-    raise EnvironmentError("FLASK_DEBUG is not set in the server's environment. Please fix and restart the server.")
+PYMATCHA_ROOT = os.path.join(os.path.dirname(__file__), '../..')   # refers to application_top
+dotenv_path = os.path.join(PYMATCHA_ROOT, '.env')
+load_dotenv(dotenv_path)
 
-if "FLASK_SECRET_KEY" not in os.environ:
-    raise EnvironmentError(
-        "FLASK_SECRET_KEY is not set in the server's environment. Please fix and restart the server."
-    )
 
-if "DB_USER" not in os.environ:
-    raise EnvironmentError("DB_USER is not set in the server's environment. Please fix and restart the server.")
+REQUIRED_ENV_VARS = [
+    "FLASK_DEBUG",
+    "FLASK_SECRET_KEY",
+    "FRONT_STATIC_FOLDER",
+    "DB_HOST",
+    "DB_PORT",
+    "DB_USER",
+    "DB_PASSWORD",
+]
 
-if "DB_PASSWORD" not in os.environ:
-    raise EnvironmentError("DB_PASSWORD is not set in the server's environment. Please fix and restart the server.")
-
+for item in REQUIRED_ENV_VARS:
+    if item not in os.environ:
+        raise EnvironmentError(f"{item} is not set in the server's environment or .env file. It is required")
 
 # TODO: Set static folder to env var or conf
-application = Flask(__name__, static_folder='../../frontend/build')
-application.debug = os.environ.get("FLASK_DEBUG", 1)
-application.secret_key = os.environ.get("FLASK_SECRET_KEY", "ThisIsADevelopmentKey")
+application = Flask(__name__, static_folder=os.getenv("FRONT_STATIC_FOLDER"))
+application.debug = os.getenv("FLASK_DEBUG")
+application.secret_key = os.getenv("FLASK_SECRET_KEY")
 
 app_db = peewee.MySQLDatabase(
     "PyMatcha",
-    password=os.environ.get("DB_PASSWORD", None),
-    user=os.environ.get("DB_USER", None),
-    host=os.environ.get("DB_HOST", None),
-    port=int(os.environ.get("DB_PORT", 3306)),
+    host=os.getenv("DB_HOST"),
+    port=int(os.getenv("DB_PORT")),
+    password=os.getenv("DB_PASSWORD"),
+    user=os.getenv("DB_USER")
 )
 
 application.config["FLASK_ADMIN_SWATCH"] = "simplex"
