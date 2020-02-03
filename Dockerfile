@@ -14,8 +14,9 @@ ENV FLASK_ENV "development"
 ENV FLASK_DEBUG True
 ENV FLASK_SECRET_KEY "ThisIsADevelopmentKey"
 ENV DB_USER "root"
-ENV DB_ ""
+ENV DB_PASSWORD ""
 
 EXPOSE 5000
 
-CMD flask run --host=127.0.0.1
+
+CMD flask run --host=0.0.0.0

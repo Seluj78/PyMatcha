@@ -29,4 +29,4 @@ if __name__ == "__main__":
     # Default debug is true
     debug = bool(os.environ.get("FLASK_DEBUG", False))
     # Runs the main loop
-    application.run(host="127.0.0.1", port=port, debug=debug)
+    application.run(host="0.0.0.0", port=port, debug=debug)
