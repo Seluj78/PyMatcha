@@ -79,4 +79,4 @@ fclean: clean
 
 re: clean all
 
-.PHONY : build backend frontend prod dev clean tests fclean all re
+.PHONY : all install_python install_react install build dev run tests docker clean fclean re
