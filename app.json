@@ -1,0 +1,39 @@
+{
+  "name": "PyMatcha",
+  "description": "A honest dating website.",
+  "keywords": [
+    "python",
+    "react",
+    "js",
+    "pymatcha",
+    "42"
+  ],
+  "website": "https://pymatcha-prod.herokuapp.com/",
+  "repository": "https://github.com/seluj78/pymatcha",
+  "logo": "",
+  "success_url": "/",
+  "scripts": {
+  },
+  "env": {
+    "FLASK_SECRET_KEY": {
+      "description": "A secret key for verifying the integrity of signed cookies. Used as a salt by Flask",
+      "generator": "secret"
+    },
+    "FLASK_DEBUG": {
+      "description": "Is debug mode enabled",
+      "value": false
+    }
+  },
+  "formation": {
+    "web": {
+      "quantity": 1,
+      "size": "free"
+    }
+  },
+  "image": "heroku/python",
+  "buildpacks": [
+    {
+      "url": "http://github.com/dollar/heroku-buildpack-multi.git"
+    }
+  ]
+}
