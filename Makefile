@@ -25,7 +25,7 @@ PYTEST = $(VENV)/bin/pytest
 FRONTEND = $(PWD)/frontend
 BACKEND = $(PWD)/backend
 DOCKER_NAME := pymatcha
-PORT := 8080
+FLASK_PORT := 5000
 
 all: install build run
 	# TODO: Build and run the server
@@ -80,9 +80,10 @@ tests: build
 docker: build docker-build docker-run
 
 docker-run:
-	docker run --name $(DOCKER_NAME) --restart=always -p $(PORT):8080 -d $(DOCKER_NAME)
+	docker run --name $(DOCKER_NAME) --restart=always -p 8080:$(FLASK_PORT) -d $(DOCKER_NAME)
 
 docker-build:
+	-docker kill $(DOCKER_NAME)
 	docker build -t $(DOCKER_NAME) .
 
 docker-clean:
@@ -94,11 +95,11 @@ clean:
 	rm -rf $(FRONTEND)/node_modules
 	rm -rf $(VENV)
 
-fclean: clean
+fclean: clean docker-clean
 	rm -rf $(FRONTEND)/build
 	rm -rf $(VENV)
 	rm -rf www
 
 re: clean all
 
-.PHONY : all install_python install_react install build dev run tests docker clean fclean re
+.PHONY : all install_python install_react install build dev run tests docker clean fclean re docker docker-build docker-clean docker-run
