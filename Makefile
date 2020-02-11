@@ -24,8 +24,6 @@ FLASK = $(VENV)/bin/flask
 PYTEST = $(VENV)/bin/pytest
 FRONTEND = $(PWD)/frontend
 BACKEND = $(PWD)/backend
-DOCKER_NAME := pymatcha
-FLASK_PORT := 5000
 
 all: install build run
 	# TODO: Build and run the server
@@ -47,15 +45,7 @@ install_react:
 install: install_python install_react
 
 build: install
-	mkdir -p www
-	mkdir -p www/frontend
-	mkdir -p www/backend
-
 	npm run build --prefix $(FRONTEND)
-	cp -R $(FRONTEND)/build www/frontend
-
-	# TODO: Add obfuscation/compilation step
-	cp -R $(BACKEND) www/
 
 dev: install
 	npm run start --prefix $(FRONTEND) &
@@ -77,29 +67,16 @@ tests: build
 	# TODO: Maybe move this to the build stage? so if the build fails and the folder isn't here it fails immediatly and not at the test stage
 	# TODO: Run the tests
 
-docker: build docker-build docker-run
-
-docker-run:
-	docker run --name $(DOCKER_NAME) --restart=always -p 8080:$(FLASK_PORT) -d $(DOCKER_NAME)
-
-docker-build:
-	-docker kill $(DOCKER_NAME)
-	docker build -t $(DOCKER_NAME) .
-
-docker-clean:
-	-docker kill $(DOCKER_NAME)
-	-docker ps -a | awk '{ print $$1,$$2 }' | grep $(DOCKER_NAME) | awk '{print $$1 }' | xargs -I {} docker rm {}
-	docker image rm $(DOCKER_NAME)
+docker:
+	# TODO
 
 clean:
 	rm -rf $(FRONTEND)/node_modules
-	rm -rf $(VENV)
 
-fclean: clean docker-clean
+fclean: clean
 	rm -rf $(FRONTEND)/build
 	rm -rf $(VENV)
-	rm -rf www
 
 re: clean all
 
-.PHONY : all install_python install_react install build dev run tests docker clean fclean re docker docker-build docker-clean docker-run
+.PHONY : all install_python install_react install build dev run tests docker clean fclean re

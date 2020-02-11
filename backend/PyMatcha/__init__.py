@@ -30,9 +30,11 @@ from flask_cors import CORS
 
 from dotenv import load_dotenv
 
+
 PYMATCHA_ROOT = os.path.join(os.path.dirname(__file__), '../..')   # refers to application_top
 dotenv_path = os.path.join(PYMATCHA_ROOT, '.env')
 load_dotenv(dotenv_path)
+
 
 REQUIRED_ENV_VARS = [
     "FLASK_DEBUG",
@@ -53,8 +55,6 @@ application = Flask(__name__, static_folder=os.getenv("FRONT_STATIC_FOLDER"))
 application.debug = os.getenv("FLASK_DEBUG")
 application.secret_key = os.getenv("FLASK_SECRET_KEY")
 
-CORS(application)
-
 app_db = peewee.MySQLDatabase(
     "PyMatcha",
     host=os.getenv("DB_HOST"),
@@ -63,8 +63,10 @@ app_db = peewee.MySQLDatabase(
     user=os.getenv("DB_USER")
 )
 
-application.config["FLASK_ADMIN_SWATCH"] = "cyborg"
+application.config["FLASK_ADMIN_SWATCH"] = "simplex"
 admin = Admin(application, name="PyMatcha Admin", template_mode="bootstrap3")
+
+CORS(application)
 
 from PyMatcha.models.user import User, UserAdmin
 
