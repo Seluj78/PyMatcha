@@ -30,5 +30,6 @@ export {
 	getToken,
 	onChange,
 	sleep,
-	effectDuration
+	effectDuration,
+	apiCall
 }
