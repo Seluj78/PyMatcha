@@ -1,3 +1,8 @@
+"""
+https://speakerdeck.com/lig/your-own-orm-in-python-how-and-why
+"""
+
+
 class StrictDict(dict):
     def __setitem__(self, key, value):
         if key not in self:
