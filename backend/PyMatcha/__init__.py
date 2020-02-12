@@ -20,15 +20,12 @@
 
 import os
 
-import peewee
-
 from flask import Flask, send_from_directory
-
-from flask_admin import Admin
 
 from flask_cors import CORS
 
 from dotenv import load_dotenv
+
 
 PYMATCHA_ROOT = os.path.join(os.path.dirname(__file__), '../..')   # refers to application_top
 dotenv_path = os.path.join(PYMATCHA_ROOT, '.env')
@@ -55,28 +52,9 @@ application.secret_key = os.getenv("FLASK_SECRET_KEY")
 
 CORS(application)
 
-app_db = peewee.MySQLDatabase(
-    "PyMatcha",
-    host=os.getenv("DB_HOST"),
-    port=int(os.getenv("DB_PORT")),
-    password=os.getenv("DB_PASSWORD"),
-    user=os.getenv("DB_USER")
-)
-
-application.config["FLASK_ADMIN_SWATCH"] = "cyborg"
-admin = Admin(application, name="PyMatcha Admin", template_mode="bootstrap3")
-
-from PyMatcha.models.user import User, UserAdmin
-
-admin.add_view(UserAdmin(User))
-
 from PyMatcha.routes.api.ping_pong import ping_pong_bp
 
 application.register_blueprint(ping_pong_bp)
-
-if bool(int(os.environ.get("CI", 0))):
-    User.drop_table()
-    User.create_table()
 
 
 # Serve React App
