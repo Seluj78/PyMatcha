@@ -54,11 +54,16 @@ application.secret_key = os.getenv("FLASK_SECRET_KEY")
 
 CORS(application)
 
+if os.getenv("CI"):
+    database_password = ""
+else:
+    database_password = os.getenv("DB_PASSWORD")
+
 database_config = {
     "host": os.getenv("DB_HOST"),
     "port": int(os.getenv("DB_PORT")),
     "user": os.getenv("DB_USER"),
-    "password": os.getenv("DB_PASSWORD"),
+    "password": database_password,
     "db": os.getenv("DB_NAME"),
     "charset": "utf8mb4",
     "cursorclass": DictCursor,
