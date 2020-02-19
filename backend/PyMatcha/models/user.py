@@ -90,25 +90,21 @@ class User(Model):
     ):
         # Check email availability
         if User.get(email=email):
-            # TODO: Raise email taken error
-            raise ValueError("Email taken")
+            raise ValueError("Email {} taken".format(email))
 
         # Check username availability
         if User.get(username=username):
-            # TODO: Raise username taken error
-            raise ValueError("Username taken")
+            raise ValueError("Username {} taken".format(username))
 
         # Check correct gender
         if gender not in ["male", "female", "other"]:
-            # TODO: Raise error for gender selection
-            raise ValueError("Gender must be male, female or other")
+            raise ValueError("Gender must be male, female or other, not {}".format(gender))
 
         # Check correct geohash
         try:
             Geohash.decode(geohash)
-        except ValueError:
-            # TODO: Return/raise error of unexpected char in hash
-            raise ValueError("Geohash error, check string integrity")
+        except ValueError as e:
+            raise e
 
         # Encrypt password
         password = hash_password(password)
