@@ -22,7 +22,7 @@ const useFetchData = (url, options = {}) => {
 
 	useEffect(() => {
 		onLoad(url, options, setState);
-	}, [url]);
+	}, [url, options]);
 	return state;
 }
 
