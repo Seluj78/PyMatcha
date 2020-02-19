@@ -36,6 +36,7 @@ def create_tables(db):
         orientation   ENUM('heterosexual', 'homosexual', 'bisexual'),
         birthdate     DATE,
         geohash       VARCHAR(256),
+        tags          LONGTEXT,
         heat_score    INT DEFAULT (0),
         online        BOOLEAN DEFAULT (FALSE),
         date_joined   TIMESTAMP DEFAULT CURRENT_TIMESTAMP,

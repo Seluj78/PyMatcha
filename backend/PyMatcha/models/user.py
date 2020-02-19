@@ -17,6 +17,7 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 """
 
+import json
 import hashlib
 
 from datetime import datetime
@@ -41,6 +42,7 @@ class User(Model):
     orientation = Field(str)
     birthdate = Field(datetime)
     geohash = Field(str)
+    tags = Field(dict)
     heat_score = Field(int)
     online = Field(bool)
     date_joined = Field(datetime)
@@ -84,6 +86,7 @@ class User(Model):
         orientation,
         birthdate,
         geohash,
+        tags,
         heat_score=0,
         online=False,
         date_joined=datetime.utcnow(),
@@ -113,6 +116,8 @@ class User(Model):
         except ValueError as e:
             raise e
 
+        # TODO: Check if all tags are set in tags
+
         # Encrypt password
         password = hash_password(password)
 
@@ -127,6 +132,7 @@ class User(Model):
             orientation=orientation,
             birthdate=birthdate,
             geohash=geohash,
+            tags=str(json.dumps(tags)),
             heat_score=heat_score,
             online=online,
             date_joined=date_joined,
