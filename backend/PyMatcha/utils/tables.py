@@ -18,7 +18,7 @@
 """
 
 
-def create_tables(db):
+def _create_user_table(db):
     with db.cursor() as c:
         print("Creating table users.")
         c.execute(
@@ -45,3 +45,7 @@ def create_tables(db):
         )
         """
         )
+
+
+def create_tables(db):
+    _create_user_table(db)
