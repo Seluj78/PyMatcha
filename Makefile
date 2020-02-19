@@ -74,7 +74,6 @@ lint:
 		flake8 backend/ && \
 		black --check backend/ \
 	)
-	#mypy --ignore-missing-imports --strict backend/PyMatcha
 
 
 tests: build
