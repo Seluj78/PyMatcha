@@ -28,7 +28,6 @@ DOCKER_NAME := pymatcha
 FLASK_PORT := 5000
 
 all: install build run
-	# TODO: Build and run the server
 
 install_python:
 ifndef TRAVIS
@@ -39,7 +38,6 @@ ifndef TRAVIS
 			$(PIP) install -r $(BACKEND)/requirements.txt \
 		)
 endif
-	# TODO: Create envs, install everything
 
 install_react:
 	npm install --prefix $(FRONTEND)
