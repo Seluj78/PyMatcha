@@ -17,15 +17,18 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 """
 
-
 import os
-
-from flask import Flask, send_from_directory
+import pymysql
 
 from flask_cors import CORS
 
 from dotenv import load_dotenv
 
+from pymysql.cursors import DictCursor
+
+from flask import Flask, send_from_directory
+
+from PyMatcha.utils.tables import create_tables
 
 PYMATCHA_ROOT = os.path.join(os.path.dirname(__file__), "../..")  # refers to application_top
 dotenv_path = os.path.join(PYMATCHA_ROOT, ".env")
@@ -50,6 +53,20 @@ application.debug = os.getenv("FLASK_DEBUG")
 application.secret_key = os.getenv("FLASK_SECRET_KEY")
 
 CORS(application)
+
+database_config = {
+    "host": os.getenv("DB_HOST"),
+    "port": int(os.getenv("DB_PORT")),
+    "user": os.getenv("DB_USER"),
+    "password": os.getenv("DB_PASSWORD"),
+    "db": os.getenv("DB_NAME"),
+    "charset": "utf8mb4",
+    "cursorclass": DictCursor,
+}
+
+db = pymysql.connect(**database_config)
+
+create_tables(db)
 
 from PyMatcha.routes.api.ping_pong import ping_pong_bp
 
