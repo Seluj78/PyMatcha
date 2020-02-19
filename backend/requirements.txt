@@ -1,8 +1,4 @@
 Flask
-Flask-Admin
-wtf-peewee
-peewee
-pymysql
 
 flask-cors
 python-dotenv
