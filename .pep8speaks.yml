@@ -4,7 +4,7 @@ scanner:
 
 flake8:  # Valid if scanner.linter is flake8
     max-line-length: 120
-    ignore: ['E402']
+    ignore: ['E402', 'W291']
     exclude: ['venv/*', 'frontend/*']
     count: False
     show-source: False
