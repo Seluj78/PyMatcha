@@ -61,10 +61,7 @@ dev: install
 
 run: build
 	( \
-		export DB_USER=EWARSESTHJ; \
-		export DB_PASSWORD=EWARSESTHJ; \
-		export FLASK_SECRET_KEY=EWARSESTHJ; \
-		export FLASK_DEBUG=EWARSESTHJ; \
+		source .env; \
 		source $(VENV)/bin/activate && \
 		python3 $(BACKEND)/app.py \
 	)
