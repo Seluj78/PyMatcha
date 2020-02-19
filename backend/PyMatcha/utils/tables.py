@@ -33,6 +33,7 @@ def create_tables(db):
         password      LONGTEXT NOT NULL,
         bio           LONGTEXT,
         gender        ENUM('male', 'female', 'other'),
+        orientation   ENUM('heterosexual', 'homosexual', 'bisexual'),
         birthdate     DATE,
         geohash       VARCHAR(256),
         heat_score    INT DEFAULT (0),

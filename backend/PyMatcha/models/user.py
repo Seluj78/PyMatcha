@@ -38,6 +38,7 @@ class User(Model):
     password = Field(str, hidden=True)
     bio = Field(str)
     gender = Field(str)
+    orientation = Field(str)
     birthdate = Field(datetime)
     geohash = Field(str)
     heat_score = Field(int)
@@ -80,6 +81,7 @@ class User(Model):
         password,
         bio,
         gender,
+        orientation,
         birthdate,
         geohash,
         heat_score=0,
@@ -100,6 +102,11 @@ class User(Model):
         if gender not in ["male", "female", "other"]:
             raise ValueError("Gender must be male, female or other, not {}".format(gender))
 
+        # Check correct orientation
+        if orientation not in ["heterosexual", "homosexual", "bisexual"]:
+            raise ValueError(
+                "Sexual Orientation must be heterosexual, homosexual or bisexual, not {}".format(orientation)
+            )
         # Check correct geohash
         try:
             Geohash.decode(geohash)
@@ -117,6 +124,7 @@ class User(Model):
             password=password,
             bio=bio,
             gender=gender,
+            orientation=orientation,
             birthdate=birthdate,
             geohash=geohash,
             heat_score=heat_score,
