@@ -4,6 +4,11 @@ flask-cors
 
 python-dotenv
 
+Geohash
+python-geohash
+
+pymysql
+
 pytest
 pytest-flask
 

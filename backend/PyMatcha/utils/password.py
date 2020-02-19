@@ -17,11 +17,10 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 """
 
-from flask import Blueprint, jsonify
+import uuid
+import hashlib
 
-ping_pong_bp = Blueprint("ping_pong", __name__)
 
-
-@ping_pong_bp.route("/ping")
-def ping():
-    return jsonify(ping="pong")
+def hash_password(password):
+    salt = uuid.uuid4().hex
+    return hashlib.sha256(salt.encode() + password.encode()).hexdigest() + ":" + salt
