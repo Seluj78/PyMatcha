@@ -16,3 +16,11 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 """
+
+
+from flask import url_for
+
+
+class TestFixturesViewHome:
+    def test_client_view_home(self, client):
+        assert client.get(url_for("serve")).status == "200 OK"

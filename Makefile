@@ -72,10 +72,15 @@ run: build
 	)
 	# TODO: Run the whole server for prod
 
+lint:
+	flake8 backend/
+	black --check backend/
+	#mypy --ignore-missing-imports --strict backend/PyMatcha
+
 tests: build
 	test -d frontend/build
+	pytest backend/
 	# TODO: Maybe move this to the build stage? so if the build fails and the folder isn't here it fails immediatly and not at the test stage
-	# TODO: Run the tests
 
 docker: build docker-build docker-run
 
