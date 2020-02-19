@@ -68,11 +68,13 @@ run: build
 	# TODO: Run the whole server for prod
 
 lint:
+	$(PIP) install -r $(BACKEND)/requirements-dev.txt
 	flake8 backend/
 	black --check backend/
 	#mypy --ignore-missing-imports --strict backend/PyMatcha
 
 tests: build
+	$(PIP) install -r $(BACKEND)/requirements-dev.txt
 	test -d frontend/build
 	pytest backend/
 	# TODO: Maybe move this to the build stage? so if the build fails and the folder isn't here it fails immediatly and not at the test stage
