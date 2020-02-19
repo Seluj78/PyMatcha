@@ -1,5 +1,5 @@
 os:
-- linux
+  - linux
 
 sudo: required
 dist: xenial
@@ -24,8 +24,8 @@ jobs:
 notifications:
   email:
     recipients:
-    - jlasne@student.42.fr
-    - gmorer@student.42.fr
+      - jlasne@student.42.fr
+      - gmorer@student.42.fr
     on_success: change
 on_failure: always
 

@@ -17,7 +17,6 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 """
 
-
 from flask import Blueprint, jsonify
 
 ping_pong_bp = Blueprint("ping_pong", __name__)

@@ -17,11 +17,9 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 """
 
-
 import os
 
 from PyMatcha import application
-
 
 if __name__ == "__main__":
     # Get the port defined in env if defined, otherwise sets it to 5000

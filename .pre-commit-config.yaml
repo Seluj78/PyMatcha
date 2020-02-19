@@ -1,8 +1,8 @@
 repos:
--   repo: https://github.com/pre-commit/pre-commit-hooks
+  - repo: https://github.com/pre-commit/pre-commit-hooks
     rev: v2.1.0
     hooks:
-    - id: flake8
+      - id: flake8
 
 # deactivated black because causing problems with node modules
 
