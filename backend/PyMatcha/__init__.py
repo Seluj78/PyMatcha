@@ -27,8 +27,8 @@ from flask_cors import CORS
 from dotenv import load_dotenv
 
 
-PYMATCHA_ROOT = os.path.join(os.path.dirname(__file__), '../..')   # refers to application_top
-dotenv_path = os.path.join(PYMATCHA_ROOT, '.env')
+PYMATCHA_ROOT = os.path.join(os.path.dirname(__file__), "../..")  # refers to application_top
+dotenv_path = os.path.join(PYMATCHA_ROOT, ".env")
 load_dotenv(dotenv_path)
 
 REQUIRED_ENV_VARS = [
@@ -58,10 +58,10 @@ application.register_blueprint(ping_pong_bp)
 
 
 # Serve React App
-@application.route('/', defaults={'path': ''})
-@application.route('/<path:path>')
+@application.route("/", defaults={"path": ""})
+@application.route("/<path:path>")
 def serve(path):
-    if path != "" and os.path.exists(application.static_folder + '/' + path):
+    if path != "" and os.path.exists(application.static_folder + "/" + path):
         return send_from_directory(application.static_folder, path)
     else:
-        return send_from_directory(application.static_folder, 'index.html')
+        return send_from_directory(application.static_folder, "index.html")
