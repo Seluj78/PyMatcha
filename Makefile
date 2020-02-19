@@ -72,7 +72,7 @@ lint:
 		source $(VENV)/bin/activate && \
 		$(PIP) install -r $(BACKEND)/requirements-dev.txt && \
 		flake8 backend/ && \
-		black --check backend/
+		black --check backend/ \
 		#mypy --ignore-missing-imports --strict backend/PyMatcha
 	)
 
@@ -82,7 +82,7 @@ tests: build
 		test -d frontend/build && \
 		source $(VENV)/bin/activate && \
 		$(PIP) install -r $(BACKEND)/requirements-dev.txt && \
-		pytest backend/
+		pytest backend/ \
 	)
 
 	# TODO: Maybe move this to the build stage? so if the build fails and the folder isn't here it fails immediatly and not at the test stage
