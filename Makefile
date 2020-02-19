@@ -68,22 +68,30 @@ run: build
 	# TODO: Run the whole server for prod
 
 lint:
+ifdef TRAVIS
+	flake8 backend/
+	black --check backend/
+else
 	( \
 		source $(VENV)/bin/activate && \
 		$(PIP) install -r $(BACKEND)/requirements-dev.txt && \
 		flake8 backend/ && \
 		black --check backend/ \
 	)
+endif
 
 
 tests: build
+ifdef TRAVIS
+	pytest backend/
+else
 	( \
 		test -d frontend/build && \
 		source $(VENV)/bin/activate && \
 		$(PIP) install -r $(BACKEND)/requirements-dev.txt && \
 		pytest backend/ \
 	)
-
+endif
 	# TODO: Maybe move this to the build stage? so if the build fails and the folder isn't here it fails immediatly and not at the test stage
 
 docker: build docker-build docker-run
