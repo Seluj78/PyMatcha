@@ -248,4 +248,19 @@ class Model(object):
         if data:
             return cls(data)
         else:
-            raise ValueError("{} not found in table {}".format(key, cls.table_name))
+            return False
+
+    @classmethod
+    def select_all(cls):
+        temp = cls()
+        with temp.db.cursor() as c:
+            c.execute("""SELECT * FROM {}""".format(cls.table_name))
+            data = c.fetchall()
+        for item in data:
+            yield cls(item)
+
+    @classmethod
+    def drop_table(cls):
+        with cls.db.cursor() as c:
+            c.execute("""DROP TABLE {}""".format(cls.table_name))
+            cls.db.commit()

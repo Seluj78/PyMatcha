@@ -24,6 +24,8 @@ from datetime import datetime
 
 from PyMatcha.utils import hash_password
 from PyMatcha.utils.orm import Model, Field
+from PyMatcha.errors import ConflictError, NotFoundError
+from PyMatcha.utils.tables import _create_user_table
 
 import Geohash
 
@@ -72,7 +74,7 @@ class User(Model):
                 )
                 self.db.commit()
         else:
-            raise Exception("User not in database")
+            raise NotFoundError("User not in database", "Try again")
 
     @staticmethod
     def create(
@@ -95,21 +97,23 @@ class User(Model):
     ):
         # Check email availability
         if User.get(email=email):
-            raise ValueError("Email {} taken".format(email))
+            raise ConflictError("Email {} taken".format(email), "Use another email")
 
         # Check username availability
         if User.get(username=username):
-            raise ValueError("Username {} taken".format(username))
+            raise ConflictError("Username {} taken".format(username), "Try another username")
 
         # Check correct gender
         if gender not in ["male", "female", "other"]:
-            raise ValueError("Gender must be male, female or other, not {}".format(gender))
+            raise ConflictError("Gender must be male, female or other, not {}".format(gender), "Try again")
 
         # Check correct orientation
         if orientation not in ["heterosexual", "homosexual", "bisexual"]:
-            raise ValueError(
-                "Sexual Orientation must be heterosexual, homosexual or bisexual, not {}".format(orientation)
+            raise ConflictError(
+                "Sexual Orientation must be heterosexual, homosexual or bisexual, not {}".format(orientation),
+                "Try again",
             )
+
         # Check correct geohash
         try:
             Geohash.decode(geohash)
@@ -124,7 +128,7 @@ class User(Model):
         new_user = User(
             first_name=first_name,
             last_name=last_name,
-            email=email,
+            email=email.lower(),
             username=username,
             password=password,
             bio=bio,
@@ -142,9 +146,58 @@ class User(Model):
         new_user.save()
         return new_user
 
-    # def essential(self):
-    #     return {
-    #         "id": self.id,
-    #         "fname": self.fname,
-    #         "lname": self.lname
-    #     }
+    def get_all_info(self):
+        return {
+            "first_name": self.first_name,
+            "last_name": self.last_name,
+            "email": self.email,
+            "username": self.username,
+            "password": self.password,
+            "bio": self.bio,
+            "gender": self.gender,
+            "orientation": self.orientation,
+            "birthdate": self.birthdate,
+            "geohash": self.geohash,
+            "tags": json.loads(self.tags),
+            "heat_score": self.heat_score,
+            "online": self.online,
+            "date_joined": self.date_joined,
+            "date_lastseen": self.date_lastseen,
+            "deleted": self.deleted,
+        }
+
+    @classmethod
+    def create_table(cls):
+        _create_user_table(cls.db)
+
+
+def get_user(uid):
+
+    not_found = 0
+    # These initializations are to make PEP happy and silence warnings
+    f_user = None
+
+    uid = uid.lower()
+
+    try:
+        user = User.get(id=uid)
+    except ValueError:
+        not_found += 1
+    else:
+        f_user = user
+    try:
+        user = User.get(username=uid)
+    except ValueError:
+        not_found += 1
+    else:
+        f_user = user
+    try:
+        user = User.get(email=uid)
+    except ValueError:
+        not_found += 1
+    else:
+        f_user = user
+    # If none of those worked, throw an error
+    if not_found == 3:
+        raise NotFoundError("User {} not found.".format(uid), "Try again with another uid")
+    return f_user

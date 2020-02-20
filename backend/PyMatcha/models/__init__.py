@@ -1,5 +1,3 @@
-from PyMatcha.models.user import User
+from PyMatcha.models.user import User, get_user
 
-__all__ = [
-    "User",
-]
+__all__ = ["User", "get_user"]

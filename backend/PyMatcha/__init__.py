@@ -74,8 +74,10 @@ db = pymysql.connect(**database_config)
 create_tables(db)
 
 from PyMatcha.routes.api.ping_pong import ping_pong_bp
+from PyMatcha.routes.api.user import user_bp
 
 application.register_blueprint(ping_pong_bp)
+application.register_blueprint(user_bp)
 
 
 # Serve React App
