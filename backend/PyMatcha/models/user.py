@@ -24,6 +24,7 @@ from datetime import datetime
 
 from PyMatcha.utils import hash_password
 from PyMatcha.utils.orm import Model, Field
+from PyMatcha.errors import ConflictError, NotFoundError
 
 import Geohash
 
@@ -72,7 +73,7 @@ class User(Model):
                 )
                 self.db.commit()
         else:
-            raise Exception("User not in database")
+            raise NotFoundError("User not in database", "Try again")
 
     @staticmethod
     def create(
@@ -95,20 +96,21 @@ class User(Model):
     ):
         # Check email availability
         if User.get(email=email):
-            raise ValueError("Email {} taken".format(email))
+            raise ConflictError("Email {} taken".format(email), "Use another email")
 
         # Check username availability
         if User.get(username=username):
-            raise ValueError("Username {} taken".format(username))
+            raise ConflictError("Username {} taken".format(username), "Try another username")
 
         # Check correct gender
         if gender not in ["male", "female", "other"]:
-            raise ValueError("Gender must be male, female or other, not {}".format(gender))
+            raise ConflictError("Gender must be male, female or other, not {}".format(gender), "Try again")
 
         # Check correct orientation
         if orientation not in ["heterosexual", "homosexual", "bisexual"]:
-            raise ValueError(
-                "Sexual Orientation must be heterosexual, homosexual or bisexual, not {}".format(orientation)
+            raise ConflictError(
+                "Sexual Orientation must be heterosexual, homosexual or bisexual, not {}".format(orientation),
+                "Try again",
             )
         # Check correct geohash
         try:
