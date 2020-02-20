@@ -6,6 +6,7 @@ import Geohash
 import datetime
 
 from PyMatcha.models import User
+from PyMatcha.errors import ConflictError
 
 
 def gen_datetime(min_year=1900, max_year=datetime.datetime.now().year):
@@ -28,8 +29,6 @@ def populate_users():
 
         last_name = names.get_last_name()
 
-        username = first_name + last_name  # TODO: More randomness in usernames
-
         password_size = random.randint(6, 14)
         chars = string.printable
         password = "".join(random.choice(chars) for i in range(password_size))
@@ -50,24 +49,32 @@ def populate_users():
         number = str(random.randint(0, 999))
         end_mail = random.choice(["", number])
         email = first_name + middle_mail + last_name + end_mail + "@gmail.com"
-        User.create(
-            first_name=first_name,
-            last_name=last_name,
-            email=email.lower(),
-            username=username,
-            password=password,
-            bio=bio,
-            gender=gender,
-            orientation=orientation,
-            birthdate=birthdate,
-            geohash=geohash,
-            tags="",  # TODO: Change to a real random tag generation
-            heat_score=0,
-            online=random.choice([True, False]),
-            date_joined=date_joined,
-            date_lastseen=date_lastseen,
-            deleted=False,
-        )
+
+        end_of_username = random.choice(["", number, last_name])
+
+        username = first_name + end_of_username
+
+        try:
+            User.create(
+                first_name=first_name,
+                last_name=last_name,
+                email=email.lower(),
+                username=username,
+                password=password,
+                bio=bio,
+                gender=gender,
+                orientation=orientation,
+                birthdate=birthdate,
+                geohash=geohash,
+                tags="",  # TODO: Change to a real random tag generation
+                heat_score=0,
+                online=random.choice([True, False]),
+                date_joined=date_joined,
+                date_lastseen=date_lastseen,
+                deleted=False,
+            )
+        except ConflictError:
+            pass  # Pass on the conflict error, this user wont be created because the username is taken. Who cares ?
     # TODO: Add images
 
 
