@@ -126,7 +126,7 @@ class User(Model):
         new_user = User(
             first_name=first_name,
             last_name=last_name,
-            email=email,
+            email=email.lower(),
             username=username,
             password=password,
             bio=bio,
@@ -144,9 +144,54 @@ class User(Model):
         new_user.save()
         return new_user
 
-    # def essential(self):
-    #     return {
-    #         "id": self.id,
-    #         "fname": self.fname,
-    #         "lname": self.lname
-    #     }
+    def get_all_info(self):
+        return {
+            "first_name": self.first_name,
+            "last_name": self.last_name,
+            "email": self.email,
+            "username": self.username,
+            "password": self.password,
+            "bio": self.bio,
+            "gender": self.gender,
+            "orientation": self.orientation,
+            "birthdate": self.birthdate,
+            "geohash": self.geohash,
+            "tags": json.loads(self.tags),
+            "heat_score": self.heat_score,
+            "online": self.online,
+            "date_joined": self.date_joined,
+            "date_lastseen": self.date_lastseen,
+            "deleted": self.deleted,
+        }
+
+
+def get_user(uid):
+
+    not_found = 0
+    # These initializations are to make PEP happy and silence warnings
+    f_user = None
+
+    uid = uid.lower()
+
+    try:
+        user = User.get(id=uid)
+    except ValueError:
+        not_found += 1
+    else:
+        f_user = user
+    try:
+        user = User.get(username=uid)
+    except ValueError:
+        not_found += 1
+    else:
+        f_user = user
+    try:
+        user = User.get(email=uid)
+    except ValueError:
+        not_found += 1
+    else:
+        f_user = user
+    # If none of those worked, throw an error
+    if not_found == 3:
+        raise NotFoundError("User {} not found.".format(uid), "Try again with another uid")
+    return f_user
