@@ -16,9 +16,12 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 """
+from __future__ import annotations
 
 import json
 import hashlib
+
+from typing import Dict, List, Optional, Any
 
 from datetime import datetime
 
@@ -57,12 +60,12 @@ class UserImage(Model):
             raise NotFoundError("Image not in database", "Try again")
 
     @staticmethod
-    def create(user_id, image_path):
+    def create(user_id: int, image_path: str) -> UserImage:
         new_image = UserImage(user_id=user_id, image_path=image_path)
         new_image.save()
         return new_image
 
-    def get_all_info(self):
+    def get_all_info(self) -> Dict:
         return {"id": self.id, "user_id": self.user_id, "image_path": self.image_path}
 
     @classmethod
@@ -97,7 +100,7 @@ class User(Model):
         # if "password" in data:
         #     self.password.value = hash_password(data["password"])
 
-    def check_password(self, password):
+    def check_password(self, password: str) -> bool:
         _hash, salt = self.password.split(":")
         return _hash == hashlib.sha256(salt.encode() + password.encode()).hexdigest()
 
@@ -118,23 +121,23 @@ class User(Model):
 
     @staticmethod
     def create(
-        first_name,
-        last_name,
-        email,
-        username,
-        password,
-        bio,
-        gender,
-        orientation,
-        birthdate,
-        geohash,
+        first_name: str,
+        last_name: str,
+        email: str,
+        username: str,
+        password: str,
+        bio: str,
+        gender: str,
+        orientation: str,
+        birthdate: datetime,
+        geohash: str,
         tags,
-        heat_score=0,
-        online=False,
-        date_joined=datetime.utcnow(),
-        date_lastseen=datetime.utcnow(),
-        deleted=False,
-    ):
+        heat_score: int = 0,
+        online: bool = False,
+        date_joined: datetime = datetime.utcnow(),
+        date_lastseen: datetime = datetime.utcnow(),
+        deleted: bool = False,
+    ) -> User:
         # Check email availability
         if User.get(email=email):
             raise ConflictError("Email {} taken".format(email), "Use another email")
@@ -186,7 +189,7 @@ class User(Model):
         new_user.save()
         return new_user
 
-    def get_all_info(self):
+    def get_all_info(self) -> Dict:
         return {
             "first_name": self.first_name,
             "last_name": self.last_name,
@@ -210,7 +213,7 @@ class User(Model):
     def create_table(cls):
         create_user_table(cls.db)
 
-    def get_images(self):
+    def get_images(self) -> List[UserImage]:
         with self.db.cursor() as c:
             c.execute(
                 """
@@ -229,7 +232,7 @@ class User(Model):
         return image_list
 
 
-def get_user(uid):
+def get_user(uid: Any[int, str]) -> Optional[User]:
 
     not_found = 0
     # These initializations are to make PEP happy and silence warnings
