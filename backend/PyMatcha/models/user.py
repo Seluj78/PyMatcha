@@ -24,10 +24,50 @@ from datetime import datetime
 
 from PyMatcha.utils import hash_password
 from PyMatcha.utils.orm import Model, Field
+from PyMatcha.utils import create_user_table, create_user_images_table
+
 from PyMatcha.errors import ConflictError, NotFoundError
-from PyMatcha.utils.tables import _create_user_table
 
 import Geohash
+
+
+class UserImage(Model):
+    table_name = "user_images"
+
+    id = Field(int, modifiable=False)
+    user_id = Field(int)
+    image_path = Field(str)
+
+    def before_init(self, data):
+        pass
+
+    def delete(self):
+        if self.id:
+            with self.db.cursor() as c:
+                c.execute(
+                    """
+                UPDATE {0} SET deleted = 1 
+                WHERE id='{1}'
+                """.format(
+                        self.table_name, self.id
+                    )
+                )
+                self.db.commit()
+        else:
+            raise NotFoundError("Image not in database", "Try again")
+
+    @staticmethod
+    def create(user_id, image_path):
+        new_image = UserImage(user_id=user_id, image_path=image_path)
+        new_image.save()
+        return new_image
+
+    def get_all_info(self):
+        return {"id": self.id, "user_id": self.user_id, "image_path": self.image_path}
+
+    @classmethod
+    def create_table(cls):
+        create_user_images_table(cls.db)
 
 
 class User(Model):
@@ -168,7 +208,25 @@ class User(Model):
 
     @classmethod
     def create_table(cls):
-        _create_user_table(cls.db)
+        create_user_table(cls.db)
+
+    def get_images(self):
+        with self.db.cursor() as c:
+            c.execute(
+                """
+                SELECT user_images.id as id, user_images.user_id as user_id, user_images.image_path as image_path 
+                FROM users 
+                INNER JOIN user_images on users.id = user_images.user_id 
+                WHERE user_id = {}
+                """.format(
+                    self.id
+                )
+            )
+            images = c.fetchall()
+            image_list = []
+            for image in images:
+                image_list.append(UserImage(image))
+        return image_list
 
 
 def get_user(uid):
