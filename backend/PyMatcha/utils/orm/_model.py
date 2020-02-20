@@ -249,3 +249,12 @@ class Model(object):
             return cls(data)
         else:
             raise ValueError("{} not found in table {}".format(key, cls.table_name))
+
+    @classmethod
+    def select_all(cls):
+        temp = cls()
+        with temp.db.cursor() as c:
+            c.execute("""SELECT * FROM {}""".format(cls.table_name))
+            data = c.fetchall()
+        for item in data:
+            yield cls(item)
