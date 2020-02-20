@@ -28,7 +28,7 @@ def populate_users():
 
         last_name = names.get_last_name()
 
-        username = first_name + last_name
+        username = first_name + last_name  # TODO: More randomness in usernames
 
         password_size = random.randint(6, 14)
         chars = string.printable
