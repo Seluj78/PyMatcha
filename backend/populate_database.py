@@ -9,7 +9,7 @@ from PyMatcha.models import User
 from PyMatcha.errors import ConflictError
 
 
-def gen_datetime(min_year=1900, max_year=datetime.datetime.now().year):
+def gen_datetime(min_year: int = 1900, max_year: int = datetime.datetime.now().year) -> datetime.datetime:
     # generate a datetime in format yyyy-mm-dd hh:mm:ss.000000
     start = datetime.datetime(min_year, 1, 1, 00, 00, 00)
     years = max_year - min_year + 1

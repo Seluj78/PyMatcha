@@ -16,18 +16,71 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 """
+from __future__ import annotations
 
 import json
 import hashlib
+
+from typing import Dict, List, Optional, Any
 
 from datetime import datetime
 
 from PyMatcha.utils import hash_password
 from PyMatcha.utils.orm import Model, Field
+from PyMatcha.utils import create_user_table, create_user_images_table
+
 from PyMatcha.errors import ConflictError, NotFoundError
-from PyMatcha.utils.tables import _create_user_table
 
 import Geohash
+
+
+class UserImage(Model):
+    table_name = "user_images"
+
+    id = Field(int, modifiable=False)
+    user_id = Field(int)
+    description = Field(str)
+    timestamp = Field(str)
+    is_primary = Field(bool)
+
+    def before_init(self, data):
+        pass
+
+    def delete(self):
+        if self.id:
+            with self.db.cursor() as c:
+                c.execute(
+                    """
+                UPDATE {0} SET deleted = 1 
+                WHERE id='{1}'
+                """.format(
+                        self.table_name, self.id
+                    )
+                )
+                self.db.commit()
+        else:
+            raise NotFoundError("Image not in database", "Try again")
+
+    @staticmethod
+    def create(
+        user_id: int, description="", timestamp=datetime.timestamp(datetime.utcnow()), is_primary=False
+    ) -> UserImage:
+        new_image = UserImage(user_id=user_id, description=description, timestamp=str(timestamp), is_primary=is_primary)
+        new_image.save()
+        return new_image
+
+    def get_all_info(self) -> Dict:
+        return {
+            "id": self.id,
+            "user_id": self.user_id,
+            "description": self.description,
+            "timestamp": self.timestamp,
+            "is_primary": self.is_primary,
+        }
+
+    @classmethod
+    def create_table(cls):
+        create_user_images_table(cls.db)
 
 
 class User(Model):
@@ -57,7 +110,7 @@ class User(Model):
         # if "password" in data:
         #     self.password.value = hash_password(data["password"])
 
-    def check_password(self, password):
+    def check_password(self, password: str) -> bool:
         _hash, salt = self.password.split(":")
         return _hash == hashlib.sha256(salt.encode() + password.encode()).hexdigest()
 
@@ -78,23 +131,23 @@ class User(Model):
 
     @staticmethod
     def create(
-        first_name,
-        last_name,
-        email,
-        username,
-        password,
-        bio,
-        gender,
-        orientation,
-        birthdate,
-        geohash,
+        first_name: str,
+        last_name: str,
+        email: str,
+        username: str,
+        password: str,
+        bio: str,
+        gender: str,
+        orientation: str,
+        birthdate: datetime,
+        geohash: str,
         tags,
-        heat_score=0,
-        online=False,
-        date_joined=datetime.utcnow(),
-        date_lastseen=datetime.utcnow(),
-        deleted=False,
-    ):
+        heat_score: int = 0,
+        online: bool = False,
+        date_joined: datetime = datetime.utcnow(),
+        date_lastseen: datetime = datetime.utcnow(),
+        deleted: bool = False,
+    ) -> User:
         # Check email availability
         if User.get(email=email):
             raise ConflictError("Email {} taken".format(email), "Use another email")
@@ -146,7 +199,7 @@ class User(Model):
         new_user.save()
         return new_user
 
-    def get_all_info(self):
+    def get_all_info(self) -> Dict:
         return {
             "first_name": self.first_name,
             "last_name": self.last_name,
@@ -168,10 +221,29 @@ class User(Model):
 
     @classmethod
     def create_table(cls):
-        _create_user_table(cls.db)
+        create_user_table(cls.db)
+
+    def get_images(self) -> List[UserImage]:
+        with self.db.cursor() as c:
+            c.execute(
+                """
+                SELECT user_images.id as id, user_images.user_id as user_id, user_images.description as description, 
+                user_images.timestamp as timestamp, user_images.is_primary as is_primary
+                FROM users 
+                INNER JOIN user_images on users.id = user_images.user_id 
+                WHERE user_id = {}
+                """.format(
+                    self.id
+                )
+            )
+            images = c.fetchall()
+            image_list = []
+            for image in images:
+                image_list.append(UserImage(image))
+        return image_list
 
 
-def get_user(uid):
+def get_user(uid: Any[int, str]) -> Optional[User]:
 
     not_found = 0
     # These initializations are to make PEP happy and silence warnings
