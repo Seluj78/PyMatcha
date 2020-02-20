@@ -56,9 +56,9 @@ def _create_user_images_table(db):
         (
         id            INT auto_increment PRIMARY KEY,
         user_id       INT (4) NOT NULL,
-        image_path    VARCHAR(256) NOT NULL,
         description   LONGTEXT,
-        timestamp     TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+        timestamp     TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+        is_primary    BOOLEAN NOT NULL
         )
         """
         )

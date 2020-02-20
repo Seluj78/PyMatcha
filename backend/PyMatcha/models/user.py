@@ -39,7 +39,9 @@ class UserImage(Model):
 
     id = Field(int, modifiable=False)
     user_id = Field(int)
-    image_path = Field(str)
+    description = Field(str)
+    timestamp = Field(str)
+    is_primary = Field(bool)
 
     def before_init(self, data):
         pass
@@ -60,13 +62,21 @@ class UserImage(Model):
             raise NotFoundError("Image not in database", "Try again")
 
     @staticmethod
-    def create(user_id: int, image_path: str) -> UserImage:
-        new_image = UserImage(user_id=user_id, image_path=image_path)
+    def create(
+        user_id: int, description="", timestamp=datetime.timestamp(datetime.utcnow()), is_primary=False
+    ) -> UserImage:
+        new_image = UserImage(user_id=user_id, description=description, timestamp=str(timestamp), is_primary=is_primary)
         new_image.save()
         return new_image
 
     def get_all_info(self) -> Dict:
-        return {"id": self.id, "user_id": self.user_id, "image_path": self.image_path}
+        return {
+            "id": self.id,
+            "user_id": self.user_id,
+            "description": self.description,
+            "timestamp": self.timestamp,
+            "is_primary": self.is_primary,
+        }
 
     @classmethod
     def create_table(cls):
