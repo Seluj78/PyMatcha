@@ -47,5 +47,23 @@ def _create_user_table(db):
         )
 
 
+def _create_user_images_table(db):
+    with db.cursor() as c:
+        print("Creating table user_images.")
+        c.execute(
+            """
+        CREATE TABLE IF NOT EXISTS user_images
+        (
+        id            INT auto_increment PRIMARY KEY,
+        user_id       INT (4) NOT NULL,
+        image_path    VARCHAR(256) NOT NULL,
+        description   LONGTEXT,
+        timestamp     TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+        )
+        """
+        )
+
+
 def create_tables(db):
     _create_user_table(db)
+    _create_user_images_table(db)
