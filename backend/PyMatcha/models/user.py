@@ -113,6 +113,7 @@ class User(Model):
                 "Sexual Orientation must be heterosexual, homosexual or bisexual, not {}".format(orientation),
                 "Try again",
             )
+
         # Check correct geohash
         try:
             Geohash.decode(geohash)
