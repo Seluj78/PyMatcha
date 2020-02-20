@@ -17,6 +17,7 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 """
 
+import json
 import hashlib
 
 from datetime import datetime
@@ -38,8 +39,10 @@ class User(Model):
     password = Field(str, hidden=True)
     bio = Field(str)
     gender = Field(str)
+    orientation = Field(str)
     birthdate = Field(datetime)
     geohash = Field(str)
+    tags = Field(dict)
     heat_score = Field(int)
     online = Field(bool)
     date_joined = Field(datetime)
@@ -80,8 +83,10 @@ class User(Model):
         password,
         bio,
         gender,
+        orientation,
         birthdate,
         geohash,
+        tags,
         heat_score=0,
         online=False,
         date_joined=datetime.utcnow(),
@@ -100,11 +105,18 @@ class User(Model):
         if gender not in ["male", "female", "other"]:
             raise ValueError("Gender must be male, female or other, not {}".format(gender))
 
+        # Check correct orientation
+        if orientation not in ["heterosexual", "homosexual", "bisexual"]:
+            raise ValueError(
+                "Sexual Orientation must be heterosexual, homosexual or bisexual, not {}".format(orientation)
+            )
         # Check correct geohash
         try:
             Geohash.decode(geohash)
         except ValueError as e:
             raise e
+
+        # TODO: Check if all tags are set in tags
 
         # Encrypt password
         password = hash_password(password)
@@ -117,8 +129,10 @@ class User(Model):
             password=password,
             bio=bio,
             gender=gender,
+            orientation=orientation,
             birthdate=birthdate,
             geohash=geohash,
+            tags=str(json.dumps(tags)),
             heat_score=heat_score,
             online=online,
             date_joined=date_joined,

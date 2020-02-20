@@ -18,7 +18,7 @@
 """
 
 
-def create_tables(db):
+def _create_user_table(db):
     with db.cursor() as c:
         print("Creating table users.")
         c.execute(
@@ -33,8 +33,10 @@ def create_tables(db):
         password      LONGTEXT NOT NULL,
         bio           LONGTEXT,
         gender        ENUM('male', 'female', 'other'),
+        orientation   ENUM('heterosexual', 'homosexual', 'bisexual'),
         birthdate     DATE,
         geohash       VARCHAR(256),
+        tags          LONGTEXT,
         heat_score    INT DEFAULT (0),
         online        BOOLEAN DEFAULT (FALSE),
         date_joined   TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
@@ -43,3 +45,7 @@ def create_tables(db):
         )
         """
         )
+
+
+def create_tables(db):
+    _create_user_table(db)
