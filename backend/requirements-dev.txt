@@ -15,3 +15,6 @@ pytest-flask
 flake8
 black
 pre-commit
+
+names
+lorem
