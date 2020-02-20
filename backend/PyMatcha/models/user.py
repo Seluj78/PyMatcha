@@ -25,6 +25,7 @@ from datetime import datetime
 from PyMatcha.utils import hash_password
 from PyMatcha.utils.orm import Model, Field
 from PyMatcha.errors import ConflictError, NotFoundError
+from PyMatcha.utils.tables import _create_user_table
 
 import Geohash
 
@@ -163,6 +164,10 @@ class User(Model):
             "date_lastseen": self.date_lastseen,
             "deleted": self.deleted,
         }
+
+    @classmethod
+    def create_table(cls):
+        _create_user_table(cls.db)
 
 
 def get_user(uid):
