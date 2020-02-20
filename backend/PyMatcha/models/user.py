@@ -103,6 +103,7 @@ class User(Model):
     date_joined = Field(datetime)
     date_lastseen = Field(datetime)
     deleted = Field(bool, modifiable=False, hidden=True)
+    profile_completed = Field(bool)
 
     def before_init(self, data):
         pass
@@ -147,6 +148,7 @@ class User(Model):
         date_joined: datetime = datetime.utcnow(),
         date_lastseen: datetime = datetime.utcnow(),
         deleted: bool = False,
+        profile_completed: bool = False,
     ) -> User:
         # Check email availability
         if User.get(email=email):
@@ -195,6 +197,42 @@ class User(Model):
             date_joined=date_joined,
             date_lastseen=date_lastseen,
             deleted=deleted,
+            profile_completed=profile_completed,
+        )
+        new_user.save()
+        return new_user
+
+    @staticmethod
+    def register(email: str, username: str, password: str) -> User:
+        # Check email availability
+        if User.get(email=email):
+            raise ConflictError("Email {} taken".format(email), "Use another email")
+
+        # Check username availability
+        if User.get(username=username):
+            raise ConflictError("Username {} taken".format(username), "Try another username")
+
+        # Encrypt password
+        password = hash_password(password)
+
+        new_user = User(
+            email=email.lower(),
+            username=username,
+            password=password,
+            first_name="",
+            last_name="",
+            bio="",
+            gender="other",
+            orientation="bisexual",
+            birthdate=datetime.utcnow(),
+            geohash="",
+            tags="",
+            heat_score=0,
+            online=False,
+            date_joined=datetime.utcnow(),
+            date_lastseen=datetime.utcnow(),
+            deleted=False,
+            profile_completed=False,
         )
         new_user.save()
         return new_user
@@ -217,6 +255,7 @@ class User(Model):
             "date_joined": self.date_joined,
             "date_lastseen": self.date_lastseen,
             "deleted": self.deleted,
+            "profile_completed": self.profile_completed,
         }
 
     @classmethod
