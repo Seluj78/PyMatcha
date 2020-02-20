@@ -227,7 +227,8 @@ class User(Model):
         with self.db.cursor() as c:
             c.execute(
                 """
-                SELECT user_images.id as id, user_images.user_id as user_id, user_images.image_path as image_path 
+                SELECT user_images.id as id, user_images.user_id as user_id, user_images.description as description, 
+                user_images.timestamp as timestamp, user_images.is_primary as is_primary
                 FROM users 
                 INNER JOIN user_images on users.id = user_images.user_id 
                 WHERE user_id = {}
