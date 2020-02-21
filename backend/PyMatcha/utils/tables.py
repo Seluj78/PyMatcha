@@ -43,7 +43,8 @@ def _create_user_table(db):
         date_lastseen     TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
         deleted           BOOLEAN DEFAULT (FALSE),
         profile_completed BOOLEAN DEFAULT (FALSE),
-        is_confirmed      BOOLEAN DEFAULT (FALSE)
+        is_confirmed      BOOLEAN DEFAULT (FALSE),
+        confirmed_on      TIMESTAMP DEFAULT NULL
         )
         """
         )
