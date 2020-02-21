@@ -20,6 +20,8 @@
 import os
 import pymysql
 
+from flask_mail import Mail
+
 from flask_cors import CORS
 
 from dotenv import load_dotenv
@@ -42,6 +44,7 @@ REQUIRED_ENV_VARS = [
     "DB_PORT",
     "DB_USER",
     "DB_PASSWORD",
+    "MAIL_PASSWORD",
 ]
 
 for item in REQUIRED_ENV_VARS:
@@ -72,6 +75,16 @@ database_config = {
 db = pymysql.connect(**database_config)
 
 create_tables(db)
+
+application.config.update(
+    MAIL_SERVER="smtp.gmail.com",
+    MAIL_PORT=465,
+    MAIL_USE_SSL=True,
+    MAIL_USERNAME="pymatcha@gmail.com",
+    MAIL_PASSWORD=os.getenv("MAIL_PASSWORD"),
+    MAIL_DEBUG=False,
+)
+mail = Mail(application)
 
 from PyMatcha.routes.api.ping_pong import ping_pong_bp
 from PyMatcha.routes.api.user import user_bp

@@ -8,3 +8,5 @@ Geohash
 python-geohash
 
 pymysql
+
+Flask-Mail

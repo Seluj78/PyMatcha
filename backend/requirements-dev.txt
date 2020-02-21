@@ -9,6 +9,8 @@ python-geohash
 
 pymysql
 
+Flask-Mail
+
 pytest
 pytest-flask
 
