@@ -1,47 +1,49 @@
 import React, { useState } from 'react';
-import { effectDuration } from '../utils';
+import { effectDuration, discard } from '../utils';
 import Loading from '../components/loadings';
+import Input from './input';
 
 const logMe = (history, setState, email, password, from) => async () => {
 	setState('loading');
-	// API call
+	// API call /auth/login
 	// sessionStorage.setItem('token', 'api call result');
 }
 
-const discard = side => {
-	return ({
-		overflow: 'hidden',
-		...effectDuration(0.5),
-		...(side === 'left' ? {marginLeft: '100%'} : {marginRight: '100%'})
-	})
-}
+const emailInput = (value, setValue, state) => ({
+	placeholder: 'email',
+	outerStyle: state === 'loading' ? discard('left') : {},
+	innerStyle: { backgroundColor: 'deepskyblue' },
+	InnerClass: 'is-info',
+	icon: 'fas fa-envelope',
+	value,
+	setValue
+})
+
+const passwordInput = (value, setValue, state) => ({
+	placeholder: 'password',
+	outerStyle: state === 'loading' ? discard('right') : {},
+	innerStyle: { backgroundColor: 'deepskyblue' },
+	InnerClass: 'is-info',
+	icon: 'fas fa-lock',
+	type: 'password',
+	value,
+	setValue
+})
 
 const LoginCard = ({ history, from }) => {
 	const [state, setState] = useState('');
+	const [email, setEmail] = useState('');
+	const [password, setPassword] = useState('');
 
 	return (
 		<div style={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
-			<div className='field' style={state === 'loading' ? discard('left') : {}}>
-				<p className='control has-icons-left'>
-					<input className='input is-info' type='text' placeholder='Email' style={{ backgroundColor: 'deepskyblue' }} />
-					<span className='icon is-small is-left'>
-						<i className='fas fa-envelope' />
-					</span>
-				</p>
-			</div> 
 			<Loading style={{position: 'absolute', left: '50%', top: '50%', opacity: state === 'loading' ? '1' : '0' , ...effectDuration(1) }} />
-			<div className='field' style={state === 'loading' ? discard('rigth') : {}}>
-				<p className='control has-icons-left'>
-					<input className='input is-info' type='password' placeholder='Password' style={{ backgroundColor: 'deepskyblue' }} />
-					<span className='icon is-small is-left'>
-						<i className='fas fa-lock' />
-					</span>
-				</p>
-			</div>
+			<Input {...emailInput(email, setEmail, state)} />
+			<Input {...passwordInput(password, setPassword, state)} />
 			<div className='field' style={state === 'loading' ? discard('left') : {}}>
-				<button className='button is-info is-light is-rounded' onClick={logMe(history, setState, from)}> Log in </button>
+				<button className='button is-info is-light is-rounded' onClick={logMe(history, setState, email, password, from)}> Log in </button>
 			</div>
-			<div className='field' style={state === 'loading' ? discard('rigth') : {}}>
+			<div className='field' style={state === 'loading' ? discard('right') : {}}>
 				<button className='button is-outlined is-warning is-rounded' > mot de passe oublier </button>
 			</div>
 		</div>

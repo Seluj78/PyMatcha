@@ -2,6 +2,21 @@ import request from 'request-promise';
 
 const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:8080';
 
+const discard = side => {
+	const discardDirections = {
+		left: {marginLeft: '100%'},
+		right: {marginRight: '100%'},
+		top: {marginTop: '100%'},
+		bottom: {transform: 'translateY(200px)'}
+	}
+	
+	return ({
+		overflow: 'hidden',
+		...effectDuration(0.5),
+		...discardDirections[side]
+	})
+}
+
 const apiCall = options => {
 	// TODO add token in the header
 	options.json = true;
@@ -31,5 +46,6 @@ export {
 	onChange,
 	sleep,
 	effectDuration,
-	apiCall
+	apiCall,
+	discard
 }

@@ -2,6 +2,7 @@ import React from 'react';
 import { getToken } from '../utils';
 import { useHistory } from 'react-router-dom';
 import LoginCard from '../components/login_card';
+import RegisterCard from '../components/register_card';
 
 // If oldPath is set, maybe a blur effect
 const Landing = ({ from }) => {
@@ -38,9 +39,7 @@ const Landing = ({ from }) => {
 					</div>
 					<div className='tile is-parent'>
 						<article className='tile is-child notification is-success'>
-							<div className='content'>
-								<p className='subtitle'>formulaire d'inscription</p>
-							</div>
+							<RegisterCard history={history} from={from} />
 						</article>
 					</div>
 				</div>
