@@ -72,6 +72,8 @@ def populate_users():
                 date_joined=date_joined,
                 date_lastseen=date_lastseen,
                 deleted=False,
+                profile_completed=True,
+                is_confirmed=True,
             )
         except ConflictError:
             pass  # Pass on the conflict error, this user wont be created because the username is taken. Who cares ?
