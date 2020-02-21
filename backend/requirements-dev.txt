@@ -11,6 +11,9 @@ pymysql
 
 Flask-Mail
 
+itsdangerous
+cryptography
+
 pytest
 pytest-flask
 
