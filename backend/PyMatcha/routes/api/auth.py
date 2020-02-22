@@ -33,6 +33,12 @@ from flask_jwt_extended import jwt_required
 from itsdangerous import BadSignature
 from itsdangerous import SignatureExpired
 from PyMatcha import ACCESS_TOKEN_EXPIRES
+from flask import Blueprint, request, redirect, render_template
+
+from itsdangerous import SignatureExpired, BadSignature
+
+import flask_jwt_extended as fjwt
+
 from PyMatcha import redis
 from PyMatcha import REFRESH_TOKEN_EXPIRES
 from PyMatcha.models.user import get_user
@@ -49,6 +55,14 @@ from PyMatcha.utils.mail import send_mail_text
 from PyMatcha.utils.success import Success
 from PyMatcha.utils.success import SuccessOutput
 from PyMatcha.utils.success import SuccessOutputMessage
+
+import PyMatcha.models.user as user
+from PyMatcha.errors import ConflictError, NotFoundError, BadRequestError, UnauthorizedError
+from PyMatcha.success import SuccessOutputMessage, Success, SuccessOutput
+from PyMatcha.utils.confirm_token import generate_confirmation_token, confirm_token
+from PyMatcha.utils.mail import send_mail_html, send_mail_text
+from PyMatcha.utils.decorators import validate_required_params
+from PyMatcha.utils import hash_password
 
 
 REQUIRED_KEYS_USER_CREATION = {"username": str, "email": str, "password": str, "first_name": str, "last_name": str}
@@ -80,12 +94,30 @@ def api_create_user():
         raise e
     else:
         token = generate_confirmation_token(email=data["email"], token_type="confirm")
-        send_mail_text.delay(
-            dest=data["email"],
-            subject="Confirm your email for PyMatcha",
-            body=os.getenv("APP_URL") + "/auth/confirm/" + token,
+        title = "Confirm your email address"
+        text1 = "Thank you for registering on PyMatcha !"
+        text2 = "Please confirm your email address using the following link"
+        text3 = "Once your email is confirmed, you can log in"
+        text4 = (
+            "If the button didn't work, copy and paste this url in your web browser: "
+            + os.getenv("APP_URL")
+            + "/auth/confirm/"
+            + token
         )
         current_app.logger.debug("New user {} successfully created".format(new_user.email))
+        buttonlink = os.getenv("APP_URL") + "/auth/confirm/" + token
+        buttontext = "Confirm my email"
+        rendered_html = render_template(
+            "email.html.jinja2",
+            title=title,
+            text1=text1,
+            text2=text2,
+            text3=text3,
+            text4=text4,
+            buttonlink=buttonlink,
+            buttontext=buttontext,
+        )
+        send_mail_html.delay(dest=data["email"], subject=title, html=rendered_html)
         return SuccessOutputMessage("email", new_user.email, "New user successfully created.")
 
 
