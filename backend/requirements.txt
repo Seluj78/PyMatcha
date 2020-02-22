@@ -13,3 +13,5 @@ Flask-Mail
 
 itsdangerous
 cryptography
+
+flask_jwt_extended
