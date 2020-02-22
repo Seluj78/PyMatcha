@@ -14,6 +14,8 @@ Flask-Mail
 itsdangerous
 cryptography
 
+flask_jwt_extended
+
 pytest
 pytest-flask
 

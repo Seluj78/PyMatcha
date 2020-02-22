@@ -28,7 +28,9 @@ from dotenv import load_dotenv
 
 from pymysql.cursors import DictCursor
 
-from flask import Flask, send_from_directory
+from flask import Flask, send_from_directory, jsonify
+
+import flask_jwt_extended as fjwt
 
 from PyMatcha.utils.tables import create_tables
 
@@ -57,6 +59,25 @@ application = Flask(__name__, static_folder=os.getenv("FRONT_STATIC_FOLDER"))
 application.debug = os.getenv("FLASK_DEBUG")
 application.secret_key = os.getenv("FLASK_SECRET_KEY")
 application.config.update(FLASK_SECRET_KEY=os.getenv("FLASK_SECRET_KEY"))
+application.config["JWT_SECRET_KEY"] = os.environ.get("FLASK_SECRET_KEY")
+
+jwt = fjwt.JWTManager(application)
+
+
+@jwt.expired_token_loader
+def expired_token_callback(expired_token):
+    resp = {
+        "code": 401,
+        "error": {
+            "message": f"The {expired_token['type']} token has expired",
+            "name": "Unauthorized Error",
+            "solution": "Try again when you have renewed your token",
+            "type": "UnauthorizedError",
+        },
+        "success": False,
+    }
+    return jsonify(resp), 401
+
 
 CORS(application)
 
