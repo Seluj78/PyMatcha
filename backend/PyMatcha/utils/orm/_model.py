@@ -248,7 +248,7 @@ class Model(object):
         if data:
             return cls(data)
         else:
-            return False
+            raise ValueError("Not found")
 
     @classmethod
     def select_all(cls):
