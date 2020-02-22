@@ -24,10 +24,11 @@ from flask import Blueprint, request, redirect
 
 from itsdangerous import SignatureExpired, BadSignature
 
+import flask_jwt_extended as fjwt
 
 from PyMatcha.models import User, get_user
-from PyMatcha.errors import ConflictError, NotFoundError, BadRequestError
-from PyMatcha.success import SuccessOutputMessage, Success
+from PyMatcha.errors import ConflictError, NotFoundError, BadRequestError, UnauthorizedError
+from PyMatcha.success import SuccessOutputMessage, Success, SuccessOutput
 from PyMatcha.utils.confirm_token import generate_confirmation_token, confirm_token
 from PyMatcha.utils.mail import send_mail_text
 from PyMatcha.utils.decorators import validate_required_params
@@ -36,6 +37,7 @@ from PyMatcha.utils import hash_password
 REQUIRED_KEYS_USER_CREATION = ["username", "email", "password"]
 REQUIRED_KEYS_PASSWORD_FORGOT = ["email"]
 REQUIRED_KEYS_PASSWORD_RESET = ["token", "password"]
+REQUIRED_KEYS_LOGIN = ["username", "password"]
 
 auth_bp = Blueprint("auth", __name__)
 
@@ -126,3 +128,27 @@ def reset_password():
         user.previous_reset_token = data["token"]
         user.save()
         return Success("Password reset successful")
+
+
+@auth_bp.route("/auth/login", methods=["POST"])
+@validate_required_params(REQUIRED_KEYS_LOGIN)
+def auth_login():
+    data = request.get_json()
+    username = data["username"]
+    password = data["password"]
+    try:
+        user = get_user(username)
+    except NotFoundError:
+        raise NotFoundError("User not found", "Try again with a different username")
+    if not user.check_password(password):
+        raise UnauthorizedError("Incorrect Password", "Try again")
+
+    # access_token = fjwt.create_access_token(
+    #     identity=get_user_safe_dict(user), expires_delta=datetime.timedelta(hours=2)
+    # )
+    # TODO: Handle expiry for token
+    user.online = True
+    user.date_lastseen = datetime.datetime.utcnow()
+    user.save()
+    access_token = fjwt.create_access_token(identity=user.get_base_info(), fresh=True)
+    return SuccessOutput("access_token", access_token)

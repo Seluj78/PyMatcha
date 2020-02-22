@@ -295,6 +295,14 @@ class User(Model):
                 image_list.append(UserImage(image))
         return image_list
 
+    def get_base_info(self):
+        return {
+            "email": self.email,
+            "username": self.username,
+            "online": self.online,
+            "date_lastseen": self.date_lastseen,
+        }
+
 
 def get_user(uid: Any[int, str]) -> Optional[User]:
 
