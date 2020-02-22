@@ -19,6 +19,8 @@
 
 from flask import Blueprint, jsonify
 
+import flask_jwt_extended as fjwt
+
 from PyMatcha.models import User, get_user
 from PyMatcha.errors import NotFoundError
 
@@ -29,6 +31,7 @@ user_bp = Blueprint("user", __name__)
 
 
 @user_bp.route("/users/", methods=["GET"])
+@fjwt.jwt_required
 def get_all_users():
     user_list = []
     for user in User.select_all():
@@ -37,6 +40,7 @@ def get_all_users():
 
 
 @user_bp.route("/users/<uid>", methods=["GET"])
+@fjwt.jwt_required
 def get_one_user(uid):
     try:
         user = get_user(uid)
