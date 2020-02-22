@@ -68,11 +68,10 @@ def populate_users():
                 geohash=geohash,
                 tags="",  # TODO: Change to a real random tag generation
                 heat_score=0,
-                online=random.choice([True, False]),
+                is_online=random.choice([True, False]),
                 date_joined=date_joined,
                 date_lastseen=date_lastseen,
-                deleted=False,
-                profile_completed=True,
+                is_profile_completed=True,
                 is_confirmed=True,
                 confirmed_on=datetime.datetime.utcnow(),
             )

@@ -147,7 +147,7 @@ def auth_login():
     #     identity=get_user_safe_dict(user), expires_delta=datetime.timedelta(hours=2)
     # )
     # TODO: Handle expiry for token
-    user.online = True
+    user.is_online = True
     user.date_lastseen = datetime.datetime.utcnow()
     user.save()
     access_token = fjwt.create_access_token(identity=user.get_base_info(), fresh=True)
