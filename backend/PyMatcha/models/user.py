@@ -104,6 +104,8 @@ class User(Model):
     date_lastseen = Field(datetime)
     deleted = Field(bool, modifiable=False, hidden=True)
     profile_completed = Field(bool)
+    is_confirmed = Field(bool)
+    confirmed_on = Field(datetime)
 
     def before_init(self, data):
         pass
@@ -149,6 +151,8 @@ class User(Model):
         date_lastseen: datetime = datetime.utcnow(),
         deleted: bool = False,
         profile_completed: bool = False,
+        is_confirmed: bool = False,
+        confirmed_on: datetime = None,
     ) -> User:
         # Check email availability
         if User.get(email=email):
@@ -198,6 +202,8 @@ class User(Model):
             date_lastseen=date_lastseen,
             deleted=deleted,
             profile_completed=profile_completed,
+            is_confirmed=is_confirmed,
+            confirmed_on=confirmed_on,
         )
         new_user.save()
         return new_user
@@ -233,6 +239,8 @@ class User(Model):
             date_lastseen=datetime.utcnow(),
             deleted=False,
             profile_completed=False,
+            is_confirmed=False,
+            confirmed_on=None,
         )
         new_user.save()
         return new_user
@@ -256,6 +264,8 @@ class User(Model):
             "date_lastseen": self.date_lastseen,
             "deleted": self.deleted,
             "profile_completed": self.profile_completed,
+            "is_confirmed": self.is_confirmed,
+            "confirmed_on": self.confirmed_on,
         }
 
     @classmethod

@@ -8,3 +8,8 @@ Geohash
 python-geohash
 
 pymysql
+
+Flask-Mail
+
+itsdangerous
+cryptography

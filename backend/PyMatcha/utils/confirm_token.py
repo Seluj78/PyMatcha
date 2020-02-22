@@ -17,30 +17,20 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 """
 
-from flask import Blueprint, jsonify
+from itsdangerous import URLSafeTimedSerializer, SignatureExpired, BadSignature
 
-from PyMatcha.models import User, get_user
-from PyMatcha.errors import NotFoundError
-
-REQUIRED_KEYS_USER_CREATION = ["username", "email", "password"]
+from PyMatcha import application
 
 
-user_bp = Blueprint("user", __name__)
+def generate_confirmation_token(email):
+    serializer = URLSafeTimedSerializer(application.config["FLASK_SECRET_KEY"])
+    return serializer.dumps(email, salt=application.config["FLASK_SECRET_KEY"])
 
 
-@user_bp.route("/users/", methods=["GET"])
-def get_all_users():
-    user_list = []
-    for user in User.select_all():
-        user_list.append(user.get_all_info())
-    return jsonify(user_list)
-
-
-@user_bp.route("/users/<uid>", methods=["GET"])
-def get_one_user(uid):
+def confirm_token(token, expiration=3600):
+    serializer = URLSafeTimedSerializer(application.config["FLASK_SECRET_KEY"])
     try:
-        user = get_user(uid)
-    except NotFoundError:
-        raise NotFoundError("User {} not found".format(uid), "Check given uid and try again")
-    else:
-        return jsonify(user.get_all_info())
+        email = serializer.loads(token, salt=application.config["FLASK_SECRET_KEY"], max_age=expiration)
+    except (SignatureExpired, BadSignature) as e:
+        raise e
+    return email

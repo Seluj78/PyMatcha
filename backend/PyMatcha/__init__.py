@@ -20,6 +20,8 @@
 import os
 import pymysql
 
+from flask_mail import Mail
+
 from flask_cors import CORS
 
 from dotenv import load_dotenv
@@ -42,6 +44,9 @@ REQUIRED_ENV_VARS = [
     "DB_PORT",
     "DB_USER",
     "DB_PASSWORD",
+    "MAIL_PASSWORD",
+    "APP_URL",
+    "REACT_APP_API_URL",
 ]
 
 for item in REQUIRED_ENV_VARS:
@@ -51,6 +56,7 @@ for item in REQUIRED_ENV_VARS:
 application = Flask(__name__, static_folder=os.getenv("FRONT_STATIC_FOLDER"))
 application.debug = os.getenv("FLASK_DEBUG")
 application.secret_key = os.getenv("FLASK_SECRET_KEY")
+application.config.update(FLASK_SECRET_KEY=os.getenv("FLASK_SECRET_KEY"))
 
 CORS(application)
 
@@ -73,11 +79,23 @@ db = pymysql.connect(**database_config)
 
 create_tables(db)
 
+application.config.update(
+    MAIL_SERVER="smtp.gmail.com",
+    MAIL_PORT=465,
+    MAIL_USE_SSL=True,
+    MAIL_USERNAME="pymatcha@gmail.com",
+    MAIL_PASSWORD=os.getenv("MAIL_PASSWORD"),
+    MAIL_DEBUG=False,
+)
+mail = Mail(application)
+
 from PyMatcha.routes.api.ping_pong import ping_pong_bp
 from PyMatcha.routes.api.user import user_bp
+from PyMatcha.routes.api.auth import auth_bp
 
 application.register_blueprint(ping_pong_bp)
 application.register_blueprint(user_bp)
+application.register_blueprint(auth_bp)
 
 
 # Serve React App
