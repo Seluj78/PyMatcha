@@ -25,26 +25,27 @@ def _create_user_table(db):
             """
         CREATE TABLE IF NOT EXISTS users 
         (
-        id                INT auto_increment PRIMARY KEY,
-        first_name        VARCHAR(256) NOT NULL,
-        last_name         VARCHAR(256),
-        email             VARCHAR(256) NOT NULL UNIQUE,
-        username          VARCHAR(256) NOT NULL UNIQUE,
-        password          LONGTEXT NOT NULL,
-        bio               LONGTEXT,
-        gender            ENUM('male', 'female', 'other'),
-        orientation       ENUM('heterosexual', 'homosexual', 'bisexual'),
-        birthdate         DATE,
-        geohash           VARCHAR(256),
-        tags              LONGTEXT,
-        heat_score        INT DEFAULT (0),
-        online            BOOLEAN DEFAULT (FALSE),
-        date_joined       TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-        date_lastseen     TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-        deleted           BOOLEAN DEFAULT (FALSE),
-        profile_completed BOOLEAN DEFAULT (FALSE),
-        is_confirmed      BOOLEAN DEFAULT (FALSE),
-        confirmed_on      TIMESTAMP DEFAULT NULL
+        id                   INT auto_increment PRIMARY KEY,
+        first_name           VARCHAR(256) NOT NULL,
+        last_name            VARCHAR(256),
+        email                VARCHAR(256) NOT NULL UNIQUE,
+        username             VARCHAR(256) NOT NULL UNIQUE,
+        password             LONGTEXT NOT NULL,
+        bio                  LONGTEXT,
+        gender               ENUM('male', 'female', 'other'),
+        orientation          ENUM('heterosexual', 'homosexual', 'bisexual'),
+        birthdate            DATE,
+        geohash              VARCHAR(256),
+        tags                 LONGTEXT,
+        heat_score           INT DEFAULT (0),
+        online               BOOLEAN DEFAULT (FALSE),
+        date_joined          TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        date_lastseen        TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        deleted              BOOLEAN DEFAULT (FALSE),
+        profile_completed    BOOLEAN DEFAULT (FALSE),
+        is_confirmed         BOOLEAN DEFAULT (FALSE),
+        confirmed_on         TIMESTAMP DEFAULT NULL,
+        previous_reset_token VARCHAR(256)
         )
         """
         )

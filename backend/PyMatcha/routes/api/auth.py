@@ -22,57 +22,28 @@ import datetime
 
 from flask import Blueprint, request, redirect
 
-from werkzeug.exceptions import BadRequest
-
 from itsdangerous import SignatureExpired, BadSignature
 
 
 from PyMatcha.models import User, get_user
-from PyMatcha.errors import BadRequestError, ConflictError, NotFoundError
-from PyMatcha.success import SuccessOutputMessage
+from PyMatcha.errors import ConflictError, NotFoundError, BadRequestError
+from PyMatcha.success import SuccessOutputMessage, Success
 from PyMatcha.utils.confirm_token import generate_confirmation_token, confirm_token
 from PyMatcha.utils.mail import send_mail_text
+from PyMatcha.utils.decorators import validate_required_params
+from PyMatcha.utils import hash_password
 
 REQUIRED_KEYS_USER_CREATION = ["username", "email", "password"]
-
+REQUIRED_KEYS_PASSWORD_FORGOT = ["email"]
+REQUIRED_KEYS_PASSWORD_RESET = ["token", "password"]
 
 auth_bp = Blueprint("auth", __name__)
 
 
 @auth_bp.route("/auth/register", methods=["POST"])
+@validate_required_params(REQUIRED_KEYS_USER_CREATION)
 def api_create_user():
-    # If the json body is missing something (`,` for example), throw an error
-    try:
-        data = request.get_json()
-    except BadRequest:
-        raise BadRequestError("The Json Body is malformed", "Please check it and try again")
-
-    # If the data dict is empty
-    if not data:
-        raise BadRequestError("Missing json body.", "Please fill your json body")
-
-    missing = []
-    for item in REQUIRED_KEYS_USER_CREATION:
-        # If a key is missing in the sent data
-        if item not in data.keys():
-            missing.append(item)
-    if missing:
-        raise BadRequestError(
-            "Missing keys {} to create user.".format(missing), "Complete your json body and try again"
-        )
-
-    for item in data.keys():
-        # If there's an unwanted key in the sent data
-        if item not in REQUIRED_KEYS_USER_CREATION:
-            raise BadRequestError(
-                "You can't specify key '{}'.".format(item),
-                "You are only allowed to specify the fields {} " "when creating a user.".format(request),
-            )
-
-    for key, value in data.items():
-        if value is None or value == "":
-            raise BadRequestError(f"The item {key} cannot be None or empty", "Please try again.")
-
+    data = request.get_json()
     data["email"] = data["email"].lower()
 
     try:
@@ -80,7 +51,7 @@ def api_create_user():
     except ConflictError as e:
         raise e
     else:
-        token = generate_confirmation_token(email=data["email"])
+        token = generate_confirmation_token(email=data["email"], token_type="confirm")
         send_mail_text(
             dest=data["email"],
             subject="Confirm your email for PyMatcha",
@@ -92,18 +63,66 @@ def api_create_user():
 @auth_bp.route("/auth/confirm/<token>", methods=["GET"])
 def confirm_email(token):
     try:
-        email = confirm_token(token, expiration=7200)
+        email, token_type = confirm_token(token, expiration=7200)
     except (SignatureExpired, BadSignature) as e:
         if e == SignatureExpired:
-            return redirect("/?success=false?message=Signature expired")
+            return redirect("/?type=confirm&success=false?message=Signature expired")
         else:
-            return redirect("/?success=false?message=Bad Signature")
+            return redirect("/?type=confirm&success=false?message=Bad Signature")
     else:
+        if token_type != "confirm":
+            return redirect("/?type=confirm&success=false?message=Wrong token type")
         try:
             user = get_user(email)
         except NotFoundError:
-            return redirect("/?success=false?message=User not found")
+            return redirect("/?type=confirm&success=false?message=User not found")
+        if user.is_confirmed:
+            return redirect("/?type=confirm&success=false?message=User already confirmed")
         user.is_confirmed = True
         user.confirmed_on = datetime.datetime.utcnow()
         user.save()
-        return redirect("/?success=true&message=User confirmed")
+        return redirect("/?type=confirm&success=true&message=User confirmed")
+
+
+@auth_bp.route("/auth/password/forgot", methods=["POST"])
+@validate_required_params(REQUIRED_KEYS_PASSWORD_FORGOT)
+def forgot_password():
+    data = request.get_json()
+    try:
+        get_user(data["email"])
+    except NotFoundError:
+        pass
+    else:
+        token = generate_confirmation_token(email=data["email"], token_type="reset")
+        send_mail_text(
+            dest=data["email"],
+            subject="Password reset for PyMatcha",
+            body=os.getenv("APP_URL") + "/reset_password?token=" + token,
+        )
+    return Success("Password reset mail sent successfully if user exists in DB")
+
+
+@auth_bp.route("/auth/password/reset", methods=["POST"])
+@validate_required_params(REQUIRED_KEYS_PASSWORD_RESET)
+def reset_password():
+    data = request.get_json()
+    try:
+        email, token_type = confirm_token(data["token"], expiration=7200)
+    except (SignatureExpired, BadSignature) as e:
+        if e == SignatureExpired:
+            raise BadRequestError("Signature Expired.", "Request another password reset and try again.")
+        else:
+            raise BadRequestError("Bad Signature.", "Request another password reset and try again.")
+    else:
+        if token_type != "reset":
+            raise BadRequestError("Wrong token type", "Try again with the correct type")
+        try:
+            user = get_user(email)
+        except NotFoundError:
+            raise NotFoundError("User not found", "Try again with another user.")
+        if user.previous_reset_token == data["token"]:
+            raise BadRequestError("Token already used", "Please request a new one")
+        user.password = hash_password(data["password"])
+        user.previous_reset_token = data["token"]
+        user.save()
+        return Success("Password reset successful")

@@ -106,6 +106,7 @@ class User(Model):
     profile_completed = Field(bool)
     is_confirmed = Field(bool)
     confirmed_on = Field(datetime)
+    previous_reset_token = Field(str)
 
     def before_init(self, data):
         pass
@@ -204,6 +205,7 @@ class User(Model):
             profile_completed=profile_completed,
             is_confirmed=is_confirmed,
             confirmed_on=confirmed_on,
+            previous_reset_token=None,
         )
         new_user.save()
         return new_user
@@ -241,6 +243,7 @@ class User(Model):
             profile_completed=False,
             is_confirmed=False,
             confirmed_on=None,
+            previous_reset_token=None,
         )
         new_user.save()
         return new_user
@@ -266,6 +269,7 @@ class User(Model):
             "profile_completed": self.profile_completed,
             "is_confirmed": self.is_confirmed,
             "confirmed_on": self.confirmed_on,
+            "previous_reset_token": self.previous_reset_token,
         }
 
     @classmethod
