@@ -99,11 +99,10 @@ class User(Model):
     geohash = Field(str)
     tags = Field(dict)
     heat_score = Field(int)
-    online = Field(bool)
+    is_online = Field(bool)
     date_joined = Field(datetime)
     date_lastseen = Field(datetime)
-    deleted = Field(bool, modifiable=False, hidden=True)
-    profile_completed = Field(bool)
+    is_profile_completed = Field(bool)
     is_confirmed = Field(bool)
     confirmed_on = Field(datetime)
     previous_reset_token = Field(str)
@@ -147,11 +146,10 @@ class User(Model):
         geohash: str,
         tags,
         heat_score: int = 0,
-        online: bool = False,
+        is_online: bool = False,
         date_joined: datetime = datetime.utcnow(),
         date_lastseen: datetime = datetime.utcnow(),
-        deleted: bool = False,
-        profile_completed: bool = False,
+        is_profile_completed: bool = False,
         is_confirmed: bool = False,
         confirmed_on: datetime = None,
     ) -> User:
@@ -198,11 +196,10 @@ class User(Model):
             geohash=geohash,
             tags=str(json.dumps(tags)),
             heat_score=heat_score,
-            online=online,
+            is_online=is_online,
             date_joined=date_joined,
             date_lastseen=date_lastseen,
-            deleted=deleted,
-            profile_completed=profile_completed,
+            is_profile_completed=is_profile_completed,
             is_confirmed=is_confirmed,
             confirmed_on=confirmed_on,
             previous_reset_token=None,
@@ -236,11 +233,10 @@ class User(Model):
             geohash="",
             tags="",
             heat_score=0,
-            online=False,
+            is_online=False,
             date_joined=datetime.utcnow(),
             date_lastseen=datetime.utcnow(),
-            deleted=False,
-            profile_completed=False,
+            is_profile_completed=False,
             is_confirmed=False,
             confirmed_on=None,
             previous_reset_token=None,
@@ -262,11 +258,10 @@ class User(Model):
             "geohash": self.geohash,
             "tags": json.loads(self.tags),
             "heat_score": self.heat_score,
-            "online": self.online,
+            "is_online": self.online,
             "date_joined": self.date_joined,
             "date_lastseen": self.date_lastseen,
-            "deleted": self.deleted,
-            "profile_completed": self.profile_completed,
+            "is_profile_completed": self.profile_completed,
             "is_confirmed": self.is_confirmed,
             "confirmed_on": self.confirmed_on,
             "previous_reset_token": self.previous_reset_token,
@@ -299,7 +294,7 @@ class User(Model):
         return {
             "email": self.email,
             "username": self.username,
-            "online": self.online,
+            "is_online": self.online,
             "date_lastseen": self.date_lastseen,
         }
 

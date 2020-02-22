@@ -38,14 +38,13 @@ def _create_user_table(db):
         geohash              VARCHAR(256),
         tags                 LONGTEXT,
         heat_score           INT DEFAULT (0),
-        online               BOOLEAN DEFAULT (FALSE),
         date_joined          TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
         date_lastseen        TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-        deleted              BOOLEAN DEFAULT (FALSE),
-        profile_completed    BOOLEAN DEFAULT (FALSE),
+        previous_reset_token VARCHAR(256),
+        is_online            BOOLEAN DEFAULT (FALSE),
+        is_profile_completed BOOLEAN DEFAULT (FALSE),
         is_confirmed         BOOLEAN DEFAULT (FALSE),
-        confirmed_on         TIMESTAMP DEFAULT NULL,
-        previous_reset_token VARCHAR(256)
+        confirmed_on         TIMESTAMP DEFAULT NULL
         )
         """
         )
