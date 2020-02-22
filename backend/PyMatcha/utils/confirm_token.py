@@ -22,15 +22,19 @@ from itsdangerous import URLSafeTimedSerializer, SignatureExpired, BadSignature
 from PyMatcha import application
 
 
-def generate_confirmation_token(email):
+def generate_confirmation_token(email, token_type):
+    if token_type not in ["confirm", "reset"]:
+        raise ValueError("Reset token type must be confirm or reset")
     serializer = URLSafeTimedSerializer(application.config["FLASK_SECRET_KEY"])
-    return serializer.dumps(email, salt=application.config["FLASK_SECRET_KEY"])
+    return serializer.dumps(email + ":{}".format(token_type), salt=application.config["FLASK_SECRET_KEY"])
 
 
 def confirm_token(token, expiration=3600):
     serializer = URLSafeTimedSerializer(application.config["FLASK_SECRET_KEY"])
     try:
-        email = serializer.loads(token, salt=application.config["FLASK_SECRET_KEY"], max_age=expiration)
+        ret = serializer.loads(token, salt=application.config["FLASK_SECRET_KEY"], max_age=expiration)
+        email = ret.split(":")[0]
+        token_type = ret.split(":")[1]
     except (SignatureExpired, BadSignature) as e:
         raise e
-    return email
+    return email, token_type
