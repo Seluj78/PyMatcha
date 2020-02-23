@@ -166,14 +166,13 @@ class Model(object):
                 raise TypeError("Field {0} is not of type {1}".format(name, field.type.__name__))
 
         query = """
-            REPLACE INTO users 
-                ({0})
-            VALUES
+            REPLACE INTO {0} 
                 ({1})
+            VALUES
+                ({2})
         """.format(
-            ", ".join(columns), ", ".join(["%s"] * len(values))
+            self.table_name, ", ".join(columns), ", ".join(["%s"] * len(values))
         )
-
         with self.db.cursor() as c:
             c.execute(query, tuple(values))
             self.db.commit()
@@ -210,7 +209,7 @@ class Model(object):
                 )
                 self.db.commit()
         else:
-            raise Exception("User not in database")
+            raise Exception("{} Not in database {}".format(self.id, self.table_name))
 
     @classmethod
     def get(cls, **kwargs):
