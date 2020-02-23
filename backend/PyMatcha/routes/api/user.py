@@ -21,8 +21,12 @@ from flask import Blueprint, jsonify
 
 import flask_jwt_extended as fjwt
 
-from PyMatcha.models import User, get_user
+import PyMatcha.models.user as user
+
 from PyMatcha.errors import NotFoundError
+
+User = user.User
+get_user = user.get_user
 
 REQUIRED_KEYS_USER_CREATION = ["username", "email", "password"]
 
@@ -34,8 +38,8 @@ user_bp = Blueprint("user", __name__)
 @fjwt.jwt_required
 def get_all_users():
     user_list = []
-    for user in User.select_all():
-        user_list.append(user.get_all_info())
+    for u in User.select_all():
+        user_list.append(u.get_all_info())
     return jsonify(user_list)
 
 
@@ -43,8 +47,8 @@ def get_all_users():
 @fjwt.jwt_required
 def get_one_user(uid):
     try:
-        user = get_user(uid)
+        u = get_user(uid)
     except NotFoundError:
         raise NotFoundError("User {} not found".format(uid), "Check given uid and try again")
     else:
-        return jsonify(user.get_all_info())
+        return jsonify(u.get_all_info())

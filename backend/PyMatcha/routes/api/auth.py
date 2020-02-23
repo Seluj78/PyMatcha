@@ -26,13 +26,16 @@ from itsdangerous import SignatureExpired, BadSignature
 
 import flask_jwt_extended as fjwt
 
-from PyMatcha.models import User, get_user
+import PyMatcha.models.user as user
 from PyMatcha.errors import ConflictError, NotFoundError, BadRequestError, UnauthorizedError
 from PyMatcha.success import SuccessOutputMessage, Success, SuccessOutput
 from PyMatcha.utils.confirm_token import generate_confirmation_token, confirm_token
 from PyMatcha.utils.mail import send_mail_text
 from PyMatcha.utils.decorators import validate_required_params
 from PyMatcha.utils import hash_password
+
+User = user.User
+get_user = user.get_user
 
 REQUIRED_KEYS_USER_CREATION = ["username", "email", "password"]
 REQUIRED_KEYS_PASSWORD_FORGOT = ["email"]
@@ -75,14 +78,14 @@ def confirm_email(token):
         if token_type != "confirm":
             return redirect("/?type=confirm&success=false?message=Wrong token type")
         try:
-            user = get_user(email)
+            u = get_user(email)
         except NotFoundError:
             return redirect("/?type=confirm&success=false?message=User not found")
-        if user.is_confirmed:
+        if u.is_confirmed:
             return redirect("/?type=confirm&success=false?message=User already confirmed")
-        user.is_confirmed = True
-        user.confirmed_on = datetime.datetime.utcnow()
-        user.save()
+        u.is_confirmed = True
+        u.confirmed_on = datetime.datetime.utcnow()
+        u.save()
         return redirect("/?type=confirm&success=true&message=User confirmed")
 
 
@@ -119,14 +122,14 @@ def reset_password():
         if token_type != "reset":
             raise BadRequestError("Wrong token type", "Try again with the correct type")
         try:
-            user = get_user(email)
+            u = get_user(email)
         except NotFoundError:
             raise NotFoundError("User not found", "Try again with another user.")
-        if user.previous_reset_token == data["token"]:
+        if u.previous_reset_token == data["token"]:
             raise BadRequestError("Token already used", "Please request a new one")
-        user.password = hash_password(data["password"])
-        user.previous_reset_token = data["token"]
-        user.save()
+        u.password = hash_password(data["password"])
+        u.previous_reset_token = data["token"]
+        u.save()
         return Success("Password reset successful")
 
 
@@ -137,18 +140,18 @@ def auth_login():
     username = data["username"]
     password = data["password"]
     try:
-        user = get_user(username)
+        u = get_user(username)
     except NotFoundError:
         raise NotFoundError("User not found", "Try again with a different username")
-    if not user.check_password(password):
+    if not u.check_password(password):
         raise UnauthorizedError("Incorrect Password", "Try again")
 
     # access_token = fjwt.create_access_token(
     #     identity=get_user_safe_dict(user), expires_delta=datetime.timedelta(hours=2)
     # )
     # TODO: Handle expiry for token
-    user.is_online = True
-    user.date_lastseen = datetime.datetime.utcnow()
-    user.save()
-    access_token = fjwt.create_access_token(identity=user.get_base_info(), fresh=True)
+    u.is_online = True
+    u.date_lastseen = datetime.datetime.utcnow()
+    u.save()
+    access_token = fjwt.create_access_token(identity=u.get_base_info(), fresh=True)
     return SuccessOutput("access_token", access_token)
