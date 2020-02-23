@@ -266,7 +266,7 @@ class User(Model):
             "geohash": self.geohash,
             "tags": json.loads(self.tags),
             "heat_score": self.heat_score,
-            "is_online": self.online,
+            "is_online": self.is_online,
             "date_joined": self.date_joined,
             "date_lastseen": self.date_lastseen,
             "is_profile_completed": self.profile_completed,
@@ -302,7 +302,7 @@ class User(Model):
         return {
             "email": self.email,
             "username": self.username,
-            "is_online": self.online,
+            "is_online": self.is_online,
             "date_lastseen": self.date_lastseen,
         }
 
