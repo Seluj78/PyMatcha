@@ -257,7 +257,7 @@ class User(Model):
         return {
             "email": self.email,
             "username": self.username,
-            "is_online": self.online,
+            "is_online": self.is_online,
             "date_lastseen": self.date_lastseen,
         }
 

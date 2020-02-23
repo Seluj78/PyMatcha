@@ -37,10 +37,10 @@ from PyMatcha.utils import hash_password
 User = user.User
 get_user = user.get_user
 
-REQUIRED_KEYS_USER_CREATION = ["username", "email", "password"]
-REQUIRED_KEYS_PASSWORD_FORGOT = ["email"]
-REQUIRED_KEYS_PASSWORD_RESET = ["token", "password"]
-REQUIRED_KEYS_LOGIN = ["username", "password"]
+REQUIRED_KEYS_USER_CREATION = {"username": str, "email": str, "password": str}
+REQUIRED_KEYS_PASSWORD_FORGOT = {"email": str}
+REQUIRED_KEYS_PASSWORD_RESET = {"token": str, "password": str}
+REQUIRED_KEYS_LOGIN = {"username": str, "password": str}
 
 auth_bp = Blueprint("auth", __name__)
 

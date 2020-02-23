@@ -23,7 +23,7 @@ def validate_required_params(required):
                 raise BadRequestError("Missing json body.", "Please fill your json body")
 
             missing = []
-            for item in required:
+            for item in required.keys():
                 # If a key is missing in the sent data
                 if item not in data.keys():
                     missing.append(item)
@@ -34,15 +34,24 @@ def validate_required_params(required):
 
             for item in data.keys():
                 # If there's an unwanted key in the sent data
-                if item not in required:
+                if item not in required.keys():
                     raise BadRequestError(
                         "You can't specify key '{}'.".format(item),
-                        "You are only allowed to specify the fields {} " "when creating a user.".format(required),
+                        "You are only allowed to specify the fields {} "
+                        "when creating a user.".format(required.keys()),
                     )
 
             for key, value in data.items():
-                if value is None or value == "":
+                if not value:
                     raise BadRequestError(f"The item {key} cannot be None or empty", "Please try again.")
+
+            wrong_types = [r for r in required.keys() if not isinstance(data[r], required[r])]
+
+            if wrong_types:
+                raise BadRequestError(
+                    "{} is/are the wrong type.".format(wrong_types), "It/They must be respectively {}".format(required)
+                )
+
             return fn(*args, **kwargs)
 
         return wrapper
