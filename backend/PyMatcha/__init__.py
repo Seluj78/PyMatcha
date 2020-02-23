@@ -79,7 +79,7 @@ def expired_token_callback(expired_token):
     return jsonify(resp), 401
 
 
-CORS(application)
+CORS(application, expose_headers="Authorization", supports_credentials=True)
 
 if os.getenv("CI"):
     database_password = ""
@@ -109,6 +109,7 @@ application.config.update(
     MAIL_DEBUG=False,
 )
 mail = Mail(application)
+
 
 from PyMatcha.routes.api.ping_pong import ping_pong_bp
 from PyMatcha.routes.api.user import user_bp
