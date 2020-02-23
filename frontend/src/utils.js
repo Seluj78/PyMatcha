@@ -4,12 +4,15 @@ const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:8080';
 
 const discard = side => {
 	const discardDirections = {
-		left: {marginLeft: '100%'},
-		right: {marginRight: '100%'},
-		top: {marginTop: '100%'},
-		bottom: {transform: 'translateY(200px)'}
+		// left: {marginLeft: '100%'},
+		// right: {marginRight: '100%'},
+		// top: {marginTop: '100%'},
+		left: { transform: 'translateX(500px)' },
+		right: { transform: 'translateX(-500px)' },
+		bottom: { transform: 'translateY(500px)' },
+		top: { transform: 'translateY(-500px)' }
 	}
-	
+
 	return ({
 		overflow: 'hidden',
 		...effectDuration(0.5),

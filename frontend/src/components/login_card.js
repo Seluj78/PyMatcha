@@ -36,8 +36,8 @@ const LoginCard = ({ history, from }) => {
 	const [password, setPassword] = useState('');
 
 	return (
-		<div style={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
-			<Loading style={{position: 'absolute', left: '50%', top: '50%', opacity: state === 'loading' ? '1' : '0' , ...effectDuration(1) }} />
+		<div style={{ height: '100%', display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
+			<Loading style={{ position: 'absolute', left: '50%', top: '50%', opacity: state === 'loading' ? '1' : '0', ...effectDuration(1) }} />
 			<Input {...emailInput(email, setEmail, state)} />
 			<Input {...passwordInput(password, setPassword, state)} />
 			<div className='field' style={state === 'loading' ? discard('left') : {}}>
