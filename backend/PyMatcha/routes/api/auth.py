@@ -139,14 +139,16 @@ def auth_login():
     try:
         user = get_user(username)
     except NotFoundError:
-        raise NotFoundError("User not found", "Try again with a different username")
+        raise UnauthorizedError("Incorrect username Password", "Try again")
     if not user.check_password(password):
-        raise UnauthorizedError("Incorrect Password", "Try again")
+        raise UnauthorizedError("Incorrect username Password", "Try again")
 
     # access_token = fjwt.create_access_token(
     #     identity=get_user_safe_dict(user), expires_delta=datetime.timedelta(hours=2)
     # )
     # TODO: Handle expiry for token
+    if not user.is_confirmed:
+        raise UnauthorizedError("User needs to be confirmed first.", "Try again when you have confirmed your email")
     user.is_online = True
     user.date_lastseen = datetime.datetime.utcnow()
     user.save()
