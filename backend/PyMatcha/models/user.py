@@ -301,7 +301,7 @@ class User(Model):
                 messages.is_seen as is_seen
                 FROM messages 
                 INNER JOIN users on users.id = messages.from_id or users.id = messages.to_id 
-                WHERE users.id = {}
+                WHERE users.id = CAST({} AS INT)
                 """.format(
                     self.id
                 )
@@ -328,7 +328,7 @@ class User(Model):
                 messages.is_liked as is_liked, 
                 messages.is_seen as is_seen
                 FROM messages 
-                WHERE from_id={0} and to_id={1}
+                WHERE from_id=CAST({0} AS INT) and to_id=CAST({1} AS INT)
 
                 UNION ALL
 
@@ -341,7 +341,7 @@ class User(Model):
                 messages.is_liked as is_liked, 
                 messages.is_seen as is_seen
                 FROM messages 
-                WHERE from_id={1} and to_id={0}
+                WHERE from_id=CAST({1} AS INT) and to_id=CAST({0} AS INT)
                 """.format(
                     self.id, with_user_id
                 )
