@@ -309,11 +309,12 @@ class User(Model):
             messages = c.fetchall()
             message_list = []
             for message in messages:
-                message_list.append(Message(message))
+                message_list.append(message.Message(message))
         return message_list
 
-    def get_messages_with_user(self, with_user_id) -> List[Message]:
+    def get_messages_with_user(self, with_user_id) -> List[message_model.Message]:
         # TODO: Create a function to get latest messages only. Maybe https://stackoverflow.com/a/41095528/6350162 ?
+        # Based on time or amount of messages https://stackoverflow.com/a/3799223/6350162
         with self.db.cursor() as c:
             c.execute(
                 """
@@ -348,7 +349,7 @@ class User(Model):
             messages = c.fetchall()
             message_list = []
             for message in messages:
-                message_list.append(Message(message))
+                message_list.append(message.Message(message))
         return message_list
 
     def get_reports_sent(self):
@@ -371,6 +372,18 @@ class User(Model):
             for r in reports:
                 reports_list.append(Report(r))
         return reports_list
+    def send_message(self, to_id, content):
+        # TODO: Send notification to the other user
+        message_model.Message.create(from_id=self.id, to_id=to_id, content=content)
+
+    def get_base_info(self):
+        return {
+            "id": self.id,
+            "email": self.email,
+            "username": self.username,
+            "is_online": self.is_online,
+            "date_lastseen": self.date_lastseen,
+        }
 
     def get_likes_received(self):
         logging.debug("Getting all likes received for user {}".format(self.id))
