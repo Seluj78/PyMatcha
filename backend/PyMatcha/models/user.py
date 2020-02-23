@@ -286,6 +286,70 @@ class User(Model):
             for r in reports:
                 reports_list.append(Report(r))
         return reports_list
+    def get_messages(self) -> List[Message]:
+        with self.db.cursor() as c:
+            c.execute(
+                """
+                SELECT 
+                messages.from_id as from_id, 
+                messages.to_id as to_id, 
+                messages.id as id, 
+                messages.timestamp as timestamp, 
+                messages.seen_timestamp as seen_timestamp, 
+                messages.content as content, 
+                messages.is_liked as is_liked, 
+                messages.is_seen as is_seen
+                FROM messages 
+                INNER JOIN users on users.id = messages.from_id or users.id = messages.to_id 
+                WHERE users.id = {}
+                """.format(
+                    self.id
+                )
+            )
+            messages = c.fetchall()
+            message_list = []
+            for message in messages:
+                message_list.append(Message(message))
+        return message_list
+
+    def get_messages_with_user(self, with_user_id) -> List[Message]:
+        # TODO: Create a function to get latest messages only. Maybe https://stackoverflow.com/a/41095528/6350162 ?
+        with self.db.cursor() as c:
+            c.execute(
+                """
+                SELECT 
+                messages.from_id as from_id, 
+                messages.to_id as to_id, 
+                messages.id as id, 
+                messages.timestamp as timestamp, 
+                messages.seen_timestamp as seen_timestamp, 
+                messages.content as content, 
+                messages.is_liked as is_liked, 
+                messages.is_seen as is_seen
+                FROM messages 
+                WHERE from_id={0} and to_id={1}
+
+                UNION ALL
+
+                SELECT messages.from_id as from_id, 
+                messages.to_id as to_id, 
+                messages.id as id, 
+                messages.timestamp as timestamp, 
+                messages.seen_timestamp as seen_timestamp, 
+                messages.content as content, 
+                messages.is_liked as is_liked, 
+                messages.is_seen as is_seen
+                FROM messages 
+                WHERE from_id={1} and to_id={0}
+                """.format(
+                    self.id, with_user_id
+                )
+            )
+            messages = c.fetchall()
+            message_list = []
+            for message in messages:
+                message_list.append(Message(message))
+        return message_list
 
     def get_reports_sent(self):
         logging.debug("Getting all reports sent for user {}".format(self.id))
