@@ -48,7 +48,6 @@ REQUIRED_ENV_VARS = [
     "DB_PASSWORD",
     "MAIL_PASSWORD",
     "APP_URL",
-    "REACT_APP_API_URL",
 ]
 
 for item in REQUIRED_ENV_VARS:

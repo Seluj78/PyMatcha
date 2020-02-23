@@ -1,6 +1,6 @@
 import request from 'request-promise';
 
-const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:8080';
+const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000';
 
 const discard = side => {
 	const discardDirections = {
@@ -20,12 +20,19 @@ const discard = side => {
 	})
 }
 
-const apiCall = options => {
+const apiCall = async options => {
 	// TODO add token in the header
 	options.json = true;
 	options.method = options.method || 'GET';
 	options.uri = `${API_URL}/${options.uri}`;
-	return request(options);
+	try {
+		return await request(options); 
+	} catch (e) {
+		console.log(e)
+		if (typeof e.error === 'string')
+			return { error: { message: e.error }, is_error: true }
+		return { ...e.error, is_error: true }
+	};
 }
 
 const getToken = () => sessionStorage.getItem('token')
