@@ -50,7 +50,7 @@ class Message(Model):
                 c.execute(
                     """
                 UPDATE {0} SET deleted = 1 
-                WHERE id='{1}'
+                WHERE id=CAST('{1}' AS INT)
                 """.format(
                         self.table_name, self.id
                     )
