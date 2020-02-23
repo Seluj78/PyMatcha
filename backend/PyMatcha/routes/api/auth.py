@@ -150,8 +150,10 @@ def auth_login():
     #     identity=get_user_safe_dict(user), expires_delta=datetime.timedelta(hours=2)
     # )
     # TODO: Handle expiry for token
+    if not u.is_confirmed:
+        raise UnauthorizedError("User needs to be confirmed first.", "Try again when you have confirmed your email")
     u.is_online = True
     u.date_lastseen = datetime.datetime.utcnow()
     u.save()
-    access_token = fjwt.create_access_token(identity=u.get_base_info(), fresh=True)
+    access_token = fjwt.create_access_token(identity=user.get_base_info(), fresh=True)
     return SuccessOutput("access_token", access_token)
