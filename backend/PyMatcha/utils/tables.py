@@ -152,13 +152,14 @@ def _create_matches_table(db):
 def _create_messages_table(db):
     with db.cursor() as c:
         print("Creating table messages.")
+        c.execute("""SET sql_notes = 0;""")
         c.execute(
             """
         CREATE TABLE IF NOT EXISTS messages
         (
         id             INT auto_increment PRIMARY KEY,
-        from_id        INT (4) NOT NULL,
-        to_id          INT (4) NOT NULL,
+        from_id        INT NOT NULL,
+        to_id          INT NOT NULL,
         timestamp      TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
         seen_timestamp TIMESTAMP,
         content        LONGTEXT NOT NULL,
@@ -167,6 +168,7 @@ def _create_messages_table(db):
         )
         """
         )
+        c.execute("""SET sql_notes = 1;""")
 
 
 def create_tables(db):
