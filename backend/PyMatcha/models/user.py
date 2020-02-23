@@ -52,7 +52,7 @@ class UserImage(Model):
                 c.execute(
                     """
                 UPDATE {0} SET deleted = 1 
-                WHERE id='{1}'
+                WHERE id=CAST({1} AS INT)
                 """.format(
                         self.table_name, self.id
                     )
@@ -123,7 +123,7 @@ class User(Model):
                 c.execute(
                     """
                 UPDATE {0} SET deleted = 1 
-                WHERE id='{1}'
+                WHERE id=CAST({1} AS INT)
                 """.format(
                         self.table_name, self.id
                     )
@@ -210,11 +210,19 @@ class User(Model):
     @staticmethod
     def register(email: str, username: str, password: str) -> User:
         # Check email availability
-        if User.get(email=email):
+        try:
+            User.get(email=email)
+        except ValueError:
+            pass
+        else:
             raise ConflictError("Email {} taken".format(email), "Use another email")
 
         # Check username availability
-        if User.get(username=username):
+        try:
+            User.get(username=username)
+        except ValueError:
+            pass
+        else:
             raise ConflictError("Username {} taken".format(username), "Try another username")
 
         # Encrypt password
@@ -279,7 +287,7 @@ class User(Model):
                 user_images.timestamp as timestamp, user_images.is_primary as is_primary
                 FROM users 
                 INNER JOIN user_images on users.id = user_images.user_id 
-                WHERE user_id = {}
+                WHERE users.id = CAST({} AS INT)
                 """.format(
                     self.id
                 )
@@ -305,7 +313,8 @@ def get_user(uid: Any[int, str]) -> Optional[User]:
     # These initializations are to make PEP happy and silence warnings
     f_user = None
 
-    uid = uid.lower()
+    if isinstance(uid, str):
+        uid = uid.lower()
 
     try:
         user = User.get(id=uid)

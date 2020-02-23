@@ -21,6 +21,7 @@
 def _create_user_table(db):
     with db.cursor() as c:
         print("Creating table users.")
+        c.execute("""SET sql_notes = 0;""")
         c.execute(
             """
         CREATE TABLE IF NOT EXISTS users 
@@ -45,26 +46,29 @@ def _create_user_table(db):
         is_profile_completed BOOLEAN DEFAULT (FALSE),
         is_confirmed         BOOLEAN DEFAULT (FALSE),
         confirmed_on         TIMESTAMP DEFAULT NULL
-        )
+        );
         """
         )
+        c.execute("""SET sql_notes = 1;""")
 
 
 def _create_user_images_table(db):
     with db.cursor() as c:
         print("Creating table user_images.")
+        c.execute("""SET sql_notes = 0;""")
         c.execute(
             """
         CREATE TABLE IF NOT EXISTS user_images
         (
         id            INT auto_increment PRIMARY KEY,
-        user_id       INT (4) NOT NULL,
+        user_id       INT NOT NULL,
         description   LONGTEXT,
         timestamp     TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
         is_primary    BOOLEAN NOT NULL
         )
         """
         )
+        c.execute("""SET sql_notes = 1;""")
 
 
 def create_tables(db):
