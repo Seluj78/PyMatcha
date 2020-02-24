@@ -22,6 +22,7 @@ def purge_offline_users():
         if date_lastseen < login_deadline_timestamp:
             # delete the key
             u = User.get(id=user_id)
+            u.date_lastseen = date_lastseen
             u.is_online = False
             u.save()
             redis.delete(key)
