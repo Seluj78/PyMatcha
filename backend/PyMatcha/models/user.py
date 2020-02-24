@@ -312,7 +312,7 @@ class User(Model):
                 message_list.append(message.Message(message))
         return message_list
 
-    def get_messages_with_user(self, with_user_id) -> List[message_model.Message]:
+    def get_messages_with_user(self, with_user_id) -> List[Message]:
         # TODO: Create a function to get latest messages only. Maybe https://stackoverflow.com/a/41095528/6350162 ?
         # Based on time or amount of messages https://stackoverflow.com/a/3799223/6350162
         with self.db.cursor() as c:
@@ -374,7 +374,7 @@ class User(Model):
         return reports_list
     def send_message(self, to_id, content):
         # TODO: Send notification to the other user
-        message_model.Message.create(from_id=self.id, to_id=to_id, content=content)
+        Message.create(from_id=self.id, to_id=to_id, content=content)
 
     def get_base_info(self):
         return {

@@ -24,7 +24,7 @@ from datetime import datetime
 
 from PyMatcha.utils.orm import Model, Field
 from PyMatcha.utils import create_messages_table
-import PyMatcha.models.user as user
+import PyMatcha.models.user as user_module
 
 from PyMatcha.errors import NotFoundError
 
@@ -71,12 +71,12 @@ class Message(Model):
     ) -> Message:
 
         try:
-            user.get_user(from_id)
+            user_module.get_user(from_id)
         except NotFoundError:
             raise NotFoundError("User from_id {} not found".format(from_id), "Try again")
 
         try:
-            user.get_user(to_id)
+            user_module.get_user(to_id)
         except NotFoundError:
             raise NotFoundError("User to_id {} not found".format(to_id), "Try again")
 
