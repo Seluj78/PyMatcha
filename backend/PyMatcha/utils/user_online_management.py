@@ -12,6 +12,7 @@ def setup_periodic_tasks(sender, **kwargs):
     sender.add_periodic_task(60, purge_offline_users.s(), name="Purge offline users every minute")
 
 
+# TODO: array of id and one DB call
 @celery.task
 def purge_offline_users():
     current_timestamp = int(datetime.datetime.utcnow().timestamp()) + 120
