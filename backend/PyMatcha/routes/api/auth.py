@@ -155,5 +155,5 @@ def auth_login():
     u.is_online = True
     u.date_lastseen = datetime.datetime.utcnow()
     u.save()
-    access_token = fjwt.create_access_token(identity=user.get_base_info(), fresh=True)
+    access_token = fjwt.create_access_token(identity=u.get_base_info(), fresh=True)
     return SuccessOutput("access_token", access_token)
