@@ -57,7 +57,7 @@ def api_create_user():
         raise e
     else:
         token = generate_confirmation_token(email=data["email"], token_type="confirm")
-        send_mail_text(
+        send_mail_text.delay(
             dest=data["email"],
             subject="Confirm your email for PyMatcha",
             body=os.getenv("APP_URL") + "/auth/confirm/" + token,
@@ -99,7 +99,7 @@ def forgot_password():
         pass
     else:
         token = generate_confirmation_token(email=data["email"], token_type="reset")
-        send_mail_text(
+        send_mail_text.delay(
             dest=data["email"],
             subject="Password reset for PyMatcha",
             body=os.getenv("APP_URL") + "/reset_password?token=" + token,
