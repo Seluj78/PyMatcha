@@ -27,60 +27,15 @@ from datetime import datetime
 
 from PyMatcha.utils import hash_password
 from PyMatcha.utils.orm import Model, Field
-from PyMatcha.utils import create_user_table, create_user_images_table
+from PyMatcha.utils import create_user_table
 
 from PyMatcha.errors import ConflictError, NotFoundError
 
+import PyMatcha.models.user_image as user_image
+
 import Geohash
 
-
-class UserImage(Model):
-    table_name = "user_images"
-
-    id = Field(int, modifiable=False)
-    user_id = Field(int)
-    description = Field(str)
-    timestamp = Field(str)
-    is_primary = Field(bool)
-
-    def before_init(self, data):
-        pass
-
-    def delete(self):
-        if self.id:
-            with self.db.cursor() as c:
-                c.execute(
-                    """
-                UPDATE {0} SET deleted = 1 
-                WHERE id=CAST({1} AS INT)
-                """.format(
-                        self.table_name, self.id
-                    )
-                )
-                self.db.commit()
-        else:
-            raise NotFoundError("Image not in database", "Try again")
-
-    @staticmethod
-    def create(
-        user_id: int, description="", timestamp=datetime.timestamp(datetime.utcnow()), is_primary=False
-    ) -> UserImage:
-        new_image = UserImage(user_id=user_id, description=description, timestamp=str(timestamp), is_primary=is_primary)
-        new_image.save()
-        return new_image
-
-    def get_all_info(self) -> Dict:
-        return {
-            "id": self.id,
-            "user_id": self.user_id,
-            "description": self.description,
-            "timestamp": self.timestamp,
-            "is_primary": self.is_primary,
-        }
-
-    @classmethod
-    def create_table(cls):
-        create_user_images_table(cls.db)
+UserImage = user_image.UserImage
 
 
 class User(Model):
