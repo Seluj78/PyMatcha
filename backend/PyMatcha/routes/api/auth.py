@@ -71,18 +71,18 @@ def confirm_email(token):
         email, token_type = confirm_token(token, expiration=7200)
     except (SignatureExpired, BadSignature) as e:
         if e == SignatureExpired:
-            return redirect("/?type=confirm&success=false?message=Signature expired")
+            return redirect("/?type=confirm&success=false&message=Signature expired")
         else:
-            return redirect("/?type=confirm&success=false?message=Bad Signature")
+            return redirect("/?type=confirm&success=false&message=Bad Signature")
     else:
         if token_type != "confirm":
-            return redirect("/?type=confirm&success=false?message=Wrong token type")
+            return redirect("/?type=confirm&success=false&message=Wrong token type")
         try:
             u = get_user(email)
         except NotFoundError:
-            return redirect("/?type=confirm&success=false?message=User not found")
+            return redirect("/?type=confirm&success=false&message=User not found")
         if u.is_confirmed:
-            return redirect("/?type=confirm&success=false?message=User already confirmed")
+            return redirect("/?type=confirm&success=false&message=User already confirmed")
         u.is_confirmed = True
         u.confirmed_on = datetime.datetime.utcnow()
         u.save()
