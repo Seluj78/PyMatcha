@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { effectDuration, discard, apiCall, sleep } from '../utils';
+import { effectDuration, discard, apiCall } from '../utils';
 import Loading from '../components/loadings';
 import Input from './input';
 
@@ -60,7 +60,7 @@ const RegisterCard = ({ history, from }) => {
 	if (state === 'ok') return <p>You will soon receive an confimration email</p>
 	return (
 		<div style={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
-			{ state != 'default' && state != 'loading' &&
+			{ state !== 'default' && state !== 'loading' &&
 				<div className="notification is-danger" style={{paddingTop: '0.5em', paddingBottom: '0.5em'}}> { state } </div>
 			}
 			< Loading style={{ position: 'absolute', left: '50%', top: '50%', opacity: state === 'loading' ? '1' : '0', ...effectDuration(1) }} />
