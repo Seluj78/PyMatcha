@@ -28,8 +28,6 @@ from PyMatcha.errors import NotFoundError
 User = user.User
 get_user = user.get_user
 
-REQUIRED_KEYS_USER_CREATION = ["username", "email", "password"]
-
 
 user_bp = Blueprint("user", __name__)
 
