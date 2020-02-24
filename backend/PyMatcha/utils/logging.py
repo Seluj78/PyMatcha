@@ -7,7 +7,8 @@ def setup_logging():
     """
     logging.basicConfig(
         level=logging.DEBUG,
-        format="%(asctime)s,%(msecs)d %(levelname)-8s [%(pathname)s:%(lineno)d (%(funcName)s()] %(message)s",
+        format="%(asctime)s,%(msecs)d %(levelname)-8s [%(pathname)s:%(lineno)d (%(funcName)s()] %(process)d:"
+        " %(message)s",
         datefmt="%d-%m-%Y:%H:%M:%S",
     )
 

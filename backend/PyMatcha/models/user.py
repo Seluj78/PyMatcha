@@ -232,7 +232,7 @@ class User(Model):
             "is_online": self.is_online,
             "date_joined": self.date_joined,
             "date_lastseen": self.date_lastseen,
-            "is_profile_completed": self.profile_completed,
+            "is_profile_completed": self.is_profile_completed,
             "is_confirmed": self.is_confirmed,
             "confirmed_on": self.confirmed_on,
             "previous_reset_token": self.previous_reset_token,

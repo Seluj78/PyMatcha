@@ -18,6 +18,7 @@
 """
 
 import os
+import logging
 import datetime
 
 from flask import Blueprint, request, redirect
@@ -50,10 +51,11 @@ auth_bp = Blueprint("auth", __name__)
 def api_create_user():
     data = request.get_json()
     data["email"] = data["email"].lower()
-
     try:
+        logging.debug("Trying to register new user {}, {}".format(data["email"], data["username"]))
         new_user = User.register(email=data["email"], username=data["username"], password=data["password"])
     except ConflictError as e:
+        logging.error("Conflict error on user register: {}".format(e))
         raise e
     else:
         token = generate_confirmation_token(email=data["email"], token_type="confirm")
@@ -62,6 +64,7 @@ def api_create_user():
             subject="Confirm your email for PyMatcha",
             body=os.getenv("APP_URL") + "/auth/confirm/" + token,
         )
+        logging.debug("New user {} successfully created".format(new_user.email))
         return SuccessOutputMessage("email", new_user.email, "New user successfully created.")
 
 

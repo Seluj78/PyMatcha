@@ -19,8 +19,10 @@
 
 import uuid
 import hashlib
+import logging
 
 
 def hash_password(password: str) -> str:
     salt = uuid.uuid4().hex
+    logging.debug("Hashing password with salt {}".format(salt))
     return hashlib.sha256(salt.encode() + password.encode()).hexdigest() + ":" + salt
