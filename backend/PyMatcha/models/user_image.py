@@ -16,7 +16,10 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 """
+
 from __future__ import annotations
+
+import logging
 
 from typing import Dict
 
@@ -61,6 +64,7 @@ class UserImage(Model):
     ) -> UserImage:
         new_image = UserImage(user_id=user_id, description=description, timestamp=str(timestamp), is_primary=is_primary)
         new_image.save()
+        logging.debug("Creating new user image")
         return new_image
 
     def get_all_info(self) -> Dict:
