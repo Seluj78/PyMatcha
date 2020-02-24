@@ -17,11 +17,8 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 """
 
-from flask import Blueprint, jsonify
+from PyMatcha.success.created import SuccessCreated
+from PyMatcha.success.deleted import SuccessDeleted
+from PyMatcha.success.success import Success, SuccessOutput, SuccessOutputMessage
 
-ping_pong_bp = Blueprint("ping_pong", __name__)
-
-
-@ping_pong_bp.route("/ping")
-def ping():
-    return jsonify(ping="pong")
+__all__ = ["SuccessDeleted", "SuccessCreated", "Success", "SuccessOutput", "SuccessOutputMessage"]

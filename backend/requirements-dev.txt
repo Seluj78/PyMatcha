@@ -1,13 +1,20 @@
 Flask
-Flask-Admin
-wtf-peewee
-
-peewee
-pymysql
 
 flask-cors
 
 python-dotenv
+
+Geohash
+python-geohash
+
+pymysql
+
+Flask-Mail
+
+itsdangerous
+cryptography
+
+flask_jwt_extended
 
 pytest
 pytest-flask
@@ -15,3 +22,6 @@ pytest-flask
 flake8
 black
 pre-commit
+
+names
+lorem

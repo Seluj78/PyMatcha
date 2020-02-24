@@ -24,9 +24,10 @@ FLASK = $(VENV)/bin/flask
 PYTEST = $(VENV)/bin/pytest
 FRONTEND = $(PWD)/frontend
 BACKEND = $(PWD)/backend
+DOCKER_NAME := pymatcha
+FLASK_PORT := 5000
 
 all: install build run
-	# TODO: Build and run the server
 
 install_python:
 ifndef TRAVIS
@@ -37,7 +38,6 @@ ifndef TRAVIS
 			$(PIP) install -r $(BACKEND)/requirements.txt \
 		)
 endif
-	# TODO: Create envs, install everything
 
 install_react:
 	npm install --prefix $(FRONTEND)
@@ -45,7 +45,15 @@ install_react:
 install: install_python install_react
 
 build: install
+	mkdir -p www
+	mkdir -p www/frontend
+	mkdir -p www/backend
+
 	npm run build --prefix $(FRONTEND)
+	cp -R $(FRONTEND)/build www/frontend
+
+	# TODO: Add obfuscation/compilation step
+	cp -R $(BACKEND) www/
 
 dev: install
 	npm run start --prefix $(FRONTEND) &
@@ -53,30 +61,62 @@ dev: install
 
 run: build
 	( \
-		export DB_USER=EWARSESTHJ; \
-		export DB_PASSWORD=EWARSESTHJ; \
-		export FLASK_SECRET_KEY=EWARSESTHJ; \
-		export FLASK_DEBUG=EWARSESTHJ; \
+		source .env; \
 		source $(VENV)/bin/activate && \
 		python3 $(BACKEND)/app.py \
 	)
 	# TODO: Run the whole server for prod
 
-tests: build
-	test -d frontend/build
-	# TODO: Maybe move this to the build stage? so if the build fails and the folder isn't here it fails immediatly and not at the test stage
-	# TODO: Run the tests
+lint:
+ifdef TRAVIS
+	flake8 backend/
+	black --check backend/
+else
+	( \
+		source $(VENV)/bin/activate && \
+		$(PIP) install -r $(BACKEND)/requirements-dev.txt && \
+		flake8 backend/ && \
+		black --check backend/ \
+	)
+endif
 
-docker:
-	# TODO
+
+tests: build
+ifdef TRAVIS
+	pytest backend/
+else
+	( \
+		test -d frontend/build && \
+		source $(VENV)/bin/activate && \
+		$(PIP) install -r $(BACKEND)/requirements-dev.txt && \
+		pytest backend/ \
+	)
+endif
+	# TODO: Maybe move this to the build stage? so if the build fails and the folder isn't here it fails immediatly and not at the test stage
+
+docker: build docker-build docker-run
+
+docker-run:
+	docker run --name $(DOCKER_NAME) --restart=always -p 8080:$(FLASK_PORT) -d $(DOCKER_NAME)
+
+docker-build:
+	-docker kill $(DOCKER_NAME)
+	docker build -t $(DOCKER_NAME) .
+
+docker-clean:
+	-docker kill $(DOCKER_NAME)
+	-docker ps -a | awk '{ print $$1,$$2 }' | grep $(DOCKER_NAME) | awk '{print $$1 }' | xargs -I {} docker rm {}
+	docker image rm $(DOCKER_NAME)
 
 clean:
 	rm -rf $(FRONTEND)/node_modules
+	rm -rf $(VENV)
 
-fclean: clean
+fclean: clean docker-clean
 	rm -rf $(FRONTEND)/build
 	rm -rf $(VENV)
+	rm -rf www
 
 re: clean all
 
-.PHONY : all install_python install_react install build dev run tests docker clean fclean re
+.PHONY : all install_python install_react install build dev run tests docker clean fclean re docker docker-build docker-clean docker-run

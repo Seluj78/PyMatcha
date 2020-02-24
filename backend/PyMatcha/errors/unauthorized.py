@@ -17,11 +17,32 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 """
 
-from flask import Blueprint, jsonify
+from PyMatcha import application
+from PyMatcha.errors.template import generate_error_json
 
-ping_pong_bp = Blueprint("ping_pong", __name__)
+
+class UnauthorizedError(Exception):
+    """
+    This is the UnauthorizedError class for the Exception.
+    """
+
+    def __init__(self, msg: str, solution: str) -> None:
+        self.name = "Unauthorized Error"
+        self.msg = msg
+        self.solution = solution
+        self.status_code = 401
+
+    pass
 
 
-@ping_pong_bp.route("/ping")
-def ping():
-    return jsonify(ping="pong")
+@application.errorhandler(UnauthorizedError)  # type: ignore
+def generate_unauthorized(error: UnauthorizedError) -> dict:
+    """
+    This is the 401 response creator. It will create a 401 response with
+    a custom message and the 401 code.
+
+    :param error: The error body
+    :return: Returns the response formatted
+    """
+
+    return generate_error_json(error, 401)

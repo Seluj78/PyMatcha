@@ -17,21 +17,36 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 """
 
+from flask import Blueprint, jsonify
 
-from PyMatcha.models.user import User
+import flask_jwt_extended as fjwt
+
+import PyMatcha.models.user as user
+
+from PyMatcha.errors import NotFoundError
+
+User = user.User
+get_user = user.get_user
 
 
-class TestFixturesViewAdmin:
-    def test_is_user_table_exists(self):
-        assert User.table_exists()
+user_bp = Blueprint("user", __name__)
 
-    def test_is_user_table_empty(self):
-        assert User.select().count() == 0
 
-    def test_create_tmp_user(self):
-        User.create(username="tmp", first_name="tmp", last_name="tmp", email="tmp.tmp@tmp.tmp").save()
-        assert User.select().count() == 1
+@user_bp.route("/users/", methods=["GET"])
+@fjwt.jwt_required
+def get_all_users():
+    user_list = []
+    for u in User.select_all():
+        user_list.append(u.get_all_info())
+    return jsonify(user_list)
 
-    def test_delete_tmp_user(self):
-        User.delete_by_id(1)
-        assert User.select().count() == 0
+
+@user_bp.route("/users/<uid>", methods=["GET"])
+@fjwt.jwt_required
+def get_one_user(uid):
+    try:
+        u = get_user(uid)
+    except NotFoundError:
+        raise NotFoundError("User {} not found".format(uid), "Check given uid and try again")
+    else:
+        return jsonify(u.get_all_info())

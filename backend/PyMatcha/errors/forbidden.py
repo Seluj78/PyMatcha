@@ -17,11 +17,32 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 """
 
-from flask import Blueprint, jsonify
+from PyMatcha import application
+from PyMatcha.errors.template import generate_error_json
 
-ping_pong_bp = Blueprint("ping_pong", __name__)
+
+class ForbiddenError(Exception):
+    """
+    This is the ForbiddenError class for the Exception.
+    """
+
+    def __init__(self, msg: str, solution: str) -> None:
+        self.name = "Forbidden Error"
+        self.msg = msg
+        self.solution = solution
+        self.status_code = 403
+
+    pass
 
 
-@ping_pong_bp.route("/ping")
-def ping():
-    return jsonify(ping="pong")
+@application.errorhandler(ForbiddenError)
+def generate_forbidden(error: ForbiddenError) -> dict:
+    """
+    This is the 403 response creator. It will create a 403 response along with
+    a custom message and the 403 code
+
+    :param error: The error body
+    :return: Returns the response formatted
+    """
+
+    return generate_error_json(error, 403)

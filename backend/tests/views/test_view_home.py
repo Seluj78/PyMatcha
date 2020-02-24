@@ -23,4 +23,4 @@ from flask import url_for
 
 class TestFixturesViewHome:
     def test_client_view_home(self, client):
-        assert client.get(url_for("home.home_view")).status == "200 OK"
+        assert client.get(url_for("serve")).status == "200 OK"

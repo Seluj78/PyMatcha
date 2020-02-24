@@ -17,24 +17,26 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 """
 
-
 import os
+import pymysql
 
-import peewee
-
-from flask import Flask, send_from_directory
-
-from flask_admin import Admin
+from flask_mail import Mail
 
 from flask_cors import CORS
 
 from dotenv import load_dotenv
 
+from pymysql.cursors import DictCursor
 
-PYMATCHA_ROOT = os.path.join(os.path.dirname(__file__), '../..')   # refers to application_top
-dotenv_path = os.path.join(PYMATCHA_ROOT, '.env')
+from flask import Flask, send_from_directory, jsonify
+
+import flask_jwt_extended as fjwt
+
+from PyMatcha.utils.tables import create_tables
+
+PYMATCHA_ROOT = os.path.join(os.path.dirname(__file__), "../..")  # refers to application_top
+dotenv_path = os.path.join(PYMATCHA_ROOT, ".env")
 load_dotenv(dotenv_path)
-
 
 REQUIRED_ENV_VARS = [
     "FLASK_DEBUG",
@@ -44,48 +46,85 @@ REQUIRED_ENV_VARS = [
     "DB_PORT",
     "DB_USER",
     "DB_PASSWORD",
+    "MAIL_PASSWORD",
+    "APP_URL",
+    "REACT_APP_API_URL",
 ]
 
 for item in REQUIRED_ENV_VARS:
     if item not in os.environ:
         raise EnvironmentError(f"{item} is not set in the server's environment or .env file. It is required")
 
-# TODO: Set static folder to env var or conf
 application = Flask(__name__, static_folder=os.getenv("FRONT_STATIC_FOLDER"))
 application.debug = os.getenv("FLASK_DEBUG")
 application.secret_key = os.getenv("FLASK_SECRET_KEY")
+application.config.update(FLASK_SECRET_KEY=os.getenv("FLASK_SECRET_KEY"))
+application.config["JWT_SECRET_KEY"] = os.environ.get("FLASK_SECRET_KEY")
 
-app_db = peewee.MySQLDatabase(
-    "PyMatcha",
-    host=os.getenv("DB_HOST"),
-    port=int(os.getenv("DB_PORT")),
-    password=os.getenv("DB_PASSWORD"),
-    user=os.getenv("DB_USER")
+jwt = fjwt.JWTManager(application)
+
+
+@jwt.expired_token_loader
+def expired_token_callback(expired_token):
+    resp = {
+        "code": 401,
+        "error": {
+            "message": f"The {expired_token['type']} token has expired",
+            "name": "Unauthorized Error",
+            "solution": "Try again when you have renewed your token",
+            "type": "UnauthorizedError",
+        },
+        "success": False,
+    }
+    return jsonify(resp), 401
+
+
+CORS(application, expose_headers="Authorization", supports_credentials=True)
+
+if os.getenv("CI"):
+    database_password = ""
+else:
+    database_password = os.getenv("DB_PASSWORD")
+
+database_config = {
+    "host": os.getenv("DB_HOST"),
+    "port": int(os.getenv("DB_PORT")),
+    "user": os.getenv("DB_USER"),
+    "password": database_password,
+    "db": os.getenv("DB_NAME"),
+    "charset": "utf8mb4",
+    "cursorclass": DictCursor,
+}
+
+db = pymysql.connect(**database_config)
+
+create_tables(db)
+
+application.config.update(
+    MAIL_SERVER="smtp.gmail.com",
+    MAIL_PORT=465,
+    MAIL_USE_SSL=True,
+    MAIL_USERNAME="pymatcha@gmail.com",
+    MAIL_PASSWORD=os.getenv("MAIL_PASSWORD"),
+    MAIL_DEBUG=False,
 )
+mail = Mail(application)
 
-application.config["FLASK_ADMIN_SWATCH"] = "simplex"
-admin = Admin(application, name="PyMatcha Admin", template_mode="bootstrap3")
-
-CORS(application)
-
-from PyMatcha.models.user import User, UserAdmin
-
-admin.add_view(UserAdmin(User))
 
 from PyMatcha.routes.api.ping_pong import ping_pong_bp
+from PyMatcha.routes.api.user import user_bp
+from PyMatcha.routes.api.auth import auth_bp
 
 application.register_blueprint(ping_pong_bp)
-
-if bool(int(os.environ.get("CI", 0))):
-    User.drop_table()
-    User.create_table()
+application.register_blueprint(user_bp)
+application.register_blueprint(auth_bp)
 
 
 # Serve React App
-@application.route('/', defaults={'path': ''})
-@application.route('/<path:path>')
+@application.route("/", defaults={"path": ""})
+@application.route("/<path:path>")
 def serve(path):
-    if path != "" and os.path.exists(application.static_folder + '/' + path):
+    if path != "" and os.path.exists(application.static_folder + "/" + path):
         return send_from_directory(application.static_folder, path)
     else:
-        return send_from_directory(application.static_folder, 'index.html')
+        return send_from_directory(application.static_folder, "index.html")
