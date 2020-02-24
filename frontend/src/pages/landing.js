@@ -37,7 +37,7 @@ const Landing = ({ from }) => {
 							</article>
 						</div>
 					</div>
-					<div className='tile is-parent'>
+					<div className='tile is-parent' style={{overflow: 'hidden'}}>
 						<article className='tile is-child notification is-success'>
 							<RegisterCard history={history} from={from} />
 						</article>

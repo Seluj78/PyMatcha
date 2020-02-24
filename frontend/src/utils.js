@@ -28,7 +28,6 @@ const apiCall = async options => {
 	try {
 		return await request(options); 
 	} catch (e) {
-		console.log(e)
 		if (typeof e.error === 'string')
 			return { error: { message: e.error }, is_error: true }
 		return { ...e.error, is_error: true }

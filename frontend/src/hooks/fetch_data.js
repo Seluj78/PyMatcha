@@ -12,8 +12,10 @@ const onLoad = async (url, options, setState) => {
 	}
 }
 
-// TODO call id for chained call
-const useFetchData = (url, options = {}) => {
+const defaultOptions = {} ;
+
+// TODO call_id for chained call
+const useFetchData = (url, options = defaultOptions) => {
 	const [state, setState] = useState({
 		loading: true,
 		error: undefined,

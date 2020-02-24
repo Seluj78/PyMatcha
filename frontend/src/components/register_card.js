@@ -10,7 +10,7 @@ const logMe = (history, setState, email, username, password, from) => async () =
 	if (!!ret.error) {
 		setState(ret.error.message);
 	} else {
-		console.log(ret)
+		setState('ok')
 	}
 }
 
@@ -34,8 +34,8 @@ const usernameInput = (value, setValue, state) => ({
 	setValue
 })
 
-const passwordInput = (value, setValue, state) => ({
-	innerStyle: { backgroundColor: 'greenyellow' },
+const passwordInput = (value, setValue) => ({
+	innerStyle: { backgroundColor: 'greenyellow'},
 	InnerClass: 'is-success',
 	icon: 'fas fa-lock',
 	type: 'password',
@@ -59,7 +59,7 @@ const RegisterCard = ({ history, from }) => {
 
 	if (state === 'ok') return <p>You will soon receive an confimration email</p>
 	return (
-		<div style={{ height: '100%', display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
+		<div style={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
 			{ state != 'default' && state != 'loading' &&
 				<div className="notification is-danger" style={{paddingTop: '0.5em', paddingBottom: '0.5em'}}> { state } </div>
 			}
@@ -67,7 +67,9 @@ const RegisterCard = ({ history, from }) => {
 			<Input {...emailInput(email, setEmail, state)} />
 			<Input {...usernameInput(username, setUsername, state)} />
 			<Input {...passwordInput(password1, setPassword1, state)} placeholder="password" outerStyle={state === 'loading' ? discard('left') : {}} />
-			<Input {...passwordInput(password2, setPassword2, state)} placeholder="Password verification" outerStyle={state === 'loading' ? discard('right') : {}} />
+			<span style={ !password_ok && !!email ? {boxShadow: "red 0px 0px 1px 1px"} : {}}>
+				<Input {...passwordInput(password2, setPassword2, state)} placeholder="Password verification" outerStyle={state === 'loading' ? discard('right') : {}} />
+			</span>
 			<div className='field' style={{ ...(state === 'loading' ? discard('bottom') : {}), marginTop: '2em' }}>
 				<button {...registerButton({history, password_ok, password1, email, setState, from, username})}> Register </button>
 			</div>
