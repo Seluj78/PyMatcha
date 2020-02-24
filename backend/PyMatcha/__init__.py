@@ -19,8 +19,11 @@
 
 import os
 import pymysql
+import datetime
 
 from flask_mail import Mail
+
+from redis import Redis
 
 from celery import Celery
 
@@ -117,6 +120,9 @@ mail = Mail(application)
 application.config["CELERY_BROKER_URL"] = "redis://localhost:6379/0"
 application.config["CELERY_RESULT_BACKEND"] = "redis://localhost:6379/0"
 
+redis = Redis(
+    host=os.getenv("REDIS_HOST") if not os.getenv("IS_DOCKER_COMPOSE") else "redis", port=os.getenv("REDIS_PORT", 6379)
+)
 
 import PyMatcha.models.user as user_module
 
@@ -125,6 +131,7 @@ get_user = user_module.get_user
 
 @jwt.user_loader_callback_loader
 def jwt_user_callback(identity):
+    redis.set("user:" + identity["id"], datetime.datetime.utcnow().timestamp())
     return get_user(identity["id"])
 
 
