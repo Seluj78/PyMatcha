@@ -38,8 +38,6 @@ from PyMatcha.utils.tables import create_tables
 
 from PyMatcha.utils.logging import setup_logging
 
-setup_logging()
-
 PYMATCHA_ROOT = os.path.join(os.path.dirname(__file__), "../..")  # refers to application_top
 dotenv_path = os.path.join(PYMATCHA_ROOT, ".env")
 load_dotenv(dotenv_path)
@@ -54,11 +52,15 @@ REQUIRED_ENV_VARS = [
     "DB_PASSWORD",
     "MAIL_PASSWORD",
     "APP_URL",
+    "ENABLE_LOGGING",
 ]
 
 for item in REQUIRED_ENV_VARS:
     if item not in os.environ:
         raise EnvironmentError(f"{item} is not set in the server's environment or .env file. It is required")
+
+if os.getenv("ENABLE_LOGGING"):
+    setup_logging()
 
 application = Flask(__name__, static_folder=os.getenv("FRONT_STATIC_FOLDER"))
 application.debug = os.getenv("FLASK_DEBUG")
