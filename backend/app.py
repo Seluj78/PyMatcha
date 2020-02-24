@@ -20,6 +20,7 @@
 import os
 
 from PyMatcha import application
+from PyMatcha.utils.logging import setup_logging
 
 if __name__ == "__main__":
     # Get the port defined in env if defined, otherwise sets it to 5000
@@ -27,4 +28,5 @@ if __name__ == "__main__":
     # Default debug is true
     debug = bool(os.environ.get("FLASK_DEBUG", False))
     # Runs the main loop
+    setup_logging()
     application.run(host="0.0.0.0", port=port, debug=debug)

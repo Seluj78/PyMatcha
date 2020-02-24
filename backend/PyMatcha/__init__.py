@@ -36,6 +36,10 @@ import flask_jwt_extended as fjwt
 
 from PyMatcha.utils.tables import create_tables
 
+from PyMatcha.utils.logging import setup_logging
+
+setup_logging()
+
 PYMATCHA_ROOT = os.path.join(os.path.dirname(__file__), "../..")  # refers to application_top
 dotenv_path = os.path.join(PYMATCHA_ROOT, ".env")
 load_dotenv(dotenv_path)
