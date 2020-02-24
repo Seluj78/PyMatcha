@@ -15,7 +15,7 @@ def setup_periodic_tasks(sender, **kwargs):
 # TODO: array of id and one DB call
 @celery.task
 def purge_offline_users():
-    current_timestamp = int(datetime.datetime.utcnow().timestamp()) + 120
+    current_timestamp = int(datetime.datetime.utcnow().timestamp()) - 120
     for key in redis.scan_iter("user:*"):
         user_id = str(key).split(":")[1]
         date_lastseen = int(redis.get(key))
