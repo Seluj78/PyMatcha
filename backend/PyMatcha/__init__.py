@@ -22,6 +22,8 @@ import pymysql
 
 from flask_mail import Mail
 
+from celery import Celery
+
 from flask_cors import CORS
 
 from dotenv import load_dotenv
@@ -86,7 +88,7 @@ else:
     database_password = os.getenv("DB_PASSWORD")
 
 database_config = {
-    "host": os.getenv("DB_HOST"),
+    "host": os.getenv("DB_HOST") if not os.getenv("IS_DOCKER_COMPOSE") else "mysql",
     "port": int(os.getenv("DB_PORT")),
     "user": os.getenv("DB_USER"),
     "password": database_password,
@@ -106,8 +108,18 @@ application.config.update(
     MAIL_USERNAME="pymatcha@gmail.com",
     MAIL_PASSWORD=os.getenv("MAIL_PASSWORD"),
     MAIL_DEBUG=False,
+    MAIL_DEFAULT_SENDER="pymatcha@gmail.com",
 )
 mail = Mail(application)
+
+
+# Celery configuration
+application.config["CELERY_BROKER_URL"] = "redis://localhost:6379/0"
+application.config["CELERY_RESULT_BACKEND"] = "redis://localhost:6379/0"
+
+# Initialize Celery
+celery = Celery(application.name, broker=application.config["CELERY_BROKER_URL"])
+celery.conf.update(application.config)
 
 
 from PyMatcha.routes.api.ping_pong import ping_pong_bp

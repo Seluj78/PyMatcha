@@ -1,0 +1,73 @@
+version: '3.3'
+
+services:
+  mysql:
+    image: mysql:8.0.18
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD:
+      MYSQL_DATABASE: pymatcha
+      MYSQL_ALLOW_EMPTY_PASSWORD: 1
+    env_file:
+      - .env
+    ports:
+      - '3306:3306'
+    expose:
+      - '3306'
+    volumes:
+      - mysql:/var/lib/mysql
+
+  redis:
+    image: redis:4.0.5-alpine
+    command: ["redis-server", "--appendonly", "yes"]
+    hostname: redis
+    networks:
+      - redis-net
+    volumes:
+      - redis-data:/data
+
+  celery-worker:
+    build:
+      context: ./celery
+      dockerfile: Dockerfile
+    environment:
+      - PYTHONUNBUFFERED=1
+    ports:
+      - '6379:6379'
+    depends_on:
+      - redis
+    links:
+      - redis
+    networks:
+      - redis-net
+
+  flask-server:
+    container_name: pymatcha
+    restart: always
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    env_file:
+      - .env
+    environment:
+      - PYTHONUNBUFFERED=1
+    ports:
+      - "5000:5000"
+    volumes:
+      - pymatcha:/app
+    depends_on:
+      - "mysql"
+      - "redis"
+      - "celery-worker"
+    links:
+      - mysql
+      - redis
+      - celery-worker
+
+networks:
+  redis-net:
+
+volumes:
+  redis-data:
+  mysql:
+  pymatcha:

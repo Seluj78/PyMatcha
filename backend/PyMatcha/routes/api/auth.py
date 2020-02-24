@@ -57,7 +57,7 @@ def api_create_user():
         raise e
     else:
         token = generate_confirmation_token(email=data["email"], token_type="confirm")
-        send_mail_text(
+        send_mail_text.delay(
             dest=data["email"],
             subject="Confirm your email for PyMatcha",
             body=os.getenv("APP_URL") + "/auth/confirm/" + token,
@@ -71,18 +71,18 @@ def confirm_email(token):
         email, token_type = confirm_token(token, expiration=7200)
     except (SignatureExpired, BadSignature) as e:
         if e == SignatureExpired:
-            return redirect("/?type=confirm&success=false?message=Signature expired")
+            return redirect("/?type=confirm&success=false&message=Signature expired")
         else:
-            return redirect("/?type=confirm&success=false?message=Bad Signature")
+            return redirect("/?type=confirm&success=false&message=Bad Signature")
     else:
         if token_type != "confirm":
-            return redirect("/?type=confirm&success=false?message=Wrong token type")
+            return redirect("/?type=confirm&success=false&message=Wrong token type")
         try:
             u = get_user(email)
         except NotFoundError:
-            return redirect("/?type=confirm&success=false?message=User not found")
+            return redirect("/?type=confirm&success=false&message=User not found")
         if u.is_confirmed:
-            return redirect("/?type=confirm&success=false?message=User already confirmed")
+            return redirect("/?type=confirm&success=false&message=User already confirmed")
         u.is_confirmed = True
         u.confirmed_on = datetime.datetime.utcnow()
         u.save()
@@ -99,7 +99,7 @@ def forgot_password():
         pass
     else:
         token = generate_confirmation_token(email=data["email"], token_type="reset")
-        send_mail_text(
+        send_mail_text.delay(
             dest=data["email"],
             subject="Password reset for PyMatcha",
             body=os.getenv("APP_URL") + "/reset_password?token=" + token,

@@ -94,6 +94,8 @@ else
 endif
 	# TODO: Maybe move this to the build stage? so if the build fails and the folder isn't here it fails immediatly and not at the test stage
 
+
+# TODO Update makefile for docker compose
 docker: build docker-build docker-run
 
 docker-run:

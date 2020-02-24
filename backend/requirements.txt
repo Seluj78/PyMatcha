@@ -11,6 +11,9 @@ pymysql
 
 Flask-Mail
 
+celery
+redis
+
 itsdangerous
 cryptography
 
