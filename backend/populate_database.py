@@ -5,8 +5,11 @@ import random
 import Geohash
 import datetime
 
-from PyMatcha.models import User
 from PyMatcha.errors import ConflictError
+
+import PyMatcha.models.user as user_module
+
+User = user_module.User
 
 
 def gen_datetime(min_year: int = 1900, max_year: int = datetime.datetime.now().year) -> datetime.datetime:

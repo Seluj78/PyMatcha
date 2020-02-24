@@ -109,11 +109,19 @@ class User(Model):
         confirmed_on: datetime = None,
     ) -> User:
         # Check email availability
-        if User.get(email=email):
+        try:
+            User.get(email=email)
+        except ValueError:
+            pass
+        else:
             raise ConflictError("Email {} taken".format(email), "Use another email")
 
         # Check username availability
-        if User.get(username=username):
+        try:
+            User.get(username=username)
+        except ValueError:
+            pass
+        else:
             raise ConflictError("Username {} taken".format(username), "Try another username")
 
         # Check correct gender
@@ -255,6 +263,7 @@ class User(Model):
 
     def get_base_info(self):
         return {
+            "id": self.id,
             "email": self.email,
             "username": self.username,
             "is_online": self.is_online,
