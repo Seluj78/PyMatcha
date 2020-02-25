@@ -17,10 +17,12 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 """
 
+import logging
+
 
 def _create_user_table(db):
     with db.cursor() as c:
-        print("Creating table users.")
+        logging.info("Creating table users.")
         c.execute("""SET sql_notes = 0;""")
         c.execute(
             """
@@ -54,7 +56,7 @@ def _create_user_table(db):
 
 def _create_user_images_table(db):
     with db.cursor() as c:
-        print("Creating table user_images.")
+        logging.info("Creating table user_images.")
         c.execute("""SET sql_notes = 0;""")
         c.execute(
             """
