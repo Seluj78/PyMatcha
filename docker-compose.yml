@@ -26,7 +26,7 @@ services:
     volumes:
       - redis-data:/data
 
-  celery-worker:
+  worker:
     build:
       context: ./celery
       dockerfile: Dockerfile
@@ -41,7 +41,7 @@ services:
     networks:
       - redis-net
 
-  flask-server:
+  web:
     container_name: pymatcha
     restart: always
     build:
@@ -58,11 +58,11 @@ services:
     depends_on:
       - "mysql"
       - "redis"
-      - "celery-worker"
+      - "worker"
     links:
       - mysql
       - redis
-      - celery-worker
+      - worker
 
 networks:
   redis-net:
