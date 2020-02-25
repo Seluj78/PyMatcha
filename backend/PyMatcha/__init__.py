@@ -133,6 +133,9 @@ application.config.update(
 logging.debug("Configuring mail")
 mail = Mail(application)
 
+redis = Redis(
+    host=os.getenv("REDIS_HOST") if not os.getenv("IS_DOCKER_COMPOSE") else "redis", port=os.getenv("REDIS_PORT", 6379)
+)
 
 import PyMatcha.models.user as user_module
 
