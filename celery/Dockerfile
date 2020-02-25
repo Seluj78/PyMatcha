@@ -10,4 +10,4 @@ WORKDIR /queue
 
 RUN pip install -r requirements.txt
 
-ENTRYPOINT celery -A worker worker --loglevel=debug --concurrency=4
+ENTRYPOINT celery -A worker worker --loglevel=debug
