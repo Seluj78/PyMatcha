@@ -1,7 +1,6 @@
 os:
   - linux
 
-sudo: required
 dist: bionic
 
 language: python
@@ -39,7 +38,7 @@ notifications:
       - jlasne@student.42.fr
       - gmorer@student.42.fr
     on_success: change
-on_failure: always
+    on_failure: always
 
 
 #deploy:
