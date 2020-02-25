@@ -19,6 +19,7 @@
 from __future__ import annotations
 
 import json
+import logging
 import hashlib
 
 from typing import Dict, List, Optional, Any
@@ -69,6 +70,7 @@ class User(Model):
         #     self.password.value = hash_password(data["password"])
 
     def check_password(self, password: str) -> bool:
+        logging.debug("Checking password again {} hashed password".format(self.id))
         _hash, salt = self.password.split(":")
         return _hash == hashlib.sha256(salt.encode() + password.encode()).hexdigest()
 
@@ -99,6 +101,7 @@ class User(Model):
         except ValueError:
             pass
         else:
+            logging.error("Email {} taken".format(email))
             raise ConflictError("Email {} taken".format(email), "Use another email")
 
         # Check username availability
@@ -107,14 +110,17 @@ class User(Model):
         except ValueError:
             pass
         else:
+            logging.error("Username {} taken".format(username))
             raise ConflictError("Username {} taken".format(username), "Try another username")
 
         # Check correct gender
         if gender not in ["male", "female", "other"]:
+            logging.error("Gender must be male, female or other, not {}".format(gender))
             raise ConflictError("Gender must be male, female or other, not {}".format(gender), "Try again")
 
         # Check correct orientation
         if orientation not in ["heterosexual", "homosexual", "bisexual"]:
+            logging.error("Sexual Orientation must be heterosexual, homosexual or bisexual, not {}".format(orientation))
             raise ConflictError(
                 "Sexual Orientation must be heterosexual, homosexual or bisexual, not {}".format(orientation),
                 "Try again",
@@ -124,6 +130,7 @@ class User(Model):
         try:
             Geohash.decode(geohash)
         except ValueError as e:
+            logging.error("Geohash error: {}".format(e))
             raise e
 
         # TODO: Check if all tags are set in tags
@@ -153,6 +160,7 @@ class User(Model):
             previous_reset_token=None,
         )
         new_user.save()
+        logging.debug("New user {} created".format(new_user.email))
         return new_user
 
     @staticmethod
@@ -163,6 +171,7 @@ class User(Model):
         except ValueError:
             pass
         else:
+            logging.error("Email {} taken".format(email))
             raise ConflictError("Email {} taken".format(email), "Use another email")
 
         # Check username availability
@@ -171,6 +180,7 @@ class User(Model):
         except ValueError:
             pass
         else:
+            logging.error("Username {} taken".format(username))
             raise ConflictError("Username {} taken".format(username), "Try another username")
 
         # Encrypt password
@@ -198,6 +208,7 @@ class User(Model):
             previous_reset_token=None,
         )
         new_user.save()
+        logging.debug("New user {} created".format(new_user.email))
         return new_user
 
     def get_all_info(self) -> Dict:
@@ -217,7 +228,7 @@ class User(Model):
             "is_online": self.is_online,
             "date_joined": self.date_joined,
             "date_lastseen": self.date_lastseen,
-            "is_profile_completed": self.profile_completed,
+            "is_profile_completed": self.is_profile_completed,
             "is_confirmed": self.is_confirmed,
             "confirmed_on": self.confirmed_on,
             "previous_reset_token": self.previous_reset_token,
@@ -228,6 +239,7 @@ class User(Model):
         create_user_table(cls.db)
 
     def get_images(self) -> List[UserImage]:
+        logging.debug("Getting all images for user {}".format(self.id))
         with self.db.cursor() as c:
             c.execute(
                 """
@@ -285,5 +297,7 @@ def get_user(uid: Any[int, str]) -> Optional[User]:
         f_user = user
     # If none of those worked, throw an error
     if not_found == 3:
+        logging.error("User {} not found.".format(uid))
         raise NotFoundError("User {} not found.".format(uid), "Try again with another uid")
+    logging.debug("Found user {} from {}".format(f_user.id, uid))
     return f_user

@@ -17,7 +17,7 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 """
 
-from flask import Blueprint, jsonify
+from flask import Blueprint, jsonify, current_app
 
 import flask_jwt_extended as fjwt
 
@@ -35,18 +35,22 @@ user_bp = Blueprint("user", __name__)
 @user_bp.route("/users/", methods=["GET"])
 @fjwt.jwt_required
 def get_all_users():
+    current_app.logger.info("/users/ -> Call")
     user_list = []
     for u in User.select_all():
         user_list.append(u.get_all_info())
+    current_app.logger.info("/users/ -> Returning all users list")
     return jsonify(user_list)
 
 
 @user_bp.route("/users/<uid>", methods=["GET"])
 @fjwt.jwt_required
 def get_one_user(uid):
+    current_app.logger.info("/users/{} -> Call".format(uid))
     try:
         u = get_user(uid)
     except NotFoundError:
         raise NotFoundError("User {} not found".format(uid), "Check given uid and try again")
     else:
+        current_app.logger.info("/users/{} -> Returning info on user {}".format(uid, uid))
         return jsonify(u.get_all_info())

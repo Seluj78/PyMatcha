@@ -1,4 +1,5 @@
 import pymysql
+import logging
 
 from copy import deepcopy
 
@@ -208,8 +209,10 @@ class Model(object):
                     )
                 )
                 self.db.commit()
+                logging.debug("deleted {} from table {}".format(self.id, self.table_name))
         else:
-            raise Exception("{} Not in table {}".format(self.id, self.table_name))
+            logging.error("{} Not in database {}".format(self.id, self.table_name))
+            raise Exception("{} Not in database {}".format(self.id, self.table_name))
 
     @classmethod
     def get(cls, **kwargs):
@@ -251,6 +254,7 @@ class Model(object):
 
     @classmethod
     def select_all(cls):
+        logging.debug("Getting all items from table {}".format(cls.table_name))
         temp = cls()
         with temp.db.cursor() as c:
             c.execute("""SELECT * FROM {}""".format(cls.table_name))
@@ -260,6 +264,7 @@ class Model(object):
 
     @classmethod
     def drop_table(cls):
+        logging.info("Dropping table {}".format(cls.table_name))
         with cls.db.cursor() as c:
             c.execute("""DROP TABLE {}""".format(cls.table_name))
             cls.db.commit()
