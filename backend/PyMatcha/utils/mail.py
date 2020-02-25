@@ -8,6 +8,7 @@ def send_mail_text(dest: str, subject: str, body: str, sender: str = "pymatcha@g
     msg = Message(subject=subject, body=body, sender=sender, recipients=[dest])
     with application.app_context():
         mail.send(msg)
+        return "Email send to {}".format(dest)
 
 
 @celery.task
@@ -15,3 +16,4 @@ def send_mail_html(dest: str, subject: str, body: str, sender: str = "pymatcha@g
     msg = Message(subject=subject, body=body, sender=sender, recipients=dest)
     with application.app_context():
         mail.send(msg)
+        return "Email send to {}".format(dest)
