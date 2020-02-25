@@ -45,7 +45,7 @@ const LoginCard = ({ history, from }) => {
 
 	return (
 		<div style={{ height: '100%', display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
-			{ state != 'default' && state != 'loading' &&
+			{ state !== 'default' && state !== 'loading' &&
 				<div className="notification is-danger" style={{paddingTop: '0.5em', paddingBottom: '0.5em'}} > { state } </div>
 			}
 			<Loading style={{ position: 'absolute', left: '50%', top: '50%', opacity: state === 'loading' ? '1' : '0', ...effectDuration(1) }} />

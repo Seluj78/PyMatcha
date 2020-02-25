@@ -20,8 +20,11 @@
 import os
 import logging
 import pymysql
+import datetime
 
 from flask_mail import Mail
+
+from redis import Redis
 
 from celery import Celery
 
@@ -140,6 +143,8 @@ logging.debug("Configuring JWT user callback loader")
 
 @jwt.user_loader_callback_loader
 def jwt_user_callback(identity):
+    # TODO: Check if this function is called everytime a jwt is used
+    redis.set("user:" + identity["id"], datetime.datetime.utcnow().timestamp())
     return get_user(identity["id"])
 
 

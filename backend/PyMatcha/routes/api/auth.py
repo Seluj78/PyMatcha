@@ -26,6 +26,8 @@ from itsdangerous import SignatureExpired, BadSignature
 
 import flask_jwt_extended as fjwt
 
+from PyMatcha import redis
+
 import PyMatcha.models.user as user
 from PyMatcha.errors import ConflictError, NotFoundError, BadRequestError, UnauthorizedError
 from PyMatcha.success import SuccessOutputMessage, Success, SuccessOutput
@@ -33,6 +35,7 @@ from PyMatcha.utils.confirm_token import generate_confirmation_token, confirm_to
 from PyMatcha.utils.mail import send_mail_text
 from PyMatcha.utils.decorators import validate_required_params
 from PyMatcha.utils import hash_password
+
 
 User = user.User
 get_user = user.get_user
@@ -184,4 +187,5 @@ def auth_login():
     u.save()
     access_token = fjwt.create_access_token(identity=u.get_base_info(), fresh=True)
     current_app.logger.debug("/auth/login -> Returning access token for user {}".format(username))
+    redis.set("user:" + u.id, u.date_lastseen.timestamp())
     return SuccessOutput("access_token", access_token)
