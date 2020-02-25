@@ -209,7 +209,7 @@ class Model(object):
                 )
                 self.db.commit()
         else:
-            raise Exception("{} Not in database {}".format(self.id, self.table_name))
+            raise Exception("{} Not in table {}".format(self.id, self.table_name))
 
     @classmethod
     def get(cls, **kwargs):
