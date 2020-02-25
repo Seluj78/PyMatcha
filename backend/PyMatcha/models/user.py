@@ -301,7 +301,7 @@ class User(Model):
                 messages.is_seen as is_seen
                 FROM messages 
                 INNER JOIN users on users.id = messages.from_id or users.id = messages.to_id 
-                WHERE users.id = CAST({} AS INT)
+                WHERE users.id = CAST({} AS SIGNED)
                 """.format(
                     self.id
                 )
@@ -329,7 +329,7 @@ class User(Model):
                 messages.is_liked as is_liked, 
                 messages.is_seen as is_seen
                 FROM messages 
-                WHERE from_id=CAST({0} AS INT) and to_id=CAST({1} AS INT)
+                WHERE from_id=CAST({0} AS SIGNED) and to_id=CAST({1} AS SIGNED)
 
                 UNION ALL
 
@@ -342,7 +342,7 @@ class User(Model):
                 messages.is_liked as is_liked, 
                 messages.is_seen as is_seen
                 FROM messages 
-                WHERE from_id=CAST({1} AS INT) and to_id=CAST({0} AS INT)
+                WHERE from_id=CAST({1} AS SIGNED) and to_id=CAST({0} AS SIGNED)
                 """.format(
                     self.id, with_user_id
                 )
@@ -350,7 +350,7 @@ class User(Model):
             messages = c.fetchall()
             message_list = []
             for message in messages:
-                message_list.append(message.Message(message))
+                message_list.append(Message(message).get_all_info())
         logging.debug(
             "Getting all messages between user {} and {} (Total: {})".format(self.id, with_user_id, len(message_list))
         )
