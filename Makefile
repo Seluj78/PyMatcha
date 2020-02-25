@@ -44,6 +44,17 @@ install_react:
 
 install: install_python install_react
 
+docker_build: install_react
+	mkdir -p www
+	mkdir -p www/frontend
+	mkdir -p www/backend
+
+	npm run build --prefix $(FRONTEND)
+	cp -R $(FRONTEND)/build www/frontend
+
+	# TODO: Add obfuscation/compilation step
+	cp -R $(BACKEND) www/
+
 build: install
 	mkdir -p www
 	mkdir -p www/frontend

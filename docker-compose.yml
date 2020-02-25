@@ -26,7 +26,7 @@ services:
     volumes:
       - redis-data:/data
 
-  celery-worker:
+  worker:
     build:
       context: ./celery
       dockerfile: Dockerfile
@@ -41,28 +41,28 @@ services:
     networks:
       - redis-net
 
-  flask-server:
+  web:
     container_name: pymatcha
     restart: always
     build:
-      context: ./backend
-      dockerfile: Dockerfile
+      context: .
+      dockerfile: backend/Dockerfile
     env_file:
       - .env
     environment:
       - PYTHONUNBUFFERED=1
     ports:
-      - "5000:5000"
+      - "8080:5000"
     volumes:
       - pymatcha:/app
     depends_on:
       - "mysql"
       - "redis"
-      - "celery-worker"
+      - "worker"
     links:
       - mysql
       - redis
-      - celery-worker
+      - worker
 
 networks:
   redis-net:
