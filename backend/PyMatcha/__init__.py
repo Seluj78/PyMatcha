@@ -116,13 +116,6 @@ logging.debug("Configuring CORS")
 CORS(application, expose_headers="Authorization", supports_credentials=True)
 
 
-@jwt.user_loader_callback_loader
-def user_loader_callback(identity):
-    return identity
-
-
-CORS(application)
-
 if os.getenv("CI"):
     database_password = ""
 else:
