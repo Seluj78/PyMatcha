@@ -25,18 +25,18 @@ import flask_jwt_extended as fjwt
 import PyMatcha.models.user as user
 
 from PyMatcha.errors import NotFoundError
-from PyMatcha.success import Success
+from PyMatcha.success import Success, SuccessOutput
 from PyMatcha.utils.decorators import validate_required_params
 
-REQUIRED_KEYS_NEW_MESSAGE = ["to_id", "content"]
-
+REQUIRED_KEYS_NEW_MESSAGE = {"to_id": int, "content": str}
+REQUIRED_KEYS_GET_CONVERSATION = {"with_id": int}
 
 messages_bp = Blueprint("messages", __name__)
 
 # TODO: Route to get messages since X timestamp
 
 
-@messages_bp.route("/messages", methods=["POST"])
+@messages_bp.route("/messages/", methods=["POST"])
 @fjwt.jwt_required
 @validate_required_params(REQUIRED_KEYS_NEW_MESSAGE)
 def send_message():
@@ -52,3 +52,13 @@ def send_message():
     sender.send_message(to_id=to_id, content=content)
     current_app.logger.debug("/messages -> Message successfully sent to {}".format(to_id))
     return Success("Message successfully sent to {}".format(to_id))
+
+
+@messages_bp.route("/messages/conversation/", methods=["GET"])
+@fjwt.jwt_required
+@validate_required_params(REQUIRED_KEYS_GET_CONVERSATION)
+def get_conversation():
+    data = request.get_json()
+    with_id: int = int(data["with_id"])
+    current_user = fjwt.get_current_user()
+    return SuccessOutput("messages", current_user.get_messages_with_user(with_id))
