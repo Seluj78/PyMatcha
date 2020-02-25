@@ -74,21 +74,6 @@ class User(Model):
         _hash, salt = self.password.split(":")
         return _hash == hashlib.sha256(salt.encode() + password.encode()).hexdigest()
 
-    def delete(self):
-        if self.id:
-            with self.db.cursor() as c:
-                c.execute(
-                    """
-                UPDATE {0} SET deleted = 1 
-                WHERE id=CAST({1} AS INT)
-                """.format(
-                        self.table_name, self.id
-                    )
-                )
-                self.db.commit()
-        else:
-            raise NotFoundError("User not in database", "Try again")
-
     @staticmethod
     def create(
         first_name: str,

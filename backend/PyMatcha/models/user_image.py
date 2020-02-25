@@ -28,8 +28,6 @@ from datetime import datetime
 from PyMatcha.utils.orm import Model, Field
 from PyMatcha.utils import create_user_images_table
 
-from PyMatcha.errors import NotFoundError
-
 
 class UserImage(Model):
     table_name = "user_images"
@@ -42,21 +40,6 @@ class UserImage(Model):
 
     def before_init(self, data):
         pass
-
-    def delete(self):
-        if self.id:
-            with self.db.cursor() as c:
-                c.execute(
-                    """
-                UPDATE {0} SET deleted = 1 
-                WHERE id=CAST({1} AS INT)
-                """.format(
-                        self.table_name, self.id
-                    )
-                )
-                self.db.commit()
-        else:
-            raise NotFoundError("Image not in database", "Try again")
 
     @staticmethod
     def create(
