@@ -17,7 +17,7 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 """
 
-from flask import Blueprint, request
+from flask import Blueprint, request, current_app
 
 
 import flask_jwt_extended as fjwt
@@ -40,6 +40,7 @@ messages_bp = Blueprint("messages", __name__)
 @fjwt.jwt_required
 @validate_required_params(REQUIRED_KEYS_NEW_MESSAGE)
 def send_message():
+    current_app.logger.debug("/messages -> Call")
     data = request.get_json()
     to_id: int = int(data["to_id"])
     content: str = data["content"]
@@ -49,4 +50,5 @@ def send_message():
     except NotFoundError:
         raise NotFoundError("User {} (from_id) not found.".format(current_user["id"]), "Try again with another uid")
     sender.send_message(to_id=to_id, content=content)
+    current_app.logger.debug("/messages -> Message successfully sent to {}".format(to_id))
     return Success("Message successfully sent to {}".format(to_id))

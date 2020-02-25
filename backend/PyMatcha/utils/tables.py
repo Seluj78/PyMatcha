@@ -151,7 +151,7 @@ def _create_matches_table(db):
 
 def _create_messages_table(db):
     with db.cursor() as c:
-        print("Creating table messages.")
+        logging.info("Creating table messages.")
         c.execute("""SET sql_notes = 0;""")
         c.execute(
             """

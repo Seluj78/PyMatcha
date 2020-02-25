@@ -310,6 +310,7 @@ class User(Model):
             message_list = []
             for message in messages:
                 message_list.append(message.Message(message))
+        logging.debug("Getting all messages sent or received by user {}".format(self.id))
         return message_list
 
     def get_messages_with_user(self, with_user_id) -> List[Message]:
@@ -350,6 +351,9 @@ class User(Model):
             message_list = []
             for message in messages:
                 message_list.append(message.Message(message))
+        logging.debug(
+            "Getting all messages between user {} and {} (Total: {})".format(self.id, with_user_id, len(message_list))
+        )
         return message_list
 
     def get_reports_sent(self):
@@ -374,6 +378,7 @@ class User(Model):
         return reports_list
     def send_message(self, to_id, content):
         # TODO: Send notification to the other user
+        logging.debug("Sending message from {} to {}".format(self.id, to_id))
         Message.create(from_id=self.id, to_id=to_id, content=content)
 
     def get_base_info(self):

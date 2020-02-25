@@ -18,6 +18,8 @@
 """
 from __future__ import annotations
 
+import logging
+
 from typing import Dict
 
 from datetime import datetime
@@ -78,10 +80,13 @@ class Message(Model):
             is_liked=is_liked,
         )
         new_message.save()
+        logging.debug("Created new message")
         return new_message
 
     def get_all_info(self) -> Dict:
+        logging.debug("Returning all info on message {}".format(self.id))
         return {
+            "id": self.id,
             "from_id": self.from_id,
             "to_id": self.to_id,
             "content": self.content,
