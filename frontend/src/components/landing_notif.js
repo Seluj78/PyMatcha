@@ -31,7 +31,7 @@ const Notif = ({ qs }) => {
 				<div className="modal-background" onClick={() => setIsActive(false)}></div>
 					<div className="modal-content">
 						<form onSubmit={onSubmit(email, setEmail, setIsActive)}>
-							<input className='input' type='email' placeholder='enter your email' value={email} onChange={e => setEmail(e.nativeEvent.target.value)}/>
+							<input required className='input' type='email' placeholder='enter your email' value={email} onChange={e => setEmail(e.nativeEvent.target.value)}/>
 						</form>
 					</div>
 				<button className="modal-close is-large" aria-label="close" onClick={() => setIsActive(false)}></button>
