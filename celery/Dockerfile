@@ -10,4 +10,6 @@ WORKDIR /queue
 
 RUN pip install -r requirements.txt
 
-ENTRYPOINT celery -A worker worker -B --loglevel=debug
+COPY ../backend .
+
+ENTRYPOINT celery -A Pymatcha.celery -B --loglevel=debug
