@@ -25,6 +25,8 @@ import PyMatcha.models.user as user
 
 from PyMatcha.errors import NotFoundError
 
+from PyMatcha import redis
+
 User = user.User
 get_user = user.get_user
 
@@ -54,3 +56,16 @@ def get_one_user(uid):
     else:
         current_app.logger.info("/users/{} -> Returning info on user {}".format(uid, uid))
         return jsonify(u.get_all_info())
+
+
+@user_bp.route("/users/online", methods=["GET"])
+@fjwt.jwt_required
+def get_all_online_users():
+    user_id = None
+    date_lastseen = None
+    online_user_list = []
+    for key in redis.scan_iter("user:*"):
+        user_id = str(key).split(":")[1]
+        date_lastseen = float(redis.get(key))
+        online_user_list.append({"id": user_id, "date_lastseen": date_lastseen})
+    return jsonify(online_user_list)
