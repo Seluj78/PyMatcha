@@ -183,3 +183,8 @@ def serve(path):
         return send_from_directory(application.static_folder, path)
     else:
         return send_from_directory(application.static_folder, "index.html")
+
+
+# import tasks here to be registered by celery
+
+import PyMatcha.utils.user_online_management  # noqa
