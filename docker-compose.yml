@@ -68,6 +68,7 @@ services:
     networks:
       - redis-net
       - mysql-net
+      - web-net
 
   nginx:
     image: nginx:latest
@@ -79,10 +80,13 @@ services:
       - 443:443
     depends_on:
       - web
+    networks:
+      - web-net
 
 networks:
   redis-net:
   mysql-net:
+  web-net:
 
 volumes:
   redis-data:
