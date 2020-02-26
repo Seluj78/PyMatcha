@@ -44,6 +44,7 @@ REQUIRED_KEYS_USER_CREATION = {"username": str, "email": str, "password": str}
 REQUIRED_KEYS_PASSWORD_FORGOT = {"email": str}
 REQUIRED_KEYS_PASSWORD_RESET = {"token": str, "password": str}
 REQUIRED_KEYS_LOGIN = {"username": str, "password": str}
+REQUIRED_KEYS_NEW_EMAIL_CONF = {"email": str}
 
 auth_bp = Blueprint("auth", __name__)
 
@@ -189,3 +190,30 @@ def auth_login():
     current_app.logger.debug("/auth/login -> Returning access token for user {}".format(username))
     redis.set("user:" + u.id, u.date_lastseen.timestamp())
     return SuccessOutput("access_token", access_token)
+
+
+@auth_bp.route("/auth/confirm/new", methods=["POST"])
+@validate_required_params(REQUIRED_KEYS_NEW_EMAIL_CONF)
+def request_new_email_conf():
+    current_app.logger.debug("/auth/confirm/new -> Call")
+    data = request.get_json()
+    email = data["email"]
+    try:
+        u = get_user(email)
+    except NotFoundError:
+        current_app.logger.debug("/auth/confirm/new -> User not found")
+        pass
+    else:
+        if u.is_confirmed:
+            current_app.logger.debug("/auth/confirm/new -> User found, Already confirmed.")
+            pass
+        else:
+            current_app.logger.debug("/auth/confirm/new -> User found, sending new confirmation email")
+            token = generate_confirmation_token(email=email, token_type="confirm")
+            send_mail_text.delay(
+                dest=data["email"],
+                subject="Confirm your email for PyMatcha",
+                body=os.getenv("APP_URL") + "/auth/confirm/" + token,
+            )
+    current_app.logger.debug("/auth/confirm/new -> New confirmation email sent if user exists in database")
+    return Success("New confirmation email sent if user exists in database")
