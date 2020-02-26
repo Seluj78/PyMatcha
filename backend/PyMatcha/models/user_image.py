@@ -16,7 +16,10 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 """
+
 from __future__ import annotations
+
+import logging
 
 from typing import Dict
 
@@ -24,8 +27,6 @@ from datetime import datetime
 
 from PyMatcha.utils.orm import Model, Field
 from PyMatcha.utils import create_user_images_table
-
-from PyMatcha.errors import NotFoundError
 
 
 class UserImage(Model):
@@ -40,27 +41,13 @@ class UserImage(Model):
     def before_init(self, data):
         pass
 
-    def delete(self):
-        if self.id:
-            with self.db.cursor() as c:
-                c.execute(
-                    """
-                UPDATE {0} SET deleted = 1 
-                WHERE id=CAST({1} AS INT)
-                """.format(
-                        self.table_name, self.id
-                    )
-                )
-                self.db.commit()
-        else:
-            raise NotFoundError("Image not in database", "Try again")
-
     @staticmethod
     def create(
         user_id: int, description="", timestamp=datetime.timestamp(datetime.utcnow()), is_primary=False
     ) -> UserImage:
         new_image = UserImage(user_id=user_id, description=description, timestamp=str(timestamp), is_primary=is_primary)
         new_image.save()
+        logging.debug("Creating new user image")
         return new_image
 
     def get_all_info(self) -> Dict:

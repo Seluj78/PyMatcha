@@ -52,12 +52,14 @@ auth_bp = Blueprint("auth", __name__)
 @auth_bp.route("/auth/register", methods=["POST"])
 @validate_required_params(REQUIRED_KEYS_USER_CREATION)
 def api_create_user():
+    current_app.logger.debug("/auth/register -> Call")
     data = request.get_json()
     data["email"] = data["email"].lower()
-
     try:
+        current_app.logger.debug("Trying to register new user {}, {}".format(data["email"], data["username"]))
         new_user = User.register(email=data["email"], username=data["username"], password=data["password"])
     except ConflictError as e:
+        current_app.logger.error("Conflict error on user register: {}".format(e))
         raise e
     else:
         token = generate_confirmation_token(email=data["email"], token_type="confirm")
@@ -66,100 +68,126 @@ def api_create_user():
             subject="Confirm your email for PyMatcha",
             body=os.getenv("APP_URL") + "/auth/confirm/" + token,
         )
+        current_app.logger.debug("New user {} successfully created".format(new_user.email))
         return SuccessOutputMessage("email", new_user.email, "New user successfully created.")
 
 
 @auth_bp.route("/auth/confirm/<token>", methods=["GET"])
 def confirm_email(token):
+    current_app.logger.debug("/auth/confirm/{} -> Call".format(token))
     try:
         email, token_type = confirm_token(token, expiration=7200)
     except (SignatureExpired, BadSignature) as e:
         if e == SignatureExpired:
+            current_app.logger.debug("/auth/confirm -> Signature Expired")
             return redirect("/?type=confirm&success=false&message=Signature expired")
         else:
+            current_app.logger.debug("/auth/confirm -> Bad Expired")
             return redirect("/?type=confirm&success=false&message=Bad Signature")
     else:
         if token_type != "confirm":
+            current_app.logger.debug("/auth/confirm -> Wrong token type")
             return redirect("/?type=confirm&success=false&message=Wrong token type")
         try:
             u = get_user(email)
         except NotFoundError:
+            current_app.logger.debug("/auth/confirm -> User not found")
             return redirect("/?type=confirm&success=false&message=User not found")
         if u.is_confirmed:
+            current_app.logger.debug("/auth/confirm -> User already confirmed")
             return redirect("/?type=confirm&success=false&message=User already confirmed")
         u.is_confirmed = True
         u.confirmed_on = datetime.datetime.utcnow()
         u.save()
+        current_app.logger.debug("/auth/confirm -> User {} confirmed.".format(u.id))
         return redirect("/?type=confirm&success=true&message=User confirmed")
 
 
 @auth_bp.route("/auth/password/forgot", methods=["POST"])
 @validate_required_params(REQUIRED_KEYS_PASSWORD_FORGOT)
 def forgot_password():
+    current_app.logger.debug("/auth/password/forgot -> Call")
     data = request.get_json()
     try:
         get_user(data["email"])
     except NotFoundError:
+        current_app.logger.debug("/auth/password/forgot -> User {} not found, no email sent".format(data["email"]))
         pass
     else:
         token = generate_confirmation_token(email=data["email"], token_type="reset")
+        current_app.logger.debug("/auth/password/forgot -> Sending worker request to send email")
         send_mail_text.delay(
             dest=data["email"],
             subject="Password reset for PyMatcha",
             body=os.getenv("APP_URL") + "/reset_password?token=" + token,
         )
+    current_app.logger.debug(
+        "/auth/password/forgot -> Password reset mail sent successfully for user {}".format(data["email"])
+    )
     return Success("Password reset mail sent successfully if user exists in DB")
 
 
 @auth_bp.route("/auth/password/reset", methods=["POST"])
 @validate_required_params(REQUIRED_KEYS_PASSWORD_RESET)
 def reset_password():
+    current_app.logger.debug("/auth/password/reset -> Call")
     data = request.get_json()
     try:
         email, token_type = confirm_token(data["token"], expiration=7200)
     except (SignatureExpired, BadSignature) as e:
         if e == SignatureExpired:
+            current_app.logger.debug("/auth/password/reset -> Signature Expired")
             raise BadRequestError("Signature Expired.", "Request another password reset and try again.")
         else:
+            current_app.logger.debug("/auth/password/reset -> Bad Signature")
             raise BadRequestError("Bad Signature.", "Request another password reset and try again.")
     else:
         if token_type != "reset":
+            current_app.logger.debug("/auth/password/reset -> Wrong token type")
             raise BadRequestError("Wrong token type", "Try again with the correct type")
         try:
             u = get_user(email)
         except NotFoundError:
+            current_app.logger.debug("/auth/password/reset -> User not found")
             raise NotFoundError("User not found", "Try again with another user.")
         if u.previous_reset_token == data["token"]:
+            current_app.logger.debug("/auth/password/reset -> Token already used")
             raise BadRequestError("Token already used", "Please request a new one")
         u.password = hash_password(data["password"])
         u.previous_reset_token = data["token"]
         u.save()
+        current_app.logger.debug("/auth/password/reset -> Password reset successfully")
         return Success("Password reset successful")
 
 
 @auth_bp.route("/auth/login", methods=["POST"])
 @validate_required_params(REQUIRED_KEYS_LOGIN)
 def auth_login():
+    current_app.logger.debug("/auth/login -> Call")
     data = request.get_json()
     username = data["username"]
     password = data["password"]
     try:
         u = get_user(username)
     except NotFoundError:
-        raise NotFoundError("User not found", "Try again with a different username")
+        current_app.logger.debug("/auth/login -> User not found")
+        raise UnauthorizedError("Incorrect username or password", "Try again")
     if not u.check_password(password):
-        raise UnauthorizedError("Incorrect Password", "Try again")
+        current_app.logger.debug("/auth/login -> Password invalid")
+        raise UnauthorizedError("Incorrect username or password", "Try again")
 
     # access_token = fjwt.create_access_token(
     #     identity=get_user_safe_dict(user), expires_delta=datetime.timedelta(hours=2)
     # )
     # TODO: Handle expiry for token
     if not u.is_confirmed:
+        current_app.logger.debug("/auth/login -> User is trying to login unconfirmed")
         raise UnauthorizedError("User needs to be confirmed first.", "Try again when you have confirmed your email")
     u.is_online = True
     u.date_lastseen = datetime.datetime.utcnow()
     u.save()
     access_token = fjwt.create_access_token(identity=u.get_base_info(), fresh=True)
+    current_app.logger.debug("/auth/login -> Returning access token for user {}".format(username))
     redis.set("user:" + u.id, u.date_lastseen.timestamp())
     return SuccessOutput("access_token", access_token)
 

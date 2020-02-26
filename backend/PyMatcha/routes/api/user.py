@@ -17,13 +17,15 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 """
 
-from flask import Blueprint, jsonify
+from flask import Blueprint, jsonify, current_app
 
 import flask_jwt_extended as fjwt
 
 import PyMatcha.models.user as user
 
 from PyMatcha.errors import NotFoundError
+
+from PyMatcha import redis
 
 User = user.User
 get_user = user.get_user
@@ -35,18 +37,35 @@ user_bp = Blueprint("user", __name__)
 @user_bp.route("/users/", methods=["GET"])
 @fjwt.jwt_required
 def get_all_users():
+    current_app.logger.info("/users/ -> Call")
     user_list = []
     for u in User.select_all():
         user_list.append(u.get_all_info())
+    current_app.logger.info("/users/ -> Returning all users list")
     return jsonify(user_list)
 
 
 @user_bp.route("/users/<uid>", methods=["GET"])
 @fjwt.jwt_required
 def get_one_user(uid):
+    current_app.logger.info("/users/{} -> Call".format(uid))
     try:
         u = get_user(uid)
     except NotFoundError:
         raise NotFoundError("User {} not found".format(uid), "Check given uid and try again")
     else:
+        current_app.logger.info("/users/{} -> Returning info on user {}".format(uid, uid))
         return jsonify(u.get_all_info())
+
+
+@user_bp.route("/users/online", methods=["GET"])
+@fjwt.jwt_required
+def get_all_online_users():
+    user_id = None
+    date_lastseen = None
+    online_user_list = []
+    for key in redis.scan_iter("user:*"):
+        user_id = str(key).split(":")[1]
+        date_lastseen = float(redis.get(key))
+        online_user_list.append({"id": user_id, "date_lastseen": date_lastseen})
+    return jsonify(online_user_list)

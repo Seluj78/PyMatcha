@@ -18,6 +18,7 @@
 """
 
 import os
+import logging
 import pymysql
 import datetime
 
@@ -39,6 +40,8 @@ import flask_jwt_extended as fjwt
 
 from PyMatcha.utils.tables import create_tables
 
+from PyMatcha.utils.logging import setup_logging
+
 PYMATCHA_ROOT = os.path.join(os.path.dirname(__file__), "../..")  # refers to application_top
 dotenv_path = os.path.join(PYMATCHA_ROOT, ".env")
 load_dotenv(dotenv_path)
@@ -53,11 +56,15 @@ REQUIRED_ENV_VARS = [
     "DB_PASSWORD",
     "MAIL_PASSWORD",
     "APP_URL",
+    "ENABLE_LOGGING",
 ]
 
 for item in REQUIRED_ENV_VARS:
     if item not in os.environ:
         raise EnvironmentError(f"{item} is not set in the server's environment or .env file. It is required")
+
+if os.getenv("ENABLE_LOGGING"):
+    setup_logging()
 
 application = Flask(__name__, static_folder=os.getenv("FRONT_STATIC_FOLDER"))
 application.debug = os.getenv("FLASK_DEBUG")
@@ -65,11 +72,16 @@ application.secret_key = os.getenv("FLASK_SECRET_KEY")
 application.config.update(FLASK_SECRET_KEY=os.getenv("FLASK_SECRET_KEY"))
 application.config["JWT_SECRET_KEY"] = os.environ.get("FLASK_SECRET_KEY")
 
+logging.debug("Configuring JWT")
 jwt = fjwt.JWTManager(application)
+
+
+logging.debug("Configuring JWT expired token handler callback")
 
 
 @jwt.expired_token_loader
 def expired_token_callback(expired_token):
+    logging.error("Token {} expired".format(expired_token))
     resp = {
         "code": 401,
         "error": {
@@ -83,6 +95,7 @@ def expired_token_callback(expired_token):
     return jsonify(resp), 401
 
 
+logging.debug("Configuring CORS")
 CORS(application, expose_headers="Authorization", supports_credentials=True)
 
 if os.getenv("CI"):
@@ -90,6 +103,7 @@ if os.getenv("CI"):
 else:
     database_password = os.getenv("DB_PASSWORD")
 
+logging.debug("Setting database config from environment variables")
 database_config = {
     "host": os.getenv("DB_HOST") if not os.getenv("IS_DOCKER_COMPOSE") else "mysql",
     "port": int(os.getenv("DB_PORT")),
@@ -100,10 +114,13 @@ database_config = {
     "cursorclass": DictCursor,
 }
 
+logging.debug("Connecting to database")
 db = pymysql.connect(**database_config)
 
+logging.debug("Creating tables")
 create_tables(db)
 
+logging.debug("Configuring mail settings")
 application.config.update(
     MAIL_SERVER="smtp.gmail.com",
     MAIL_PORT=465,
@@ -113,12 +130,8 @@ application.config.update(
     MAIL_DEBUG=False,
     MAIL_DEFAULT_SENDER="pymatcha@gmail.com",
 )
+logging.debug("Configuring mail")
 mail = Mail(application)
-
-
-# Celery configuration
-application.config["CELERY_BROKER_URL"] = "redis://localhost:6379/0"
-application.config["CELERY_RESULT_BACKEND"] = "redis://localhost:6379/0"
 
 redis = Redis(
     host=os.getenv("REDIS_HOST") if not os.getenv("IS_DOCKER_COMPOSE") else "redis", port=os.getenv("REDIS_PORT", 6379)
@@ -128,6 +141,8 @@ import PyMatcha.models.user as user_module
 
 get_user = user_module.get_user
 
+logging.debug("Configuring JWT user callback loader")
+
 
 @jwt.user_loader_callback_loader
 def jwt_user_callback(identity):
@@ -136,6 +151,12 @@ def jwt_user_callback(identity):
     return get_user(identity["id"])
 
 
+logging.debug("Configuring Celery Redis URLs")
+# Celery configuration
+application.config["CELERY_BROKER_URL"] = "redis://localhost:6379/0"
+application.config["CELERY_RESULT_BACKEND"] = "redis://localhost:6379/0"
+
+logging.debug("Initializing Celery")
 # Initialize Celery
 celery = Celery(application.name, broker=application.config["CELERY_BROKER_URL"])
 celery.conf.update(application.config)
@@ -145,9 +166,13 @@ from PyMatcha.routes.api.ping_pong import ping_pong_bp
 from PyMatcha.routes.api.user import user_bp
 from PyMatcha.routes.api.auth import auth_bp
 
+logging.debug("Registering Flask blueprints")
 application.register_blueprint(ping_pong_bp)
 application.register_blueprint(user_bp)
 application.register_blueprint(auth_bp)
+
+
+logging.debug("Registering serve route for REACT")
 
 
 # Serve React App
@@ -158,3 +183,8 @@ def serve(path):
         return send_from_directory(application.static_folder, path)
     else:
         return send_from_directory(application.static_folder, "index.html")
+
+
+# import tasks here to be registered by celery
+
+import PyMatcha.utils.user_online_management  # noqa
