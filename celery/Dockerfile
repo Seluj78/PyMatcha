@@ -10,4 +10,4 @@ WORKDIR /queue
 
 RUN pip install -r requirements.txt
 
-ENTRYPOINT celery -A worker worker -B
+ENTRYPOINT celery -A worker worker -B --loglevel=debug
