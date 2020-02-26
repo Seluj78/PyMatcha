@@ -27,4 +27,4 @@ ENV PYTHONDONTWRITEBYTECODE 1
 ENV IS_DOCKER_COMPOSE true
 EXPOSE 5000
 
-CMD gunicorn --chdir backend app:application -w 2 --threads 2 -b 0.0.0.0:5000 --log-level=debug
+CMD gunicorn --chdir backend app:application -w 2 --threads 2 -b 0.0.0.0:5000

@@ -64,6 +64,17 @@ services:
       - redis
       - worker
 
+  nginx:
+    image: nginx:latest
+    container_name: pnginx
+    volumes:
+      - ./nginx/:/etc/nginx/
+    ports:
+      - 80:80
+      - 443:443
+    depends_on:
+      - web
+
 networks:
   redis-net:
 
