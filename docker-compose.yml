@@ -32,8 +32,8 @@ services:
 
   worker:
     build:
-      context: ./celery
-      dockerfile: Dockerfile
+      context: backend
+      dockerfile: Dockerfile.celery
     environment:
       - PYTHONUNBUFFERED=1
     depends_on:
