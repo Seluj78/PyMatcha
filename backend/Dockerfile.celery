@@ -10,6 +10,4 @@ WORKDIR /queue
 
 RUN pip install redis celery
 
-COPY ../backend .
-
 ENTRYPOINT celery -A Pymatcha.celery -B --loglevel=debug
