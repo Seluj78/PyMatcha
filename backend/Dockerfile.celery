@@ -8,8 +8,6 @@ ENV PYTHONUNBUFFERED 1
 COPY . /queue
 WORKDIR /queue
 
-RUN apt-get install gcc
-
 RUN pip install -r backend/requirements.txt
 
 ENTRYPOINT export $(cat .env | xargs) && celery worker --workdir backend -A PyMatcha.celery -B --loglevel=debug
