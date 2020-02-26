@@ -34,8 +34,6 @@ services:
       dockerfile: Dockerfile
     environment:
       - PYTHONUNBUFFERED=1
-    ports:
-      - '6379:6379'
     depends_on:
       - redis
     links:
@@ -65,6 +63,8 @@ services:
       - mysql
       - redis
       - worker
+    networks:
+      - redis-net
 
   nginx:
     image: nginx:latest
