@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { effectDuration, discard, apiCall } from '../utils';
-import Loading from '../components/loadings';
+import Loading from '../components/loading';
 import Input from './input';
 
 const logMe = (history, setState, email, username, password, from) => async () => {

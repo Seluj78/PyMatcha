@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { effectDuration, discard, apiCall } from '../utils';
-import Loading from '../components/loadings';
+import Loading from '../components/loading';
 import Input from './input';
 
 const logMe = (history, setState, username, password, from) => async () => {
@@ -13,8 +13,6 @@ const logMe = (history, setState, username, password, from) => async () => {
 		sessionStorage.setItem("token", token);
 		history.push('/');
 	}
-	// API call /auth/login
-	// sessionStorage.setItem('token', 'api call result');
 }
 
 const usernameInput = (value, setValue, state) => ({
