@@ -36,7 +36,7 @@ messages_bp = Blueprint("messages", __name__)
 # TODO: Route to get messages since X timestamp
 
 
-@messages_bp.route("/messages/", methods=["POST"])
+@messages_bp.route("/messages/send/", methods=["POST"])
 @fjwt.jwt_required
 @validate_required_params(REQUIRED_KEYS_NEW_MESSAGE)
 def send_message():
