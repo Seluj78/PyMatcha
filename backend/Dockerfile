@@ -19,7 +19,7 @@ RUN apt-get -y install apt-utils curl gnupg
 RUN curl -sL https://deb.nodesource.com/setup_12.x  | bash -
 RUN apt-get -y install nodejs
 
-RUN make docker_build
+RUN export $(cat .env | xargs) && make docker_build
 
 workdir /src/www
 
