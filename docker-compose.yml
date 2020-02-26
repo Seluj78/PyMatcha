@@ -16,6 +16,8 @@ services:
       - '3306'
     volumes:
       - mysql:/var/lib/mysql
+    networks:
+      - mysql-net
 
   redis:
     image: redis:4.0.5-alpine
@@ -65,6 +67,7 @@ services:
       - worker
     networks:
       - redis-net
+      - mysql-net
 
   nginx:
     image: nginx:latest
@@ -79,6 +82,7 @@ services:
 
 networks:
   redis-net:
+  mysql-net:
 
 volumes:
   redis-data:
