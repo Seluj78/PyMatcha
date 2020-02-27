@@ -72,6 +72,18 @@ application.secret_key = os.getenv("FLASK_SECRET_KEY")
 application.config.update(FLASK_SECRET_KEY=os.getenv("FLASK_SECRET_KEY"))
 application.config["JWT_SECRET_KEY"] = os.environ.get("FLASK_SECRET_KEY")
 
+logging.debug("Configuring Celery Redis URLs")
+CELERY_BROKER_URL = "redis://localhost:6379/0" if not os.getenv("IS_DOCKER_COMPOSE") else "redis://redis:6379/0"
+CELERY_RESULT_BACKEND = "redis://localhost:6379/0" if not os.getenv("IS_DOCKER_COMPOSE") else "redis://redis:6379/0"
+# Celery configuration
+application.config["CELERY_BROKER_URL"] = CELERY_BROKER_URL
+application.config["CELERY_RESULT_BACKEND"] = CELERY_RESULT_BACKEND
+
+logging.debug("Initializing Celery")
+# Initialize Celery
+celery = Celery(application.name, broker=CELERY_BROKER_URL)
+celery.conf.update(application.config)
+
 logging.debug("Configuring JWT")
 jwt = fjwt.JWTManager(application)
 
@@ -149,19 +161,6 @@ def jwt_user_callback(identity):
     # TODO: Check if this function is called everytime a jwt is used
     redis.set("user:" + identity["id"], datetime.datetime.utcnow().timestamp())
     return get_user(identity["id"])
-
-
-logging.debug("Configuring Celery Redis URLs")
-CELERY_BROKER_URL = "redis://localhost:6379/0" if not os.getenv("IS_DOCKER_COMPOSE") else "redis://redis:6379/0"
-CELERY_RESULT_BACKEND = "redis://localhost:6379/0" if not os.getenv("IS_DOCKER_COMPOSE") else "redis://redis:6379/0"
-# Celery configuration
-application.config["CELERY_BROKER_URL"] = CELERY_BROKER_URL
-application.config["CELERY_RESULT_BACKEND"] = CELERY_RESULT_BACKEND
-
-logging.debug("Initializing Celery")
-# Initialize Celery
-celery = Celery(application.name, broker=CELERY_BROKER_URL)
-celery.conf.update(application.config)
 
 
 from PyMatcha.routes.api.ping_pong import ping_pong_bp
