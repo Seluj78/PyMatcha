@@ -8,6 +8,7 @@ services:
       MYSQL_ROOT_PASSWORD:
       MYSQL_DATABASE: pymatcha
       MYSQL_ALLOW_EMPTY_PASSWORD: 1
+    command: mysql -uroot -c "grant usage on *.* to root@'%' with max_user_connections 10;"
     env_file:
       - .env
     ports:
