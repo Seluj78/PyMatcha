@@ -152,17 +152,15 @@ def jwt_user_callback(identity):
 
 
 logging.debug("Configuring Celery Redis URLs")
+CELERY_BROKER_URL = "redis://localhost:6379/0" if not os.getenv("IS_DOCKER_COMPOSE") else "redis://redis:6379/0"
+CELERY_RESULT_BACKEND = "redis://localhost:6379/0" if not os.getenv("IS_DOCKER_COMPOSE") else "redis://redis:6379/0"
 # Celery configuration
-application.config["CELERY_BROKER_URL"] = (
-    "redis://localhost:6379/0" if not os.getenv("IS_DOCKER_COMPOSE") else "redis://redis:6379/0"
-)
-application.config["CELERY_RESULT_BACKEND"] = (
-    "redis://localhost:6379/0" if not os.getenv("IS_DOCKER_COMPOSE") else "redis://redis:6379/0"
-)
+application.config["CELERY_BROKER_URL"] = CELERY_BROKER_URL
+application.config["CELERY_RESULT_BACKEND"] = CELERY_RESULT_BACKEND
 
 logging.debug("Initializing Celery")
 # Initialize Celery
-celery = Celery(application.name, broker=application.config["CELERY_BROKER_URL"])
+celery = Celery(application.name, broker=CELERY_BROKER_URL)
 celery.conf.update(application.config)
 
 
