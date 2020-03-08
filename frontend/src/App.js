@@ -7,13 +7,13 @@ import { getToken } from './utils'
 import './App.css';
 
 const App = () => (
-	<BrowserRouter>
-		<Switch>
-			<PrivateRoute exact path="/" component={Home} />
-			<Route exact path="/login" component={Landing} />
-			<Route component={NotFound} />
-		</Switch>
-	</BrowserRouter>
+		<BrowserRouter>
+			<Switch>
+				<PrivateRoute exact path="/" component={Home} />
+				<Route exact path="/login" component={Landing} />
+				<Route component={NotFound} />
+			</Switch>
+		</BrowserRouter> 
 );
 
 const PrivateRoute = ({ component: Component, ...rest }) => (
@@ -22,7 +22,7 @@ const PrivateRoute = ({ component: Component, ...rest }) => (
 			(!!getToken() ? (
 				<Component {...props} />
 			) : (
-				<Redirect to={{ pathname: "/login", state: { from: props.location }}} />
+				<Redirect to={{ pathname: `/login${window.location.search}`, state: { from: props.location }}} />
 			))
 		}
 	/>

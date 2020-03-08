@@ -3,14 +3,26 @@ import { getToken } from '../utils';
 import { useHistory } from 'react-router-dom';
 import LoginCard from '../components/login_card';
 import RegisterCard from '../components/register_card';
+import Notif from '../components/landing_notif';
 
 // If oldPath is set, maybe a blur effect
+const getQs = () => {
+	const urlParams = new URLSearchParams(window.location.search);
+	let ret = {};
+	let empty = true;
+	urlParams.forEach((value, key) => { ret[key] = value ; empty = false ; })
+	return empty ? null : ret;
+}
+
 const Landing = ({ from }) => {
 	const history = useHistory();
+	const qs = getQs();
+
 	if (!!getToken())
 		history.push('/');
 	return (
 			<div className='container' style={{ textAlign: 'center', padding: '1.5em' }}>
+				<Notif qs={qs} />
 				<p className='title is-1' style={{ margin: '1em' }} >Matcha</p>
 				<div className='tile is-ancestor'>
 					<div className='tile is-vertical is-8'>
