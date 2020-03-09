@@ -17,25 +17,21 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 """
 
-import os
 import datetime
-
-from flask import Blueprint, request, redirect, current_app
-
-from itsdangerous import SignatureExpired, BadSignature
+import os
 
 import flask_jwt_extended as fjwt
-
-from PyMatcha import redis
+from flask import Blueprint, request, redirect, current_app
+from itsdangerous import SignatureExpired, BadSignature
 
 import PyMatcha.models.user as user
+from PyMatcha import redis
 from PyMatcha.errors import ConflictError, NotFoundError, BadRequestError, UnauthorizedError
 from PyMatcha.success import SuccessOutputMessage, Success, SuccessOutput
-from PyMatcha.utils.confirm_token import generate_confirmation_token, confirm_token
-from PyMatcha.utils.mail import send_mail_text
-from PyMatcha.utils.decorators import validate_required_params
 from PyMatcha.utils import hash_password
-
+from PyMatcha.utils.confirm_token import generate_confirmation_token, confirm_token
+from PyMatcha.utils.decorators import validate_required_params
+from PyMatcha.utils.mail import send_mail_text
 
 User = user.User
 get_user = user.get_user

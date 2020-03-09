@@ -1,7 +1,7 @@
-import pymysql
 import logging
-
 from copy import deepcopy
+
+import pymysql
 
 from PyMatcha import database_config
 from PyMatcha.utils.orm import Field

@@ -1,13 +1,13 @@
+import datetime
+import random
+import string
+
+import Geohash
 import lorem
 import names
-import string
-import random
-import Geohash
-import datetime
-
-from PyMatcha.errors import ConflictError
 
 import PyMatcha.models.user as user_module
+from PyMatcha.errors import ConflictError
 
 User = user_module.User
 
