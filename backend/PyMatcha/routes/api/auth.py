@@ -184,7 +184,7 @@ def auth_login():
     u.save()
     access_token = fjwt.create_access_token(identity=u.get_base_info(), fresh=True)
     current_app.logger.debug("/auth/login -> Returning access token for user {}".format(username))
-    redis.set("user:" + u.id, u.date_lastseen.timestamp())
+    redis.set("user:" + str(u.id), u.date_lastseen.timestamp())
     return SuccessOutput("access_token", access_token)
 
 

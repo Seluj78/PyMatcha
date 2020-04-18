@@ -77,25 +77,25 @@ services:
     networks:
       - redis-net
       - mysql-net
-      - web-net
-
-  nginx:
-    image: nginx:latest
-    container_name: pnginx
-    volumes:
-      - ./nginx/:/etc/nginx/
-    ports:
-      - 80:80
-      - 443:443
-    depends_on:
-      - web
-    networks:
-      - web-net
+#      - web-net
+#
+#  nginx:
+#    image: nginx:latest
+#    container_name: pnginx
+#    volumes:
+#      - ./nginx/:/etc/nginx/
+#    ports:
+#      - 80:80
+#      - 443:443
+#    depends_on:
+#      - web
+#    networks:
+#      - web-net
 
 networks:
   redis-net:
   mysql-net:
-  web-net:
+#  web-net:
 
 volumes:
   redis-data:

@@ -150,7 +150,7 @@ logging.debug("Configuring JWT user callback loader")
 @jwt.user_loader_callback_loader
 def jwt_user_callback(identity):
     # TODO: Check if this function is called everytime a jwt is used
-    redis.set("user:" + identity["id"], datetime.datetime.utcnow().timestamp())
+    redis.set("user:" + str(identity["id"]), datetime.datetime.utcnow().timestamp())
     return get_user(identity["id"])
 
 
