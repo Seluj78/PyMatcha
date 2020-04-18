@@ -1,8 +1,8 @@
 import logging
 
-from PyMatcha import mail, celery, application
-
 from flask_mail import Message
+
+from PyMatcha import mail, celery, application
 
 
 @celery.task

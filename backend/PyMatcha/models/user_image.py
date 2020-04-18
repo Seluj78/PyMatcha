@@ -20,13 +20,11 @@
 from __future__ import annotations
 
 import logging
-
+from datetime import datetime
 from typing import Dict
 
-from datetime import datetime
-
-from PyMatcha.utils.orm import Model, Field
 from PyMatcha.utils import create_user_images_table
+from PyMatcha.utils.orm import Model, Field
 
 
 class UserImage(Model):

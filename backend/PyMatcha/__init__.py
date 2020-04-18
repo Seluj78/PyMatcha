@@ -17,30 +17,22 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 """
 
-import os
-import logging
-import pymysql
 import datetime
-
-from flask_mail import Mail
-
-from redis import Redis
-
-from celery import Celery
-
-from flask_cors import CORS
-
-from dotenv import load_dotenv
-
-from pymysql.cursors import DictCursor
-
-from flask import Flask, send_from_directory, jsonify
+import logging
+import os
 
 import flask_jwt_extended as fjwt
-
-from PyMatcha.utils.tables import create_tables
+import pymysql
+from celery import Celery
+from dotenv import load_dotenv
+from flask import Flask, send_from_directory, jsonify
+from flask_cors import CORS
+from flask_mail import Mail
+from pymysql.cursors import DictCursor
+from redis import Redis
 
 from PyMatcha.utils.logging import setup_logging
+from PyMatcha.utils.tables import create_tables
 
 PYMATCHA_ROOT = os.path.join(os.path.dirname(__file__), "../..")  # refers to application_top
 dotenv_path = os.path.join(PYMATCHA_ROOT, ".env")
@@ -72,9 +64,20 @@ application.secret_key = os.getenv("FLASK_SECRET_KEY")
 application.config.update(FLASK_SECRET_KEY=os.getenv("FLASK_SECRET_KEY"))
 application.config["JWT_SECRET_KEY"] = os.environ.get("FLASK_SECRET_KEY")
 
+logging.debug("Configuring Celery Redis URLs")
+CELERY_BROKER_URL = "redis://localhost:6379/0" if not os.getenv("IS_DOCKER_COMPOSE") else "redis://redis:6379/0"
+CELERY_RESULT_BACKEND = "redis://localhost:6379/0" if not os.getenv("IS_DOCKER_COMPOSE") else "redis://redis:6379/0"
+# Celery configuration
+application.config["CELERY_BROKER_URL"] = CELERY_BROKER_URL
+application.config["CELERY_RESULT_BACKEND"] = CELERY_RESULT_BACKEND
+
+logging.debug("Initializing Celery")
+# Initialize Celery
+celery = Celery(application.name, broker=CELERY_BROKER_URL)
+celery.conf.update(application.config)
+
 logging.debug("Configuring JWT")
 jwt = fjwt.JWTManager(application)
-
 
 logging.debug("Configuring JWT expired token handler callback")
 
@@ -147,19 +150,8 @@ logging.debug("Configuring JWT user callback loader")
 @jwt.user_loader_callback_loader
 def jwt_user_callback(identity):
     # TODO: Check if this function is called everytime a jwt is used
-    redis.set("user:" + identity["id"], datetime.datetime.utcnow().timestamp())
+    redis.set("user:" + str(identity["id"]), datetime.datetime.utcnow().timestamp())
     return get_user(identity["id"])
-
-
-logging.debug("Configuring Celery Redis URLs")
-# Celery configuration
-application.config["CELERY_BROKER_URL"] = "redis://localhost:6379/0"
-application.config["CELERY_RESULT_BACKEND"] = "redis://localhost:6379/0"
-
-logging.debug("Initializing Celery")
-# Initialize Celery
-celery = Celery(application.name, broker=application.config["CELERY_BROKER_URL"])
-celery.conf.update(application.config)
 
 
 from PyMatcha.routes.api.ping_pong import ping_pong_bp
@@ -170,7 +162,6 @@ logging.debug("Registering Flask blueprints")
 application.register_blueprint(ping_pong_bp)
 application.register_blueprint(user_bp)
 application.register_blueprint(auth_bp)
-
 
 logging.debug("Registering serve route for REACT")
 

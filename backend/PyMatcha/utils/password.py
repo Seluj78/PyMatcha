@@ -17,9 +17,9 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 """
 
-import uuid
 import hashlib
 import logging
+import uuid
 
 
 def hash_password(password: str) -> str:

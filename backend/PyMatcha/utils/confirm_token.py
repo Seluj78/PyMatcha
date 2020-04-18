@@ -38,7 +38,6 @@ def generate_confirmation_token(email, token_type):
 
 
 def confirm_token(token, expiration=3600):
-
     serializer = URLSafeTimedSerializer(application.config["FLASK_SECRET_KEY"])
     try:
         logging.debug("Trying to confirm token {}")

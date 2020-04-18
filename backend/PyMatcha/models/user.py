@@ -18,23 +18,19 @@
 """
 from __future__ import annotations
 
+import hashlib
 import json
 import logging
-import hashlib
-
+from datetime import datetime
 from typing import Dict, List, Optional, Any
 
-from datetime import datetime
-
-from PyMatcha.utils import hash_password
-from PyMatcha.utils.orm import Model, Field
-from PyMatcha.utils import create_user_table
-
-from PyMatcha.errors import ConflictError, NotFoundError
+import Geohash
 
 import PyMatcha.models.user_image as user_image
-
-import Geohash
+from PyMatcha.errors import ConflictError, NotFoundError
+from PyMatcha.utils import create_user_table
+from PyMatcha.utils import hash_password
+from PyMatcha.utils.orm import Model, Field
 
 UserImage = user_image.UserImage
 
@@ -269,7 +265,6 @@ class User(Model):
 
 
 def get_user(uid: Any[int, str]) -> Optional[User]:
-
     not_found = 0
     # These initializations are to make PEP happy and silence warnings
     f_user = None

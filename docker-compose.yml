@@ -8,6 +8,7 @@ services:
       MYSQL_ROOT_PASSWORD:
       MYSQL_DATABASE: pymatcha
       MYSQL_ALLOW_EMPTY_PASSWORD: 1
+#    command: mysql -uroot -c "grant usage on *.* to root@'%' with max_user_connections 10;"
     env_file:
       - .env
     ports:
@@ -16,11 +17,15 @@ services:
       - '3306'
     volumes:
       - mysql:/var/lib/mysql
+    networks:
+      - mysql-net
 
   redis:
     image: redis:4.0.5-alpine
     command: ["redis-server", "--appendonly", "yes"]
     hostname: redis
+    ports:
+      - '6379:6379'
     networks:
       - redis-net
     volumes:
@@ -28,18 +33,24 @@ services:
 
   worker:
     build:
-      context: ./celery
-      dockerfile: Dockerfile
+      context: .
+      dockerfile: backend/Dockerfile
     environment:
       - PYTHONUNBUFFERED=1
-    ports:
-      - '6379:6379'
+      - CELERY_BROKER_URL=redis://redis:6379/0
+      - CELERY_RESULT_BACKEND=redis://redis:6379/0
+    env_file:
+      - .env
+    entrypoint: celery worker --workdir backend -A PyMatcha.celery -B --loglevel=debug
+    volumes:
+      - pymatcha:/app
     depends_on:
       - redis
     links:
       - redis
     networks:
       - redis-net
+      - mysql-net
 
   web:
     container_name: pymatcha
@@ -63,9 +74,28 @@ services:
       - mysql
       - redis
       - worker
+    networks:
+      - redis-net
+      - mysql-net
+#      - web-net
+#
+#  nginx:
+#    image: nginx:latest
+#    container_name: pnginx
+#    volumes:
+#      - ./nginx/:/etc/nginx/
+#    ports:
+#      - 80:80
+#      - 443:443
+#    depends_on:
+#      - web
+#    networks:
+#      - web-net
 
 networks:
   redis-net:
+  mysql-net:
+#  web-net:
 
 volumes:
   redis-data:
