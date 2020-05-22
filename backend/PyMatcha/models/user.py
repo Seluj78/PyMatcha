@@ -22,15 +22,19 @@ import hashlib
 import json
 import logging
 from datetime import datetime
-from typing import Dict, List, Optional, Any
+from typing import Any
+from typing import Dict
+from typing import List
+from typing import Optional
 
 import Geohash
-
 import PyMatcha.models.user_image as user_image
-from PyMatcha.errors import ConflictError, NotFoundError
+from PyMatcha.errors import ConflictError
+from PyMatcha.errors import NotFoundError
 from PyMatcha.utils import create_user_table
 from PyMatcha.utils import hash_password
-from PyMatcha.utils.orm import Model, Field
+from PyMatcha.utils.orm import Field
+from PyMatcha.utils.orm import Model
 
 UserImage = user_image.UserImage
 
@@ -219,7 +223,7 @@ class User(Model):
             "orientation": self.orientation,
             "birthdate": self.birthdate,
             "geohash": self.geohash,
-            "tags": json.loads(self.tags),
+            "tags": json.loads(self.tags),  # TODO: Optimize this
             "heat_score": self.heat_score,
             "is_online": self.is_online,
             "date_joined": self.date_joined,

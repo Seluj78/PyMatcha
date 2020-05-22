@@ -1,0 +1,889 @@
+{
+	"info": {
+		"_postman_id": "33f2f20e-4ae2-42ad-8c56-53196432e628",
+		"name": "PyMatcha",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Auth",
+			"item": [
+				{
+					"name": "Create user no JSON",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "4ef614bd-e92a-4a6b-9e16-2eb9a8c3d606",
+								"exec": [
+									"var response = JSON.parse(responseBody);",
+									"",
+									"",
+									"pm.test(\"Status code is 400\", function () {",
+									"    pm.response.to.have.status(400);",
+									"});",
+									"",
+									"tests[\"JSON return code is 400\"] = response.code == 400",
+									"",
+									"tests[\"success is false\"] = response.success == false",
+									"tests[\"Message is correct\"] = response.error.message == \"Missing json body.\"",
+									"tests[\"Error type is Bad Request\"] = response.error.type == \"BadRequestError\""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{host}}/auth/register",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"auth",
+								"register"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create user malformed JSON",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "d3ae559c-9587-4ad4-a79e-4a6e851da11c",
+								"exec": [
+									"var response = JSON.parse(responseBody);",
+									"",
+									"",
+									"pm.test(\"Status code is 400\", function () {",
+									"    pm.response.to.have.status(400);",
+									"});",
+									"",
+									"tests[\"JSON return code is 400\"] = response.code == 400",
+									"",
+									"tests[\"success is false\"] = response.success == false",
+									"tests[\"Message is correct\"] = response.error.message == \"The Json Body is malformed\"",
+									"tests[\"Error type is Bad Request\"] = response.error.type == \"BadRequestError\""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/auth/register",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"auth",
+								"register"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create user missing key",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "ccdbec95-4dfd-4618-9772-5cef79f73098",
+								"exec": [
+									"var response = JSON.parse(responseBody);",
+									"",
+									"",
+									"pm.test(\"Status code is 400\", function () {",
+									"    pm.response.to.have.status(400);",
+									"});",
+									"",
+									"tests[\"JSON return code is 400\"] = response.code == 400",
+									"",
+									"tests[\"success is true\"] = response.success == false",
+									"tests[\"Message is correct\"] = response.error.message == \"Missing key(s) ['username'] to perform action.\"",
+									"tests[\"Error type is Bad Request\"] = response.error.type == \"BadRequestError\""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"email\": \"{{user_email}}\",\n\t\"password\": \"{{user_password}}\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/auth/register",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"auth",
+								"register"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create user too many keys",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "893bac2d-763b-4e34-8507-f5f2cdc43bb7",
+								"exec": [
+									"var response = JSON.parse(responseBody);",
+									"",
+									"",
+									"pm.test(\"Status code is 400\", function () {",
+									"    pm.response.to.have.status(400);",
+									"});",
+									"",
+									"tests[\"JSON return code is 400\"] = response.code == 400",
+									"",
+									"tests[\"success is true\"] = response.success == false",
+									"tests[\"Message is correct\"] = response.error.message == \"You can't specify key 'role'.\"",
+									"tests[\"Error type is Bad Request\"] = response.error.type == \"BadRequestError\""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"email\": \"{{user_email}}\",\n\t\"password\": \"{{user_password}}\",\n\t\"username\": \"{{user_username}}\",\n\t\"role\": \"admin\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/auth/register",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"auth",
+								"register"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create user",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "fd7c5637-25c6-4a0c-8c8f-58f77b3846e7",
+								"exec": [
+									"var response = JSON.parse(responseBody);",
+									"",
+									"",
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"tests[\"JSON return code is 200\"] = response.code == 200",
+									"",
+									"tests[\"success is true\"] = response.success == true"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"username\": \"{{user_username}}\",\n\t\"email\": \"{{user_email}}\",\n\t\"password\": \"{{user_password}}\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/auth/register",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"auth",
+								"register"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create user email already taken",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "c910369c-9203-4a5a-9b35-3a7e069f2165",
+								"exec": [
+									"var response = JSON.parse(responseBody);",
+									"",
+									"",
+									"pm.test(\"Status code is 400\", function () {",
+									"    pm.response.to.have.status(409);",
+									"});",
+									"",
+									"tests[\"JSON return code is 400\"] = response.code == 409",
+									"",
+									"tests[\"success is false\"] = response.success == false",
+									"tests[\"Message is correct\"] = response.error.message == \"Email jules.lasne@gmail.com taken\"",
+									"tests[\"Error type is Bad Request\"] = response.error.type == \"ConflictError\""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"username\": \"{{user_username}}\",\n\t\"email\": \"{{user_email}}\",\n\t\"password\": \"{{user_password}}\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/auth/register",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"auth",
+								"register"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete user",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "fcc07149-ec79-43b2-9a04-9d6741569cc9",
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(204);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{host}}/users/{{user_email}}",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"users",
+								"{{user_email}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create user after delete",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "24ee2a8f-b47e-46d6-bfe3-7b4a4f6c17e7",
+								"exec": [
+									"var response = JSON.parse(responseBody);",
+									"",
+									"",
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"tests[\"JSON return code is 200\"] = response.code == 200",
+									"",
+									"tests[\"success is true\"] = response.success == true",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"username\": \"{{user_username}}\",\n\t\"email\": \"{{user_email}}\",\n\t\"password\": \"{{user_password}}\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/auth/register",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"auth",
+								"register"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Login user without confirmation",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "00bf2176-6e9f-4c1d-a0da-a17ef0b9c462",
+								"exec": [
+									"var response = JSON.parse(responseBody);",
+									"",
+									"",
+									"pm.test(\"Status code is 401\", function () {",
+									"    pm.response.to.have.status(401);",
+									"});",
+									"",
+									"tests[\"JSON return code is 401\"] = response.code == 401",
+									"",
+									"tests[\"success is true\"] = response.success == false",
+									"tests[\"Message is correct\"] = response.error.message == \"User needs to be confirmed first.\"",
+									"tests[\"Error type is Bad Request\"] = response.error.type == \"UnauthorizedError\""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"username\": \"{{user_username}}\",\n\t\"password\": \"{{user_password}}\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/auth/login",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"auth",
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Confirm user without debug token",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "d0079172-864c-446a-aaab-337ed1f50a5f",
+								"exec": [
+									"var response = JSON.parse(responseBody);",
+									"",
+									"",
+									"pm.test(\"Status code is 401\", function () {",
+									"    pm.response.to.have.status(401);",
+									"});",
+									"",
+									"tests[\"JSON return code is 401\"] = response.code == 401",
+									"",
+									"tests[\"success is false\"] = response.success == false",
+									"tests[\"Message is correct\"] = response.error.message == \"Missing debug auth token.\"",
+									"tests[\"Error type is Bad Request\"] = response.error.type == \"UnauthorizedError\""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{host}}/debug/users/confirm/-1",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"debug",
+								"users",
+								"confirm",
+								"-1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Confirm user unknow user",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "b5c23cd1-3c22-4d9f-abab-ab5a2cdd8274",
+								"exec": [
+									"var response = JSON.parse(responseBody);",
+									"",
+									"",
+									"pm.test(\"Status code is 404\", function () {",
+									"    pm.response.to.have.status(404);",
+									"});",
+									"",
+									"tests[\"JSON return code is 404\"] = response.code == 404",
+									"",
+									"tests[\"success is false\"] = response.success == false",
+									"tests[\"Message is correct\"] = response.error.message == \"User -1 not found\"",
+									"tests[\"Error type is Bad Request\"] = response.error.type == \"NotFoundError\""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "debug-auth-token",
+								"type": "text",
+								"value": "{{debug_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{host}}/debug/users/confirm/-1",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"debug",
+								"users",
+								"confirm",
+								"-1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Confirm user",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "d90b1efa-eb85-49eb-8ebd-af568584d3ff",
+								"exec": [
+									"var response = JSON.parse(responseBody);",
+									"",
+									"",
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"tests[\"JSON return code is 200\"] = response.code == 200",
+									"",
+									"tests[\"success is true\"] = response.success == true",
+									"tests[\"Message is correct\"] = response.message == \"User successfully confirmed\"",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "debug-auth-token",
+								"type": "text",
+								"value": "{{debug_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{host}}/debug/users/confirm/{{user_email}}",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"debug",
+								"users",
+								"confirm",
+								"{{user_email}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Confirm user already confirmed",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "6ecb334d-3cbc-482e-9d1b-e9a8fd905b93",
+								"exec": [
+									"var response = JSON.parse(responseBody);",
+									"",
+									"",
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"tests[\"JSON return code is 200\"] = response.code == 200",
+									"",
+									"tests[\"success is true\"] = response.success == true",
+									"tests[\"Message is correct\"] = response.message == \"User already confirmed\"",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "debug-auth-token",
+								"type": "text",
+								"value": "{{debug_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{host}}/debug/users/confirm/{{user_email}}",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"debug",
+								"users",
+								"confirm",
+								"{{user_email}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Login user no JSON",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "3d8bf89b-e772-4f7d-aaf1-b8521d2adb55",
+								"exec": [
+									"var response = JSON.parse(responseBody);",
+									"",
+									"",
+									"pm.test(\"Status code is 400\", function () {",
+									"    pm.response.to.have.status(400);",
+									"});",
+									"",
+									"tests[\"JSON return code is 400\"] = response.code == 400",
+									"",
+									"tests[\"success is false\"] = response.success == false",
+									"tests[\"Message is correct\"] = response.error.message == \"Missing json body.\"",
+									"tests[\"Error type is Bad Request\"] = response.error.type == \"BadRequestError\""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{host}}/auth/login",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"auth",
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Login user malformed JSON",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "aae59bb2-7762-4746-b8f5-d3afd170ca5e",
+								"exec": [
+									"var response = JSON.parse(responseBody);",
+									"",
+									"",
+									"pm.test(\"Status code is 400\", function () {",
+									"    pm.response.to.have.status(400);",
+									"});",
+									"",
+									"tests[\"JSON return code is 400\"] = response.code == 400",
+									"",
+									"tests[\"success is false\"] = response.success == false",
+									"tests[\"Message is correct\"] = response.error.message == \"The Json Body is malformed\"",
+									"tests[\"Error type is Bad Request\"] = response.error.type == \"BadRequestError\""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/auth/login",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"auth",
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Login user missing username",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "3f376d93-fd41-46e3-ab73-595cde6175b4",
+								"exec": [
+									"var response = JSON.parse(responseBody);",
+									"",
+									"",
+									"pm.test(\"Status code is 400\", function () {",
+									"    pm.response.to.have.status(400);",
+									"});",
+									"",
+									"tests[\"JSON return code is 400\"] = response.code == 400",
+									"",
+									"tests[\"success is true\"] = response.success == false",
+									"tests[\"Message is correct\"] = response.error.message == \"Missing key(s) ['username'] to perform action.\"",
+									"tests[\"Error type is Bad Request\"] = response.error.type == \"BadRequestError\""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"password\": \"{{user_password}}\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/auth/login",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"auth",
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Login user with username",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "e10688e6-53e0-43de-b9c6-1e2fdab08e4b",
+								"exec": [
+									"var response = JSON.parse(responseBody);",
+									"",
+									"",
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"tests[\"JSON return code is 200\"] = response.code == 200",
+									"",
+									"tests[\"success is true\"] = response.success == true",
+									"",
+									"postman.setEnvironmentVariable(\"user_token\", response.access_token);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"username\": \"{{user_username}}\",\n\t\"password\": \"{{user_password}}\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/auth/login",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"auth",
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Login user with email",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "ef228ced-b948-4beb-a04c-40c1efbc08f7",
+								"exec": [
+									"var response = JSON.parse(responseBody);",
+									"",
+									"",
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"tests[\"JSON return code is 200\"] = response.code == 200",
+									"",
+									"tests[\"success is true\"] = response.success == true",
+									"",
+									"postman.setEnvironmentVariable(\"user_token\", response.access_token);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"password\": \"{{user_password}}\",\n\t\"username\": \"{{user_email}}\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/auth/login",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"auth",
+								"login"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "03880fb4-1c4c-41cc-8fc3-1d55b6bdae39",
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"id": "2b7ab20b-c5a1-4b8c-a4c2-a9f501f9a02c",
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				}
+			],
+			"protocolProfileBehavior": {}
+		}
+	],
+	"protocolProfileBehavior": {}
+}

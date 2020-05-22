@@ -2,7 +2,6 @@ import logging
 from copy import deepcopy
 
 import pymysql
-
 from PyMatcha import database_config
 from PyMatcha.utils.orm import Field
 
@@ -211,8 +210,8 @@ class Model(object):
                 self.db.commit()
                 logging.debug("deleted {} from table {}".format(self.id, self.table_name))
         else:
-            logging.error("{} Not in database {}".format(self.id, self.table_name))
-            raise Exception("{} Not in database {}".format(self.id, self.table_name))
+            logging.error("{} Not in table {}".format(self.id, self.table_name))
+            raise Exception("{} Not in table {}".format(self.id, self.table_name))
 
     @classmethod
     def get(cls, **kwargs):

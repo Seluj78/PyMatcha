@@ -16,13 +16,14 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 """
-
 import flask_jwt_extended as fjwt
-from flask import Blueprint, jsonify, current_app
-
 import PyMatcha.models.user as user
+from flask import Blueprint
+from flask import current_app
+from flask import jsonify
 from PyMatcha import redis
 from PyMatcha.errors import NotFoundError
+from PyMatcha.success import SuccessDeleted
 
 User = user.User
 get_user = user.get_user
@@ -65,3 +66,17 @@ def get_all_online_users():
         date_lastseen = float(redis.get(key))
         online_user_list.append({"id": user_id, "date_lastseen": date_lastseen})
     return jsonify(online_user_list)
+
+
+@user_bp.route("/users/<uid>", methods=["DELETE"])
+# @fjwt.jwt_required
+def delete_user(uid):
+    current_app.logger.info("DELETE /users/{} -> Call".format(uid))
+    try:
+        u = get_user(uid)
+    except NotFoundError:
+        raise NotFoundError("User {} not found".format(uid), "Check given id and try again")
+    else:
+        current_app.logger.info("/users/{} -> DELETE user {}".format(uid, uid))
+        u.delete()
+        return SuccessDeleted("User {} Deleted".format(uid))

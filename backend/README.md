@@ -32,6 +32,8 @@ pre-commit install
 
 ## Running the server
 
+# TODO: Update the var list
+
 |        Key       | Value                             | Comment                                                                                                                                                 |
 |:----------------:|-----------------------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------|
 | FLASK_ENV        | Either `prod` or `dev`            | If this variable is set to `dev`, then no need to supply FLASK_DEBUG and FLASK_SECRET_KEY                                                               |
@@ -49,6 +51,8 @@ python app.py
 
 ## Running tests
 
+TODO: Explain how to setup tests on postman with the collection and the server
+
 ### Flake8
 
 ```bash
@@ -58,3 +62,5 @@ flake8
 ```bash
 export FLASK_DEBUG=1 && export FLASK_SECRET_KEY=ThisIsADevelopmentKey && export DB_USER=pymatcharoot && export DB_PASSWORD=PASSWORD && export DB_HOST='pymatchadb-tests.cvesmjtn6kz7.eu-west-3.rds.amazonaws.com' && export CI=1 && python -m pytest
 ```
+
+TODO: Setup postman cli in CI
