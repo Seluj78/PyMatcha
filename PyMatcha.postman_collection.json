@@ -883,6 +883,52 @@
 				}
 			],
 			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "User",
+			"item": [
+				{
+					"name": "Get all users missing auth header",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "37b58aa3-2003-4255-b4a6-16a0ec509fb5",
+								"exec": [
+									"var response = JSON.parse(responseBody);",
+									"",
+									"",
+									"pm.test(\"Status code is 401\", function () {",
+									"    pm.response.to.have.status(401);",
+									"});",
+									"",
+									"tests[\"JSON return code is 401\"] = response.code == 401",
+									"",
+									"tests[\"success is false\"] = response.success == false",
+									"tests[\"Message is correct\"] = response.error.message == \"Missing Authorization Header\"",
+									"tests[\"Error type is Bad Request\"] = response.error.type == \"UnauthorizedError\""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{host}}/users",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"users"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"protocolProfileBehavior": {}
 		}
 	],
 	"protocolProfileBehavior": {}
