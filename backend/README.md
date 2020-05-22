@@ -51,6 +51,8 @@ python app.py
 
 ## Running tests
 
+TODO: Explain how to setup tests on postman with the collection and the server
+
 ### Flake8
 
 ```bash
