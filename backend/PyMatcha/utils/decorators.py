@@ -30,7 +30,7 @@ def validate_required_params(required):
                     missing.append(item)
             if missing:
                 raise BadRequestError(
-                    "Missing keys {} to create user.".format(missing), "Complete your json body and try again"
+                    "Missing key(s) {} to perform action.".format(missing), "Complete your json body and try again"
                 )
 
             for item in data.keys():
