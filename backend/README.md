@@ -32,6 +32,8 @@ pre-commit install
 
 ## Running the server
 
+# TODO: Update the var list
+
 |        Key       | Value                             | Comment                                                                                                                                                 |
 |:----------------:|-----------------------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------|
 | FLASK_ENV        | Either `prod` or `dev`            | If this variable is set to `dev`, then no need to supply FLASK_DEBUG and FLASK_SECRET_KEY                                                               |
