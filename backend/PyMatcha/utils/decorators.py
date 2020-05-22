@@ -1,9 +1,10 @@
+import os
 from functools import wraps
 
 from flask import request
-from werkzeug.exceptions import BadRequest
-
 from PyMatcha.errors import BadRequestError
+from PyMatcha.errors import UnauthorizedError
+from werkzeug.exceptions import BadRequest
 
 
 def validate_required_params(required):
@@ -57,3 +58,17 @@ def validate_required_params(required):
         return wrapper
 
     return decorator
+
+
+def debug_token_required(f):
+    @wraps(f)
+    def decorated_function(*args, **kwargs):
+        token = request.headers.get("debug-auth-token", None)
+        if token:
+            if token != os.getenv("DEBUG_AUTH_TOKEN"):
+                raise UnauthorizedError("Incorrect debug auth token.", "Try again")
+        else:
+            raise UnauthorizedError("Missing debug auth token.", "Try again")
+        return f(*args, **kwargs)
+
+    return decorated_function

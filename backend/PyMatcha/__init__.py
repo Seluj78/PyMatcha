@@ -16,7 +16,6 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 """
-
 import datetime
 import logging
 import os
@@ -25,14 +24,15 @@ import flask_jwt_extended as fjwt
 import pymysql
 from celery import Celery
 from dotenv import load_dotenv
-from flask import Flask, send_from_directory, jsonify
+from flask import Flask
+from flask import jsonify
+from flask import send_from_directory
 from flask_cors import CORS
 from flask_mail import Mail
-from pymysql.cursors import DictCursor
-from redis import Redis
-
 from PyMatcha.utils.logging import setup_logging
 from PyMatcha.utils.tables import create_tables
+from pymysql.cursors import DictCursor
+from redis import Redis
 
 PYMATCHA_ROOT = os.path.join(os.path.dirname(__file__), "../..")  # refers to application_top
 dotenv_path = os.path.join(PYMATCHA_ROOT, ".env")
@@ -162,6 +162,13 @@ logging.debug("Registering Flask blueprints")
 application.register_blueprint(ping_pong_bp)
 application.register_blueprint(user_bp)
 application.register_blueprint(auth_bp)
+
+if application.debug:
+    logging.debug("Registering debug route")
+    from PyMatcha.routes.api.debug import debug_bp
+
+    application.register_blueprint(debug_bp)
+
 
 logging.debug("Registering serve route for REACT")
 
