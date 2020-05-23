@@ -49,6 +49,7 @@ REQUIRED_ENV_VARS = [
     "MAIL_PASSWORD",
     "APP_URL",
     "ENABLE_LOGGING",
+    "DEBUG_AUTH_TOKEN",
 ]
 
 for item in REQUIRED_ENV_VARS:
@@ -59,7 +60,12 @@ if os.getenv("ENABLE_LOGGING"):
     setup_logging()
 
 application = Flask(__name__, static_folder=os.getenv("FRONT_STATIC_FOLDER"))
-application.debug = os.getenv("FLASK_DEBUG")
+
+if os.getenv("FLASK_DEBUG", "false") == "true":
+    application.debug = True
+else:
+    application.debug = False
+
 application.secret_key = os.getenv("FLASK_SECRET_KEY")
 application.config.update(FLASK_SECRET_KEY=os.getenv("FLASK_SECRET_KEY"))
 application.config["JWT_SECRET_KEY"] = os.environ.get("FLASK_SECRET_KEY")
