@@ -17,6 +17,9 @@ get_user = user.get_user
 @debug_bp.route("/debug/users/confirm/<uid>", methods=["POST"])
 @debug_token_required
 def debug_confirm_user(uid):
+    """
+    This route confirms a given user without having to send and receive an email
+    """
     current_app.logger.debug("/debug/users/confirm/{} -> Call".format(uid))
     try:
         u = get_user(uid)

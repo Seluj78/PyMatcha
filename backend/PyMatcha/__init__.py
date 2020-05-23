@@ -56,7 +56,7 @@ for item in REQUIRED_ENV_VARS:
     if item not in os.environ:
         raise EnvironmentError(f"{item} is not set in the server's environment or .env file. It is required")
 
-if os.getenv("ENABLE_LOGGING"):
+if os.getenv("ENABLE_LOGGING") == "True":
     setup_logging()
 
 application = Flask(__name__, static_folder=os.getenv("FRONT_STATIC_FOLDER"))
@@ -161,6 +161,7 @@ def jwt_user_callback(identity):
     try:
         u = get_user(identity["id"])
     except NotFoundError:
+        # The user who the server issues the token for was deleted in the db.
         return None
     redis.set("user:" + str(identity["id"]), datetime.datetime.utcnow().timestamp())
     return u
