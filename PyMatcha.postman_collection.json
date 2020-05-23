@@ -265,7 +265,6 @@
 									"tests[\"JSON return code is 400\"] = response.code == 409",
 									"",
 									"tests[\"success is false\"] = response.success == false",
-									"tests[\"Message is correct\"] = response.error.message == \"Email jules.lasne@gmail.com taken\"",
 									"tests[\"Error type is Bad Request\"] = response.error.type == \"ConflictError\""
 								],
 								"type": "text/javascript"
@@ -308,6 +307,46 @@
 									"pm.test(\"Status code is 200\", function () {",
 									"    pm.response.to.have.status(204);",
 									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{host}}/users/{{user_email}}",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"users",
+								"{{user_email}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete user not existant",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "08f93b56-aed9-414e-b953-9c5e2a91a9c7",
+								"exec": [
+									"var response = JSON.parse(responseBody);",
+									"",
+									"",
+									"pm.test(\"Status code is 404\", function () {",
+									"    pm.response.to.have.status(404);",
+									"});",
+									"",
+									"tests[\"JSON return code is 404\"] = response.code == 404",
+									"",
+									"tests[\"success is true\"] = response.success == false",
+									"tests[\"Error type is Bad Request\"] = response.error.type == \"NotFoundError\""
 								],
 								"type": "text/javascript"
 							}
@@ -913,6 +952,102 @@
 						}
 					],
 					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{host}}/users",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"users"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get all users expired auth token",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "1683f7f0-a248-497c-b18a-dd1adc6ac0f5",
+								"exec": [
+									"var response = JSON.parse(responseBody);",
+									"",
+									"",
+									"pm.test(\"Status code is 401\", function () {",
+									"    pm.response.to.have.status(401);",
+									"});",
+									"",
+									"tests[\"JSON return code is 401\"] = response.code == 401",
+									"",
+									"tests[\"success is false\"] = response.success == false",
+									"tests[\"Message is correct\"] = response.error.message == \"The access token has expired\"",
+									"tests[\"Error type is Bad Request\"] = response.error.type == \"UnauthorizedError\""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{user_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{host}}/users",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"users"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get all users",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "928cf7ee-dd14-459e-a299-a2e31ebbea4d",
+								"exec": [
+									"var response = JSON.parse(responseBody);",
+									"",
+									"",
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"tests[\"JSON array is not empty\"] = response.length != 0"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{user_token}}",
+									"type": "string"
+								}
+							]
+						},
 						"method": "GET",
 						"header": [],
 						"url": {

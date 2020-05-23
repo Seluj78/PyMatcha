@@ -223,7 +223,7 @@ class User(Model):
             "orientation": self.orientation,
             "birthdate": self.birthdate,
             "geohash": self.geohash,
-            "tags": json.loads(self.tags),  # TODO: Optimize this
+            "tags": json.loads(self.tags) if self.tags else "",  # TODO: Optimize this
             "heat_score": self.heat_score,
             "is_online": self.is_online,
             "date_joined": self.date_joined,
