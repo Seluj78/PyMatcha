@@ -33,7 +33,7 @@ jobs:
         - node_modules/.bin/newman --version
         - python backend/app.py &
         - sleep 5
-      script: node_modules/.bin/newman run PyMatcha.postman_collection.json
+      script: node_modules/.bin/newman run --delay-request 20 --color on --verbose PyMatcha.postman_collection.json
 #    - stage: deploy
 #      script: ./deploy
 
