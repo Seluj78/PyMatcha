@@ -9,6 +9,7 @@ python:
 
 services:
   - mysql
+  - redis-server
 
 install: pip install -r backend/requirements-dev.txt
 
