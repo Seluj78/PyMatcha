@@ -28,7 +28,11 @@ jobs:
         - sudo mysql_upgrade
         - mysql --version
         - mysql -e 'CREATE DATABASE pymatcha;'
-      script: make tests
+        - npm install newman
+        - node_modules/.bin/newman --version
+        - python backend/app.py &
+        - sleep 5
+      script: node_modules/.bin/newman run PyMatcha.postman_collection.json
 #    - stage: deploy
 #      script: ./deploy
 
