@@ -47,7 +47,7 @@ services:
       - .env
     entrypoint: celery worker --workdir . -A PyMatcha.celery -B --loglevel=debug
     volumes:
-      - pymatcha:/app
+      - app:/app
     depends_on:
       - redis
     links:
