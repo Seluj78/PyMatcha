@@ -2,7 +2,8 @@ import datetime
 import logging
 
 import PyMatcha.models.user as user_module
-from PyMatcha import celery, redis
+from PyMatcha import celery
+from PyMatcha import redis
 
 User = user_module.User
 
@@ -23,10 +24,15 @@ def purge_offline_users():
         date_lastseen = float(redis.get(key))
         if date_lastseen < login_deadline_timestamp:
             # delete the key
-            u = User.get(id=user_id)
-            u.date_lastseen = datetime.datetime.fromtimestamp(date_lastseen)
-            u.is_online = False
-            u.save()
+            try:
+                u = User.get(id=user_id)
+            except ValueError:
+                # The user has been deleted from DB while he was last online
+                pass
+            else:
+                u.date_lastseen = datetime.datetime.fromtimestamp(date_lastseen)
+                u.is_online = False
+                u.save()
             redis.delete(key)
             count += 1
     logging.debug("Purged {} users".format(count))
