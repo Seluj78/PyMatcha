@@ -817,7 +817,7 @@
 									"",
 									"tests[\"success is true\"] = response.success == true",
 									"",
-									"postman.setEnvironmentVariable(\"user_token\", response.access_token);"
+									"postman.collectionVariables(\"user_token\", response.access_token);"
 								],
 								"type": "text/javascript"
 							}
@@ -867,7 +867,7 @@
 									"",
 									"tests[\"success is true\"] = response.success == true",
 									"",
-									"postman.setEnvironmentVariable(\"user_token\", response.access_token);"
+									"pm.collectionVariables.set(\"user_token\", response.access_token);"
 								],
 								"type": "text/javascript"
 							}
@@ -1077,7 +1077,11 @@
 									"    pm.response.to.have.status(200);",
 									"});",
 									"",
-									"tests[\"JSON array is not empty\"] = response.length != 0"
+									"user_email = pm.collectionVariables.get(\"user_email\");",
+									"user_username = pm.collectionVariables.get(\"user_username\");",
+									"",
+									"tests[\"Is email correct\"] = response.email == user_email",
+									"tests[\"Is username correct\"] = response.username == user_username"
 								],
 								"type": "text/javascript"
 							}
@@ -1097,24 +1101,25 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{host}}/users",
+							"raw": "{{host}}/users/{{user_username}}",
 							"host": [
 								"{{host}}"
 							],
 							"path": [
-								"users"
+								"users",
+								"{{user_username}}"
 							]
 						}
 					},
 					"response": []
 				},
 				{
-					"name": "Get one user by email Copy",
+					"name": "Get one user by username",
 					"event": [
 						{
 							"listen": "test",
 							"script": {
-								"id": "db22148d-6f88-48d3-a347-4ba6a40ba995",
+								"id": "157d53ec-3d71-453e-90bc-172e1d7d3531",
 								"exec": [
 									"var response = JSON.parse(responseBody);",
 									"",
@@ -1123,7 +1128,11 @@
 									"    pm.response.to.have.status(200);",
 									"});",
 									"",
-									"tests[\"JSON array is not empty\"] = response.length != 0"
+									"user_email = pm.collectionVariables.get(\"user_email\");",
+									"user_username = pm.collectionVariables.get(\"user_username\");",
+									"",
+									"tests[\"Is email correct\"] = response.email == user_email",
+									"tests[\"Is username correct\"] = response.username == user_username"
 								],
 								"type": "text/javascript"
 							}
@@ -1143,12 +1152,13 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{host}}/users",
+							"raw": "{{host}}/users/{{user_email}}",
 							"host": [
 								"{{host}}"
 							],
 							"path": [
-								"users"
+								"users",
+								"{{user_email}}"
 							]
 						}
 					},
@@ -1158,6 +1168,16 @@
 			"protocolProfileBehavior": {}
 		}
 	],
+	"auth": {
+		"type": "bearer",
+		"bearer": [
+			{
+				"key": "token",
+				"value": "{{user_token}}",
+				"type": "string"
+			}
+		]
+	},
 	"event": [
 		{
 			"listen": "prerequest",
@@ -1182,37 +1202,37 @@
 	],
 	"variable": [
 		{
-			"id": "b48250a5-a198-441b-9962-c73fd073f136",
+			"id": "576c637b-b8da-4202-a68b-12c781aa10b3",
 			"key": "host",
 			"value": "http://127.0.0.1:5000",
 			"type": "string"
 		},
 		{
-			"id": "f8f82a5a-c99a-4669-871b-acc231ea5391",
+			"id": "4afbfa2c-9425-4e22-b5a1-b825f67d398f",
 			"key": "user_email",
 			"value": "foo@example.org",
 			"type": "string"
 		},
 		{
-			"id": "a65597cc-8915-4642-b654-fdf82284f573",
+			"id": "7aaf7ce2-bddd-4287-a873-8bc85c7d7bbb",
 			"key": "user_username",
 			"value": "bar",
 			"type": "string"
 		},
 		{
-			"id": "e7406bcf-fd38-405a-a1d0-c44d6d6669f5",
+			"id": "477069dd-ffd4-44d1-b621-1704d67f4c3d",
 			"key": "user_password",
 			"value": "admin",
 			"type": "string"
 		},
 		{
-			"id": "87fb5d29-556b-4547-bd80-0868c3993957",
+			"id": "b13bc904-e2e2-4162-99de-b75549c1b6aa",
 			"key": "debug_token",
 			"value": "xX69jules69Xx",
 			"type": "string"
 		},
 		{
-			"id": "28664059-337d-4f63-88e1-a37278156d44",
+			"id": "c32f8bf7-7cdb-4e17-88a5-3dfdb19c53a7",
 			"key": "user_token",
 			"value": "",
 			"type": "string"
