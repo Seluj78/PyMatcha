@@ -191,8 +191,10 @@ logging.debug("Registering serve route for REACT")
 @application.route("/<path:path>")
 def serve(path):
     if path != "" and os.path.exists(application.static_folder + "/" + path):
+        logging.debug("Requested {} and serving that page.".format(path))
         return send_from_directory(application.static_folder, path)
     else:
+        logging.debug("{} not found or index requested. Redirecting to index.html".format(path))
         return send_from_directory(application.static_folder, "index.html")
 
 
