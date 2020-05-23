@@ -817,7 +817,7 @@
 									"",
 									"tests[\"success is true\"] = response.success == true",
 									"",
-									"postman.collectionVariables(\"user_token\", response.access_token);"
+									"pm.collectionVariables.set(\"user_token\", response.access_token);"
 								],
 								"type": "text/javascript"
 							}
@@ -952,6 +952,9 @@
 						}
 					],
 					"request": {
+						"auth": {
+							"type": "noauth"
+						},
 						"method": "GET",
 						"header": [],
 						"url": {
@@ -997,7 +1000,7 @@
 							"bearer": [
 								{
 									"key": "token",
-									"value": "{{user_token}}",
+									"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE1OTAyNDEyNTcsIm5iZiI6MTU5MDI0MTI1NywianRpIjoiZjc5YmM1Y2ItYTAzNi00ZGJiLWI2YjAtMmM0OTBmNDM5NWFkIiwiZXhwIjoxNTkwMjQyMTU3LCJpZGVudGl0eSI6eyJpZCI6NTA1LCJlbWFpbCI6ImZvb0BleGFtcGxlLm9yZyIsInVzZXJuYW1lIjoiYmFyIiwiaXNfb25saW5lIjp0cnVlLCJkYXRlX2xhc3RzZWVuIjoiU2F0LCAyMyBNYXkgMjAyMCAxMzo0MDo1NyBHTVQifSwiZnJlc2giOnRydWUsInR5cGUiOiJhY2Nlc3MifQ.23nH4nn9mLrEkS9HxozzNqATwtuko0WZ1gvx529NaLE",
 									"type": "string"
 								}
 							]
@@ -1202,37 +1205,37 @@
 	],
 	"variable": [
 		{
-			"id": "576c637b-b8da-4202-a68b-12c781aa10b3",
+			"id": "b5fecc65-d7f1-44f9-b884-9901b7a290ac",
 			"key": "host",
 			"value": "http://127.0.0.1:5000",
 			"type": "string"
 		},
 		{
-			"id": "4afbfa2c-9425-4e22-b5a1-b825f67d398f",
+			"id": "16399821-5d4e-4e0a-8da4-755a5aeb5d8f",
 			"key": "user_email",
 			"value": "foo@example.org",
 			"type": "string"
 		},
 		{
-			"id": "7aaf7ce2-bddd-4287-a873-8bc85c7d7bbb",
+			"id": "3e3c3654-86ba-444d-b7c8-77e9e7a9d7db",
 			"key": "user_username",
 			"value": "bar",
 			"type": "string"
 		},
 		{
-			"id": "477069dd-ffd4-44d1-b621-1704d67f4c3d",
+			"id": "7a04d203-ac1f-4c37-9b6b-356858596e79",
 			"key": "user_password",
 			"value": "admin",
 			"type": "string"
 		},
 		{
-			"id": "b13bc904-e2e2-4162-99de-b75549c1b6aa",
+			"id": "39bb42f7-01c3-4139-b5e9-c21c5ee01847",
 			"key": "debug_token",
 			"value": "xX69jules69Xx",
 			"type": "string"
 		},
 		{
-			"id": "c32f8bf7-7cdb-4e17-88a5-3dfdb19c53a7",
+			"id": "478e7194-188b-4352-b704-bc12cfc8d6ac",
 			"key": "user_token",
 			"value": "",
 			"type": "string"
