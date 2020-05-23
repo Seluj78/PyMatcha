@@ -8,7 +8,6 @@ services:
       MYSQL_ROOT_PASSWORD:
       MYSQL_DATABASE: pymatcha
       MYSQL_ALLOW_EMPTY_PASSWORD: 1
-#    command: mysql -uroot -c "grant usage on *.* to root@'%' with max_user_connections 10;"
     env_file:
       - .env
     ports:
@@ -19,6 +18,11 @@ services:
       - mysql:/var/lib/mysql
     networks:
       - mysql-net
+    healthcheck:
+      test: "/usr/bin/mysql --user=$DB_USER --password=$DB_PASSWORD --execute \"SHOW DATABASES;\""
+      interval: 3s
+      timeout: 1s
+      retries: 5
 
   redis:
     image: redis:4.0.5-alpine
@@ -34,30 +38,30 @@ services:
   worker:
     build:
       context: .
-      dockerfile: backend/Dockerfile
+      dockerfile: ./Dockerfile
     environment:
       - PYTHONUNBUFFERED=1
       - CELERY_BROKER_URL=redis://redis:6379/0
       - CELERY_RESULT_BACKEND=redis://redis:6379/0
     env_file:
       - .env
-    entrypoint: celery worker --workdir backend -A PyMatcha.celery -B --loglevel=debug
+    entrypoint: celery worker --workdir . -A PyMatcha.celery -B --loglevel=debug
     volumes:
-      - pymatcha:/app
+      - app:/app
     depends_on:
       - redis
+      - mysql
     links:
       - redis
     networks:
       - redis-net
       - mysql-net
 
-  web:
-    container_name: pymatcha
+  app:
     restart: always
     build:
       context: .
-      dockerfile: backend/Dockerfile
+      dockerfile: ./Dockerfile
     env_file:
       - .env
     environment:
@@ -65,11 +69,11 @@ services:
     ports:
       - "8080:5000"
     volumes:
-      - pymatcha:/app
+      - app:/app
     depends_on:
-      - "mysql"
-      - "redis"
-      - "worker"
+      - mysql
+      - redis
+      - worker
     links:
       - mysql
       - redis
@@ -77,27 +81,12 @@ services:
     networks:
       - redis-net
       - mysql-net
-#      - web-net
-#
-#  nginx:
-#    image: nginx:latest
-#    container_name: pnginx
-#    volumes:
-#      - ./nginx/:/etc/nginx/
-#    ports:
-#      - 80:80
-#      - 443:443
-#    depends_on:
-#      - web
-#    networks:
-#      - web-net
 
 networks:
   redis-net:
   mysql-net:
-#  web-net:
 
 volumes:
   redis-data:
   mysql:
-  pymatcha:
+  app:
