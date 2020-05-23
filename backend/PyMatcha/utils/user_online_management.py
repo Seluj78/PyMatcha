@@ -13,6 +13,9 @@ def setup_periodic_tasks(sender, **kwargs):
     sender.add_periodic_task(60, purge_offline_users.s(), name="Purge offline users every minute")
 
 
+# TODO: Add a task to update last seen every minute based on redis data, like the offline user purge
+
+
 @celery.task
 def purge_offline_users():
     logging.debug("Purging offline users")
