@@ -213,6 +213,7 @@ class User(Model):
 
     def get_all_info(self) -> Dict:
         return {
+            "id": self.id,
             "first_name": self.first_name,
             "last_name": self.last_name,
             "email": self.email,
@@ -223,7 +224,7 @@ class User(Model):
             "orientation": self.orientation,
             "birthdate": self.birthdate,
             "geohash": self.geohash,
-            "tags": json.loads(self.tags),  # TODO: Optimize this
+            "tags": json.loads(self.tags) if self.tags else "",  # TODO: Optimize this
             "heat_score": self.heat_score,
             "is_online": self.is_online,
             "date_joined": self.date_joined,

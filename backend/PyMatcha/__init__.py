@@ -49,17 +49,23 @@ REQUIRED_ENV_VARS = [
     "MAIL_PASSWORD",
     "APP_URL",
     "ENABLE_LOGGING",
+    "DEBUG_AUTH_TOKEN",
 ]
 
 for item in REQUIRED_ENV_VARS:
     if item not in os.environ:
         raise EnvironmentError(f"{item} is not set in the server's environment or .env file. It is required")
 
-if os.getenv("ENABLE_LOGGING"):
+if os.getenv("ENABLE_LOGGING") == "True":
     setup_logging()
 
 application = Flask(__name__, static_folder=os.getenv("FRONT_STATIC_FOLDER"))
-application.debug = os.getenv("FLASK_DEBUG")
+
+if os.getenv("FLASK_DEBUG", "false") == "true":
+    application.debug = True
+else:
+    application.debug = False
+
 application.secret_key = os.getenv("FLASK_SECRET_KEY")
 application.config.update(FLASK_SECRET_KEY=os.getenv("FLASK_SECRET_KEY"))
 application.config["JWT_SECRET_KEY"] = os.environ.get("FLASK_SECRET_KEY")
@@ -147,11 +153,18 @@ get_user = user_module.get_user
 logging.debug("Configuring JWT user callback loader")
 
 
+from PyMatcha.errors import NotFoundError
+
+
 @jwt.user_loader_callback_loader
 def jwt_user_callback(identity):
-    # TODO: Check if this function is called everytime a jwt is used
+    try:
+        u = get_user(identity["id"])
+    except NotFoundError:
+        # The user who the server issues the token for was deleted in the db.
+        return None
     redis.set("user:" + str(identity["id"]), datetime.datetime.utcnow().timestamp())
-    return get_user(identity["id"])
+    return u
 
 
 from PyMatcha.routes.api.ping_pong import ping_pong_bp
@@ -178,8 +191,10 @@ logging.debug("Registering serve route for REACT")
 @application.route("/<path:path>")
 def serve(path):
     if path != "" and os.path.exists(application.static_folder + "/" + path):
+        logging.debug("Requested {} and serving that page.".format(path))
         return send_from_directory(application.static_folder, path)
     else:
+        logging.debug("{} not found or index requested. Redirecting to index.html".format(path))
         return send_from_directory(application.static_folder, "index.html")
 
 

@@ -34,6 +34,9 @@
 						}
 					],
 					"request": {
+						"auth": {
+							"type": "noauth"
+						},
 						"method": "POST",
 						"header": [],
 						"url": {
@@ -75,6 +78,9 @@
 						}
 					],
 					"request": {
+						"auth": {
+							"type": "noauth"
+						},
 						"method": "POST",
 						"header": [],
 						"body": {
@@ -125,6 +131,9 @@
 						}
 					],
 					"request": {
+						"auth": {
+							"type": "noauth"
+						},
 						"method": "POST",
 						"header": [],
 						"body": {
@@ -175,6 +184,9 @@
 						}
 					],
 					"request": {
+						"auth": {
+							"type": "noauth"
+						},
 						"method": "POST",
 						"header": [],
 						"body": {
@@ -223,6 +235,9 @@
 						}
 					],
 					"request": {
+						"auth": {
+							"type": "noauth"
+						},
 						"method": "POST",
 						"header": [],
 						"body": {
@@ -265,7 +280,6 @@
 									"tests[\"JSON return code is 400\"] = response.code == 409",
 									"",
 									"tests[\"success is false\"] = response.success == false",
-									"tests[\"Message is correct\"] = response.error.message == \"Email jules.lasne@gmail.com taken\"",
 									"tests[\"Error type is Bad Request\"] = response.error.type == \"ConflictError\""
 								],
 								"type": "text/javascript"
@@ -273,6 +287,9 @@
 						}
 					],
 					"request": {
+						"auth": {
+							"type": "noauth"
+						},
 						"method": "POST",
 						"header": [],
 						"body": {
@@ -314,14 +331,74 @@
 						}
 					],
 					"request": {
+						"auth": {
+							"type": "noauth"
+						},
 						"method": "DELETE",
-						"header": [],
+						"header": [
+							{
+								"key": "debug-auth-token",
+								"value": "{{debug_token}}",
+								"type": "text"
+							}
+						],
 						"url": {
-							"raw": "{{host}}/users/{{user_email}}",
+							"raw": "{{host}}/debug/users/{{user_email}}",
 							"host": [
 								"{{host}}"
 							],
 							"path": [
+								"debug",
+								"users",
+								"{{user_email}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete user not existant",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "08f93b56-aed9-414e-b953-9c5e2a91a9c7",
+								"exec": [
+									"var response = JSON.parse(responseBody);",
+									"",
+									"",
+									"pm.test(\"Status code is 404\", function () {",
+									"    pm.response.to.have.status(404);",
+									"});",
+									"",
+									"tests[\"JSON return code is 404\"] = response.code == 404",
+									"",
+									"tests[\"success is true\"] = response.success == false",
+									"tests[\"Error type is Bad Request\"] = response.error.type == \"NotFoundError\""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "debug-auth-token",
+								"value": "{{debug_token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{host}}/debug/users/{{user_email}}",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"debug",
 								"users",
 								"{{user_email}}"
 							]
@@ -778,7 +855,7 @@
 									"",
 									"tests[\"success is true\"] = response.success == true",
 									"",
-									"postman.setEnvironmentVariable(\"user_token\", response.access_token);"
+									"pm.collectionVariables.set(\"user_token\", response.access_token);"
 								],
 								"type": "text/javascript"
 							}
@@ -828,7 +905,7 @@
 									"",
 									"tests[\"success is true\"] = response.success == true",
 									"",
-									"postman.setEnvironmentVariable(\"user_token\", response.access_token);"
+									"pm.collectionVariables.set(\"user_token\", response.access_token);"
 								],
 								"type": "text/javascript"
 							}
@@ -883,6 +960,428 @@
 				}
 			],
 			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "User",
+			"item": [
+				{
+					"name": "Get all users missing auth header",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "37b58aa3-2003-4255-b4a6-16a0ec509fb5",
+								"exec": [
+									"var response = JSON.parse(responseBody);",
+									"",
+									"",
+									"pm.test(\"Status code is 401\", function () {",
+									"    pm.response.to.have.status(401);",
+									"});",
+									"",
+									"tests[\"JSON return code is 401\"] = response.code == 401",
+									"",
+									"tests[\"success is false\"] = response.success == false",
+									"tests[\"Message is correct\"] = response.error.message == \"Missing Authorization Header\"",
+									"tests[\"Error type is Bad Request\"] = response.error.type == \"UnauthorizedError\""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{host}}/users",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"users"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get all users expired auth token",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "1683f7f0-a248-497c-b18a-dd1adc6ac0f5",
+								"exec": [
+									"var response = JSON.parse(responseBody);",
+									"",
+									"",
+									"pm.test(\"Status code is 401\", function () {",
+									"    pm.response.to.have.status(401);",
+									"});",
+									"",
+									"tests[\"JSON return code is 401\"] = response.code == 401",
+									"",
+									"tests[\"success is false\"] = response.success == false",
+									"tests[\"Message is correct\"] = response.error.message == \"The access token has expired\"",
+									"tests[\"Error type is Bad Request\"] = response.error.type == \"UnauthorizedError\""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{expired_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{host}}/users",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"users"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get all users",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "928cf7ee-dd14-459e-a299-a2e31ebbea4d",
+								"exec": [
+									"var response = JSON.parse(responseBody);",
+									"",
+									"",
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"tests[\"JSON array is not empty\"] = response.length != 0"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{user_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{host}}/users",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"users"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get one user by email",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "d05304d2-c671-49dd-adc6-2a0cd7d7cbc4",
+								"exec": [
+									"var response = JSON.parse(responseBody);",
+									"",
+									"",
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"user_email = pm.collectionVariables.get(\"user_email\");",
+									"user_username = pm.collectionVariables.get(\"user_username\");",
+									"",
+									"tests[\"Is email correct\"] = response.email == user_email",
+									"tests[\"Is username correct\"] = response.username == user_username",
+									"",
+									"pm.collectionVariables.set(\"user_id\", response.id)"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{user_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{host}}/users/{{user_username}}",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"users",
+								"{{user_username}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get one user by username",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "157d53ec-3d71-453e-90bc-172e1d7d3531",
+								"exec": [
+									"var response = JSON.parse(responseBody);",
+									"",
+									"",
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"user_email = pm.collectionVariables.get(\"user_email\");",
+									"user_username = pm.collectionVariables.get(\"user_username\");",
+									"",
+									"tests[\"Is email correct\"] = response.email == user_email",
+									"tests[\"Is username correct\"] = response.username == user_username"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{user_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{host}}/users/{{user_email}}",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"users",
+								"{{user_email}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get online users",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "50e7dc59-141e-4e61-bdab-cca8a83ef81e",
+								"exec": [
+									"var response = JSON.parse(responseBody);",
+									"",
+									"",
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"// user_id = pm.collectionVariables.get(\"user_id\");",
+									"",
+									"// tests[\"User id is correct\"] = response[0].id == user_id"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{user_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{host}}/users/online",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"users",
+								"online"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "Delete user after tests",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "ab5c7873-b122-4d66-bb53-d200ee5511cc",
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(204);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "debug-auth-token",
+						"value": "{{debug_token}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{host}}/debug/users/{{user_email}}",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"debug",
+						"users",
+						"{{user_email}}"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"auth": {
+		"type": "bearer",
+		"bearer": [
+			{
+				"key": "token",
+				"value": "{{user_token}}",
+				"type": "string"
+			}
+		]
+	},
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"id": "2cc3d134-eb34-4730-8210-2065800a7560",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"id": "86a65fc9-d3fe-4c9c-bcb4-e0a093425b33",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"id": "bbf8a43f-0469-484c-883b-bfb782ac7988",
+			"key": "host",
+			"value": "http://127.0.0.1:5000",
+			"type": "string"
+		},
+		{
+			"id": "b83b67f8-c6d4-458d-b18a-36bea829a323",
+			"key": "user_email",
+			"value": "foo@example.org",
+			"type": "string"
+		},
+		{
+			"id": "d821b498-734f-4410-8caf-57ed2013b6fe",
+			"key": "user_username",
+			"value": "bar",
+			"type": "string"
+		},
+		{
+			"id": "db3e1ced-4bfc-4654-aa6a-2bf7b8e2f567",
+			"key": "user_password",
+			"value": "admin",
+			"type": "string"
+		},
+		{
+			"id": "7ad1e957-1735-4748-b4e4-eb912adff03a",
+			"key": "debug_token",
+			"value": "xX69jules69Xx",
+			"type": "string"
+		},
+		{
+			"id": "4d0789b6-f5ee-428e-b1f7-5434d415dc81",
+			"key": "user_token",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"id": "ebf22620-69af-48fa-a151-932e97429428",
+			"key": "expired_token",
+			"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE1OTAyNDIyNjQsIm5iZiI6MTU5MDI0MjI2NCwianRpIjoiNTM0ZGI5NzQtOWE4Ni00MGViLWE1NDEtMDg3N2ZmNzQ3NDVhIiwiZXhwIjoxNTkwMjQyMzI0LCJpZGVudGl0eSI6eyJpZCI6NTEyLCJlbWFpbCI6ImZvb0BleGFtcGxlLm9yZyIsInVzZXJuYW1lIjoiYmFyIiwiaXNfb25saW5lIjp0cnVlLCJkYXRlX2xhc3RzZWVuIjoiU2F0LCAyMyBNYXkgMjAyMCAxMzo1Nzo0NCBHTVQifSwiZnJlc2giOnRydWUsInR5cGUiOiJhY2Nlc3MifQ.NTp2P0WNkXDwzuzrcNIQdeAfizQ57HQgkzBLSvY1yHU",
+			"type": "string"
+		},
+		{
+			"id": "4740b896-8d99-477d-8e15-e6916090d1dd",
+			"key": "user_id",
+			"value": "",
+			"type": "string"
 		}
 	],
 	"protocolProfileBehavior": {}

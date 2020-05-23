@@ -66,6 +66,7 @@ services:
       - .env
     environment:
       - PYTHONUNBUFFERED=1
+      - FLASK_DEBUG=false
     ports:
       - "8080:5000"
     volumes:

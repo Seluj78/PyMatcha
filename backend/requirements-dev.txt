@@ -20,9 +20,6 @@ cryptography
 
 flask_jwt_extended
 
-pytest
-pytest-flask
-
 flake8
 black
 pre-commit
