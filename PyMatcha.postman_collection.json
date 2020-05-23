@@ -1000,7 +1000,7 @@
 							"bearer": [
 								{
 									"key": "token",
-									"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE1OTAyNDEyNTcsIm5iZiI6MTU5MDI0MTI1NywianRpIjoiZjc5YmM1Y2ItYTAzNi00ZGJiLWI2YjAtMmM0OTBmNDM5NWFkIiwiZXhwIjoxNTkwMjQyMTU3LCJpZGVudGl0eSI6eyJpZCI6NTA1LCJlbWFpbCI6ImZvb0BleGFtcGxlLm9yZyIsInVzZXJuYW1lIjoiYmFyIiwiaXNfb25saW5lIjp0cnVlLCJkYXRlX2xhc3RzZWVuIjoiU2F0LCAyMyBNYXkgMjAyMCAxMzo0MDo1NyBHTVQifSwiZnJlc2giOnRydWUsInR5cGUiOiJhY2Nlc3MifQ.23nH4nn9mLrEkS9HxozzNqATwtuko0WZ1gvx529NaLE",
+									"value": "{{expired_token}}",
 									"type": "string"
 								}
 							]
@@ -1166,6 +1166,57 @@
 						}
 					},
 					"response": []
+				},
+				{
+					"name": "Get online users",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "50e7dc59-141e-4e61-bdab-cca8a83ef81e",
+								"exec": [
+									"var response = JSON.parse(responseBody);",
+									"",
+									"",
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"user_email = pm.collectionVariables.get(\"user_email\");",
+									"user_username = pm.collectionVariables.get(\"user_username\");",
+									"",
+									"tests[\"Is email correct\"] = response.email == user_email",
+									"tests[\"Is username correct\"] = response.username == user_username"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{user_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{host}}/users/{{user_email}}",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"users",
+								"{{user_email}}"
+							]
+						}
+					},
+					"response": []
 				}
 			],
 			"protocolProfileBehavior": {}
@@ -1205,39 +1256,45 @@
 	],
 	"variable": [
 		{
-			"id": "b5fecc65-d7f1-44f9-b884-9901b7a290ac",
+			"id": "874e6486-5cbf-4221-bad4-f23d3e1434ed",
 			"key": "host",
 			"value": "http://127.0.0.1:5000",
 			"type": "string"
 		},
 		{
-			"id": "16399821-5d4e-4e0a-8da4-755a5aeb5d8f",
+			"id": "338a0aa6-eca3-46fb-9823-c8d998cdaec9",
 			"key": "user_email",
 			"value": "foo@example.org",
 			"type": "string"
 		},
 		{
-			"id": "3e3c3654-86ba-444d-b7c8-77e9e7a9d7db",
+			"id": "dea84a15-11bb-4d3f-bb1c-3b7739075f87",
 			"key": "user_username",
 			"value": "bar",
 			"type": "string"
 		},
 		{
-			"id": "7a04d203-ac1f-4c37-9b6b-356858596e79",
+			"id": "6c971411-78c5-4143-8210-b02c6ca5c397",
 			"key": "user_password",
 			"value": "admin",
 			"type": "string"
 		},
 		{
-			"id": "39bb42f7-01c3-4139-b5e9-c21c5ee01847",
+			"id": "02b3d365-73b2-45dd-b362-b129601f614f",
 			"key": "debug_token",
 			"value": "xX69jules69Xx",
 			"type": "string"
 		},
 		{
-			"id": "478e7194-188b-4352-b704-bc12cfc8d6ac",
+			"id": "f02e23ad-6109-4c1d-84df-d6222cd2107c",
 			"key": "user_token",
 			"value": "",
+			"type": "string"
+		},
+		{
+			"id": "d9612a55-9b82-4cd5-87e1-ddcda8ded553",
+			"key": "expired_token",
+			"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE1OTAyNDIyNjQsIm5iZiI6MTU5MDI0MjI2NCwianRpIjoiNTM0ZGI5NzQtOWE4Ni00MGViLWE1NDEtMDg3N2ZmNzQ3NDVhIiwiZXhwIjoxNTkwMjQyMzI0LCJpZGVudGl0eSI6eyJpZCI6NTEyLCJlbWFpbCI6ImZvb0BleGFtcGxlLm9yZyIsInVzZXJuYW1lIjoiYmFyIiwiaXNfb25saW5lIjp0cnVlLCJkYXRlX2xhc3RzZWVuIjoiU2F0LCAyMyBNYXkgMjAyMCAxMzo1Nzo0NCBHTVQifSwiZnJlc2giOnRydWUsInR5cGUiOiJhY2Nlc3MifQ.NTp2P0WNkXDwzuzrcNIQdeAfizQ57HQgkzBLSvY1yHU",
 			"type": "string"
 		}
 	],
