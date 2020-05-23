@@ -164,7 +164,7 @@ class User(Model):
         return new_user
 
     @staticmethod
-    def register(email: str, username: str, password: str) -> User:
+    def register(email: str, username: str, password: str, first_name: str, last_name: str) -> User:
         # Check email availability
         try:
             User.get(email=email)
@@ -190,8 +190,8 @@ class User(Model):
             email=email.lower(),
             username=username,
             password=password,
-            first_name="",
-            last_name="",
+            first_name=first_name,
+            last_name=last_name,
             bio="",
             gender="other",
             orientation="bisexual",

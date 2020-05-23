@@ -16,27 +16,35 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 """
-
 import datetime
 import os
 
 import flask_jwt_extended as fjwt
-from flask import Blueprint, request, redirect, current_app
-from itsdangerous import SignatureExpired, BadSignature
-
 import PyMatcha.models.user as user
+from flask import Blueprint
+from flask import current_app
+from flask import redirect
+from flask import request
+from itsdangerous import BadSignature
+from itsdangerous import SignatureExpired
 from PyMatcha import redis
-from PyMatcha.errors import ConflictError, NotFoundError, BadRequestError, UnauthorizedError
-from PyMatcha.success import SuccessOutputMessage, Success, SuccessOutput
+from PyMatcha.errors import BadRequestError
+from PyMatcha.errors import ConflictError
+from PyMatcha.errors import NotFoundError
+from PyMatcha.errors import UnauthorizedError
+from PyMatcha.success import Success
+from PyMatcha.success import SuccessOutput
+from PyMatcha.success import SuccessOutputMessage
 from PyMatcha.utils import hash_password
-from PyMatcha.utils.confirm_token import generate_confirmation_token, confirm_token
+from PyMatcha.utils.confirm_token import confirm_token
+from PyMatcha.utils.confirm_token import generate_confirmation_token
 from PyMatcha.utils.decorators import validate_required_params
 from PyMatcha.utils.mail import send_mail_text
 
 User = user.User
 get_user = user.get_user
 
-REQUIRED_KEYS_USER_CREATION = {"username": str, "email": str, "password": str}
+REQUIRED_KEYS_USER_CREATION = {"username": str, "email": str, "password": str, "first_name": str, "last_name": str}
 REQUIRED_KEYS_PASSWORD_FORGOT = {"email": str}
 REQUIRED_KEYS_PASSWORD_RESET = {"token": str, "password": str}
 REQUIRED_KEYS_LOGIN = {"username": str, "password": str}
@@ -53,7 +61,13 @@ def api_create_user():
     data["email"] = data["email"].lower()
     try:
         current_app.logger.debug("Trying to register new user {}, {}".format(data["email"], data["username"]))
-        new_user = User.register(email=data["email"], username=data["username"], password=data["password"])
+        new_user = User.register(
+            email=data["email"],
+            username=data["username"],
+            password=data["password"],
+            first_name=data["first_name"],
+            last_name=data["last_name"],
+        )
     except ConflictError as e:
         current_app.logger.error("Conflict error on user register: {}".format(e))
         raise e
