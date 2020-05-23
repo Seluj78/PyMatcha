@@ -1066,5 +1066,65 @@
 			"protocolProfileBehavior": {}
 		}
 	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"id": "2cc3d134-eb34-4730-8210-2065800a7560",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"id": "86a65fc9-d3fe-4c9c-bcb4-e0a093425b33",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"id": "b48250a5-a198-441b-9962-c73fd073f136",
+			"key": "host",
+			"value": "http://127.0.0.1:5000",
+			"type": "string"
+		},
+		{
+			"id": "f8f82a5a-c99a-4669-871b-acc231ea5391",
+			"key": "user_email",
+			"value": "foo@example.org",
+			"type": "string"
+		},
+		{
+			"id": "a65597cc-8915-4642-b654-fdf82284f573",
+			"key": "user_username",
+			"value": "bar",
+			"type": "string"
+		},
+		{
+			"id": "e7406bcf-fd38-405a-a1d0-c44d6d6669f5",
+			"key": "user_password",
+			"value": "admin",
+			"type": "string"
+		},
+		{
+			"id": "87fb5d29-556b-4547-bd80-0868c3993957",
+			"key": "debug_token",
+			"value": "xX69jules69Xx",
+			"type": "string"
+		},
+		{
+			"id": "28664059-337d-4f63-88e1-a37278156d44",
+			"key": "user_token",
+			"value": "",
+			"type": "string"
+		}
+	],
 	"protocolProfileBehavior": {}
 }
