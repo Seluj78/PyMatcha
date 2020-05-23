@@ -123,7 +123,7 @@
 									"tests[\"JSON return code is 400\"] = response.code == 400",
 									"",
 									"tests[\"success is true\"] = response.success == false",
-									"tests[\"Message is correct\"] = response.error.message == \"Missing key(s) ['username'] to perform action.\"",
+									"tests[\"Message is correct\"] = response.error.message == \"Missing key(s) ['username', 'first_name', 'last_name'] to perform action.\"",
 									"tests[\"Error type is Bad Request\"] = response.error.type == \"BadRequestError\""
 								],
 								"type": "text/javascript"
@@ -191,7 +191,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n\t\"email\": \"{{user_email}}\",\n\t\"password\": \"{{user_password}}\",\n\t\"username\": \"{{user_username}}\",\n\t\"role\": \"admin\"\n}",
+							"raw": "{\n\t\"username\": \"{{user_username}}\",\n\t\"email\": \"{{user_email}}\",\n\t\"password\": \"{{user_password}}\",\n\t\"first_name\": \"{{user_firstname}}\",\n\t\"last_name\": \"{{user_lastname}}\",\n\t\"role\": \"admin\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -242,7 +242,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n\t\"username\": \"{{user_username}}\",\n\t\"email\": \"{{user_email}}\",\n\t\"password\": \"{{user_password}}\"\n}",
+							"raw": "{\n\t\"username\": \"{{user_username}}\",\n\t\"email\": \"{{user_email}}\",\n\t\"password\": \"{{user_password}}\",\n\t\"first_name\": \"{{user_firstname}}\",\n\t\"last_name\": \"{{user_lastname}}\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -294,7 +294,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n\t\"username\": \"{{user_username}}\",\n\t\"email\": \"{{user_email}}\",\n\t\"password\": \"{{user_password}}\"\n}",
+							"raw": "{\n\t\"username\": \"{{user_username}}\",\n\t\"email\": \"{{user_email}}\",\n\t\"password\": \"{{user_password}}\",\n\t\"first_name\": \"{{user_firstname}}\",\n\t\"last_name\": \"{{user_lastname}}\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -435,7 +435,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n\t\"username\": \"{{user_username}}\",\n\t\"email\": \"{{user_email}}\",\n\t\"password\": \"{{user_password}}\"\n}",
+							"raw": "{\n\t\"username\": \"{{user_username}}\",\n\t\"email\": \"{{user_email}}\",\n\t\"password\": \"{{user_password}}\",\n\t\"first_name\": \"{{user_firstname}}\",\n\t\"last_name\": \"{{user_lastname}}\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -1336,51 +1336,63 @@
 	],
 	"variable": [
 		{
-			"id": "bbf8a43f-0469-484c-883b-bfb782ac7988",
+			"id": "18a4fc2f-e31a-4eb5-a108-e8c6673f39e6",
 			"key": "host",
 			"value": "http://127.0.0.1:5000",
 			"type": "string"
 		},
 		{
-			"id": "b83b67f8-c6d4-458d-b18a-36bea829a323",
+			"id": "259dee23-5217-4b8d-851e-c5bd9d3ce3fe",
+			"key": "user_id",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"id": "217a6b0c-3736-4390-a582-bb5843110a29",
 			"key": "user_email",
 			"value": "foo@example.org",
 			"type": "string"
 		},
 		{
-			"id": "d821b498-734f-4410-8caf-57ed2013b6fe",
+			"id": "2be2be1d-ec21-445b-a070-4afc26b8a172",
 			"key": "user_username",
 			"value": "bar",
 			"type": "string"
 		},
 		{
-			"id": "db3e1ced-4bfc-4654-aa6a-2bf7b8e2f567",
+			"id": "504174fc-1495-4f63-964c-8ef3733c972c",
 			"key": "user_password",
 			"value": "admin",
 			"type": "string"
 		},
 		{
-			"id": "7ad1e957-1735-4748-b4e4-eb912adff03a",
+			"id": "c2570adf-6653-424b-b115-3e4792f47272",
+			"key": "user_firstname",
+			"value": "Foo",
+			"type": "string"
+		},
+		{
+			"id": "b09e772d-42d7-4a4b-8b9d-f77da5368f5e",
+			"key": "user_lastname",
+			"value": "Bar",
+			"type": "string"
+		},
+		{
+			"id": "f013f378-3356-4bed-b8f7-aa8e11dde3ee",
 			"key": "debug_token",
 			"value": "xX69jules69Xx",
 			"type": "string"
 		},
 		{
-			"id": "4d0789b6-f5ee-428e-b1f7-5434d415dc81",
+			"id": "fa85e290-f49a-4190-ab7b-22e8cfddd72d",
 			"key": "user_token",
 			"value": "",
 			"type": "string"
 		},
 		{
-			"id": "ebf22620-69af-48fa-a151-932e97429428",
+			"id": "2a5a6d9e-b973-40cc-b450-7c2186581771",
 			"key": "expired_token",
 			"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE1OTAyNDIyNjQsIm5iZiI6MTU5MDI0MjI2NCwianRpIjoiNTM0ZGI5NzQtOWE4Ni00MGViLWE1NDEtMDg3N2ZmNzQ3NDVhIiwiZXhwIjoxNTkwMjQyMzI0LCJpZGVudGl0eSI6eyJpZCI6NTEyLCJlbWFpbCI6ImZvb0BleGFtcGxlLm9yZyIsInVzZXJuYW1lIjoiYmFyIiwiaXNfb25saW5lIjp0cnVlLCJkYXRlX2xhc3RzZWVuIjoiU2F0LCAyMyBNYXkgMjAyMCAxMzo1Nzo0NCBHTVQifSwiZnJlc2giOnRydWUsInR5cGUiOiJhY2Nlc3MifQ.NTp2P0WNkXDwzuzrcNIQdeAfizQ57HQgkzBLSvY1yHU",
-			"type": "string"
-		},
-		{
-			"id": "4740b896-8d99-477d-8e15-e6916090d1dd",
-			"key": "user_id",
-			"value": "",
 			"type": "string"
 		}
 	],

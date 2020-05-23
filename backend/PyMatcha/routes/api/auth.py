@@ -44,7 +44,7 @@ from PyMatcha.utils.mail import send_mail_text
 User = user.User
 get_user = user.get_user
 
-REQUIRED_KEYS_USER_CREATION = {"username": str, "email": str, "password": str}
+REQUIRED_KEYS_USER_CREATION = {"username": str, "email": str, "password": str, "first_name": str, "last_name": str}
 REQUIRED_KEYS_PASSWORD_FORGOT = {"email": str}
 REQUIRED_KEYS_PASSWORD_RESET = {"token": str, "password": str}
 REQUIRED_KEYS_LOGIN = {"username": str, "password": str}
@@ -61,7 +61,13 @@ def api_create_user():
     data["email"] = data["email"].lower()
     try:
         current_app.logger.debug("Trying to register new user {}, {}".format(data["email"], data["username"]))
-        new_user = User.register(email=data["email"], username=data["username"], password=data["password"])
+        new_user = User.register(
+            email=data["email"],
+            username=data["username"],
+            password=data["password"],
+            first_name=data["first_name"],
+            last_name=data["last_name"],
+        )
     except ConflictError as e:
         current_app.logger.error("Conflict error on user register: {}".format(e))
         raise e
