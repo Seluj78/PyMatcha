@@ -5,6 +5,7 @@ from flask import Blueprint
 from flask import current_app
 from PyMatcha.errors import NotFoundError
 from PyMatcha.success import Success
+from PyMatcha.success import SuccessDeleted
 from PyMatcha.utils.decorators import debug_token_required
 
 debug_bp = Blueprint("debug", __name__)
@@ -30,3 +31,17 @@ def debug_confirm_user(uid):
     u.save()
     current_app.logger.debug("/debug/users/confirm -> User {} confirmed.".format(u.id))
     return Success("User successfully confirmed")
+
+
+@debug_bp.route("/debug/users/<uid>", methods=["DELETE"])
+@debug_token_required
+def delete_user(uid):
+    current_app.logger.info("DELETE /debug/users/{} -> Call".format(uid))
+    try:
+        u = get_user(uid)
+    except NotFoundError:
+        raise NotFoundError("User {} not found".format(uid), "Check given id and try again")
+    else:
+        current_app.logger.info("/debug/users/{} -> DELETE user {}".format(uid, uid))
+        u.delete()
+        return SuccessDeleted("User {} Deleted".format(uid))

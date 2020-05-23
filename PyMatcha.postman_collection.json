@@ -313,14 +313,24 @@
 						}
 					],
 					"request": {
+						"auth": {
+							"type": "noauth"
+						},
 						"method": "DELETE",
-						"header": [],
+						"header": [
+							{
+								"key": "debug-auth-token",
+								"value": "{{debug_token}}",
+								"type": "text"
+							}
+						],
 						"url": {
-							"raw": "{{host}}/users/{{user_email}}",
+							"raw": "{{host}}/debug/users/{{user_email}}",
 							"host": [
 								"{{host}}"
 							],
 							"path": [
+								"debug",
 								"users",
 								"{{user_email}}"
 							]
@@ -353,14 +363,24 @@
 						}
 					],
 					"request": {
+						"auth": {
+							"type": "noauth"
+						},
 						"method": "DELETE",
-						"header": [],
+						"header": [
+							{
+								"key": "debug-auth-token",
+								"value": "{{debug_token}}",
+								"type": "text"
+							}
+						],
 						"url": {
-							"raw": "{{host}}/users/{{user_email}}",
+							"raw": "{{host}}/debug/users/{{user_email}}",
 							"host": [
 								"{{host}}"
 							],
 							"path": [
+								"debug",
 								"users",
 								"{{user_email}}"
 							]
@@ -1084,7 +1104,9 @@
 									"user_username = pm.collectionVariables.get(\"user_username\");",
 									"",
 									"tests[\"Is email correct\"] = response.email == user_email",
-									"tests[\"Is username correct\"] = response.username == user_username"
+									"tests[\"Is username correct\"] = response.username == user_username",
+									"",
+									"pm.collectionVariables.set(\"user_id\", response.id)"
 								],
 								"type": "text/javascript"
 							}
@@ -1182,11 +1204,9 @@
 									"    pm.response.to.have.status(200);",
 									"});",
 									"",
-									"user_email = pm.collectionVariables.get(\"user_email\");",
-									"user_username = pm.collectionVariables.get(\"user_username\");",
+									"// user_id = pm.collectionVariables.get(\"user_id\");",
 									"",
-									"tests[\"Is email correct\"] = response.email == user_email",
-									"tests[\"Is username correct\"] = response.username == user_username"
+									"// tests[\"User id is correct\"] = response[0].id == user_id"
 								],
 								"type": "text/javascript"
 							}
@@ -1206,13 +1226,13 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{host}}/users/{{user_email}}",
+							"raw": "{{host}}/users/online",
 							"host": [
 								"{{host}}"
 							],
 							"path": [
 								"users",
-								"{{user_email}}"
+								"online"
 							]
 						}
 					},
@@ -1256,45 +1276,51 @@
 	],
 	"variable": [
 		{
-			"id": "874e6486-5cbf-4221-bad4-f23d3e1434ed",
+			"id": "d20c6599-c60c-4e1e-b291-66da702873c7",
 			"key": "host",
 			"value": "http://127.0.0.1:5000",
 			"type": "string"
 		},
 		{
-			"id": "338a0aa6-eca3-46fb-9823-c8d998cdaec9",
+			"id": "9c77c101-e71a-422f-9224-eed1a04992a2",
 			"key": "user_email",
 			"value": "foo@example.org",
 			"type": "string"
 		},
 		{
-			"id": "dea84a15-11bb-4d3f-bb1c-3b7739075f87",
+			"id": "377b3b97-a380-4e3b-9d1d-d8084186f01f",
 			"key": "user_username",
 			"value": "bar",
 			"type": "string"
 		},
 		{
-			"id": "6c971411-78c5-4143-8210-b02c6ca5c397",
+			"id": "55b4de50-8741-470c-afa0-4df6880fe6c1",
 			"key": "user_password",
 			"value": "admin",
 			"type": "string"
 		},
 		{
-			"id": "02b3d365-73b2-45dd-b362-b129601f614f",
+			"id": "68fe57cd-3b51-4cca-947b-a6a6ca722dd2",
 			"key": "debug_token",
 			"value": "xX69jules69Xx",
 			"type": "string"
 		},
 		{
-			"id": "f02e23ad-6109-4c1d-84df-d6222cd2107c",
+			"id": "45f740cc-7b53-4275-9b04-c6e14933ab57",
 			"key": "user_token",
 			"value": "",
 			"type": "string"
 		},
 		{
-			"id": "d9612a55-9b82-4cd5-87e1-ddcda8ded553",
+			"id": "abfa00ac-5f27-471b-b504-1fa768d42a27",
 			"key": "expired_token",
 			"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE1OTAyNDIyNjQsIm5iZiI6MTU5MDI0MjI2NCwianRpIjoiNTM0ZGI5NzQtOWE4Ni00MGViLWE1NDEtMDg3N2ZmNzQ3NDVhIiwiZXhwIjoxNTkwMjQyMzI0LCJpZGVudGl0eSI6eyJpZCI6NTEyLCJlbWFpbCI6ImZvb0BleGFtcGxlLm9yZyIsInVzZXJuYW1lIjoiYmFyIiwiaXNfb25saW5lIjp0cnVlLCJkYXRlX2xhc3RzZWVuIjoiU2F0LCAyMyBNYXkgMjAyMCAxMzo1Nzo0NCBHTVQifSwiZnJlc2giOnRydWUsInR5cGUiOiJhY2Nlc3MifQ.NTp2P0WNkXDwzuzrcNIQdeAfizQ57HQgkzBLSvY1yHU",
+			"type": "string"
+		},
+		{
+			"id": "15616e67-40e9-46aa-b325-99580361242e",
+			"key": "user_id",
+			"value": "",
 			"type": "string"
 		}
 	],
