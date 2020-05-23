@@ -27,7 +27,7 @@ def purge_offline_users():
             try:
                 u = User.get(id=user_id)
             except ValueError:
-                # The user has been deleted from DB while he was last online
+                # The user has been deleted from DB while he was still online
                 pass
             else:
                 u.date_lastseen = datetime.datetime.fromtimestamp(date_lastseen)
