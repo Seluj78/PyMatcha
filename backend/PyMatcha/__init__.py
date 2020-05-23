@@ -147,11 +147,17 @@ get_user = user_module.get_user
 logging.debug("Configuring JWT user callback loader")
 
 
+from PyMatcha.errors import NotFoundError
+
+
 @jwt.user_loader_callback_loader
 def jwt_user_callback(identity):
-    # TODO: Check if this function is called everytime a jwt is used
+    try:
+        u = get_user(identity["id"])
+    except NotFoundError:
+        return None
     redis.set("user:" + str(identity["id"]), datetime.datetime.utcnow().timestamp())
-    return get_user(identity["id"])
+    return u
 
 
 from PyMatcha.routes.api.ping_pong import ping_pong_bp
