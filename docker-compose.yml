@@ -19,6 +19,11 @@ services:
       - mysql:/var/lib/mysql
     networks:
       - mysql-net
+    healthcheck:
+      test: "/usr/bin/mysql --user=$DB_USER --password=$DB_PASSWORD --execute \"SHOW DATABASES;\""
+      interval: 3s
+      timeout: 1s
+      retries: 5
 
   redis:
     image: redis:4.0.5-alpine
@@ -65,7 +70,7 @@ services:
     ports:
       - "8080:5000"
     volumes:
-      - pymatcha:/app
+      - app:/app
     depends_on:
       - mysql
       - redis

@@ -44,17 +44,6 @@ install_react:
 
 install: install_python install_react
 
-docker_build: install_react
-	mkdir -p www
-	mkdir -p www/frontend
-	mkdir -p www/backend
-
-	npm run build --prefix $(FRONTEND)
-	cp -R $(FRONTEND)/build www/frontend
-
-	# TODO: Add obfuscation/compilation step
-	cp -R $(BACKEND) www/
-
 build: install
 	mkdir -p www
 	mkdir -p www/frontend
@@ -105,21 +94,10 @@ else
 endif
 	# TODO: Maybe move this to the build stage? so if the build fails and the folder isn't here it fails immediatly and not at the test stage
 
+docker:
+	docker-compose build
+	docker-compose up
 
-# TODO Update makefile for docker compose
-docker: build docker-build docker-run
-
-docker-run:
-	docker run --name $(DOCKER_NAME) --restart=always -p 8080:$(FLASK_PORT) -d $(DOCKER_NAME)
-
-docker-build:
-	-docker kill $(DOCKER_NAME)
-	docker build -t $(DOCKER_NAME) .
-
-docker-clean:
-	-docker kill $(DOCKER_NAME)
-	-docker ps -a | awk '{ print $$1,$$2 }' | grep $(DOCKER_NAME) | awk '{print $$1 }' | xargs -I {} docker rm {}
-	docker image rm $(DOCKER_NAME)
 
 clean:
 	rm -rf $(FRONTEND)/node_modules
