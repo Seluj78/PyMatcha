@@ -31,7 +31,7 @@ all: install build run
 
 install_python:
 ifndef TRAVIS
-		test -d $(VENV) || python3.7 -m venv $(VENV)
+		test -d $(VENV) || python -m venv $(VENV)
 		( \
 			source $(VENV)/bin/activate; \
 			pip install wheel; \
