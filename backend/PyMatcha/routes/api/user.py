@@ -58,8 +58,8 @@ def get_one_user(uid):
 @user_bp.route("/users/online", methods=["GET"])
 @fjwt.jwt_required
 def get_all_online_users():
-    user_id = None
-    date_lastseen = None
+    user_id = None  # noqa
+    date_lastseen = None  # noqa
     online_user_list = []
     for key in redis.scan_iter("user:*"):
         user_id = str(key).split(":")[1]
