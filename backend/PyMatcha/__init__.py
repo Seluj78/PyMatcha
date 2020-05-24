@@ -61,7 +61,7 @@ if os.getenv("ENABLE_LOGGING") == "True":
 
 application = Flask(__name__, static_folder=os.getenv("FRONT_STATIC_FOLDER"))
 
-if os.getenv("FLASK_DEBUG", "false") == "true":
+if os.getenv("FLASK_DEBUG", "false") == "true" or os.getenv("FLASK_DEBUG", "false") == "1":
     application.debug = True
 else:
     application.debug = False

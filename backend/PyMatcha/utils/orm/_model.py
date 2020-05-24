@@ -173,6 +173,11 @@ class Model(object):
         """.format(
             self.table_name, ", ".join(columns), ", ".join(["%s"] * len(values))
         )
+        logging.debug(
+            "---------------------------------------------------------------------------{}\n\n\n\n\n\n\n{}".format(
+                query, values
+            )
+        )
         with self.db.cursor() as c:
             c.execute(query, tuple(values))
             self.db.commit()
