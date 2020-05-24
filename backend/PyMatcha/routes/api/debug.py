@@ -55,11 +55,11 @@ def delete_user(uid):
 @debug_bp.route("/debug/redis")
 # @debug_token_required
 def debug_show_redis():
-    ret = []
+    ret = {"users": {}, "jtis": {}}
     for key in redis.scan_iter("user:*"):
         value = redis.get(str(key))
-        ret.append({key: value})
+        ret["users"][key] = value
     for key in redis.scan_iter("jti:*"):
         value = redis.get(str(key))
-        ret.append({key: value})
+        ret["jtis"][key] = value
     return jsonify(ret), 200
