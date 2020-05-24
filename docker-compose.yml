@@ -56,6 +56,7 @@ services:
     networks:
       - redis-net
       - mysql-net
+    restart: always
 
   app:
     restart: always
@@ -66,7 +67,7 @@ services:
       - .env
     environment:
       - PYTHONUNBUFFERED=1
-      - FLASK_DEBUG=false
+      - FLASK_DEBUG=true
     ports:
       - "8080:5000"
     volumes:
@@ -81,6 +82,21 @@ services:
       - worker
     networks:
       - redis-net
+      - mysql-net
+
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    container_name: dev_pma
+    links:
+      - mysql
+    environment:
+      PMA_HOST: mysql
+      PMA_PORT: 3306
+      PMA_ARBITRARY: 1
+    restart: always
+    ports:
+      - 8183:80
+    networks:
       - mysql-net
 
 networks:
