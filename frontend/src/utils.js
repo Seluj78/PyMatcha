@@ -1,6 +1,6 @@
 import request from 'request-promise';
 
-const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000';
+const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:8080';
 
 const discard = side => {
 	const discardDirections = {
@@ -26,7 +26,7 @@ const apiCall = async options => {
 	options.method = options.method || 'GET';
 	options.uri = `${API_URL}/${options.uri}`;
 	try {
-		return await request(options); 
+		return await request(options);
 	} catch (e) {
 		if (typeof e.error === 'string')
 			return { error: { message: e.error }, is_error: true }
