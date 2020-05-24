@@ -855,7 +855,8 @@
 									"",
 									"tests[\"success is true\"] = response.success == true",
 									"",
-									"pm.collectionVariables.set(\"user_token\", response.access_token);"
+									"pm.collectionVariables.set(\"user_access_token\", response.tokens.access_token);",
+									"pm.collectionVariables.set(\"user_refresh_token\", response.tokens.refresh_token);"
 								],
 								"type": "text/javascript"
 							}
@@ -905,7 +906,8 @@
 									"",
 									"tests[\"success is true\"] = response.success == true",
 									"",
-									"pm.collectionVariables.set(\"user_token\", response.access_token);"
+									"pm.collectionVariables.set(\"user_access_token\", response.tokens.access_token);",
+									"pm.collectionVariables.set(\"user_refresh_token\", response.tokens.refresh_token);"
 								],
 								"type": "text/javascript"
 							}
@@ -1079,16 +1081,6 @@
 						}
 					],
 					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "{{user_token}}",
-									"type": "string"
-								}
-							]
-						},
 						"method": "GET",
 						"header": [],
 						"url": {
@@ -1131,16 +1123,6 @@
 						}
 					],
 					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "{{user_token}}",
-									"type": "string"
-								}
-							]
-						},
 						"method": "GET",
 						"header": [],
 						"url": {
@@ -1182,16 +1164,6 @@
 						}
 					],
 					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "{{user_token}}",
-									"type": "string"
-								}
-							]
-						},
 						"method": "GET",
 						"header": [],
 						"url": {
@@ -1231,16 +1203,6 @@
 						}
 					],
 					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "{{user_token}}",
-									"type": "string"
-								}
-							]
-						},
 						"method": "GET",
 						"header": [],
 						"url": {
@@ -1307,7 +1269,7 @@
 		"bearer": [
 			{
 				"key": "token",
-				"value": "{{user_token}}",
+				"value": "{{user_access_token}}",
 				"type": "string"
 			}
 		]
@@ -1336,61 +1298,67 @@
 	],
 	"variable": [
 		{
-			"id": "18a4fc2f-e31a-4eb5-a108-e8c6673f39e6",
+			"id": "614a5f63-4117-4d6b-9135-0e65a875e6d3",
 			"key": "host",
 			"value": "http://127.0.0.1:5000",
 			"type": "string"
 		},
 		{
-			"id": "259dee23-5217-4b8d-851e-c5bd9d3ce3fe",
+			"id": "13b0de83-1e2c-453b-a1c3-1add8018ebe1",
 			"key": "user_id",
 			"value": "",
 			"type": "string"
 		},
 		{
-			"id": "217a6b0c-3736-4390-a582-bb5843110a29",
+			"id": "f7a685c8-34e5-4871-9e2d-e35a6e9c652d",
 			"key": "user_email",
 			"value": "foo@example.org",
 			"type": "string"
 		},
 		{
-			"id": "2be2be1d-ec21-445b-a070-4afc26b8a172",
+			"id": "8da5eccc-c7e3-45da-bdd9-37a0afac5e5e",
 			"key": "user_username",
 			"value": "bar",
 			"type": "string"
 		},
 		{
-			"id": "504174fc-1495-4f63-964c-8ef3733c972c",
+			"id": "cb8796c0-7ce0-4dbd-9db7-ea59411d3c71",
 			"key": "user_password",
 			"value": "admin",
 			"type": "string"
 		},
 		{
-			"id": "c2570adf-6653-424b-b115-3e4792f47272",
+			"id": "7cba306a-94aa-48bf-ba11-5706f1094615",
 			"key": "user_firstname",
 			"value": "Foo",
 			"type": "string"
 		},
 		{
-			"id": "b09e772d-42d7-4a4b-8b9d-f77da5368f5e",
+			"id": "c73c01b5-743e-4d50-84f8-ce8d6de2c6de",
 			"key": "user_lastname",
 			"value": "Bar",
 			"type": "string"
 		},
 		{
-			"id": "f013f378-3356-4bed-b8f7-aa8e11dde3ee",
+			"id": "a61aa66f-d97d-4c0a-9401-98e0f6a3dc92",
 			"key": "debug_token",
 			"value": "xX69jules69Xx",
 			"type": "string"
 		},
 		{
-			"id": "fa85e290-f49a-4190-ab7b-22e8cfddd72d",
-			"key": "user_token",
+			"id": "bdfcbbf1-d0e2-4f53-9795-d0c0e51ac328",
+			"key": "user_access_token",
 			"value": "",
 			"type": "string"
 		},
 		{
-			"id": "2a5a6d9e-b973-40cc-b450-7c2186581771",
+			"id": "2f46d294-d606-4a24-b617-4d5e3c8af95b",
+			"key": "user_refresh_token",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"id": "4016a8cf-4f9d-482b-8036-c26686883388",
 			"key": "expired_token",
 			"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE1OTAyNDIyNjQsIm5iZiI6MTU5MDI0MjI2NCwianRpIjoiNTM0ZGI5NzQtOWE4Ni00MGViLWE1NDEtMDg3N2ZmNzQ3NDVhIiwiZXhwIjoxNTkwMjQyMzI0LCJpZGVudGl0eSI6eyJpZCI6NTEyLCJlbWFpbCI6ImZvb0BleGFtcGxlLm9yZyIsInVzZXJuYW1lIjoiYmFyIiwiaXNfb25saW5lIjp0cnVlLCJkYXRlX2xhc3RzZWVuIjoiU2F0LCAyMyBNYXkgMjAyMCAxMzo1Nzo0NCBHTVQifSwiZnJlc2giOnRydWUsInR5cGUiOiJhY2Nlc3MifQ.NTp2P0WNkXDwzuzrcNIQdeAfizQ57HQgkzBLSvY1yHU",
 			"type": "string"
