@@ -27,7 +27,9 @@ from flask import redirect
 from flask import request
 from itsdangerous import BadSignature
 from itsdangerous import SignatureExpired
+from PyMatcha import ACCESS_TOKEN_EXPIRES
 from PyMatcha import redis
+from PyMatcha import REFRESH_TOKEN_EXPIRES
 from PyMatcha.errors import BadRequestError
 from PyMatcha.errors import ConflictError
 from PyMatcha.errors import NotFoundError
@@ -198,9 +200,46 @@ def auth_login():
     # u.date_lastseen = datetime.datetime.utcnow()
     # u.save()
     access_token = fjwt.create_access_token(identity=u.get_base_info(), fresh=True)
+    refresh_token = fjwt.create_refresh_token(identity=u.get_base_info())
+    access_jti = fjwt.get_jti(access_token)
+    refresh_jti = fjwt.get_jti(refresh_token)
+
+    redis.set("jti:" + access_jti, "false", ACCESS_TOKEN_EXPIRES * 1.2)
+    redis.set("jti:" + refresh_jti, "false", REFRESH_TOKEN_EXPIRES * 1.2)
+
     current_app.logger.debug("/auth/login -> Returning access token for user {}".format(username))
     redis.set("user:" + str(u.id), datetime.datetime.utcnow().timestamp())
+    tokens = {"access_token": access_token, "refresh_token": refresh_token}
+    return SuccessOutput("tokens", tokens)
+
+
+@auth_bp.route("/auth/refresh", methods=["POST"])
+@fjwt.jwt_refresh_token_required
+def refresh():
+    # Do the same thing that we did in the login endpoint here
+    current_user = fjwt.get_jwt_identity()
+    access_token = fjwt.create_access_token(identity=current_user)
+    access_jti = fjwt.get_jti(encoded_token=access_token)
+    redis.set("jti:" + access_jti, "false", ACCESS_TOKEN_EXPIRES * 1.2)
     return SuccessOutput("access_token", access_token)
+
+
+# Endpoint for revoking the current users access token
+@auth_bp.route("/auth/access_revoke", methods=["DELETE"])
+@fjwt.jwt_required
+def logout():
+    jti = fjwt.get_raw_jwt()["jti"]
+    redis.set("jti:" + jti, "true", ACCESS_TOKEN_EXPIRES * 1.2)
+    return Success("Access token revoked")
+
+
+# Endpoint for revoking the current users refresh token
+@auth_bp.route("/auth/refresh_revoke", methods=["DELETE"])
+@fjwt.jwt_refresh_token_required
+def logout2():
+    jti = fjwt.get_raw_jwt()["jti"]
+    redis.set("jti:" + jti, "true", REFRESH_TOKEN_EXPIRES * 1.2)
+    return Success("Refresh token revoked")
 
 
 @auth_bp.route("/auth/confirm/new", methods=["POST"])

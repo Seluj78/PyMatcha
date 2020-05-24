@@ -3,6 +3,8 @@ import datetime
 import PyMatcha.models.user as user
 from flask import Blueprint
 from flask import current_app
+from flask import jsonify
+from PyMatcha import redis
 from PyMatcha.errors import NotFoundError
 from PyMatcha.success import Success
 from PyMatcha.success import SuccessDeleted
@@ -48,3 +50,16 @@ def delete_user(uid):
         current_app.logger.info("/debug/users/{} -> DELETE user {}".format(uid, uid))
         u.delete()
         return SuccessDeleted("User {} Deleted".format(uid))
+
+
+@debug_bp.route("/debug/redis")
+# @debug_token_required
+def debug_show_redis():
+    ret = []
+    for key in redis.scan_iter("user:*"):
+        value = redis.get(str(key))
+        ret.append({key: value})
+    for key in redis.scan_iter("jti:*"):
+        value = redis.get(str(key))
+        ret.append({key: value})
+    return jsonify(ret), 200
