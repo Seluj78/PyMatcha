@@ -56,6 +56,7 @@ services:
     networks:
       - redis-net
       - mysql-net
+    restart: always
 
   app:
     restart: always
