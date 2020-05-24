@@ -16,7 +16,6 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 """
-
 import logging
 
 
@@ -34,20 +33,20 @@ def _create_user_table(db):
         email                VARCHAR(256) NOT NULL UNIQUE,
         username             VARCHAR(256) NOT NULL UNIQUE,
         password             LONGTEXT NOT NULL,
-        bio                  LONGTEXT,
+        bio                  LONGTEXT DEFAULT NULL,
         gender               ENUM('male', 'female', 'other'),
         orientation          ENUM('heterosexual', 'homosexual', 'bisexual'),
-        birthdate            DATE,
-        geohash              VARCHAR(256),
-        tags                 LONGTEXT,
+        birthdate            DATE DEFAULT NULL,
+        geohash              VARCHAR(256) DEFAULT NULL,
+        tags                 LONGTEXT,  # TODO: JSON ?
         heat_score           INT DEFAULT (0),
-        date_joined          TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-        date_lastseen        TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        date_joined          DATETIME DEFAULT NOW(),
+        date_lastseen        DATETIME DEFAULT NOW(),
         previous_reset_token VARCHAR(256),
         is_online            BOOLEAN DEFAULT (FALSE),
         is_profile_completed BOOLEAN DEFAULT (FALSE),
         is_confirmed         BOOLEAN DEFAULT (FALSE),
-        confirmed_on         TIMESTAMP DEFAULT NULL
+        confirmed_on         DATETIME DEFAULT NULL
         );
         """
         )

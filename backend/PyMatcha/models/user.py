@@ -18,10 +18,10 @@
 """
 from __future__ import annotations
 
+import datetime
 import hashlib
 import json
 import logging
-from datetime import datetime
 from typing import Any
 from typing import Dict
 from typing import List
@@ -51,16 +51,16 @@ class User(Model):
     bio = Field(str)
     gender = Field(str)
     orientation = Field(str)
-    birthdate = Field(datetime)
+    birthdate = Field(datetime.date)
     geohash = Field(str)
     tags = Field(dict)
     heat_score = Field(int)
     is_online = Field(bool)
-    date_joined = Field(datetime)
-    date_lastseen = Field(datetime)
+    date_joined = Field(datetime.datetime, fmt="%Y-%m-%d %H:%M:%S")
+    date_lastseen = Field(datetime.datetime, fmt="%Y-%m-%d %H:%M:%S")
     is_profile_completed = Field(bool)
     is_confirmed = Field(bool)
-    confirmed_on = Field(datetime)
+    confirmed_on = Field(datetime.datetime, fmt="%Y-%m-%d %H:%M:%S")
     previous_reset_token = Field(str)
 
     def before_init(self, data):
@@ -84,16 +84,16 @@ class User(Model):
         bio: str,
         gender: str,
         orientation: str,
-        birthdate: datetime,
+        birthdate: datetime.date,
         geohash: str,
         tags,
         heat_score: int = 0,
         is_online: bool = False,
-        date_joined: datetime = datetime.utcnow(),
-        date_lastseen: datetime = datetime.utcnow(),
+        date_joined: datetime.datetime = datetime.datetime.utcnow(),
+        date_lastseen: datetime.datetime = datetime.datetime.utcnow(),
         is_profile_completed: bool = False,
         is_confirmed: bool = False,
-        confirmed_on: datetime = None,
+        confirmed_on: datetime.datetime = None,
     ) -> User:
         # Check email availability
         try:
@@ -195,13 +195,13 @@ class User(Model):
             bio="",
             gender="other",
             orientation="bisexual",
-            birthdate=datetime.utcnow(),
-            geohash="",
+            birthdate=None,
+            geohash=None,
             tags="",
             heat_score=0,
             is_online=False,
-            date_joined=datetime.utcnow(),
-            date_lastseen=datetime.utcnow(),
+            date_joined=datetime.datetime.utcnow(),
+            date_lastseen=datetime.datetime.utcnow(),
             is_profile_completed=False,
             is_confirmed=False,
             confirmed_on=None,

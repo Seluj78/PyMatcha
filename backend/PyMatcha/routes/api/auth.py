@@ -16,20 +16,28 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 """
-
 import datetime
 import os
 
 import flask_jwt_extended as fjwt
-from flask import Blueprint, request, redirect, current_app
-from itsdangerous import SignatureExpired, BadSignature
-
 import PyMatcha.models.user as user
+from flask import Blueprint
+from flask import current_app
+from flask import redirect
+from flask import request
+from itsdangerous import BadSignature
+from itsdangerous import SignatureExpired
 from PyMatcha import redis
-from PyMatcha.errors import ConflictError, NotFoundError, BadRequestError, UnauthorizedError
-from PyMatcha.success import SuccessOutputMessage, Success, SuccessOutput
+from PyMatcha.errors import BadRequestError
+from PyMatcha.errors import ConflictError
+from PyMatcha.errors import NotFoundError
+from PyMatcha.errors import UnauthorizedError
+from PyMatcha.success import Success
+from PyMatcha.success import SuccessOutput
+from PyMatcha.success import SuccessOutputMessage
 from PyMatcha.utils import hash_password
-from PyMatcha.utils.confirm_token import generate_confirmation_token, confirm_token
+from PyMatcha.utils.confirm_token import confirm_token
+from PyMatcha.utils.confirm_token import generate_confirmation_token
 from PyMatcha.utils.decorators import validate_required_params
 from PyMatcha.utils.mail import send_mail_text
 
@@ -92,9 +100,10 @@ def confirm_email(token):
         if u.is_confirmed:
             current_app.logger.debug("/auth/confirm -> User already confirmed")
             return redirect("/?type=confirm&success=false&message=User already confirmed")
-        u.is_confirmed = True
-        u.confirmed_on = datetime.datetime.utcnow()
-        u.save()
+        else:
+            u.is_confirmed = True
+            u.confirmed_on = datetime.datetime.utcnow()
+            u.save()
         current_app.logger.debug("/auth/confirm -> User {} confirmed.".format(u.id))
         return redirect("/?type=confirm&success=true&message=User confirmed")
 
@@ -179,12 +188,12 @@ def auth_login():
     if not u.is_confirmed:
         current_app.logger.debug("/auth/login -> User is trying to login unconfirmed")
         raise UnauthorizedError("User needs to be confirmed first.", "Try again when you have confirmed your email")
-    u.is_online = True
-    u.date_lastseen = datetime.datetime.utcnow()
-    u.save()
+    # u.is_online = True
+    # u.date_lastseen = datetime.datetime.utcnow()
+    # u.save()
     access_token = fjwt.create_access_token(identity=u.get_base_info(), fresh=True)
     current_app.logger.debug("/auth/login -> Returning access token for user {}".format(username))
-    redis.set("user:" + str(u.id), u.date_lastseen.timestamp())
+    redis.set("user:" + str(u.id), datetime.datetime.utcnow().timestamp())
     return SuccessOutput("access_token", access_token)
 
 

@@ -5,7 +5,6 @@ import string
 import Geohash
 import lorem
 import names
-
 import PyMatcha.models.user as user_module
 from PyMatcha.errors import ConflictError
 
@@ -67,7 +66,7 @@ def populate_users():
                 bio=bio,
                 gender=gender,
                 orientation=orientation,
-                birthdate=birthdate,
+                birthdate=birthdate.date(),
                 geohash=geohash,
                 tags="",  # TODO: Change to a real random tag generation
                 heat_score=0,

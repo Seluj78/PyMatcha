@@ -10,18 +10,17 @@ User = user_module.User
 
 @celery.on_after_configure.connect
 def setup_periodic_tasks(sender, **kwargs):
-    sender.add_periodic_task(60, purge_offline_users.s(), name="Purge offline users every minute")
-
-
-# TODO: Add a task to update last seen every minute based on redis data, like the offline user purge
+    sender.add_periodic_task(60, update_offline_users.s(), name="Update online users every minute")
 
 
 @celery.task
-def purge_offline_users():
-    logging.debug("Purging offline users")
+def update_offline_users():
+    logging.debug("Updating offline users")
     # Get the last login deadline
     login_deadline_timestamp = float(datetime.datetime.utcnow().timestamp()) - 120
     count = 0
+    online_count = 0
+    offline_count = 0
     # For all user keys
     for key in redis.scan_iter("user:*"):
         # Get the user id
@@ -39,8 +38,27 @@ def purge_offline_users():
                 u.date_lastseen = datetime.datetime.fromtimestamp(date_lastseen)
                 u.is_online = False
                 u.save()
+                offline_count += 1
             # delete the key in redis, setting the user as offline in redis
             redis.delete(key)
             count += 1
-    logging.debug("Purged {} users".format(count))
-    return "Purged {} users".format(count)
+        else:
+            try:
+                u = User.get(id=user_id)
+            except ValueError:
+                # Edge case where the user has been deleted from DB while he was still online
+                redis.delete(key)
+            else:
+                u.date_lastseen = datetime.datetime.fromtimestamp(date_lastseen)
+                u.is_online = True
+                u.save()
+                online_count += 1
+            count += 1
+    logging.debug(
+        "Updated online status for {} users. {} passed offline and {} passed or stayed online".format(
+            count, offline_count, online_count
+        )
+    )
+    return "Updated online status for {} users. {} passed offline and {} passed or stayed online".format(
+        count, offline_count, online_count
+    )
