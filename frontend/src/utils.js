@@ -13,11 +13,7 @@ const logOut = () => {
 const refreshAcess = async () => {
 	console.log("token perime")
 	const token = getRefreshToken();
-	if (!token) {
-		logOut();
-		return null;
-	}
-	if (tokenData(token).exp < Math.floor(Date.now() / 1000) + 10) {
+	if (!token || tokenData(token).exp < Math.floor(Date.now() / 1000) + 10) {
 		logOut();
 		return null;
 	}
