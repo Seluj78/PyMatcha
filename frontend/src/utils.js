@@ -6,7 +6,8 @@ const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:8080';
 const logOut = () => {
 	localStorage.removeItem("refresh_token");
 	sessionStorage.removeItem("access_token");
-	// TODO return smoothly to the login page
+	console.log("!! Expired token !!");
+	window.location.reload();
 }
 
 const refreshAcess = async () => {
@@ -34,6 +35,7 @@ const refreshAcess = async () => {
 		return access_token;
 	} catch (e) {
 		console.log(e);
+		logOut();
 	}
 
 }
