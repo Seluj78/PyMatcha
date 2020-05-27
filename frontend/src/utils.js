@@ -17,7 +17,7 @@ const refreshAcess = async () => {
 		logOut();
 		return null;
 	}
-	if (tokenData(token).exp < Math.floor(Date.now() / 1000) - 10) {
+	if (tokenData(token).exp < Math.floor(Date.now() / 1000) + 10) {
 		logOut();
 		return null;
 	}
@@ -75,7 +75,7 @@ const apiCall = async options => {
 	options.headers = options.headers || {};
 	let token = getAccessToken();
 	if (!!token) {
-		if (tokenData(token).exp < Math.floor(Date.now() / 1000) - 10)
+		if (tokenData(token).exp < Math.floor(Date.now() / 1000) + 10)
 			token = await refreshAcess()
 		options.headers["Authorization"] = `Bearer ${token}`
 	}
