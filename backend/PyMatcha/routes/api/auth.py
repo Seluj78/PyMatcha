@@ -209,8 +209,8 @@ def auth_login():
 
     current_app.logger.debug("/auth/login -> Returning access token for user {}".format(username))
     redis.set("user:" + str(u.id), datetime.datetime.utcnow().timestamp())
-    tokens = {"access_token": access_token, "refresh_token": refresh_token}
-    return SuccessOutput("tokens", tokens)
+    ret = {"access_token": access_token, "refresh_token": refresh_token, "is_profile_completed": u.is_profile_completed}
+    return SuccessOutput("success", ret)
 
 
 @auth_bp.route("/auth/refresh", methods=["POST"])
@@ -222,7 +222,6 @@ def refresh():
     access_jti = fjwt.get_jti(encoded_token=access_token)
     redis.set("jti:" + access_jti, "false", ACCESS_TOKEN_EXPIRES * 1.2)
     return SuccessOutput("access_token", access_token)
-    ret = {"access_token": access_token, "is_profile_completed": u.is_profile_completed}
 
 
 # Endpoint for revoking the current users access token
