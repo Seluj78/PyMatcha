@@ -203,7 +203,7 @@ def auth_login():
     current_app.logger.debug("/auth/login -> Returning access token for user {}".format(username))
     redis.set("user:" + str(u.id), datetime.datetime.utcnow().timestamp())
     ret = {"access_token": access_token, "refresh_token": refresh_token, "is_profile_completed": u.is_profile_completed}
-    return SuccessOutput("success", ret)
+    return SuccessOutput("return", ret)
 
 
 @auth_bp.route("/auth/refresh", methods=["POST"])
