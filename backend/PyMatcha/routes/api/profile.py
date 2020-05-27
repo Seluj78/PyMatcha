@@ -30,25 +30,25 @@ get_user = user.get_user
 profile_bp = Blueprint("profile", __name__)
 
 REQUIRED_PARAMS_COMPLETE_PROFILE = {
-    "genre": str,
+    "orientation": str,
     "bio": str,
     # "tags": str
 }
 
 
-@profile_bp.route("/profile/complete")
+@profile_bp.route("/profile/complete", methods=["POST"])
 @fjwt.jwt_required
 @validate_params(REQUIRED_PARAMS_COMPLETE_PROFILE)
 def complete_profile():
     current_user = fjwt.current_user
-    data = request.json()
-    genre = data["genre"]
+    data = request.get_json()
+    orientation = data["orientation"]
     bio = data["bio"]
 
-    if genre not in ["heterosexual", "homosexual", "bisexual", "other"]:
+    if orientation not in ["heterosexual", "homosexual", "bisexual", "other"]:
         raise BadRequestError("Genre must be heterosexual, homosexual, bisexual or other", "Try again")
 
-    current_user.genre = genre
+    current_user.orientation = orientation
     current_user.bio = bio
     current_user.is_profile_completed = True
     current_user.save()

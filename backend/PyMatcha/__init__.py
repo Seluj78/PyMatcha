@@ -189,11 +189,13 @@ def check_if_token_is_revoked(decrypted_token):
 from PyMatcha.routes.api.ping_pong import ping_pong_bp
 from PyMatcha.routes.api.user import user_bp
 from PyMatcha.routes.api.auth import auth_bp
+from PyMatcha.routes.api.profile import profile_bp
 
 logging.debug("Registering Flask blueprints")
 application.register_blueprint(ping_pong_bp)
 application.register_blueprint(user_bp)
 application.register_blueprint(auth_bp)
+application.register_blueprint(profile_bp)
 
 if application.debug:
     logging.debug("Registering debug route")
