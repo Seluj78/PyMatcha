@@ -35,7 +35,7 @@ def _create_user_table(db):
         password             LONGTEXT NOT NULL,
         bio                  LONGTEXT DEFAULT NULL,
         gender               ENUM('male', 'female', 'other'),
-        orientation          ENUM('heterosexual', 'homosexual', 'bisexual'),
+        orientation          ENUM('heterosexual', 'homosexual', 'bisexual', 'other'),
         birthdate            DATE DEFAULT NULL,
         geohash              VARCHAR(256) DEFAULT NULL,
         tags                 LONGTEXT,  # TODO: JSON ?

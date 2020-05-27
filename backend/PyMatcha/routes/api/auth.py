@@ -40,7 +40,7 @@ from PyMatcha.success import SuccessOutputMessage
 from PyMatcha.utils import hash_password
 from PyMatcha.utils.confirm_token import confirm_token
 from PyMatcha.utils.confirm_token import generate_confirmation_token
-from PyMatcha.utils.decorators import validate_required_params
+from PyMatcha.utils.decorators import validate_params
 from PyMatcha.utils.mail import send_mail_text
 
 User = user.User
@@ -56,7 +56,7 @@ auth_bp = Blueprint("auth", __name__)
 
 
 @auth_bp.route("/auth/register", methods=["POST"])
-@validate_required_params(REQUIRED_KEYS_USER_CREATION)
+@validate_params(REQUIRED_KEYS_USER_CREATION)
 def api_create_user():
     current_app.logger.debug("/auth/register -> Call")
     data = request.get_json()
@@ -117,7 +117,7 @@ def confirm_email(token):
 
 
 @auth_bp.route("/auth/password/forgot", methods=["POST"])
-@validate_required_params(REQUIRED_KEYS_PASSWORD_FORGOT)
+@validate_params(REQUIRED_KEYS_PASSWORD_FORGOT)
 def forgot_password():
     current_app.logger.debug("/auth/password/forgot -> Call")
     data = request.get_json()
@@ -141,7 +141,7 @@ def forgot_password():
 
 
 @auth_bp.route("/auth/password/reset", methods=["POST"])
-@validate_required_params(REQUIRED_KEYS_PASSWORD_RESET)
+@validate_params(REQUIRED_KEYS_PASSWORD_RESET)
 def reset_password():
     current_app.logger.debug("/auth/password/reset -> Call")
     data = request.get_json()
@@ -174,7 +174,7 @@ def reset_password():
 
 
 @auth_bp.route("/auth/login", methods=["POST"])
-@validate_required_params(REQUIRED_KEYS_LOGIN)
+@validate_params(REQUIRED_KEYS_LOGIN)
 def auth_login():
     current_app.logger.debug("/auth/login -> Call")
     data = request.get_json()
@@ -243,7 +243,7 @@ def logout2():
 
 
 @auth_bp.route("/auth/confirm/new", methods=["POST"])
-@validate_required_params(REQUIRED_KEYS_NEW_EMAIL_CONF)
+@validate_params(REQUIRED_KEYS_NEW_EMAIL_CONF)
 def request_new_email_conf():
     current_app.logger.debug("/auth/confirm/new -> Call")
     data = request.get_json()

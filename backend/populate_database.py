@@ -25,7 +25,7 @@ def populate_users():
     for i in range(0, 500):
         gender = random.choice(["male", "female", "other"])
 
-        orientation = random.choice(["heterosexual", "homosexual", "bisexual"])
+        orientation = random.choice(["heterosexual", "homosexual", "bisexual", "other"])
 
         first_name = names.get_first_name(gender=gender if gender != "other" else None)
 

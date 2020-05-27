@@ -119,10 +119,12 @@ class User(Model):
             raise ConflictError("Gender must be male, female or other, not {}".format(gender), "Try again")
 
         # Check correct orientation
-        if orientation not in ["heterosexual", "homosexual", "bisexual"]:
-            logging.error("Sexual Orientation must be heterosexual, homosexual or bisexual, not {}".format(orientation))
+        if orientation not in ["heterosexual", "homosexual", "bisexual", "other"]:
+            logging.error(
+                "Sexual Orientation must be heterosexual, homosexual, bisexual or other, not {}".format(orientation)
+            )
             raise ConflictError(
-                "Sexual Orientation must be heterosexual, homosexual or bisexual, not {}".format(orientation),
+                "Sexual Orientation must be heterosexual, homosexual, bisexual or other, not {}".format(orientation),
                 "Try again",
             )
 
