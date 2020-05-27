@@ -189,16 +189,9 @@ def auth_login():
         current_app.logger.debug("/auth/login -> Password invalid")
         raise UnauthorizedError("Incorrect username or password", "Try again")
 
-    # access_token = fjwt.create_access_token(
-    #     identity=get_user_safe_dict(user), expires_delta=datetime.timedelta(hours=2)
-    # )
-    # TODO: Handle expiry for token
     if not u.is_confirmed:
         current_app.logger.debug("/auth/login -> User is trying to login unconfirmed")
         raise UnauthorizedError("User needs to be confirmed first.", "Try again when you have confirmed your email")
-    # u.is_online = True
-    # u.date_lastseen = datetime.datetime.utcnow()
-    # u.save()
     access_token = fjwt.create_access_token(identity=u.get_base_info(), fresh=True)
     refresh_token = fjwt.create_refresh_token(identity=u.get_base_info())
     access_jti = fjwt.get_jti(access_token)
@@ -216,7 +209,6 @@ def auth_login():
 @auth_bp.route("/auth/refresh", methods=["POST"])
 @fjwt.jwt_refresh_token_required
 def refresh():
-    # Do the same thing that we did in the login endpoint here
     current_user = fjwt.get_jwt_identity()
     access_token = fjwt.create_access_token(identity=current_user)
     access_jti = fjwt.get_jti(encoded_token=access_token)
@@ -224,7 +216,6 @@ def refresh():
     return SuccessOutput("access_token", access_token)
 
 
-# Endpoint for revoking the current users access token
 @auth_bp.route("/auth/access_revoke", methods=["DELETE"])
 @fjwt.jwt_required
 def logout():
@@ -233,7 +224,6 @@ def logout():
     return Success("Access token revoked")
 
 
-# Endpoint for revoking the current users refresh token
 @auth_bp.route("/auth/refresh_revoke", methods=["DELETE"])
 @fjwt.jwt_refresh_token_required
 def logout2():
