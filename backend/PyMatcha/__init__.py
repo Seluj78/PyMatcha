@@ -83,6 +83,14 @@ celery = Celery(application.name, broker=CELERY_BROKER_URL)
 celery.conf.update(application.config)
 
 logging.debug("Configuring JWT")
+
+ACCESS_TOKEN_EXPIRES = datetime.timedelta(minutes=15)
+REFRESH_TOKEN_EXPIRES = datetime.timedelta(days=30)
+application.config["JWT_ACCESS_TOKEN_EXPIRES"] = ACCESS_TOKEN_EXPIRES
+application.config["JWT_REFRESH_TOKEN_EXPIRES"] = REFRESH_TOKEN_EXPIRES
+application.config["JWT_BLACKLIST_ENABLED"] = True
+application.config["JWT_BLACKLIST_TOKEN_CHECKS"] = ["access", "refresh"]
+
 jwt = JWTManager(application)
 
 logging.debug("Configuring JWT expired token handler callback")
@@ -143,7 +151,9 @@ logging.debug("Configuring mail")
 mail = Mail(application)
 
 redis = Redis(
-    host=os.getenv("REDIS_HOST") if not os.getenv("IS_DOCKER_COMPOSE") else "redis", port=os.getenv("REDIS_PORT", 6379)
+    host=os.getenv("REDIS_HOST") if not os.getenv("IS_DOCKER_COMPOSE") else "redis",
+    port=os.getenv("REDIS_PORT", 6379),
+    decode_responses=True,
 )
 
 import PyMatcha.models.user as user_module
@@ -165,6 +175,15 @@ def jwt_user_callback(identity):
         return None
     redis.set("user:" + str(identity["id"]), datetime.datetime.utcnow().timestamp())
     return u
+
+
+@jwt.token_in_blacklist_loader
+def check_if_token_is_revoked(decrypted_token):
+    jti = decrypted_token["jti"]
+    entry = redis.get("jti:" + jti)
+    if entry is None:
+        return True
+    return entry == "true"
 
 
 from PyMatcha.routes.api.ping_pong import ping_pong_bp
@@ -190,11 +209,10 @@ logging.debug("Registering serve route for REACT")
 @application.route("/", defaults={"path": ""})
 @application.route("/<path:path>")
 def serve(path):
+    logging.debug("Serving {}.".format(path))
     if path != "" and os.path.exists(application.static_folder + "/" + path):
-        logging.debug("Requested {} and serving that page.".format(path))
         return send_from_directory(application.static_folder, path)
     else:
-        logging.debug("{} not found or index requested. Redirecting to index.html".format(path))
         return send_from_directory(application.static_folder, "index.html")
 
 

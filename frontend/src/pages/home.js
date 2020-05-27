@@ -5,14 +5,15 @@ import Loading from '../components/loading';
 import Error from '../components/error';
 
 const logOut = history => () => {
-	sessionStorage.removeItem('token');
+	localStorage.removeItem("refresh_token");
+	sessionStorage.removeItem("access_token");
 	history.push('login');
 }
 
 const ApiCallTest = () => {
-	const { loading, result, error } = useFetchData('/ping');
-	if ( !!loading ) return <Loading />
-	else if ( !!error ) return <Error message={error} />
+	const { loading, result, error } = useFetchData('/users');
+	if (!!loading) return <Loading />
+	else if (!!error) return <Error message={error} />
 	return (
 		<div>
 			call Result: {JSON.stringify(result)}

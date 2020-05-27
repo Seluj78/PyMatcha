@@ -855,7 +855,8 @@
 									"",
 									"tests[\"success is true\"] = response.success == true",
 									"",
-									"pm.collectionVariables.set(\"user_token\", response.access_token);"
+									"pm.collectionVariables.set(\"user_access_token\", response.tokens.access_token);",
+									"pm.collectionVariables.set(\"user_refresh_token\", response.tokens.refresh_token);"
 								],
 								"type": "text/javascript"
 							}
@@ -905,7 +906,8 @@
 									"",
 									"tests[\"success is true\"] = response.success == true",
 									"",
-									"pm.collectionVariables.set(\"user_token\", response.access_token);"
+									"pm.collectionVariables.set(\"user_access_token\", response.tokens.access_token);",
+									"pm.collectionVariables.set(\"user_refresh_token\", response.tokens.refresh_token);"
 								],
 								"type": "text/javascript"
 							}
@@ -931,6 +933,67 @@
 							"path": [
 								"auth",
 								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Refresh user token",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "da2f2db3-b810-40f5-8732-a45e5f0dc689",
+								"exec": [
+									"var response = JSON.parse(responseBody);",
+									"",
+									"",
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"tests[\"JSON return code is 200\"] = response.code == 200",
+									"",
+									"tests[\"success is true\"] = response.success == true",
+									"",
+									"pm.collectionVariables.set(\"user_access_token\", response.access_token);",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{user_refresh_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"password\": \"{{user_password}}\",\n\t\"username\": \"{{user_email}}\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/auth/refresh",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"auth",
+								"refresh"
 							]
 						}
 					},
@@ -1079,16 +1142,6 @@
 						}
 					],
 					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "{{user_token}}",
-									"type": "string"
-								}
-							]
-						},
 						"method": "GET",
 						"header": [],
 						"url": {
@@ -1131,16 +1184,6 @@
 						}
 					],
 					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "{{user_token}}",
-									"type": "string"
-								}
-							]
-						},
 						"method": "GET",
 						"header": [],
 						"url": {
@@ -1182,16 +1225,6 @@
 						}
 					],
 					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "{{user_token}}",
-									"type": "string"
-								}
-							]
-						},
 						"method": "GET",
 						"header": [],
 						"url": {
@@ -1231,16 +1264,6 @@
 						}
 					],
 					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "{{user_token}}",
-									"type": "string"
-								}
-							]
-						},
 						"method": "GET",
 						"header": [],
 						"url": {
@@ -1300,6 +1323,29 @@
 				}
 			},
 			"response": []
+		},
+		{
+			"name": "DEBUG redis view all keys",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://127.0.0.1:5000/debug/redis",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "5000",
+					"path": [
+						"debug",
+						"redis"
+					]
+				}
+			},
+			"response": []
 		}
 	],
 	"auth": {
@@ -1307,7 +1353,7 @@
 		"bearer": [
 			{
 				"key": "token",
-				"value": "{{user_token}}",
+				"value": "{{user_access_token}}",
 				"type": "string"
 			}
 		]
@@ -1336,61 +1382,67 @@
 	],
 	"variable": [
 		{
-			"id": "18a4fc2f-e31a-4eb5-a108-e8c6673f39e6",
+			"id": "6c8b7fc6-9cc7-4d64-a3a8-6906042342b6",
 			"key": "host",
 			"value": "http://127.0.0.1:5000",
 			"type": "string"
 		},
 		{
-			"id": "259dee23-5217-4b8d-851e-c5bd9d3ce3fe",
+			"id": "ddad86e9-22e5-4a88-b52d-301816ef3a36",
 			"key": "user_id",
 			"value": "",
 			"type": "string"
 		},
 		{
-			"id": "217a6b0c-3736-4390-a582-bb5843110a29",
+			"id": "5d18d3f6-eaeb-40d7-8a7c-c7b0d964553c",
 			"key": "user_email",
 			"value": "foo@example.org",
 			"type": "string"
 		},
 		{
-			"id": "2be2be1d-ec21-445b-a070-4afc26b8a172",
+			"id": "faf5a9f1-4700-4834-9c27-828bd5a91ce7",
 			"key": "user_username",
 			"value": "bar",
 			"type": "string"
 		},
 		{
-			"id": "504174fc-1495-4f63-964c-8ef3733c972c",
+			"id": "ed8d0627-3dca-497c-a0ac-3ea8d91f44ee",
 			"key": "user_password",
 			"value": "admin",
 			"type": "string"
 		},
 		{
-			"id": "c2570adf-6653-424b-b115-3e4792f47272",
+			"id": "0d707d74-159d-44d8-ba14-d6d481e06f36",
 			"key": "user_firstname",
 			"value": "Foo",
 			"type": "string"
 		},
 		{
-			"id": "b09e772d-42d7-4a4b-8b9d-f77da5368f5e",
+			"id": "af2785be-3f97-4b93-8715-6d3fc078f780",
 			"key": "user_lastname",
 			"value": "Bar",
 			"type": "string"
 		},
 		{
-			"id": "f013f378-3356-4bed-b8f7-aa8e11dde3ee",
+			"id": "acc6eed3-ff7a-427e-ad0c-3759ce4d730b",
 			"key": "debug_token",
 			"value": "xX69jules69Xx",
 			"type": "string"
 		},
 		{
-			"id": "fa85e290-f49a-4190-ab7b-22e8cfddd72d",
-			"key": "user_token",
+			"id": "b0753752-b0e6-4772-aefd-c5fb69ea93ff",
+			"key": "user_access_token",
 			"value": "",
 			"type": "string"
 		},
 		{
-			"id": "2a5a6d9e-b973-40cc-b450-7c2186581771",
+			"id": "99791095-2cf9-486c-9573-1e21bb25012b",
+			"key": "user_refresh_token",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"id": "fb718e68-8130-4d40-ab14-4e5816a8f1e7",
 			"key": "expired_token",
 			"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE1OTAyNDIyNjQsIm5iZiI6MTU5MDI0MjI2NCwianRpIjoiNTM0ZGI5NzQtOWE4Ni00MGViLWE1NDEtMDg3N2ZmNzQ3NDVhIiwiZXhwIjoxNTkwMjQyMzI0LCJpZGVudGl0eSI6eyJpZCI6NTEyLCJlbWFpbCI6ImZvb0BleGFtcGxlLm9yZyIsInVzZXJuYW1lIjoiYmFyIiwiaXNfb25saW5lIjp0cnVlLCJkYXRlX2xhc3RzZWVuIjoiU2F0LCAyMyBNYXkgMjAyMCAxMzo1Nzo0NCBHTVQifSwiZnJlc2giOnRydWUsInR5cGUiOiJhY2Nlc3MifQ.NTp2P0WNkXDwzuzrcNIQdeAfizQ57HQgkzBLSvY1yHU",
 			"type": "string"
