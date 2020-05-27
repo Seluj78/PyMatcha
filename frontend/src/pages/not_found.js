@@ -1,6 +1,6 @@
 import React from 'react';
 import { useHistory } from 'react-router-dom';
-import { getToken } from '../utils';
+import { getRefreshToken } from '../utils';
 
 const goOut = history => () => {
 	history.push('/');
@@ -8,7 +8,7 @@ const goOut = history => () => {
 
 const NotFound = () => {
 	const history = useHistory();
-	if (!getToken()) history.push({ pathname: '/login', search: window.location.search });
+	if (!getRefreshToken()) history.push({ pathname: '/login', search: window.location.search });
 	return (
 		<div>
 			<h1>404 not found</h1>

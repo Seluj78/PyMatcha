@@ -5,12 +5,13 @@ import Input from './input';
 
 const logMe = (history, setState, username, password, from) => async () => {
 	setState('loading');
-	let ret = await apiCall({uri: '/auth/login', method: 'POST', body: {username, password}})
+	let ret = await apiCall({ uri: '/auth/login', method: 'POST', body: { username, password } })
 	if (!!ret.is_error) {
 		setState(ret.error.message)
 	} else {
-		const token = ret.access_token;
-		sessionStorage.setItem("token", token);
+		let { access_token, refresh_token } = ret.tokens;
+		localStorage.setItem("refresh_token", refresh_token);
+		sessionStorage.setItem("access_token", access_token);
 		history.push('/');
 	}
 }
@@ -43,8 +44,8 @@ const LoginCard = ({ history, from }) => {
 
 	return (
 		<div style={{ height: '100%', display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
-			{ state !== 'default' && state !== 'loading' &&
-				<div className="notification is-danger" style={{paddingTop: '0.5em', paddingBottom: '0.5em'}} > { state } </div>
+			{state !== 'default' && state !== 'loading' &&
+				<div className="notification is-danger" style={{ paddingTop: '0.5em', paddingBottom: '0.5em' }} > {state} </div>
 			}
 			<Loading style={{ position: 'absolute', left: '50%', top: '50%', opacity: state === 'loading' ? '1' : '0', ...effectDuration(1) }} />
 			<Input {...usernameInput(username, setUsername, state)} />
