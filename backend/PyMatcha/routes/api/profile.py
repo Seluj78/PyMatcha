@@ -32,7 +32,7 @@ get_user = user.get_user
 
 profile_bp = Blueprint("profile", __name__)
 
-REQUIRED_PARAMS_COMPLETE_PROFILE = {"gender": str, "birthdate": str, "orientation": str, "bio": str, "tags": list}
+REQUIRED_PARAMS_COMPLETE_PROFILE = {"gender": str, "birthdate": int, "orientation": str, "bio": str, "tags": list}
 
 
 @profile_bp.route("/profile/complete", methods=["POST"])
@@ -49,7 +49,7 @@ def complete_profile():
     bio = data["bio"]
     tags = data["tags"]
     gender = data["gender"]
-    birthday = data["birthdate"]
+    birthdate = data["birthdate"]
 
     if orientation not in ["heterosexual", "homosexual", "bisexual", "other"]:
         raise BadRequestError("Orientation must be heterosexual, homosexual, bisexual or other", "Try again")
@@ -64,6 +64,6 @@ def complete_profile():
     current_user.bio = bio
     current_user.is_profile_completed = True
     current_user.gender = gender
-    current_user.birthday = datetime.date.fromtimestamp(birthday)
+    current_user.birthdate = datetime.date.fromtimestamp(int(birthdate))
     current_user.save()
     return Success("Profile completed !")
