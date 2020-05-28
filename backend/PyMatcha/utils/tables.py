@@ -38,7 +38,6 @@ def _create_user_table(db):
         orientation          ENUM('heterosexual', 'homosexual', 'bisexual', 'other'),
         birthdate            DATE DEFAULT NULL,
         geohash              VARCHAR(256) DEFAULT NULL,
-        tags                 LONGTEXT,  # TODO: JSON ?
         heat_score           INT DEFAULT (0),
         date_joined          DATETIME DEFAULT NOW(),
         date_lastseen        DATETIME DEFAULT NOW(),
@@ -72,6 +71,24 @@ def _create_user_images_table(db):
         c.execute("""SET sql_notes = 1;""")
 
 
+def _create_tags_table(db):
+    with db.cursor() as c:
+        logging.info("Creating table tags.")
+        c.execute("""SET sql_notes = 0;""")
+        c.execute(
+            """
+        CREATE TABLE IF NOT EXISTS tags
+        (
+        id            INT auto_increment PRIMARY KEY,
+        user_id       INT NOT NULL,
+        name          VARCHAR(256)
+        )
+        """
+        )
+        c.execute("""SET sql_notes = 1;""")
+
+
 def create_tables(db):
     _create_user_table(db)
     _create_user_images_table(db)
+    _create_tags_table(db)

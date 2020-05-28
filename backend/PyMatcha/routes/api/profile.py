@@ -21,6 +21,7 @@ import PyMatcha.models.user as user
 from flask import Blueprint
 from flask import request
 from PyMatcha.errors import BadRequestError
+from PyMatcha.models.tag import Tag
 from PyMatcha.success import Success
 from PyMatcha.utils.decorators import validate_params
 
@@ -29,11 +30,7 @@ get_user = user.get_user
 
 profile_bp = Blueprint("profile", __name__)
 
-REQUIRED_PARAMS_COMPLETE_PROFILE = {
-    "orientation": str,
-    "bio": str,
-    # "tags": str
-}
+REQUIRED_PARAMS_COMPLETE_PROFILE = {"orientation": str, "bio": str, "tags": list}
 
 
 @profile_bp.route("/profile/complete", methods=["POST"])
@@ -48,9 +45,13 @@ def complete_profile():
     data = request.get_json()
     orientation = data["orientation"]
     bio = data["bio"]
+    tags = data["tags"]
 
     if orientation not in ["heterosexual", "homosexual", "bisexual", "other"]:
         raise BadRequestError("Genre must be heterosexual, homosexual, bisexual or other", "Try again")
+
+    for tag in tags:
+        Tag.create(name=tag, user_id=current_user.id)
 
     current_user.orientation = orientation
     current_user.bio = bio
