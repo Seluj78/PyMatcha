@@ -16,6 +16,8 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 """
+import datetime
+
 import flask_jwt_extended as fjwt
 import PyMatcha.models.user as user
 from flask import Blueprint
@@ -30,7 +32,7 @@ get_user = user.get_user
 
 profile_bp = Blueprint("profile", __name__)
 
-REQUIRED_PARAMS_COMPLETE_PROFILE = {"orientation": str, "bio": str, "tags": list}
+REQUIRED_PARAMS_COMPLETE_PROFILE = {"gender": str, "birthdate": str, "orientation": str, "bio": str, "tags": list}
 
 
 @profile_bp.route("/profile/complete", methods=["POST"])
@@ -46,9 +48,14 @@ def complete_profile():
     orientation = data["orientation"]
     bio = data["bio"]
     tags = data["tags"]
+    gender = data["gender"]
+    birthday = data["birthdate"]
 
     if orientation not in ["heterosexual", "homosexual", "bisexual", "other"]:
-        raise BadRequestError("Genre must be heterosexual, homosexual, bisexual or other", "Try again")
+        raise BadRequestError("Orientation must be heterosexual, homosexual, bisexual or other", "Try again")
+
+    if gender not in ["male", "female", "other"]:
+        raise BadRequestError("Gender must be male, female or other", "Try again")
 
     for tag in tags:
         Tag.create(name=tag, user_id=current_user.id)
@@ -56,5 +63,7 @@ def complete_profile():
     current_user.orientation = orientation
     current_user.bio = bio
     current_user.is_profile_completed = True
+    current_user.gender = gender
+    current_user.birthday = datetime.date.fromtimestamp(birthday)
     current_user.save()
     return Success("Profile completed !")
