@@ -41,6 +41,10 @@ REQUIRED_PARAMS_COMPLETE_PROFILE = {
 @validate_params(REQUIRED_PARAMS_COMPLETE_PROFILE)
 def complete_profile():
     current_user = fjwt.current_user
+    if current_user.is_profile_completed:
+        raise BadRequestError(
+            "The user has already completed his profile", "Go to your profile settings to edit your profile"
+        )
     data = request.get_json()
     orientation = data["orientation"]
     bio = data["bio"]
