@@ -25,8 +25,10 @@ from flask import Blueprint
 from flask import request
 from PyMatcha.errors import BadRequestError
 from PyMatcha.errors import NotFoundError
+from PyMatcha.errors import UnauthorizedError
 from PyMatcha.models.tag import Tag
 from PyMatcha.success import Success
+from PyMatcha.utils import hash_password
 from PyMatcha.utils.confirm_token import generate_confirmation_token
 from PyMatcha.utils.decorators import validate_params
 from PyMatcha.utils.mail import send_mail_text
@@ -119,7 +121,7 @@ def edit_profile():
     return Success("User successfully modified !")
 
 
-@profile_bp.route("/profile/email", methods=["PUT"])
+@profile_bp.route("/profile/edit/email", methods=["PUT"])
 @fjwt.jwt_required
 @validate_params({"email": str})
 def edit_email():
@@ -138,3 +140,25 @@ def edit_email():
         body=os.getenv("APP_URL") + "/auth/confirm/" + token,
     )
     return Success("Email sent for new email")
+
+
+@profile_bp.route("/profile/edit/password", methods=["PUT"])
+@fjwt.jwt_required
+@validate_params({"old_password": str, "new_password": str})
+def edit_password():
+    data = request.get_json()
+    old_password = data["old_password"]
+    new_password = data["new_password"]
+    current_user = fjwt.current_user
+    if not current_user.check_password(old_password):
+        raise UnauthorizedError("Incorrect password", "Try again")
+    current_user.password = hash_password(new_password)
+    current_user.save()
+    # TODO: Send mail
+    send_mail_text.delay(
+        dest=current_user.email,
+        subject="Password change notification",
+        body=f"Your password was changed at {datetime.datetime.utcnow()}."
+        f" If you believe it wasn't you, please change it immediatly",
+    )
+    return Success("User password successfully updated.")

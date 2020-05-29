@@ -1580,12 +1580,13 @@
 							}
 						},
 						"url": {
-							"raw": "{{host}}/profile/email",
+							"raw": "{{host}}/profile/edit/email",
 							"host": [
 								"{{host}}"
 							],
 							"path": [
 								"profile",
+								"edit",
 								"email"
 							]
 						}
@@ -1768,13 +1769,117 @@
 							}
 						},
 						"url": {
-							"raw": "{{host}}/profile/email",
+							"raw": "{{host}}/profile/edit/email",
 							"host": [
 								"{{host}}"
 							],
 							"path": [
 								"profile",
+								"edit",
 								"email"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Edit password",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "f7b0849b-2da8-4c40-b2b2-fb1adde71c16",
+								"exec": [
+									"var response = JSON.parse(responseBody);",
+									"",
+									"",
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"",
+									"tests[\"success is true\"] = response.success == true",
+									"tests[\"Message is correct\"] = response.message == \"User password successfully updated.\"",
+									"pm.collectionVariables.set(\"user_password\", \"dolphin2\")"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"old_password\": \"{{user_password}}\",\n\t\"new_password\": \"dolphin2\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/profile/edit/password",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"profile",
+								"edit",
+								"password"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Login user after password edit",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "6e4ec56d-ad5e-450b-805e-230bfd47f4d7",
+								"exec": [
+									"var response = JSON.parse(responseBody);",
+									"",
+									"",
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"tests[\"JSON return code is 200\"] = response.code == 200",
+									"",
+									"tests[\"success is true\"] = response.success == true",
+									"",
+									"tests[\"Is profile completed is 1\"] = response.return.is_profile_completed == 1",
+									"",
+									"pm.collectionVariables.set(\"user_access_token\", response.return.access_token);",
+									"pm.collectionVariables.set(\"user_refresh_token\", response.return.refresh_token);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"password\": \"{{user_password}}\",\n\t\"username\": \"{{user_email}}\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/auth/login",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"auth",
+								"login"
 							]
 						}
 					},
@@ -1801,6 +1906,7 @@
 							"pm.collectionVariables.set(\"user_lastname\", \"Bar\")",
 							"pm.collectionVariables.set(\"user_gender\", \"other\")",
 							"pm.collectionVariables.set(\"user_orientation\", \"bisexual\")",
+							"pm.collectionVariables.set(\"user_password\", \"admin\")",
 							""
 						],
 						"type": "text/javascript"
@@ -1839,15 +1945,10 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "http://127.0.0.1:5000/debug/redis",
-					"protocol": "http",
+					"raw": "{{host}}/debug/redis",
 					"host": [
-						"127",
-						"0",
-						"0",
-						"1"
+						"{{host}}"
 					],
-					"port": "5000",
 					"path": [
 						"debug",
 						"redis"
@@ -1891,91 +1992,91 @@
 	],
 	"variable": [
 		{
-			"id": "094262c7-3966-4dfa-a853-f1c5d51c2b44",
+			"id": "0b227a65-f661-47b2-8bc4-cbaadf557d17",
 			"key": "host",
 			"value": "http://127.0.0.1:5000",
 			"type": "string"
 		},
 		{
-			"id": "f20e8057-8051-4c8e-9c4e-26a827f3869a",
+			"id": "cda2689f-841d-40cf-83f7-126c84c175e5",
 			"key": "user_id",
 			"value": "",
 			"type": "string"
 		},
 		{
-			"id": "e9df5103-fe2c-43d4-9af7-c75f8c2e807d",
+			"id": "901e9e11-29dd-4cff-9f8f-5ef222000d7d",
 			"key": "user_email",
 			"value": "foo@example.org",
 			"type": "string"
 		},
 		{
-			"id": "60e17880-09b8-4d3e-8469-b981889cfc2d",
+			"id": "873da2ea-7d43-4e13-a409-2a42f5b3fada",
 			"key": "user_username",
 			"value": "foo",
 			"type": "string"
 		},
 		{
-			"id": "17f0f4d6-706b-4b1a-af55-4dce7951b034",
+			"id": "11c9af91-cfc0-4bac-a197-6f3efa0edf42",
 			"key": "user_password",
 			"value": "admin",
 			"type": "string"
 		},
 		{
-			"id": "56bde633-3094-4e67-b371-6988ee53f656",
+			"id": "4bb1d9e2-3eee-49b0-9591-8a87e4b28a05",
 			"key": "user_firstname",
 			"value": "Foo",
 			"type": "string"
 		},
 		{
-			"id": "b1e5aef2-ccc1-4dcd-9f30-72de325d356f",
+			"id": "69f58f99-73b4-4fc6-bfe6-46ff80240ce2",
 			"key": "user_lastname",
 			"value": "Bar",
 			"type": "string"
 		},
 		{
-			"id": "70de06f1-3986-4d0c-8896-fa1d407c9ab7",
+			"id": "e305f6b4-a16d-48e0-b3df-da36fffd800b",
 			"key": "debug_token",
 			"value": "xX69jules69Xx",
 			"type": "string"
 		},
 		{
-			"id": "af19a08b-cac2-407e-aad0-a50701a46b00",
+			"id": "89274e60-1321-42ab-9158-6518061bbb5d",
 			"key": "user_access_token",
 			"value": "",
 			"type": "string"
 		},
 		{
-			"id": "aa09044e-e5cf-4f2d-b3e7-e36ae5a69768",
+			"id": "998a540c-261c-4202-84ea-fb7734042831",
 			"key": "user_refresh_token",
 			"value": "",
 			"type": "string"
 		},
 		{
-			"id": "491d80fa-5b4a-4b45-a20d-bf78b25956c3",
+			"id": "3553c278-be1c-4547-80a8-5f2c221a40f9",
 			"key": "expired_token",
 			"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE1OTAyNDIyNjQsIm5iZiI6MTU5MDI0MjI2NCwianRpIjoiNTM0ZGI5NzQtOWE4Ni00MGViLWE1NDEtMDg3N2ZmNzQ3NDVhIiwiZXhwIjoxNTkwMjQyMzI0LCJpZGVudGl0eSI6eyJpZCI6NTEyLCJlbWFpbCI6ImZvb0BleGFtcGxlLm9yZyIsInVzZXJuYW1lIjoiYmFyIiwiaXNfb25saW5lIjp0cnVlLCJkYXRlX2xhc3RzZWVuIjoiU2F0LCAyMyBNYXkgMjAyMCAxMzo1Nzo0NCBHTVQifSwiZnJlc2giOnRydWUsInR5cGUiOiJhY2Nlc3MifQ.NTp2P0WNkXDwzuzrcNIQdeAfizQ57HQgkzBLSvY1yHU",
 			"type": "string"
 		},
 		{
-			"id": "a371fdfe-b9d2-4c9f-ba66-70d4c9ff2642",
+			"id": "b4792aa7-be9a-45e7-9420-4ddae8a688b7",
 			"key": "user_orientation",
 			"value": "heterosexual",
 			"type": "string"
 		},
 		{
-			"id": "cc1b47ba-e150-4129-8875-95508dc6fa71",
+			"id": "b4f62225-257f-40dc-b89a-517c054381bd",
 			"key": "user_bio",
 			"value": "Lorem Ipsum is the single greatest threat. We are not - we are not keeping up with other websites. Lorem Ipsum best not make any more threats to your website. It will be met with fire and fury like the world has never seen. Does everybody know that pig named Lorem Ipsum? An ‘extremely credible source’ has called my office and told me that Barack Obama’s placeholder text is a fraud.",
 			"type": "string"
 		},
 		{
-			"id": "4b28aa5c-618c-48ff-a301-d237ce387e3e",
+			"id": "f4264583-0652-4208-9490-f130eec59dfb",
 			"key": "user_gender",
 			"value": "male",
 			"type": "string"
 		},
 		{
-			"id": "c8757bb2-7bb4-4b1a-9ac5-f5e2e9b13e5a",
+			"id": "6c69f0b0-9c4a-4566-b37f-27c4f445dc6c",
 			"key": "user_birthdate",
 			"value": "1590674628",
 			"type": "string"
