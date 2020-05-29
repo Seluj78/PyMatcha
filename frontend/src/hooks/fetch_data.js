@@ -1,18 +1,17 @@
 import { useState, useEffect } from 'react';
 import { apiCall } from '../utils';
 
-const onLoad = async (url, options, setState) => {
-	setState({ loading: true, error: undefined, result: undefined})
+const onLoad = async (url, options) => {
 	try {
 		const result = await apiCall({ uri: url, ...options });
-		setState({ loading: false, error: undefined, result });
+		return ({ result })
 	} catch (e) {
 		console.error(e)
-		setState({ loading: false, error: e.message, result: undefined});
+		return ({ error: e.message })
 	}
 }
 
-const defaultOptions = {} ;
+const defaultOptions = {};
 
 // TODO call_id for chained call
 const useFetchData = (url, options = defaultOptions) => {
@@ -23,7 +22,10 @@ const useFetchData = (url, options = defaultOptions) => {
 	});
 
 	useEffect(() => {
-		onLoad(url, options, setState);
+		let lock = false;
+		onLoad(url, options)
+			.then(result => !lock && setState({ loading: false, ...result }))
+		return () => lock = true
 	}, [url, options]);
 	return state;
 }
