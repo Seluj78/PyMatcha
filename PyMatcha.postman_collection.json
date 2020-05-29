@@ -1467,7 +1467,8 @@
 									"",
 									"tests[\"success is true\"] = response.success == true",
 									"tests[\"Message is correct\"] = response.message == \"User successfully modified !\"",
-									""
+									"",
+									"pm.collectionVariables.set(\"user_username\", \"FooBar\")"
 								],
 								"type": "text/javascript"
 							}
@@ -1478,7 +1479,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n\t\"orientation\": \"heterosexual\",\n\t\"bio\": \"{{user_bio}}\",\n\t\"tags\": [\n\t\t\"bot\",\n\t\t\"robot\",\n\t\t\"postman\",\n\t\t\"sex\",\n\t\t\"friends\",\n\t\t\"drink\",\n\t\t\"smoke\"\n\t\t],\n\t\"gender\": \"male\",\n\t\"birthdate\": {{user_birthdate}},\n\t\"first_name\": \"Foo\",\n\t\"last_name\": \"Bar\",\n\t\"username\": \"FooBar\"\n}",
+							"raw": "{\n\t\"orientation\": \"homosexual\",\n\t\"bio\": \"{{user_bio}}\",\n\t\"tags\": [\n\t\t\"bot\",\n\t\t\"robot\",\n\t\t\"postman\",\n\t\t\"sex\",\n\t\t\"friends\",\n\t\t\"drink\",\n\t\t\"smoke\"\n\t\t],\n\t\"gender\": \"male\",\n\t\"birthdate\": {{user_birthdate}},\n\t\"first_name\": \"Foo\",\n\t\"last_name\": \"Bar\",\n\t\"username\": \"FooBar\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -1514,12 +1515,11 @@
 									"});",
 									"",
 									"user_email = pm.collectionVariables.get(\"user_email\");",
-									"user_orientation = pm.collectionVariables.get(\"user_orientation\");",
 									"",
 									"tests[\"Is email correct\"] = response.email == user_email",
 									"tests[\"Is username correct\"] = response.username == \"FooBar\"",
 									"tests[\"Are tags present\"] = response.tags.length == 7",
-									"tests[\"User orientation is correct\"] = response.orientation == user_orientation",
+									"tests[\"User orientation is correct\"] = response.orientation == \"homosexual\"",
 									"tests[\"User gender is correct\"] = response.gender == \"male\"",
 									"pm.collectionVariables.set(\"user_id\", response.id)"
 								],
@@ -1542,12 +1542,249 @@
 						}
 					},
 					"response": []
+				},
+				{
+					"name": "Edit email",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "b875494e-b2dc-47b2-8be8-6738230c66ac",
+								"exec": [
+									"var response = JSON.parse(responseBody);",
+									"",
+									"",
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"",
+									"tests[\"success is true\"] = response.success == true",
+									"tests[\"Message is correct\"] = response.message == \"Email sent for new email\"",
+									"pm.collectionVariables.set(\"user_email\", \"bar@example.org\")"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"email\": \"bar@example.org\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/profile/email",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"profile",
+								"email"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get one user after edited email",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "74dc8e5c-e73a-4105-83a3-d6123262c458",
+								"exec": [
+									"var response = JSON.parse(responseBody);",
+									"",
+									"",
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"user_email = pm.collectionVariables.get(\"user_email\");",
+									"",
+									"tests[\"Is email correct\"] = response.email == \"bar@example.org\"",
+									"tests[\"Is username correct\"] = response.username == \"FooBar\"",
+									"tests[\"Are tags present\"] = response.tags.length == 7",
+									"tests[\"User orientation is correct\"] = response.orientation == \"homosexual\"",
+									"tests[\"User gender is correct\"] = response.gender == \"male\"",
+									"tests[\"Is confirmed == 0\"] = response.is_confirmed == 0"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{host}}/users/{{user_email}}",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"users",
+								"{{user_email}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Confirm user after email edit",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "3334c423-c936-476b-98ca-3223898d50b5",
+								"exec": [
+									"var response = JSON.parse(responseBody);",
+									"",
+									"",
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"tests[\"JSON return code is 200\"] = response.code == 200",
+									"",
+									"tests[\"success is true\"] = response.success == true",
+									"tests[\"Message is correct\"] = response.message == \"User successfully confirmed\"",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "debug-auth-token",
+								"type": "text",
+								"value": "{{debug_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{host}}/debug/users/confirm/{{user_email}}",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"debug",
+								"users",
+								"confirm",
+								"{{user_email}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get one user after email edit and confirmation",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "0a10263d-d6f2-4154-82bb-e1c2bdaaf584",
+								"exec": [
+									"var response = JSON.parse(responseBody);",
+									"",
+									"",
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"user_email = pm.collectionVariables.get(\"user_email\");",
+									"",
+									"tests[\"Is email correct\"] = response.email == \"bar@example.org\"",
+									"tests[\"Is username correct\"] = response.username == \"FooBar\"",
+									"tests[\"Are tags present\"] = response.tags.length == 7",
+									"tests[\"User orientation is correct\"] = response.orientation == \"homosexual\"",
+									"tests[\"User gender is correct\"] = response.gender == \"male\"",
+									"tests[\"Is confirmed == 0\"] = response.is_confirmed == 1"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{host}}/users/{{user_email}}",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"users",
+								"{{user_email}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Edit email with same email",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "ddc3695a-8c73-44b7-aa1c-965a32b3d0dd",
+								"exec": [
+									"var response = JSON.parse(responseBody);",
+									"",
+									"",
+									"pm.test(\"Status code is 400\", function () {",
+									"    pm.response.to.have.status(400);",
+									"});",
+									"",
+									"",
+									"tests[\"JSON return code is 400\"] = response.code == 400",
+									"",
+									"tests[\"success is false\"] = response.success == false",
+									"tests[\"Message is correct\"] = response.error.message == \"The new email is the same as the old one !\"",
+									"tests[\"Error type is Bad Request\"] = response.error.type == \"BadRequestError\""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"email\": \"bar@example.org\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/profile/email",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"profile",
+								"email"
+							]
+						}
+					},
+					"response": []
 				}
 			],
 			"protocolProfileBehavior": {}
 		},
 		{
-			"name": "Delete user after tests",
+			"name": "Delete user after tests & reset variables",
 			"event": [
 				{
 					"listen": "test",
@@ -1556,7 +1793,15 @@
 						"exec": [
 							"pm.test(\"Status code is 200\", function () {",
 							"    pm.response.to.have.status(204);",
-							"});"
+							"});",
+							"",
+							"pm.collectionVariables.set(\"user_email\", \"foo@example.org\")",
+							"pm.collectionVariables.set(\"user_username\", \"foo\")",
+							"pm.collectionVariables.set(\"user_firstname\", \"Foo\")",
+							"pm.collectionVariables.set(\"user_lastname\", \"Bar\")",
+							"pm.collectionVariables.set(\"user_gender\", \"other\")",
+							"pm.collectionVariables.set(\"user_orientation\", \"bisexual\")",
+							""
 						],
 						"type": "text/javascript"
 					}
@@ -1570,8 +1815,8 @@
 				"header": [
 					{
 						"key": "debug-auth-token",
-						"value": "{{debug_token}}",
-						"type": "text"
+						"type": "text",
+						"value": "{{debug_token}}"
 					}
 				],
 				"url": {
@@ -1646,91 +1891,91 @@
 	],
 	"variable": [
 		{
-			"id": "ee3529e9-cdd6-4308-8a1d-0edef6fca8e1",
+			"id": "094262c7-3966-4dfa-a853-f1c5d51c2b44",
 			"key": "host",
 			"value": "http://127.0.0.1:5000",
 			"type": "string"
 		},
 		{
-			"id": "a5f28010-fcaa-45b8-854a-818903317da6",
+			"id": "f20e8057-8051-4c8e-9c4e-26a827f3869a",
 			"key": "user_id",
 			"value": "",
 			"type": "string"
 		},
 		{
-			"id": "e5433b0f-60e3-4167-9312-bf9ec4962983",
+			"id": "e9df5103-fe2c-43d4-9af7-c75f8c2e807d",
 			"key": "user_email",
 			"value": "foo@example.org",
 			"type": "string"
 		},
 		{
-			"id": "7a18a68c-3244-4dd6-9a7d-3c309bb176f5",
+			"id": "60e17880-09b8-4d3e-8469-b981889cfc2d",
 			"key": "user_username",
-			"value": "bar",
+			"value": "foo",
 			"type": "string"
 		},
 		{
-			"id": "0cedfada-9756-439c-9c47-5f26be9b4cb3",
+			"id": "17f0f4d6-706b-4b1a-af55-4dce7951b034",
 			"key": "user_password",
 			"value": "admin",
 			"type": "string"
 		},
 		{
-			"id": "99d5eccf-e07f-40e5-8d6d-fd43c448eb9f",
+			"id": "56bde633-3094-4e67-b371-6988ee53f656",
 			"key": "user_firstname",
 			"value": "Foo",
 			"type": "string"
 		},
 		{
-			"id": "2c8e556b-46ba-4a99-b47e-a8d320a6f682",
+			"id": "b1e5aef2-ccc1-4dcd-9f30-72de325d356f",
 			"key": "user_lastname",
 			"value": "Bar",
 			"type": "string"
 		},
 		{
-			"id": "32314549-41a0-4aa7-ae5b-3568c4aa9cc0",
+			"id": "70de06f1-3986-4d0c-8896-fa1d407c9ab7",
 			"key": "debug_token",
 			"value": "xX69jules69Xx",
 			"type": "string"
 		},
 		{
-			"id": "44809d49-7682-44e4-90a2-e17de7a8a95e",
+			"id": "af19a08b-cac2-407e-aad0-a50701a46b00",
 			"key": "user_access_token",
 			"value": "",
 			"type": "string"
 		},
 		{
-			"id": "8b42b046-2f60-4e87-a49d-d79206d3001f",
+			"id": "aa09044e-e5cf-4f2d-b3e7-e36ae5a69768",
 			"key": "user_refresh_token",
 			"value": "",
 			"type": "string"
 		},
 		{
-			"id": "591d0ce5-469b-4b46-9600-ddf097e7fd50",
+			"id": "491d80fa-5b4a-4b45-a20d-bf78b25956c3",
 			"key": "expired_token",
 			"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE1OTAyNDIyNjQsIm5iZiI6MTU5MDI0MjI2NCwianRpIjoiNTM0ZGI5NzQtOWE4Ni00MGViLWE1NDEtMDg3N2ZmNzQ3NDVhIiwiZXhwIjoxNTkwMjQyMzI0LCJpZGVudGl0eSI6eyJpZCI6NTEyLCJlbWFpbCI6ImZvb0BleGFtcGxlLm9yZyIsInVzZXJuYW1lIjoiYmFyIiwiaXNfb25saW5lIjp0cnVlLCJkYXRlX2xhc3RzZWVuIjoiU2F0LCAyMyBNYXkgMjAyMCAxMzo1Nzo0NCBHTVQifSwiZnJlc2giOnRydWUsInR5cGUiOiJhY2Nlc3MifQ.NTp2P0WNkXDwzuzrcNIQdeAfizQ57HQgkzBLSvY1yHU",
 			"type": "string"
 		},
 		{
-			"id": "b0b34788-e107-4efe-ad31-a873640c2f31",
+			"id": "a371fdfe-b9d2-4c9f-ba66-70d4c9ff2642",
 			"key": "user_orientation",
 			"value": "heterosexual",
 			"type": "string"
 		},
 		{
-			"id": "1e8dcc93-4687-4f75-9ebc-7db3bac516b8",
+			"id": "cc1b47ba-e150-4129-8875-95508dc6fa71",
 			"key": "user_bio",
 			"value": "Lorem Ipsum is the single greatest threat. We are not - we are not keeping up with other websites. Lorem Ipsum best not make any more threats to your website. It will be met with fire and fury like the world has never seen. Does everybody know that pig named Lorem Ipsum? An ‘extremely credible source’ has called my office and told me that Barack Obama’s placeholder text is a fraud.",
 			"type": "string"
 		},
 		{
-			"id": "9465dc19-d5ad-4392-ab87-6ae12e29a907",
+			"id": "4b28aa5c-618c-48ff-a301-d237ce387e3e",
 			"key": "user_gender",
-			"value": "other",
+			"value": "male",
 			"type": "string"
 		},
 		{
-			"id": "e1770e73-72f5-4e3d-92d8-4b2584b68ba3",
+			"id": "c8757bb2-7bb4-4b1a-9ac5-f5e2e9b13e5a",
 			"key": "user_birthdate",
 			"value": "1590674628",
 			"type": "string"
