@@ -3003,6 +3003,182 @@
 						}
 					},
 					"response": []
+				},
+				{
+					"name": "Edit geolocation with ip",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "39231db4-62ff-4230-8a9f-d6bcda2e91ad",
+								"exec": [
+									"var response = JSON.parse(responseBody);",
+									"",
+									"",
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"",
+									"tests[\"success is true\"] = response.success == true",
+									"tests[\"Message is correct\"] = response.message == \"New location sucessfully saved.\""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"ip\": \"{{user_ip}}\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/profile/edit/geolocation",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"profile",
+								"edit",
+								"geolocation"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get one user after ip geoloc edit",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "499a0ac6-2355-490c-8f0f-010c397591be",
+								"exec": [
+									"var response = JSON.parse(responseBody);",
+									"",
+									"",
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"user_email = pm.collectionVariables.get(\"user_email\");",
+									"",
+									"tests[\"Is geohash correct\"] = response.geohash == \"ezzweqbd4wuk\""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{host}}/users/{{user_email}}",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"users",
+								"{{user_email}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Edit geolocation with lat lng",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "6f2ec5c9-96dc-4e1b-af46-96352d0d2135",
+								"exec": [
+									"var response = JSON.parse(responseBody);",
+									"",
+									"",
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"",
+									"tests[\"success is true\"] = response.success == true",
+									"tests[\"Message is correct\"] = response.message == \"New location sucessfully saved.\""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"ip\": \"{{user_ip}}\",\n\t\"lat\": {{user_lat}},\n\t\"lng\": {{user_lng}}\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/profile/edit/geolocation",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"profile",
+								"edit",
+								"geolocation"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get one user after lat lng edit",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "14daee88-fcc1-4a60-8100-45eded9ecbd8",
+								"exec": [
+									"var response = JSON.parse(responseBody);",
+									"",
+									"",
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"user_email = pm.collectionVariables.get(\"user_email\");",
+									"",
+									"tests[\"Is geohash correct\"] = response.geohash == \"ezzx4fcq327u\""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{host}}/users/{{user_email}}",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"users",
+								"{{user_email}}"
+							]
+						}
+					},
+					"response": []
 				}
 			],
 			"protocolProfileBehavior": {}
