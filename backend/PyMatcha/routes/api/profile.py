@@ -20,9 +20,11 @@ import datetime
 import os
 
 import flask_jwt_extended as fjwt
+import Geohash
 import PyMatcha.models.user as user
 from flask import Blueprint
 from flask import request
+from ip2geotools.databases.noncommercial import DbIpCity
 from PyMatcha.errors import BadRequestError
 from PyMatcha.errors import NotFoundError
 from PyMatcha.errors import UnauthorizedError
@@ -162,3 +164,28 @@ def edit_password():
         f" If you believe it wasn't you, please change it immediatly",
     )
     return Success("User password successfully updated.")
+
+
+@profile_bp.route("/profile/edit/geolocation", methods=["PUT"])
+@fjwt.jwt_required
+@validate_params({"ip": str}, {"lat": float, "lng": float})
+def edit_geolocation():
+    data = request.get_json()
+    ip = data["ip"]
+    current_user = fjwt.current_user
+    try:
+        lat = data["lat"]
+        lng = data["lng"]
+    except KeyError:
+        lat = None
+        lng = None
+
+    if lat and lng:
+        current_user.geohash = Geohash.encode(lat, lng)
+    else:
+        response = DbIpCity.get(ip, api_key="free")
+        lat = response.latitude
+        lng = response.longitude
+        current_user.geohash = Geohash.encode(lat, lng)
+    current_user.save()
+    return Success("New location sucessfully saved.")
