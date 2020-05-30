@@ -1,11 +1,13 @@
 import datetime
 
+import flask_jwt_extended as fjwt
 import PyMatcha.models.user as user
 from flask import Blueprint
 from flask import current_app
 from flask import jsonify
 from PyMatcha import redis
 from PyMatcha.errors import NotFoundError
+from PyMatcha.models.view import View
 from PyMatcha.success import Success
 from PyMatcha.success import SuccessDeleted
 from PyMatcha.utils.decorators import debug_token_required
@@ -52,8 +54,26 @@ def delete_user(uid):
         return SuccessDeleted("User {} Deleted".format(uid))
 
 
+@debug_bp.route("/debug/views/<int:amount>", methods=["POST"])
+@debug_token_required
+@fjwt.jwt_required
+def create_views(amount):
+    current_user = fjwt.current_user
+    for i in range(amount):
+        View.create(profile_id=current_user.id, viewer_id=i)
+    return Success(f"Added {amount} views to user {current_user.id}")
+
+
+@debug_bp.route("/debug/views", methods=["DELETE"])
+@debug_token_required
+def delete_views():
+    View.drop_table()
+    View.create_table()
+    return "", 204
+
+
 @debug_bp.route("/debug/redis")
-# @debug_token_required
+@debug_token_required
 def debug_show_redis():
     ret = {"users": {}, "jtis": {}}
     for key in redis.scan_iter("user:*"):

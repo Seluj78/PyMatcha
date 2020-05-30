@@ -31,6 +31,7 @@ import PyMatcha.models.user_image as user_image
 from PyMatcha.errors import ConflictError
 from PyMatcha.errors import NotFoundError
 from PyMatcha.models.tag import Tag
+from PyMatcha.models.view import View
 from PyMatcha.utils import create_user_table
 from PyMatcha.utils import hash_password
 from PyMatcha.utils.orm import Field
@@ -280,6 +281,26 @@ class User(Model):
             for t in tags:
                 tags_list.append(Tag(t))
         return tags_list
+
+    def get_views(self):
+        logging.debug("Getting all views for user profile {}".format(self.id))
+        with self.db.cursor() as c:
+            c.execute(
+                """
+                SELECT views.id as id, views.profile_id as profile_id, 
+                views.viewer_id as viewer_id, views.dt_seen as dt_seen
+                FROM users 
+                INNER JOIN views on users.id = views.profile_id 
+                WHERE users.id = CAST({} AS UNSIGNED)
+                """.format(
+                    self.id
+                )
+            )
+            views = c.fetchall()
+            views_list = []
+            for v in views:
+                views_list.append(View(v))
+        return views_list
 
 
 def get_user(uid: Any[int, str]) -> Optional[User]:

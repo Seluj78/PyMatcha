@@ -1949,8 +1949,6 @@
 									"    pm.response.to.have.status(200);",
 									"});",
 									"",
-									"user_email = pm.collectionVariables.get(\"user_email\");",
-									"",
 									"tests[\"Is geohash correct\"] = response.geohash == \"ezzweqbd4wuk\""
 								],
 								"type": "text/javascript"
@@ -2037,8 +2035,6 @@
 									"    pm.response.to.have.status(200);",
 									"});",
 									"",
-									"user_email = pm.collectionVariables.get(\"user_email\");",
-									"",
 									"tests[\"Is geohash correct\"] = response.geohash == \"ezzx4fcq327u\""
 								],
 								"type": "text/javascript"
@@ -2056,6 +2052,103 @@
 							"path": [
 								"users",
 								"{{user_email}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create random views",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "545bcc8e-5159-4ce2-9a28-11efc5dfbf62",
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"id": "90d417c9-84fa-457d-adbb-93c453b15a29",
+								"exec": [
+									"var response = JSON.parse(responseBody);",
+									"",
+									"",
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"tests[\"JSON return code is 200\"] = response.code == 200",
+									"",
+									"tests[\"success is true\"] = response.success == true"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "debug-auth-token",
+								"value": "xX69jules69Xx",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{host}}/debug/views/78",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"debug",
+								"views",
+								"78"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get profile views",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "dade5edf-80bc-4e3c-8509-d56281228062",
+								"exec": [
+									"var response = JSON.parse(responseBody);",
+									"",
+									"",
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"tests[\"JSON return code is 200\"] = response.code == 200",
+									"",
+									"tests[\"success is true\"] = response.success == true",
+									"",
+									"tests[\"View count\"] = response.views.length == 78"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{host}}/profile/views",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"profile",
+								"views"
 							]
 						}
 					},
@@ -2116,10 +2209,58 @@
 			"response": []
 		},
 		{
+			"name": "Reset views table",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "0e26bd80-adcd-472d-a239-4b7cdc4403fb",
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(204);",
+							"});",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "debug-auth-token",
+						"type": "text",
+						"value": "{{debug_token}}"
+					}
+				],
+				"url": {
+					"raw": "{{host}}/debug/views",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"debug",
+						"views"
+					]
+				}
+			},
+			"response": []
+		},
+		{
 			"name": "DEBUG redis view all keys",
 			"request": {
 				"method": "GET",
-				"header": [],
+				"header": [
+					{
+						"key": "debug-auth-token",
+						"value": "xX69jules69Xx",
+						"type": "text"
+					}
+				],
 				"url": {
 					"raw": "{{host}}/debug/redis",
 					"host": [
@@ -2168,109 +2309,109 @@
 	],
 	"variable": [
 		{
-			"id": "ba54d237-6790-4b6a-9516-a39706728255",
+			"id": "9ee0b458-242a-42c6-b5f8-e696eb8a0729",
 			"key": "host",
 			"value": "http://127.0.0.1:5000",
 			"type": "string"
 		},
 		{
-			"id": "83404c17-bd3c-4c78-bcbe-04fc63afcd2c",
+			"id": "6c597c98-eb07-40c7-8bd8-e8f2c7015b1b",
 			"key": "user_id",
 			"value": "",
 			"type": "string"
 		},
 		{
-			"id": "8f89a062-8871-4338-bf87-315bc90865ac",
+			"id": "532e183c-9ce0-4f3e-a516-3bd255e358ee",
 			"key": "user_email",
 			"value": "foo@example.org",
 			"type": "string"
 		},
 		{
-			"id": "7fe38071-c287-4ef7-b7bc-fade4e70ce41",
+			"id": "7abbc682-23eb-47b2-9892-bf5db23af497",
 			"key": "user_username",
 			"value": "foo",
 			"type": "string"
 		},
 		{
-			"id": "089c8889-0774-458b-9ff6-1768db6d496d",
+			"id": "982c50f4-bc18-4c6d-8938-282e36ba34de",
 			"key": "user_password",
 			"value": "admin",
 			"type": "string"
 		},
 		{
-			"id": "6049c136-632d-4096-85cf-e07936df0b98",
+			"id": "e8c39bfa-cf48-48fe-b231-501aff995bc4",
 			"key": "user_firstname",
 			"value": "Foo",
 			"type": "string"
 		},
 		{
-			"id": "2b124a77-82ee-471b-b0da-d67f33b51968",
+			"id": "4c7b2449-9f4f-4f74-8c85-489b5cd5937e",
 			"key": "user_lastname",
 			"value": "Bar",
 			"type": "string"
 		},
 		{
-			"id": "a747331a-a123-4ec5-815a-9a782bb221c2",
+			"id": "7a863c36-4345-4a6a-b0ad-a0b097cfef5f",
 			"key": "debug_token",
 			"value": "xX69jules69Xx",
 			"type": "string"
 		},
 		{
-			"id": "310d251f-935b-4bfa-9009-bfa2c9253fde",
+			"id": "47d8d8f4-c900-469e-8a7b-5a14ee64ad57",
 			"key": "user_access_token",
 			"value": "",
 			"type": "string"
 		},
 		{
-			"id": "dda8194b-da83-463a-8777-fdf09bd57397",
+			"id": "db2500a3-5115-4ef9-a554-cf6fda284240",
 			"key": "user_refresh_token",
 			"value": "",
 			"type": "string"
 		},
 		{
-			"id": "53a51049-0f79-44ed-94d2-776bff535df0",
+			"id": "90c8271c-0619-4735-bcaa-0ca95aa4f8ab",
 			"key": "expired_token",
 			"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE1OTAyNDIyNjQsIm5iZiI6MTU5MDI0MjI2NCwianRpIjoiNTM0ZGI5NzQtOWE4Ni00MGViLWE1NDEtMDg3N2ZmNzQ3NDVhIiwiZXhwIjoxNTkwMjQyMzI0LCJpZGVudGl0eSI6eyJpZCI6NTEyLCJlbWFpbCI6ImZvb0BleGFtcGxlLm9yZyIsInVzZXJuYW1lIjoiYmFyIiwiaXNfb25saW5lIjp0cnVlLCJkYXRlX2xhc3RzZWVuIjoiU2F0LCAyMyBNYXkgMjAyMCAxMzo1Nzo0NCBHTVQifSwiZnJlc2giOnRydWUsInR5cGUiOiJhY2Nlc3MifQ.NTp2P0WNkXDwzuzrcNIQdeAfizQ57HQgkzBLSvY1yHU",
 			"type": "string"
 		},
 		{
-			"id": "6b0d9aef-9b57-4dd3-81d7-57f0eac7e050",
+			"id": "ce0863fb-3310-40cb-82ff-5a7a0a4e4857",
 			"key": "user_orientation",
 			"value": "heterosexual",
 			"type": "string"
 		},
 		{
-			"id": "5c9181e4-9016-4e21-96ea-5dc4068e7f2a",
+			"id": "94603d88-df49-4037-8355-ff595d910444",
 			"key": "user_bio",
 			"value": "Lorem Ipsum is the single greatest threat. We are not - we are not keeping up with other websites. Lorem Ipsum best not make any more threats to your website. It will be met with fire and fury like the world has never seen. Does everybody know that pig named Lorem Ipsum? An ‘extremely credible source’ has called my office and told me that Barack Obama’s placeholder text is a fraud.",
 			"type": "string"
 		},
 		{
-			"id": "a509cf68-fed7-498e-b193-ec4917ab5b64",
+			"id": "9eaf6774-eb9a-4f29-8755-edb8905b625e",
 			"key": "user_gender",
 			"value": "male",
 			"type": "string"
 		},
 		{
-			"id": "94c52bbf-019b-48ec-a981-fe71decd979f",
+			"id": "396db636-caf7-43e7-9e8c-cf70cd250c36",
 			"key": "user_birthdate",
 			"value": "1590674628",
 			"type": "string"
 		},
 		{
-			"id": "aa7335f6-3aa9-4993-bd22-6d2faeb0ef54",
+			"id": "d268c770-a5e1-4933-91d1-9fcdd0ef575e",
 			"key": "user_lat",
 			"value": "44.8404",
 			"type": "string"
 		},
 		{
-			"id": "5037aa20-cc43-483a-8d0f-5f289e3ed3a0",
+			"id": "d4fa040b-8348-4edd-839c-e4dfe2eec8d6",
 			"key": "user_lng",
 			"value": "-0.5805",
 			"type": "string"
 		},
 		{
-			"id": "21c4e9a3-fc74-4c92-9f6c-f5eb071db1c1",
+			"id": "6d890f0d-9211-4da8-b036-66c1dc204de0",
 			"key": "user_ip",
 			"value": "77.205.46.181",
 			"type": "string"

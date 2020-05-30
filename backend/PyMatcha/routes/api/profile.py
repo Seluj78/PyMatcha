@@ -29,7 +29,9 @@ from PyMatcha.errors import BadRequestError
 from PyMatcha.errors import NotFoundError
 from PyMatcha.errors import UnauthorizedError
 from PyMatcha.models.tag import Tag
+from PyMatcha.models.view import View
 from PyMatcha.success import Success
+from PyMatcha.success import SuccessOutput
 from PyMatcha.utils import hash_password
 from PyMatcha.utils.confirm_token import generate_confirmation_token
 from PyMatcha.utils.decorators import validate_params
@@ -189,3 +191,27 @@ def edit_geolocation():
         current_user.geohash = Geohash.encode(lat, lng)
     current_user.save()
     return Success("New location sucessfully saved.")
+
+
+@profile_bp.route("/profile/views", methods=["GET"])
+@fjwt.jwt_required
+def get_profile_views():
+    current_user = fjwt.current_user
+    profile_views = current_user.get_views()
+    profile_views = [v.get_all_info() for v in profile_views]
+    return SuccessOutput("views", profile_views)
+
+
+@profile_bp.route("/profile/view/<uid>", methods=["GET"])
+@fjwt.jwt_required
+def view_profile(uid):
+    current_user = fjwt.current_user
+    try:
+        u = get_user(uid)
+    except NotFoundError:
+        raise NotFoundError(f"User {uid} not found", "try again")
+
+    if current_user.id == u.id:
+        View.create(profile_id=u.id, viewer_id=current_user.id)
+
+    return SuccessOutput("profile", u.get_all_info())

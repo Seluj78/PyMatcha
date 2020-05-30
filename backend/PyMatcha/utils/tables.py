@@ -88,7 +88,26 @@ def _create_tags_table(db):
         c.execute("""SET sql_notes = 1;""")
 
 
+def _create_views_table(db):
+    with db.cursor() as c:
+        logging.info("Creating table views.")
+        c.execute("""SET sql_notes = 0;""")
+        c.execute(
+            """
+        CREATE TABLE IF NOT EXISTS views
+        (
+        id            INT auto_increment PRIMARY KEY,
+        profile_id    INT NOT NULL,
+        viewer_id     INT NOT NULL,
+        dt_seen       DATETIME DEFAULT NOW()
+        )
+        """
+        )
+        c.execute("""SET sql_notes = 1;""")
+
+
 def create_tables(db):
     _create_user_table(db)
     _create_user_images_table(db)
     _create_tags_table(db)
+    _create_views_table(db)
