@@ -211,7 +211,7 @@ def view_profile(uid):
     except NotFoundError:
         raise NotFoundError(f"User {uid} not found", "try again")
 
-    if current_user.id == u.id:
+    if current_user.id != u.id:
         View.create(profile_id=u.id, viewer_id=current_user.id)
 
     return SuccessOutput("profile", u.get_all_info())
