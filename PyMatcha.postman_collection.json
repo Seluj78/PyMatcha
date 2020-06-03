@@ -2807,6 +2807,57 @@
 								}
 							},
 							"response": []
+						},
+						{
+							"name": "Report yourself",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "6be429c6-89f9-4a13-9907-834b2dc30d5e",
+										"exec": [
+											"var response = JSON.parse(responseBody);",
+											"",
+											"",
+											"pm.test(\"Status code is 400\", function () {",
+											"    pm.response.to.have.status(400);",
+											"});",
+											"",
+											"tests[\"JSON return code is 400\"] = response.code == 400",
+											"",
+											"tests[\"success is true\"] = response.success == false",
+											"tests[\"Message is correct\"] = response.error.message == \"Cannot report yourself\"",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n\t\"reason\": \"bot\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{host}}/profile/report/{{user_email}}",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"profile",
+										"report",
+										"{{user_email}}"
+									]
+								}
+							},
+							"response": []
 						}
 					],
 					"protocolProfileBehavior": {},
@@ -3015,109 +3066,109 @@
 	],
 	"variable": [
 		{
-			"id": "0aa4bf10-ee3d-4f4a-b758-be39c538b297",
+			"id": "d1eaccac-408b-4cce-9488-9ecc655a0af7",
 			"key": "host",
 			"value": "http://127.0.0.1:5000",
 			"type": "string"
 		},
 		{
-			"id": "4829552b-b71d-446f-9cf8-e4991a601c47",
+			"id": "a8a6a2fc-7b93-49e5-85c3-29a0e8380388",
 			"key": "user_id",
 			"value": "",
 			"type": "string"
 		},
 		{
-			"id": "510d6996-225a-47e0-9a1f-59e5d8850459",
+			"id": "ccde4af0-1f5c-4d5e-99e3-bf815dbd446c",
 			"key": "user_email",
 			"value": "foo@example.org",
 			"type": "string"
 		},
 		{
-			"id": "817af169-5253-490d-8cb4-4c9c6552a32f",
+			"id": "cdfd8c84-76fa-4bb8-b832-5ab254aabc1e",
 			"key": "user_username",
 			"value": "foo",
 			"type": "string"
 		},
 		{
-			"id": "a7b685c8-afc8-4beb-85a7-ef9148e43003",
+			"id": "1b12c9b7-ab43-408c-b698-04985777713d",
 			"key": "user_password",
 			"value": "admin",
 			"type": "string"
 		},
 		{
-			"id": "dbf73ec4-2360-4d06-a7a8-ed800176a5f6",
+			"id": "8f998682-b1d6-4edc-abde-a5b245c17d53",
 			"key": "user_firstname",
 			"value": "Foo",
 			"type": "string"
 		},
 		{
-			"id": "6c74dc40-dccc-4778-8f5d-66893810a0ab",
+			"id": "219af8cb-d79d-4258-94cd-f2f8089a91ba",
 			"key": "user_lastname",
 			"value": "Bar",
 			"type": "string"
 		},
 		{
-			"id": "344d24a4-8705-4cc5-b459-a0d4e77960e0",
+			"id": "f62858c5-d0ba-4ff2-a61a-842c390852be",
 			"key": "debug_token",
 			"value": "xX69jules69Xx",
 			"type": "string"
 		},
 		{
-			"id": "6573eb46-4b86-475a-8dea-6487a32124b3",
+			"id": "61ebc570-2f3d-4e0c-b59a-53b2e143bae1",
 			"key": "user_access_token",
 			"value": "",
 			"type": "string"
 		},
 		{
-			"id": "fcb3c2f2-50b9-496f-8863-3a9e7927c083",
+			"id": "bb8645b5-ef60-473e-b1dd-528efaa2780e",
 			"key": "user_refresh_token",
 			"value": "",
 			"type": "string"
 		},
 		{
-			"id": "e53f8bf1-4e49-47fe-af11-ff48243709ca",
+			"id": "c41b0879-23c7-4275-bf7f-0cae15ca7b37",
 			"key": "expired_token",
 			"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE1OTAyNDIyNjQsIm5iZiI6MTU5MDI0MjI2NCwianRpIjoiNTM0ZGI5NzQtOWE4Ni00MGViLWE1NDEtMDg3N2ZmNzQ3NDVhIiwiZXhwIjoxNTkwMjQyMzI0LCJpZGVudGl0eSI6eyJpZCI6NTEyLCJlbWFpbCI6ImZvb0BleGFtcGxlLm9yZyIsInVzZXJuYW1lIjoiYmFyIiwiaXNfb25saW5lIjp0cnVlLCJkYXRlX2xhc3RzZWVuIjoiU2F0LCAyMyBNYXkgMjAyMCAxMzo1Nzo0NCBHTVQifSwiZnJlc2giOnRydWUsInR5cGUiOiJhY2Nlc3MifQ.NTp2P0WNkXDwzuzrcNIQdeAfizQ57HQgkzBLSvY1yHU",
 			"type": "string"
 		},
 		{
-			"id": "97f04f56-8788-4a96-b4bf-b7df76d61a85",
+			"id": "37fd47b5-d383-455a-bcec-afe02cdf9978",
 			"key": "user_orientation",
 			"value": "heterosexual",
 			"type": "string"
 		},
 		{
-			"id": "9d3ae8c3-9e9d-410c-8f3e-9981aa794ffe",
+			"id": "9a219eea-c8cc-487c-8a2d-72772aa3b162",
 			"key": "user_bio",
 			"value": "Lorem Ipsum is the single greatest threat. We are not - we are not keeping up with other websites. Lorem Ipsum best not make any more threats to your website. It will be met with fire and fury like the world has never seen. Does everybody know that pig named Lorem Ipsum? An ‘extremely credible source’ has called my office and told me that Barack Obama’s placeholder text is a fraud.",
 			"type": "string"
 		},
 		{
-			"id": "286a8b4b-4896-4052-9954-5268fa7ec5d2",
+			"id": "c249e68b-d32b-4444-bfcd-ea30a1c9e1d2",
 			"key": "user_gender",
 			"value": "male",
 			"type": "string"
 		},
 		{
-			"id": "8af47f4b-543e-4854-9f5e-4d233c3b1fa8",
+			"id": "eb7495d2-6317-4bef-9836-622b826c5187",
 			"key": "user_birthdate",
 			"value": "1590674628",
 			"type": "string"
 		},
 		{
-			"id": "268b8033-29e7-43cd-8656-320cb618c349",
+			"id": "47a85136-14be-42f6-8dc3-6c1f2664c471",
 			"key": "user_lat",
 			"value": "44.8404",
 			"type": "string"
 		},
 		{
-			"id": "055ded59-04f0-49b0-b0ef-5e197597e234",
+			"id": "bcec627d-14c0-4750-bf7f-dd2b3a04bed1",
 			"key": "user_lng",
 			"value": "-0.5805",
 			"type": "string"
 		},
 		{
-			"id": "6067682f-bb9d-43fa-b35a-f9d6e924596e",
+			"id": "122f39f0-e595-4300-a44c-48a40b2a8e1c",
 			"key": "user_ip",
 			"value": "77.205.46.181",
 			"type": "string"
