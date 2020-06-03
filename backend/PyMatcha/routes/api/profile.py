@@ -241,4 +241,4 @@ def report_profile(uid):
         raise BadRequestError("Cannot report yourself", "Try again")
     Report.create(reporter_id=current_user.id, reported_id=u.id, reason=reason, details=details)
 
-    return Success(f"Report created on user {u.id} {u.get_reports_sent()} {u.get_reports_received()}")
+    return Success(f"Report created on user {u.email}")
