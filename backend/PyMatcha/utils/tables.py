@@ -18,11 +18,14 @@
 """
 import logging
 
+DISABLE_SQL_NOTES = """SET sql_notes = 0;"""
+ENABLE_SQL_NOTES = """SET sql_notes = 1;"""
+
 
 def _create_user_table(db):
     with db.cursor() as c:
         logging.info("Creating table users.")
-        c.execute("""SET sql_notes = 0;""")
+        c.execute(DISABLE_SQL_NOTES)
         c.execute(
             """
         CREATE TABLE IF NOT EXISTS users 
@@ -49,13 +52,13 @@ def _create_user_table(db):
         );
         """
         )
-        c.execute("""SET sql_notes = 1;""")
+        c.execute(ENABLE_SQL_NOTES)
 
 
 def _create_user_images_table(db):
     with db.cursor() as c:
         logging.info("Creating table user_images.")
-        c.execute("""SET sql_notes = 0;""")
+        c.execute(DISABLE_SQL_NOTES)
         c.execute(
             """
         CREATE TABLE IF NOT EXISTS user_images
@@ -68,13 +71,13 @@ def _create_user_images_table(db):
         )
         """
         )
-        c.execute("""SET sql_notes = 1;""")
+        c.execute(ENABLE_SQL_NOTES)
 
 
 def _create_tags_table(db):
     with db.cursor() as c:
         logging.info("Creating table tags.")
-        c.execute("""SET sql_notes = 0;""")
+        c.execute(DISABLE_SQL_NOTES)
         c.execute(
             """
         CREATE TABLE IF NOT EXISTS tags
@@ -85,13 +88,13 @@ def _create_tags_table(db):
         )
         """
         )
-        c.execute("""SET sql_notes = 1;""")
+        c.execute(ENABLE_SQL_NOTES)
 
 
 def _create_views_table(db):
     with db.cursor() as c:
         logging.info("Creating table views.")
-        c.execute("""SET sql_notes = 0;""")
+        c.execute(DISABLE_SQL_NOTES)
         c.execute(
             """
         CREATE TABLE IF NOT EXISTS views
@@ -103,7 +106,28 @@ def _create_views_table(db):
         )
         """
         )
-        c.execute("""SET sql_notes = 1;""")
+        c.execute(ENABLE_SQL_NOTES)
+
+
+def _create_reports_table(db):
+    with db.cursor() as c:
+        logging.info("Creating table reports.")
+        c.execute(DISABLE_SQL_NOTES)
+        c.execute(
+            """
+        CREATE TABLE IF NOT EXISTS reports
+        (
+        id            INT auto_increment PRIMARY KEY,
+        reported_id   INT NOT NULL,
+        reporter_id   INT NOT NULL,
+        dt_reported   DATETIME DEFAULT NOW(),
+        details       VARCHAR(256),
+        reason        ENUM('harassment', 'bot', 'spam', 'inappropriate content'),
+        status        ENUM('processing request', 'insufficient evidence', 'convicted and banned')
+        )
+        """
+        )
+        c.execute(ENABLE_SQL_NOTES)
 
 
 def create_tables(db):
@@ -111,3 +135,4 @@ def create_tables(db):
     _create_user_images_table(db)
     _create_tags_table(db)
     _create_views_table(db)
+    _create_reports_table(db)

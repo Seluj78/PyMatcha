@@ -36,7 +36,7 @@ def get_all_users():
     current_app.logger.info("/users/ -> Call")
     user_list = []
     for u in User.select_all():
-        user_list.append(u.get_all_info())
+        user_list.append(u.to_dict())
     current_app.logger.info("/users/ -> Returning all users list")
     return jsonify(user_list)
 
@@ -51,7 +51,7 @@ def get_one_user(uid):
         raise NotFoundError("User {} not found".format(uid), "Check given uid and try again")
     else:
         current_app.logger.info("/users/{} -> Returning info on user {}".format(uid, uid))
-        return jsonify(u.get_all_info())
+        return jsonify(u.to_dict())
 
 
 @user_bp.route("/users/online", methods=["GET"])

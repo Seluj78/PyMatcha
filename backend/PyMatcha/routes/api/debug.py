@@ -7,6 +7,7 @@ from flask import current_app
 from flask import jsonify
 from PyMatcha import redis
 from PyMatcha.errors import NotFoundError
+from PyMatcha.models.report import Report
 from PyMatcha.models.view import View
 from PyMatcha.success import Success
 from PyMatcha.success import SuccessDeleted
@@ -83,3 +84,29 @@ def debug_show_redis():
         value = redis.get(str(key))
         ret["jtis"][key] = value
     return jsonify(ret), 200
+
+
+@debug_bp.route("/debug/reports", methods=["DELETE"])
+@debug_token_required
+def delete_reports():
+    Report.drop_table()
+    Report.create_table()
+    return "", 204
+
+
+@debug_bp.route("/debug/reports")
+@debug_token_required
+def debug_get_all_reports():
+    report_list = []
+    for r in Report.select_all():
+        report_list.append(r.to_dict())
+    return jsonify(report_list)
+
+
+@debug_bp.route("/debug/reports/<uid>")
+@debug_token_required
+def debug_get_user_reports(uid):
+    u = get_user(uid)
+    reports_received = [r.to_dict() for r in u.get_reports_received()]
+    reports_sent = [r.to_dict() for r in u.get_reports_sent()]
+    return jsonify({"reports_received": reports_received, "reports_sent": reports_sent}), 200

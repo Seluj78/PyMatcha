@@ -19,7 +19,6 @@
 from __future__ import annotations
 
 import logging
-from typing import Dict
 
 from PyMatcha.utils import create_tags_table
 from PyMatcha.utils.orm import Field
@@ -42,9 +41,6 @@ class Tag(Model):
         new_tag.save()
         logging.debug("Creating new tag")
         return new_tag
-
-    def get_all_info(self) -> Dict:
-        return {"id": self.id, "user_id": self.user_id, "name": self.name}
 
     @classmethod
     def create_table(cls):

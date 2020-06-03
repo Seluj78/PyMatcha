@@ -30,6 +30,7 @@ import Geohash
 import PyMatcha.models.user_image as user_image
 from PyMatcha.errors import ConflictError
 from PyMatcha.errors import NotFoundError
+from PyMatcha.models.report import Report
 from PyMatcha.models.tag import Tag
 from PyMatcha.models.view import View
 from PyMatcha.utils import create_user_table
@@ -208,27 +209,10 @@ class User(Model):
         logging.debug("New user {} created".format(new_user.email))
         return new_user
 
-    def get_all_info(self) -> Dict:
-        return {
-            "id": self.id,
-            "first_name": self.first_name,
-            "last_name": self.last_name,
-            "email": self.email,
-            "username": self.username,
-            "bio": self.bio,
-            "gender": self.gender,
-            "orientation": self.orientation,
-            "birthdate": self.birthdate,
-            "geohash": self.geohash,
-            "tags": [t.name for t in self.get_tags()],
-            "heat_score": self.heat_score,
-            "is_online": self.is_online,
-            "date_joined": self.date_joined,
-            "date_lastseen": self.date_lastseen,
-            "is_profile_completed": self.is_profile_completed,
-            "is_confirmed": self.is_confirmed,
-            "confirmed_on": self.confirmed_on,
-        }
+    def to_dict(self) -> Dict:
+        returned_dict = super().to_dict()
+        returned_dict["tags"] = [t.to_dict() for t in self.get_tags()]
+        return returned_dict
 
     @classmethod
     def create_table(cls):
@@ -254,7 +238,7 @@ class User(Model):
                 image_list.append(UserImage(image))
         return image_list
 
-    def get_base_info(self):
+    def get_jwt_info(self):
         return {
             "id": self.id,
             "email": self.email,
@@ -301,6 +285,48 @@ class User(Model):
             for v in views:
                 views_list.append(View(v))
         return views_list
+
+    def get_reports_received(self):
+        logging.debug("Getting all reports received for user {}".format(self.id))
+        with self.db.cursor() as c:
+            c.execute(
+                """
+                SELECT reports.id as id, reports.reported_id as reported_id, 
+                reports.reporter_id as reporter_id, reports.dt_reported as dt_reported,
+                reports.details as details, reports.reason as reason, reports.status as status
+                FROM users 
+                INNER JOIN reports on users.id = reports.reported_id 
+                WHERE users.id = CAST({} AS UNSIGNED)
+                """.format(
+                    self.id
+                )
+            )
+            reports = c.fetchall()
+            reports_list = []
+            for r in reports:
+                reports_list.append(Report(r))
+        return reports_list
+
+    def get_reports_sent(self):
+        logging.debug("Getting all reports sent for user {}".format(self.id))
+        with self.db.cursor() as c:
+            c.execute(
+                """
+                SELECT reports.id as id, reports.reported_id as reported_id, 
+                reports.reporter_id as reporter_id, reports.dt_reported as dt_reported,
+                reports.details as details, reports.reason as reason, reports.status as status
+                FROM users 
+                INNER JOIN reports on users.id = reports.reporter_id 
+                WHERE users.id = CAST({} AS UNSIGNED)
+                """.format(
+                    self.id
+                )
+            )
+            reports = c.fetchall()
+            reports_list = []
+            for r in reports:
+                reports_list.append(Report(r))
+        return reports_list
 
 
 def get_user(uid: Any[int, str]) -> Optional[User]:

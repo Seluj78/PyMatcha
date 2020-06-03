@@ -20,7 +20,6 @@ from __future__ import annotations
 
 import datetime
 import logging
-from typing import Dict
 
 from PyMatcha.utils import create_views_table
 from PyMatcha.utils.orm import Field
@@ -44,9 +43,6 @@ class View(Model):
         new_view.save()
         logging.debug("Creating new view")
         return new_view
-
-    def get_all_info(self) -> Dict:
-        return {"id": self.id, "profile_id": self.profile_id, "viewer_id": self.viewer_id, "dt_seen": self.dt_seen}
 
     @classmethod
     def create_table(cls):
