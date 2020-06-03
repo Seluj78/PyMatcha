@@ -2340,6 +2340,20 @@
 						},
 						{
 							"name": "DEBUG Report +1 profile",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "0da2ad7a-a0fd-4a42-a07c-b6bb4267efbd",
+										"exec": [
+											"pm.test(\"Status code is 204\", function () {",
+											"    pm.response.to.have.status(204);",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
 							"request": {
 								"auth": {
 									"type": "noauth"
@@ -2715,6 +2729,44 @@
 							"response": []
 						},
 						{
+							"name": "Get report_me user to check reports received",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "b8600edd-2f77-4a2b-ba62-75cf8e14a03b",
+										"exec": [
+											"var response = JSON.parse(responseBody);",
+											"",
+											"",
+											"pm.test(\"Status code is 200\", function () {",
+											"    pm.response.to.have.status(200);",
+											"});",
+											"",
+											"tests[\"One report has been sent\"] = response.reports.sent.length == 0",
+											"tests[\"No report has been received\"] = response.reports.received.length == 1"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{host}}/users/report_me@example.org",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"users",
+										"report_me@example.org"
+									]
+								}
+							},
+							"response": []
+						},
+						{
 							"name": "Delete user report_me",
 							"event": [
 								{
@@ -2963,109 +3015,109 @@
 	],
 	"variable": [
 		{
-			"id": "1457d0f6-a65f-4336-bb10-5ba248fd02e4",
+			"id": "0aa4bf10-ee3d-4f4a-b758-be39c538b297",
 			"key": "host",
 			"value": "http://127.0.0.1:5000",
 			"type": "string"
 		},
 		{
-			"id": "f439fe2f-9a94-477c-87c4-4cee9fd649f9",
+			"id": "4829552b-b71d-446f-9cf8-e4991a601c47",
 			"key": "user_id",
 			"value": "",
 			"type": "string"
 		},
 		{
-			"id": "b0717176-65f1-4bf9-85e1-d5a4670f4407",
+			"id": "510d6996-225a-47e0-9a1f-59e5d8850459",
 			"key": "user_email",
 			"value": "foo@example.org",
 			"type": "string"
 		},
 		{
-			"id": "8ae38156-a458-436e-b2a9-f2599f7c9ee4",
+			"id": "817af169-5253-490d-8cb4-4c9c6552a32f",
 			"key": "user_username",
 			"value": "foo",
 			"type": "string"
 		},
 		{
-			"id": "c2329f20-61d2-4f34-a9a5-9f490e4b3927",
+			"id": "a7b685c8-afc8-4beb-85a7-ef9148e43003",
 			"key": "user_password",
 			"value": "admin",
 			"type": "string"
 		},
 		{
-			"id": "fa6fc205-25e2-4150-a6a3-9fc0005e7cef",
+			"id": "dbf73ec4-2360-4d06-a7a8-ed800176a5f6",
 			"key": "user_firstname",
 			"value": "Foo",
 			"type": "string"
 		},
 		{
-			"id": "f8f455bd-667f-478c-8422-b249069be145",
+			"id": "6c74dc40-dccc-4778-8f5d-66893810a0ab",
 			"key": "user_lastname",
 			"value": "Bar",
 			"type": "string"
 		},
 		{
-			"id": "b8f2e62e-522a-428c-a2f8-c24f59bd5fd8",
+			"id": "344d24a4-8705-4cc5-b459-a0d4e77960e0",
 			"key": "debug_token",
 			"value": "xX69jules69Xx",
 			"type": "string"
 		},
 		{
-			"id": "9061c605-92f2-4a48-9de2-47aa76a4b54e",
+			"id": "6573eb46-4b86-475a-8dea-6487a32124b3",
 			"key": "user_access_token",
 			"value": "",
 			"type": "string"
 		},
 		{
-			"id": "087c57f0-6dc7-45a3-a49d-cf10e7c64ae5",
+			"id": "fcb3c2f2-50b9-496f-8863-3a9e7927c083",
 			"key": "user_refresh_token",
 			"value": "",
 			"type": "string"
 		},
 		{
-			"id": "c3abd8e6-2d5c-49ff-81a5-8c0eef9d3d30",
+			"id": "e53f8bf1-4e49-47fe-af11-ff48243709ca",
 			"key": "expired_token",
 			"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE1OTAyNDIyNjQsIm5iZiI6MTU5MDI0MjI2NCwianRpIjoiNTM0ZGI5NzQtOWE4Ni00MGViLWE1NDEtMDg3N2ZmNzQ3NDVhIiwiZXhwIjoxNTkwMjQyMzI0LCJpZGVudGl0eSI6eyJpZCI6NTEyLCJlbWFpbCI6ImZvb0BleGFtcGxlLm9yZyIsInVzZXJuYW1lIjoiYmFyIiwiaXNfb25saW5lIjp0cnVlLCJkYXRlX2xhc3RzZWVuIjoiU2F0LCAyMyBNYXkgMjAyMCAxMzo1Nzo0NCBHTVQifSwiZnJlc2giOnRydWUsInR5cGUiOiJhY2Nlc3MifQ.NTp2P0WNkXDwzuzrcNIQdeAfizQ57HQgkzBLSvY1yHU",
 			"type": "string"
 		},
 		{
-			"id": "06d6445e-4a08-4a73-9f77-c373e72e11a2",
+			"id": "97f04f56-8788-4a96-b4bf-b7df76d61a85",
 			"key": "user_orientation",
 			"value": "heterosexual",
 			"type": "string"
 		},
 		{
-			"id": "bea3f45f-1b31-4a5a-a8b0-3b19a51121cd",
+			"id": "9d3ae8c3-9e9d-410c-8f3e-9981aa794ffe",
 			"key": "user_bio",
 			"value": "Lorem Ipsum is the single greatest threat. We are not - we are not keeping up with other websites. Lorem Ipsum best not make any more threats to your website. It will be met with fire and fury like the world has never seen. Does everybody know that pig named Lorem Ipsum? An ‘extremely credible source’ has called my office and told me that Barack Obama’s placeholder text is a fraud.",
 			"type": "string"
 		},
 		{
-			"id": "96a2a049-ba40-4a0d-a121-87ae2c69e405",
+			"id": "286a8b4b-4896-4052-9954-5268fa7ec5d2",
 			"key": "user_gender",
 			"value": "male",
 			"type": "string"
 		},
 		{
-			"id": "368ec511-6d63-4078-8ce9-927099fd5e0d",
+			"id": "8af47f4b-543e-4854-9f5e-4d233c3b1fa8",
 			"key": "user_birthdate",
 			"value": "1590674628",
 			"type": "string"
 		},
 		{
-			"id": "902e8352-9d84-4506-8d2f-43d6e5955aa5",
+			"id": "268b8033-29e7-43cd-8656-320cb618c349",
 			"key": "user_lat",
 			"value": "44.8404",
 			"type": "string"
 		},
 		{
-			"id": "40b99878-a229-47d6-b542-0658ca174bac",
+			"id": "055ded59-04f0-49b0-b0ef-5e197597e234",
 			"key": "user_lng",
 			"value": "-0.5805",
 			"type": "string"
 		},
 		{
-			"id": "4d97f30c-1c59-4b6f-b305-3e52b9eb4e88",
+			"id": "6067682f-bb9d-43fa-b35a-f9d6e924596e",
 			"key": "user_ip",
 			"value": "77.205.46.181",
 			"type": "string"
