@@ -8,14 +8,16 @@ import { getRefreshToken } from './utils';
 import './App.css';
 
 const App = () => (
-	<BrowserRouter>
-		<Switch>
-			<PrivateRoute exact path="/" component={Home} />
-			<Route exact path="/onboarding" component={Onboarding} />
-			<Route exact path="/login" component={Landing} />
-			<Route component={NotFound} />
-		</Switch>
-	</BrowserRouter>
+	<div className='container' style={{ textAlign: 'center', padding: '1.5em' }}>
+		<BrowserRouter>
+			<Switch>
+				<PrivateRoute exact path="/" component={Home} />
+				<Route exact path="/onboarding" component={Onboarding} />
+				<Route exact path="/login" component={Landing} />
+				<Route component={NotFound} />
+			</Switch>
+		</BrowserRouter>
+	</div>
 );
 
 const PrivateRoute = ({ component: Component, ...rest }) => {

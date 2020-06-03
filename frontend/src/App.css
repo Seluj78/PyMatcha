@@ -91,10 +91,9 @@
 	100% {
 	  transform: scale(0.9);
 	}
-  }
-  
+}
 
-  .horizTranslate {
+.horizTranslate {
 	-webkit-transition: 0.5s;
 	-moz-transition: 0.5s;
 	-ms-transition: 0.5s;
@@ -102,3 +101,17 @@
 	transition: 0.5s;
 	margin-left: 100% !important;
   }
+
+.desktop {
+  display: none;
+}
+
+@media(min-width: 768px) {
+	.desktop {
+		display: inline;
+	}
+
+	.mobile {
+		display: none;
+	}
+}
