@@ -212,6 +212,9 @@ class User(Model):
     def to_dict(self) -> Dict:
         returned_dict = super().to_dict()
         returned_dict["tags"] = [t.to_dict() for t in self.get_tags()]
+        returned_dict["reports"] = {"sent": [], "received": []}
+        returned_dict["reports"]["sent"] = [r.to_dict() for r in self.get_reports_sent()]
+        returned_dict["reports"]["received"] = [r.to_dict() for r in self.get_reports_received()]
         return returned_dict
 
     @classmethod
