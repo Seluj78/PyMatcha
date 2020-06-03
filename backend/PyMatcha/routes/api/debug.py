@@ -5,6 +5,7 @@ import PyMatcha.models.user as user
 from flask import Blueprint
 from flask import current_app
 from flask import jsonify
+from flask import request
 from PyMatcha import redis
 from PyMatcha.errors import NotFoundError
 from PyMatcha.models.report import Report
@@ -12,6 +13,7 @@ from PyMatcha.models.view import View
 from PyMatcha.success import Success
 from PyMatcha.success import SuccessDeleted
 from PyMatcha.utils.decorators import debug_token_required
+from PyMatcha.utils.decorators import validate_params
 
 debug_bp = Blueprint("debug", __name__)
 
@@ -94,7 +96,7 @@ def delete_reports():
     return "", 204
 
 
-@debug_bp.route("/debug/reports")
+@debug_bp.route("/debug/reports", methods=["GET"])
 @debug_token_required
 def debug_get_all_reports():
     report_list = []
@@ -103,10 +105,26 @@ def debug_get_all_reports():
     return jsonify(report_list)
 
 
-@debug_bp.route("/debug/reports/<uid>")
+@debug_bp.route("/debug/reports/<uid>", methods=["GET"])
 @debug_token_required
 def debug_get_user_reports(uid):
     u = get_user(uid)
     reports_received = [r.to_dict() for r in u.get_reports_received()]
     reports_sent = [r.to_dict() for r in u.get_reports_sent()]
     return jsonify({"reports_received": reports_received, "reports_sent": reports_sent}), 200
+
+
+DEBUG_CREATE_FAKE_REPORT = {"reporter_id": int, "reported_id": int, "reason": str, "details": str}
+
+
+@debug_bp.route("/debug/reports", methods=["POST"])
+@debug_token_required
+@validate_params(DEBUG_CREATE_FAKE_REPORT)
+def debug_create_report():
+    data = request.get_json()
+    reporter_id = data["reporter_id"]
+    reported_id = data["reported_id"]
+    reason = data["reason"]
+    details = data["details"]
+    Report.create(reported_id=reported_id, reporter_id=reporter_id, reason=reason, details=details)
+    return "", 204
