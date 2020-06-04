@@ -26,13 +26,13 @@ from typing import Dict
 from typing import Optional
 
 import Geohash
-from PyMatcha.errors import ConflictError
-from PyMatcha.errors import NotFoundError
 from PyMatcha.models.report import Report
 from PyMatcha.models.tag import Tag
 from PyMatcha.models.view import View
 from PyMatcha.utils import create_user_table
 from PyMatcha.utils import hash_password
+from PyMatcha.utils.errors import ConflictError
+from PyMatcha.utils.errors import NotFoundError
 from PyMatcha.utils.orm import Field
 from PyMatcha.utils.orm import Model
 

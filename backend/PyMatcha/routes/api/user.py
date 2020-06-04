@@ -22,7 +22,7 @@ from flask import Blueprint
 from flask import current_app
 from flask import jsonify
 from PyMatcha import redis
-from PyMatcha.errors import NotFoundError
+from PyMatcha.utils.errors import NotFoundError
 
 User = user.User
 get_user = user.get_user

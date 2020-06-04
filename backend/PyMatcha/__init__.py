@@ -163,7 +163,7 @@ get_user = user_module.get_user
 logging.debug("Configuring JWT user callback loader")
 
 
-from PyMatcha.errors import NotFoundError
+from PyMatcha.utils.errors import NotFoundError
 
 
 @jwt.user_loader_callback_loader

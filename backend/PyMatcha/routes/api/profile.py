@@ -25,18 +25,18 @@ import PyMatcha.models.user as user
 from flask import Blueprint
 from flask import request
 from ip2geotools.databases.noncommercial import DbIpCity
-from PyMatcha.errors import BadRequestError
-from PyMatcha.errors import NotFoundError
-from PyMatcha.errors import UnauthorizedError
 from PyMatcha.models.report import Report
 from PyMatcha.models.tag import Tag
 from PyMatcha.models.view import View
-from PyMatcha.success import Success
-from PyMatcha.success import SuccessOutput
 from PyMatcha.utils import hash_password
 from PyMatcha.utils.confirm_token import generate_confirmation_token
 from PyMatcha.utils.decorators import validate_params
+from PyMatcha.utils.errors import BadRequestError
+from PyMatcha.utils.errors import NotFoundError
+from PyMatcha.utils.errors import UnauthorizedError
 from PyMatcha.utils.mail import send_mail_text
+from PyMatcha.utils.success import Success
+from PyMatcha.utils.success import SuccessOutput
 
 User = user.User
 get_user = user.get_user
