@@ -71,6 +71,9 @@ def complete_profile():
     gender = data["gender"]
     birthdate = data["birthdate"]
 
+    if len(tags) != len(set(tags)):
+        raise BadRequestError("Duplicate tags", "Try again")
+
     for tag in tags:
         Tag.create(name=tag, user_id=current_user.id)
 

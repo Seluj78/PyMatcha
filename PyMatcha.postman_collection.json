@@ -1315,6 +1315,56 @@
 					"name": "Complete profile",
 					"item": [
 						{
+							"name": "Complete profile duplicated tags",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "8f4e4aaf-811a-4319-bfcb-3f25c5fb063f",
+										"exec": [
+											"var response = JSON.parse(responseBody);",
+											"",
+											"",
+											"pm.test(\"Status code is 400\", function () {",
+											"    pm.response.to.have.status(400);",
+											"});",
+											"",
+											"tests[\"JSON return code is 400\"] = response.code == 400",
+											"",
+											"tests[\"success is true\"] = response.success == false",
+											"tests[\"Message is correct\"] = response.error.message == \"Duplicate tags\"",
+											"tests[\"Error type is Bad Request\"] = response.error.type == \"BadRequestError\""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n\t\"orientation\": \"{{user_orientation}}\",\n\t\"bio\": \"{{user_bio}}\",\n\t\"tags\": [\n\t\t\"bot\",\n\t\t\"robot\",\n\t\t\"postman\",\n\t\t\"sex\",\n\t\t\"friends\",\n\t\t\"drink\",\n\t\t\"smoke\",\n\t\t\"smoke\"\n\t\t],\n\t\"gender\": \"{{user_gender}}\",\n\t\"birthdate\": {{user_birthdate}}\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{host}}/profile/complete",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"profile",
+										"complete"
+									]
+								}
+							},
+							"response": []
+						},
+						{
 							"name": "Complete profile",
 							"event": [
 								{
@@ -1458,6 +1508,56 @@
 									"path": [
 										"users",
 										"{{user_username}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Complete already completed profile",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "829a77b9-6e38-41ca-ba36-2f305d3160d3",
+										"exec": [
+											"var response = JSON.parse(responseBody);",
+											"",
+											"",
+											"pm.test(\"Status code is 400\", function () {",
+											"    pm.response.to.have.status(400);",
+											"});",
+											"",
+											"tests[\"JSON return code is 400\"] = response.code == 400",
+											"",
+											"tests[\"success is true\"] = response.success == false",
+											"tests[\"Message is correct\"] = response.error.message == \"The user has already completed his profile\"",
+											"tests[\"Error type is Bad Request\"] = response.error.type == \"BadRequestError\""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n\t\"orientation\": \"{{user_orientation}}\",\n\t\"bio\": \"{{user_bio}}\",\n\t\"tags\": [\n\t\t\"bot\",\n\t\t\"robot\",\n\t\t\"postman\",\n\t\t\"sex\",\n\t\t\"friends\",\n\t\t\"drink\",\n\t\t\"smoke\"\n\t\t],\n\t\"gender\": \"{{user_gender}}\",\n\t\"birthdate\": {{user_birthdate}}\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{host}}/profile/complete",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"profile",
+										"complete"
 									]
 								}
 							},
@@ -3443,182 +3543,6 @@
 					"response": []
 				},
 				{
-					"name": "Edit geolocation with ip",
-					"event": [
-						{
-							"listen": "test",
-							"script": {
-								"id": "39231db4-62ff-4230-8a9f-d6bcda2e91ad",
-								"exec": [
-									"var response = JSON.parse(responseBody);",
-									"",
-									"",
-									"pm.test(\"Status code is 200\", function () {",
-									"    pm.response.to.have.status(200);",
-									"});",
-									"",
-									"",
-									"tests[\"success is true\"] = response.success == true",
-									"tests[\"Message is correct\"] = response.message == \"New location sucessfully saved.\""
-								],
-								"type": "text/javascript"
-							}
-						}
-					],
-					"request": {
-						"method": "PUT",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n\t\"ip\": \"{{user_ip}}\"\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{host}}/profile/edit/geolocation",
-							"host": [
-								"{{host}}"
-							],
-							"path": [
-								"profile",
-								"edit",
-								"geolocation"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Get one user after ip geoloc edit",
-					"event": [
-						{
-							"listen": "test",
-							"script": {
-								"id": "499a0ac6-2355-490c-8f0f-010c397591be",
-								"exec": [
-									"var response = JSON.parse(responseBody);",
-									"",
-									"",
-									"pm.test(\"Status code is 200\", function () {",
-									"    pm.response.to.have.status(200);",
-									"});",
-									"",
-									"user_email = pm.collectionVariables.get(\"user_email\");",
-									"",
-									"tests[\"Is geohash correct\"] = response.geohash == \"ezzweqbd4wuk\""
-								],
-								"type": "text/javascript"
-							}
-						}
-					],
-					"request": {
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "{{host}}/users/{{user_email}}",
-							"host": [
-								"{{host}}"
-							],
-							"path": [
-								"users",
-								"{{user_email}}"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Edit geolocation with lat lng",
-					"event": [
-						{
-							"listen": "test",
-							"script": {
-								"id": "6f2ec5c9-96dc-4e1b-af46-96352d0d2135",
-								"exec": [
-									"var response = JSON.parse(responseBody);",
-									"",
-									"",
-									"pm.test(\"Status code is 200\", function () {",
-									"    pm.response.to.have.status(200);",
-									"});",
-									"",
-									"",
-									"tests[\"success is true\"] = response.success == true",
-									"tests[\"Message is correct\"] = response.message == \"New location sucessfully saved.\""
-								],
-								"type": "text/javascript"
-							}
-						}
-					],
-					"request": {
-						"method": "PUT",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n\t\"ip\": \"{{user_ip}}\",\n\t\"lat\": {{user_lat}},\n\t\"lng\": {{user_lng}}\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{host}}/profile/edit/geolocation",
-							"host": [
-								"{{host}}"
-							],
-							"path": [
-								"profile",
-								"edit",
-								"geolocation"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Get one user after lat lng edit",
-					"event": [
-						{
-							"listen": "test",
-							"script": {
-								"id": "14daee88-fcc1-4a60-8100-45eded9ecbd8",
-								"exec": [
-									"var response = JSON.parse(responseBody);",
-									"",
-									"",
-									"pm.test(\"Status code is 200\", function () {",
-									"    pm.response.to.have.status(200);",
-									"});",
-									"",
-									"user_email = pm.collectionVariables.get(\"user_email\");",
-									"",
-									"tests[\"Is geohash correct\"] = response.geohash == \"ezzx4fcq327u\""
-								],
-								"type": "text/javascript"
-							}
-						}
-					],
-					"request": {
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "{{host}}/users/{{user_email}}",
-							"host": [
-								"{{host}}"
-							],
-							"path": [
-								"users",
-								"{{user_email}}"
-							]
-						}
-					},
-					"response": []
-				},
-				{
 					"name": "Reset likes table",
 					"event": [
 						{
@@ -3655,182 +3579,6 @@
 							"path": [
 								"debug",
 								"likes"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Edit geolocation with ip",
-					"event": [
-						{
-							"listen": "test",
-							"script": {
-								"id": "39231db4-62ff-4230-8a9f-d6bcda2e91ad",
-								"exec": [
-									"var response = JSON.parse(responseBody);",
-									"",
-									"",
-									"pm.test(\"Status code is 200\", function () {",
-									"    pm.response.to.have.status(200);",
-									"});",
-									"",
-									"",
-									"tests[\"success is true\"] = response.success == true",
-									"tests[\"Message is correct\"] = response.message == \"New location sucessfully saved.\""
-								],
-								"type": "text/javascript"
-							}
-						}
-					],
-					"request": {
-						"method": "PUT",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n\t\"ip\": \"{{user_ip}}\"\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{host}}/profile/edit/geolocation",
-							"host": [
-								"{{host}}"
-							],
-							"path": [
-								"profile",
-								"edit",
-								"geolocation"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Get one user after ip geoloc edit",
-					"event": [
-						{
-							"listen": "test",
-							"script": {
-								"id": "499a0ac6-2355-490c-8f0f-010c397591be",
-								"exec": [
-									"var response = JSON.parse(responseBody);",
-									"",
-									"",
-									"pm.test(\"Status code is 200\", function () {",
-									"    pm.response.to.have.status(200);",
-									"});",
-									"",
-									"user_email = pm.collectionVariables.get(\"user_email\");",
-									"",
-									"tests[\"Is geohash correct\"] = response.geohash == \"ezzweqbd4wuk\""
-								],
-								"type": "text/javascript"
-							}
-						}
-					],
-					"request": {
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "{{host}}/users/{{user_email}}",
-							"host": [
-								"{{host}}"
-							],
-							"path": [
-								"users",
-								"{{user_email}}"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Edit geolocation with lat lng",
-					"event": [
-						{
-							"listen": "test",
-							"script": {
-								"id": "6f2ec5c9-96dc-4e1b-af46-96352d0d2135",
-								"exec": [
-									"var response = JSON.parse(responseBody);",
-									"",
-									"",
-									"pm.test(\"Status code is 200\", function () {",
-									"    pm.response.to.have.status(200);",
-									"});",
-									"",
-									"",
-									"tests[\"success is true\"] = response.success == true",
-									"tests[\"Message is correct\"] = response.message == \"New location sucessfully saved.\""
-								],
-								"type": "text/javascript"
-							}
-						}
-					],
-					"request": {
-						"method": "PUT",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n\t\"ip\": \"{{user_ip}}\",\n\t\"lat\": {{user_lat}},\n\t\"lng\": {{user_lng}}\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{host}}/profile/edit/geolocation",
-							"host": [
-								"{{host}}"
-							],
-							"path": [
-								"profile",
-								"edit",
-								"geolocation"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Get one user after lat lng edit",
-					"event": [
-						{
-							"listen": "test",
-							"script": {
-								"id": "14daee88-fcc1-4a60-8100-45eded9ecbd8",
-								"exec": [
-									"var response = JSON.parse(responseBody);",
-									"",
-									"",
-									"pm.test(\"Status code is 200\", function () {",
-									"    pm.response.to.have.status(200);",
-									"});",
-									"",
-									"user_email = pm.collectionVariables.get(\"user_email\");",
-									"",
-									"tests[\"Is geohash correct\"] = response.geohash == \"ezzx4fcq327u\""
-								],
-								"type": "text/javascript"
-							}
-						}
-					],
-					"request": {
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "{{host}}/users/{{user_email}}",
-							"host": [
-								"{{host}}"
-							],
-							"path": [
-								"users",
-								"{{user_email}}"
 							]
 						}
 					},
@@ -3898,109 +3646,109 @@
 	],
 	"variable": [
 		{
-			"id": "6e4fa140-fd2d-458b-869b-ed3adf0c0405",
+			"id": "befd8b3f-9044-4678-9d42-4a6c8338bf11",
 			"key": "host",
 			"value": "http://127.0.0.1:5000",
 			"type": "string"
 		},
 		{
-			"id": "1552a9d4-b8d2-4243-a4c3-80adb5b30246",
+			"id": "c4b1b28d-8534-47c2-82c7-860dc212642e",
 			"key": "user_id",
 			"value": "",
 			"type": "string"
 		},
 		{
-			"id": "618bf18e-994d-4ce0-aab9-270eccace110",
+			"id": "4f7a5f1a-27ef-46df-b07a-5783a0582318",
 			"key": "user_email",
 			"value": "foo@example.org",
 			"type": "string"
 		},
 		{
-			"id": "45565905-5593-4c86-86d4-09d3e1b79b44",
+			"id": "64c06a4c-82d7-4037-a181-a114c86cb8b1",
 			"key": "user_username",
 			"value": "foo",
 			"type": "string"
 		},
 		{
-			"id": "12fe0a4f-538c-427c-bfc8-713ddf91951e",
+			"id": "3434046b-300e-40f3-b9fd-73dd6bc2cd6c",
 			"key": "user_password",
 			"value": "admin",
 			"type": "string"
 		},
 		{
-			"id": "54076982-35c8-4e0c-9749-a1db617f4b65",
+			"id": "161c234f-f1f4-4ff5-bc40-657ebcb9f8c5",
 			"key": "user_firstname",
 			"value": "Foo",
 			"type": "string"
 		},
 		{
-			"id": "11a2638f-ddd8-43fc-8c14-77a64e43fa84",
+			"id": "50525fc7-ea75-4c51-96a5-c5c86f23c0b0",
 			"key": "user_lastname",
 			"value": "Bar",
 			"type": "string"
 		},
 		{
-			"id": "a309b268-5b2e-45ff-8fd1-6b8690c4d4f4",
+			"id": "44de7cd4-5407-4658-8520-6e46691bedc7",
 			"key": "debug_token",
 			"value": "xX69jules69Xx",
 			"type": "string"
 		},
 		{
-			"id": "b3f080fe-ce62-46f3-a8a3-bb443263da70",
+			"id": "5f242c9a-b6c8-4629-97d6-43892032c5d1",
 			"key": "user_access_token",
 			"value": "",
 			"type": "string"
 		},
 		{
-			"id": "c73f2085-12f1-4466-8431-937bf9d0d6c6",
+			"id": "d7266cf0-0862-409b-b5fc-c628b34d0d48",
 			"key": "user_refresh_token",
 			"value": "",
 			"type": "string"
 		},
 		{
-			"id": "63825162-fc6f-4d4d-bf68-2d284eabfd81",
+			"id": "ea412b72-2502-4e1c-a337-4303217e9567",
 			"key": "expired_token",
 			"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE1OTAyNDIyNjQsIm5iZiI6MTU5MDI0MjI2NCwianRpIjoiNTM0ZGI5NzQtOWE4Ni00MGViLWE1NDEtMDg3N2ZmNzQ3NDVhIiwiZXhwIjoxNTkwMjQyMzI0LCJpZGVudGl0eSI6eyJpZCI6NTEyLCJlbWFpbCI6ImZvb0BleGFtcGxlLm9yZyIsInVzZXJuYW1lIjoiYmFyIiwiaXNfb25saW5lIjp0cnVlLCJkYXRlX2xhc3RzZWVuIjoiU2F0LCAyMyBNYXkgMjAyMCAxMzo1Nzo0NCBHTVQifSwiZnJlc2giOnRydWUsInR5cGUiOiJhY2Nlc3MifQ.NTp2P0WNkXDwzuzrcNIQdeAfizQ57HQgkzBLSvY1yHU",
 			"type": "string"
 		},
 		{
-			"id": "50fa34be-ea91-4beb-b8b2-de15116cdf42",
+			"id": "15a1e7fa-a337-4a29-8b7f-9678e76ac359",
 			"key": "user_orientation",
 			"value": "heterosexual",
 			"type": "string"
 		},
 		{
-			"id": "f136a65e-b99f-4188-82fa-e3ab03c57d05",
+			"id": "3637321b-78a5-4fdb-b778-0a2be4c1a4c0",
 			"key": "user_bio",
 			"value": "Lorem Ipsum is the single greatest threat. We are not - we are not keeping up with other websites. Lorem Ipsum best not make any more threats to your website. It will be met with fire and fury like the world has never seen. Does everybody know that pig named Lorem Ipsum? An ‘extremely credible source’ has called my office and told me that Barack Obama’s placeholder text is a fraud.",
 			"type": "string"
 		},
 		{
-			"id": "65ab3ff6-8bea-48ed-be53-345312837932",
+			"id": "c6b3be30-6f52-484e-bb25-7287064a18d2",
 			"key": "user_gender",
 			"value": "male",
 			"type": "string"
 		},
 		{
-			"id": "51ee5dc1-9985-43cb-9233-17ca85414ac0",
+			"id": "1b2c293e-b2e3-47fb-8843-37dfc40527ef",
 			"key": "user_birthdate",
 			"value": "1590674628",
 			"type": "string"
 		},
 		{
-			"id": "f79a3061-2f36-46dd-875f-86084faf7509",
+			"id": "cfc85af0-71b7-4e21-aec9-e6ed932baa07",
 			"key": "user_lat",
 			"value": "44.8404",
 			"type": "string"
 		},
 		{
-			"id": "9210db16-f8ae-401d-accc-e62123890fc1",
+			"id": "bea4970c-1b1b-495e-aacd-5f28919da8be",
 			"key": "user_lng",
 			"value": "-0.5805",
 			"type": "string"
 		},
 		{
-			"id": "fdf68a3f-2fb6-49dd-aeba-0ac156ce9e87",
+			"id": "56bc40c9-b5d0-47bb-bf4c-030cd02f35fb",
 			"key": "user_ip",
 			"value": "77.205.46.181",
 			"type": "string"
