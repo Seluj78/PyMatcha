@@ -20,8 +20,11 @@ const Landing = ({ from }) => {
 
 	if (!!getRefreshToken())
 		history.push('/');
+	else if (localStorage.getItem("onboarding") === "true")
+		history.push('/onbaording');
+
 	return (
-		<div className='container' style={{ textAlign: 'center', padding: '1.5em' }}>
+		<div>
 			<Notif qs={qs} />
 			<p className='title is-1' style={{ margin: '1em' }} >Matcha</p>
 			<div className='tile is-ancestor'>

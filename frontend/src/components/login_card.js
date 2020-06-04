@@ -9,9 +9,11 @@ const logMe = (history, setState, username, password, from) => async () => {
 	if (!!ret.is_error) {
 		setState(ret.error.message)
 	} else {
-		let { access_token, refresh_token } = ret.tokens;
+		let { access_token, refresh_token, is_profile_completed } = ret.return;
 		localStorage.setItem("refresh_token", refresh_token);
 		sessionStorage.setItem("access_token", access_token);
+		if (!is_profile_completed)
+			localStorage.setItem("onboarding", true)
 		history.push('/');
 	}
 }

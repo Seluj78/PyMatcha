@@ -1,5 +1,6 @@
 import os
 from functools import wraps
+from typing import Optional
 
 from flask import request
 from PyMatcha.errors import BadRequestError
@@ -7,7 +8,10 @@ from PyMatcha.errors import UnauthorizedError
 from werkzeug.exceptions import BadRequest
 
 
-def validate_required_params(required):
+def validate_params(required: dict, optional: Optional[dict] = None):
+    if optional is None:
+        optional = {}
+
     def decorator(fn):
         """Decorator that checks for the required parameters"""
 
@@ -29,28 +33,30 @@ def validate_required_params(required):
                 if item not in data.keys():
                     missing.append(item)
             if missing:
-                raise BadRequestError(
-                    "Missing key(s) {} to perform action.".format(missing), "Complete your json body and try again"
-                )
+                raise BadRequestError("Missing keys {}.".format(missing), "Complete your json body and try again")
 
             for item in data.keys():
                 # If there's an unwanted key in the sent data
-                if item not in required.keys():
+                if item not in required.keys() and item not in optional.keys():
                     raise BadRequestError(
                         "You can't specify key '{}'.".format(item),
-                        "You are only allowed to specify the fields {} "
-                        "when creating a user.".format(required.keys()),
+                        "You are only allowed to specify the fields {}" ".".format(required.keys()),
                     )
 
             for key, value in data.items():
                 if not value:
-                    raise BadRequestError(f"The item {key} cannot be None or empty", "Please try again.")
+                    if required[key] == int:
+                        pass
+                    else:
+                        raise BadRequestError(f"The item {key} cannot be None or empty", "Please try again.")
 
             wrong_types = [r for r in required.keys() if not isinstance(data[r], required[r])]
+            wrong_types += [r for r in optional.keys() if r in data and not isinstance(data[r], optional[r])]
 
             if wrong_types:
                 raise BadRequestError(
-                    "{} is/are the wrong type.".format(wrong_types), "It/They must be respectively {}".format(required)
+                    "{} is/are the wrong type.".format(wrong_types),
+                    "It/They must be respectively {} and {}".format(required, optional),
                 )
 
             return fn(*args, **kwargs)

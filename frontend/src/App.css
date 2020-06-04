@@ -52,7 +52,6 @@
 	position: absolute;
 	width: 32px;
 	height: 32px;
-	background: #fff;
 	animation: lds-heart 1.2s infinite cubic-bezier(0.215, 0.61, 0.355, 1);
   }
   .lds-heart div:after,
@@ -62,7 +61,7 @@
 	display: block;
 	width: 32px;
 	height: 32px;
-	background: #fff;
+	background: inherit;
   }
   .lds-heart div:before {
 	left: -24px;
@@ -91,10 +90,9 @@
 	100% {
 	  transform: scale(0.9);
 	}
-  }
-  
+}
 
-  .horizTranslate {
+.horizTranslate {
 	-webkit-transition: 0.5s;
 	-moz-transition: 0.5s;
 	-ms-transition: 0.5s;
@@ -102,3 +100,17 @@
 	transition: 0.5s;
 	margin-left: 100% !important;
   }
+
+.desktop {
+  display: none;
+}
+
+@media(min-width: 768px) {
+	.desktop {
+		display: inline;
+	}
+
+	.mobile {
+		display: none;
+	}
+}

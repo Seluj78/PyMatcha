@@ -40,7 +40,7 @@ from PyMatcha.success import SuccessOutputMessage
 from PyMatcha.utils import hash_password
 from PyMatcha.utils.confirm_token import confirm_token
 from PyMatcha.utils.confirm_token import generate_confirmation_token
-from PyMatcha.utils.decorators import validate_required_params
+from PyMatcha.utils.decorators import validate_params
 from PyMatcha.utils.mail import send_mail_text
 
 User = user.User
@@ -56,7 +56,7 @@ auth_bp = Blueprint("auth", __name__)
 
 
 @auth_bp.route("/auth/register", methods=["POST"])
-@validate_required_params(REQUIRED_KEYS_USER_CREATION)
+@validate_params(REQUIRED_KEYS_USER_CREATION)
 def api_create_user():
     current_app.logger.debug("/auth/register -> Call")
     data = request.get_json()
@@ -117,7 +117,7 @@ def confirm_email(token):
 
 
 @auth_bp.route("/auth/password/forgot", methods=["POST"])
-@validate_required_params(REQUIRED_KEYS_PASSWORD_FORGOT)
+@validate_params(REQUIRED_KEYS_PASSWORD_FORGOT)
 def forgot_password():
     current_app.logger.debug("/auth/password/forgot -> Call")
     data = request.get_json()
@@ -141,7 +141,7 @@ def forgot_password():
 
 
 @auth_bp.route("/auth/password/reset", methods=["POST"])
-@validate_required_params(REQUIRED_KEYS_PASSWORD_RESET)
+@validate_params(REQUIRED_KEYS_PASSWORD_RESET)
 def reset_password():
     current_app.logger.debug("/auth/password/reset -> Call")
     data = request.get_json()
@@ -174,7 +174,7 @@ def reset_password():
 
 
 @auth_bp.route("/auth/login", methods=["POST"])
-@validate_required_params(REQUIRED_KEYS_LOGIN)
+@validate_params(REQUIRED_KEYS_LOGIN)
 def auth_login():
     current_app.logger.debug("/auth/login -> Call")
     data = request.get_json()
@@ -189,16 +189,9 @@ def auth_login():
         current_app.logger.debug("/auth/login -> Password invalid")
         raise UnauthorizedError("Incorrect username or password", "Try again")
 
-    # access_token = fjwt.create_access_token(
-    #     identity=get_user_safe_dict(user), expires_delta=datetime.timedelta(hours=2)
-    # )
-    # TODO: Handle expiry for token
     if not u.is_confirmed:
         current_app.logger.debug("/auth/login -> User is trying to login unconfirmed")
         raise UnauthorizedError("User needs to be confirmed first.", "Try again when you have confirmed your email")
-    # u.is_online = True
-    # u.date_lastseen = datetime.datetime.utcnow()
-    # u.save()
     access_token = fjwt.create_access_token(identity=u.get_base_info(), fresh=True)
     refresh_token = fjwt.create_refresh_token(identity=u.get_base_info())
     access_jti = fjwt.get_jti(access_token)
@@ -209,14 +202,13 @@ def auth_login():
 
     current_app.logger.debug("/auth/login -> Returning access token for user {}".format(username))
     redis.set("user:" + str(u.id), datetime.datetime.utcnow().timestamp())
-    tokens = {"access_token": access_token, "refresh_token": refresh_token}
-    return SuccessOutput("tokens", tokens)
+    ret = {"access_token": access_token, "refresh_token": refresh_token, "is_profile_completed": u.is_profile_completed}
+    return SuccessOutput("return", ret)
 
 
 @auth_bp.route("/auth/refresh", methods=["POST"])
 @fjwt.jwt_refresh_token_required
 def refresh():
-    # Do the same thing that we did in the login endpoint here
     current_user = fjwt.get_jwt_identity()
     access_token = fjwt.create_access_token(identity=current_user)
     access_jti = fjwt.get_jti(encoded_token=access_token)
@@ -224,7 +216,6 @@ def refresh():
     return SuccessOutput("access_token", access_token)
 
 
-# Endpoint for revoking the current users access token
 @auth_bp.route("/auth/access_revoke", methods=["DELETE"])
 @fjwt.jwt_required
 def logout():
@@ -233,7 +224,6 @@ def logout():
     return Success("Access token revoked")
 
 
-# Endpoint for revoking the current users refresh token
 @auth_bp.route("/auth/refresh_revoke", methods=["DELETE"])
 @fjwt.jwt_refresh_token_required
 def logout2():
@@ -243,7 +233,7 @@ def logout2():
 
 
 @auth_bp.route("/auth/confirm/new", methods=["POST"])
-@validate_required_params(REQUIRED_KEYS_NEW_EMAIL_CONF)
+@validate_params(REQUIRED_KEYS_NEW_EMAIL_CONF)
 def request_new_email_conf():
     current_app.logger.debug("/auth/confirm/new -> Call")
     data = request.get_json()
@@ -256,7 +246,7 @@ def request_new_email_conf():
     else:
         if u.is_confirmed:
             current_app.logger.debug("/auth/confirm/new -> User found, Already confirmed.")
-            pass
+            return Success("User already confirmed")
         else:
             current_app.logger.debug("/auth/confirm/new -> User found, sending new confirmation email")
             token = generate_confirmation_token(email=email, token_type="confirm")

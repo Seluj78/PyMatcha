@@ -2,6 +2,13 @@ import request from 'request-promise';
 
 const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:8080';
 
+const date2Html = d => {
+	const t = new Date(d);
+	const date = ('0' + t.getDate()).slice(-2);
+	const month = ('0' + (t.getMonth() + 1)).slice(-2);
+	const year = t.getFullYear();
+	return `${year}-${month}-${date}`;
+}
 
 const logOut = () => {
 	localStorage.removeItem("refresh_token");
@@ -109,5 +116,6 @@ export {
 	tokenData,
 	effectDuration,
 	apiCall,
-	discard
+	date2Html,
+	discard,
 }

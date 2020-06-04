@@ -6,7 +6,7 @@ ADD .env .
 RUN export $(cat .env | xargs)
 RUN npm run build
 
-FROM python:3.7.7-buster
+FROM python:3.8.3-buster
 WORKDIR /www
 ADD backend .
 ADD .env .
