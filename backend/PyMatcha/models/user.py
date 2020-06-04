@@ -369,7 +369,6 @@ class User(Model):
             )
             result = c.fetchone()
             value = next(iter(result.values()))
-            print(value)
             return bool(value)
 
 
