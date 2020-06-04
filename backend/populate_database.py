@@ -1,4 +1,5 @@
 import datetime
+import json
 import random
 import string
 
@@ -7,8 +8,10 @@ import lorem
 import names
 import PyMatcha.models.user as user_module
 from PyMatcha.errors import ConflictError
+from PyMatcha.models.tag import Tag
 
 User = user_module.User
+get_user = user_module.get_user
 
 
 def gen_datetime(min_year: int = 1900, max_year: int = datetime.datetime.now().year) -> datetime.datetime:
@@ -57,7 +60,7 @@ def populate_users():
         username = first_name + end_of_username
 
         try:
-            User.create(
+            u = User.create(
                 first_name=first_name,
                 last_name=last_name,
                 email=email.lower(),
@@ -68,7 +71,6 @@ def populate_users():
                 orientation=orientation,
                 birthdate=birthdate.date(),
                 geohash=geohash,
-                tags="",  # TODO: Change to a real random tag generation
                 heat_score=0,
                 is_online=random.choice([True, False]),
                 date_joined=date_joined,
@@ -77,6 +79,13 @@ def populate_users():
                 is_confirmed=True,
                 confirmed_on=datetime.datetime.utcnow(),
             )
+            with open("tags.json") as handle:
+                json_list = json.load(handle)
+            u = get_user(username)
+            tags = random.sample(json_list, 5)
+
+            for tag in tags:
+                Tag.create(name=tag, user_id=u.id)
         except ConflictError:
             pass  # Pass on the conflict error, this user wont be created because the username is taken. Who cares ?
     # TODO: Add images

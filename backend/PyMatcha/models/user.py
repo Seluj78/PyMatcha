@@ -20,7 +20,6 @@ from __future__ import annotations
 
 import datetime
 import hashlib
-import json
 import logging
 from typing import Any
 from typing import Dict
@@ -31,6 +30,7 @@ import Geohash
 import PyMatcha.models.user_image as user_image
 from PyMatcha.errors import ConflictError
 from PyMatcha.errors import NotFoundError
+from PyMatcha.models.tag import Tag
 from PyMatcha.utils import create_user_table
 from PyMatcha.utils import hash_password
 from PyMatcha.utils.orm import Field
@@ -53,7 +53,6 @@ class User(Model):
     orientation = Field(str)
     birthdate = Field(datetime.date)
     geohash = Field(str)
-    tags = Field(dict)
     heat_score = Field(int)
     is_online = Field(bool)
     date_joined = Field(datetime.datetime, fmt="%Y-%m-%d %H:%M:%S")
@@ -86,7 +85,6 @@ class User(Model):
         orientation: str,
         birthdate: datetime.date,
         geohash: str,
-        tags,
         heat_score: int = 0,
         is_online: bool = False,
         date_joined: datetime.datetime = datetime.datetime.utcnow(),
@@ -135,8 +133,6 @@ class User(Model):
             logging.error("Geohash error: {}".format(e))
             raise e
 
-        # TODO: Check if all tags are set in tags
-
         # Encrypt password
         password = hash_password(password)
 
@@ -151,7 +147,6 @@ class User(Model):
             orientation=orientation,
             birthdate=birthdate,
             geohash=geohash,
-            tags=str(json.dumps(tags)),
             heat_score=heat_score,
             is_online=is_online,
             date_joined=date_joined,
@@ -199,7 +194,6 @@ class User(Model):
             orientation="bisexual",
             birthdate=None,
             geohash=None,
-            tags="",
             heat_score=0,
             is_online=False,
             date_joined=datetime.datetime.utcnow(),
@@ -220,13 +214,12 @@ class User(Model):
             "last_name": self.last_name,
             "email": self.email,
             "username": self.username,
-            "password": self.password,
             "bio": self.bio,
             "gender": self.gender,
             "orientation": self.orientation,
             "birthdate": self.birthdate,
             "geohash": self.geohash,
-            "tags": json.loads(self.tags) if self.tags else "",  # TODO: Optimize this
+            "tags": [t.name for t in self.get_tags()],
             "heat_score": self.heat_score,
             "is_online": self.is_online,
             "date_joined": self.date_joined,
@@ -234,7 +227,6 @@ class User(Model):
             "is_profile_completed": self.is_profile_completed,
             "is_confirmed": self.is_confirmed,
             "confirmed_on": self.confirmed_on,
-            "previous_reset_token": self.previous_reset_token,
         }
 
     @classmethod
@@ -250,7 +242,7 @@ class User(Model):
                 user_images.timestamp as timestamp, user_images.is_primary as is_primary
                 FROM users 
                 INNER JOIN user_images on users.id = user_images.user_id 
-                WHERE users.id = CAST({} AS INT)
+                WHERE users.id = CAST({} AS UNSIGNED)
                 """.format(
                     self.id
                 )
@@ -269,6 +261,25 @@ class User(Model):
             "is_online": self.is_online,
             "date_lastseen": self.date_lastseen,
         }
+
+    def get_tags(self):
+        logging.debug("Getting all tags for user {}".format(self.id))
+        with self.db.cursor() as c:
+            c.execute(
+                """
+                SELECT tags.id as id, tags.user_id as user_id, tags.name as name
+                FROM users 
+                INNER JOIN tags on users.id = tags.user_id 
+                WHERE users.id = CAST({} AS UNSIGNED)
+                """.format(
+                    self.id
+                )
+            )
+            tags = c.fetchall()
+            tags_list = []
+            for t in tags:
+                tags_list.append(Tag(t))
+        return tags_list
 
 
 def get_user(uid: Any[int, str]) -> Optional[User]:
