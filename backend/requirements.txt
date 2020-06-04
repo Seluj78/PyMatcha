@@ -16,7 +16,7 @@ celery==4.4.0
 redis==3.4.1
 
 itsdangerous==1.1.0
-cryptography==2.8
+cryptography==2.9.2
 
 flask_jwt_extended==3.24.1
 
