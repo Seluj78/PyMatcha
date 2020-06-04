@@ -1,5 +1,5 @@
 import React from 'react';
-import { BrowserRouter, Switch, Route, Redirect, useHistory } from 'react-router-dom';
+import { BrowserRouter, Switch, Route, Redirect } from 'react-router-dom';
 import Home from "./pages/home";
 import Landing from "./pages/landing";
 import Onboarding from "./pages/onboarding";
@@ -21,7 +21,7 @@ const App = () => (
 );
 
 const PrivateRoute = ({ component: Component, ...rest }) => {
-	const history = useHistory();
+	// const history = useHistory();
 
 	return (
 		<Route {...rest}
