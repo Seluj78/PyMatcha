@@ -22,7 +22,7 @@ flask_jwt_extended==3.24.1
 
 flake8==3.7.9
 black==19.10b0
-pre-commit==2.1.0
+pre-commit==2.4.0
 
 names==0.3.0
 lorem==0.1.1
