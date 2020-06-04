@@ -166,7 +166,7 @@ class User(Model):
         except ValueError:
             pass
         else:
-            logging.error("Email {} taken".format(email))
+            logging.warning("Email {} taken".format(email))
             raise ConflictError("Email {} taken".format(email), "Use another email")
 
         # Check username availability
@@ -383,7 +383,7 @@ def get_user(uid: Any[int, str]) -> Optional[User]:
         f_user = user
     # If none of those worked, throw an error
     if not_found == 3:
-        logging.error("User {} not found.".format(uid))
+        logging.warning("User {} not found.".format(uid))
         raise NotFoundError("User {} not found.".format(uid), "Try again with another uid")
     logging.debug("Found user {} from {}".format(f_user.id, uid))
     return f_user

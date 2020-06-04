@@ -76,7 +76,7 @@ def api_create_user():
             last_name=data["last_name"],
         )
     except ConflictError as e:
-        current_app.logger.error("Conflict error on user register: {}".format(e))
+        current_app.logger.warning("Conflict error on user register: {}".format(e))
         raise e
     else:
         token = generate_confirmation_token(email=data["email"], token_type="confirm")
