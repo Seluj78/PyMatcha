@@ -13,7 +13,7 @@ pymysql==0.9.3
 Flask-Mail==0.9.1
 
 celery==4.4.0
-redis==3.4.1
+redis==3.5.3
 
 itsdangerous==1.1.0
 cryptography==2.9.2
