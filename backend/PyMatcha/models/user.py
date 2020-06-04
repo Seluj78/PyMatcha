@@ -214,6 +214,8 @@ class User(Model):
         returned_dict["likes"] = {"sent": [], "received": []}
         returned_dict["likes"]["sent"] = [l.to_dict() for l in self.get_likes_sent()]
         returned_dict["likes"]["received"] = [l.to_dict() for l in self.get_likes_received()]
+        returned_dict.pop("password")
+        returned_dict.pop("previous_reset_token")
         return returned_dict
 
     @classmethod
