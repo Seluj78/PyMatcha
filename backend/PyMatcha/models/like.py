@@ -32,7 +32,7 @@ class Like(Model):
     id = Field(int, modifiable=False)
     liker_id = Field(int)
     liked_id = Field(int)
-    dt_liked = Field(datetime.datetime)
+    dt_liked = Field(datetime.datetime, fmt="%Y-%m-%d %H:%M:%S")
     is_superlike = Field(bool)
 
     def before_init(self, data):

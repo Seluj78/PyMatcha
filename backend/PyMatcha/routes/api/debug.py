@@ -7,6 +7,7 @@ from flask import request
 from flask_jwt_extended import current_user
 from flask_jwt_extended import jwt_required
 from PyMatcha import redis
+from PyMatcha.models.like import Like
 from PyMatcha.models.report import Report
 from PyMatcha.models.user import get_user
 from PyMatcha.models.view import View
@@ -124,4 +125,12 @@ def debug_create_report():
     reason = data["reason"]
     details = data["details"]
     Report.create(reported_id=reported_id, reporter_id=reporter_id, reason=reason, details=details)
+    return "", 204
+
+
+@debug_bp.route("/debug/likes", methods=["DELETE"])
+@debug_token_required
+def delete_likes():
+    Like.drop_table()
+    Like.create_table()
     return "", 204

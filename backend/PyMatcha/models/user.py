@@ -354,6 +354,24 @@ class User(Model):
                 like_list.append(Report(l))
         return like_list
 
+    def already_likes(self, liked_id: int) -> bool:
+        with self.db.cursor() as c:
+            c.execute(
+                """
+                SELECT EXISTS(
+                  SELECT * FROM likes WHERE
+                    liker_id = CAST({} AS UNSIGNED) and 
+                    liked_id = CAST({} AS UNSIGNED)
+                )
+                """.format(
+                    self.id, liked_id
+                )
+            )
+            result = c.fetchone()
+            value = next(iter(result.values()))
+            print(value)
+            return bool(value)
+
 
 def get_user(uid: Any[int, str]) -> Optional[User]:
     not_found = 0
