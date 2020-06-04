@@ -246,7 +246,7 @@ def request_new_email_conf():
     else:
         if u.is_confirmed:
             current_app.logger.debug("/auth/confirm/new -> User found, Already confirmed.")
-            pass
+            return Success("User already confirmed")
         else:
             current_app.logger.debug("/auth/confirm/new -> User found, sending new confirmation email")
             token = generate_confirmation_token(email=email, token_type="confirm")
