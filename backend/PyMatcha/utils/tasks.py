@@ -9,7 +9,7 @@ from PyMatcha.models.user import User
 @celery.on_after_configure.connect
 def setup_periodic_tasks(sender, **kwargs):
     sender.add_periodic_task(60, update_offline_users.s(), name="Update online users every minute")
-    sender.add_periodic_task(10, update_popularity_scores.s(), name="Update popularity scores every minute")
+    sender.add_periodic_task(3600, update_popularity_scores.s(), name="Update popularity scores every minute")
 
 
 @celery.task
