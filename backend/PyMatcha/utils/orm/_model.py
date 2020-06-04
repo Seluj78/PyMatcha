@@ -210,7 +210,7 @@ class Model(object):
                 self.db.commit()
                 logging.debug("deleted {} from table {}".format(self.id, self.table_name))
         else:
-            logging.error("{} Not in table {}".format(self.id, self.table_name))
+            logging.warning("{} Not in table {}".format(self.id, self.table_name))
             raise Exception("{} Not in table {}".format(self.id, self.table_name))
 
     @classmethod
@@ -252,6 +252,52 @@ class Model(object):
             raise ValueError("Not found")
 
     @classmethod
+    def get_multi(cls, **kwargs):
+        """
+        Get a model from the database, using multiple keyword argument as a filter.
+
+        Class method allows you to use without instanciation eg.
+
+            model = Model.get(username="test", email="test@example.org")
+
+        Returns a populated user instance on success and raises an error if the row count was 0
+
+        """
+
+        keys = []
+        values = []
+        for key, value in kwargs.items():
+            keys.append(key)
+            values.append(value)
+
+        where = ""
+        length = len(keys)
+        for index, (key, value) in enumerate(zip(keys, values)):
+            if index == length - 1:
+                where = where + f"{key}={value}"
+            else:
+                where = where + f"{key}={value} and "
+
+        temp = cls()
+        with temp.db.cursor() as c:
+            c.execute(
+                """
+                SELECT 
+                    {fields}
+                FROM 
+                    {table} 
+                WHERE   {where}""".format(
+                    fields=", ".join(temp.fields.keys()), table=cls.table_name, where=where
+                )
+            )
+
+            data = c.fetchone()
+        if data:
+            return cls(data)
+        else:
+            raise ValueError("Not found")
+
+    @classmethod
     def select_all(cls):
         logging.debug("Getting all items from table {}".format(cls.table_name))
         temp = cls()
@@ -263,7 +309,7 @@ class Model(object):
 
     @classmethod
     def drop_table(cls):
-        logging.info("Dropping table {}".format(cls.table_name))
+        logging.warning("Dropping table {}".format(cls.table_name))
         with cls.db.cursor() as c:
             c.execute("""DROP TABLE {}""".format(cls.table_name))
             cls.db.commit()
