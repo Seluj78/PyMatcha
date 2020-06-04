@@ -24,7 +24,7 @@ from flask import jsonify
 from PyMatcha import redis
 from PyMatcha.utils.errors import NotFoundError
 
-User = user.User
+User = user.User  # TODO: Change this
 get_user = user.get_user
 
 user_bp = Blueprint("user", __name__)
