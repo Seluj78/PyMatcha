@@ -1,10 +1,11 @@
 import datetime
 
-import flask_jwt_extended as fjwt
 from flask import Blueprint
 from flask import current_app
 from flask import jsonify
 from flask import request
+from flask_jwt_extended import current_user
+from flask_jwt_extended import jwt_required
 from PyMatcha import redis
 from PyMatcha.models.report import Report
 from PyMatcha.models.user import get_user
@@ -56,9 +57,8 @@ def delete_user(uid):
 
 @debug_bp.route("/debug/views/<int:amount>", methods=["POST"])
 @debug_token_required
-@fjwt.jwt_required
+@jwt_required
 def create_views(amount):
-    current_user = fjwt.current_user
     for i in range(amount):
         View.create(profile_id=current_user.id, viewer_id=i)
     return Success(f"Added {amount} views to user {current_user.id}")

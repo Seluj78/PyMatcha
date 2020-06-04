@@ -19,10 +19,11 @@
 import datetime
 import os
 
-import flask_jwt_extended as fjwt
 import Geohash
 from flask import Blueprint
 from flask import request
+from flask_jwt_extended import current_user
+from flask_jwt_extended import jwt_required
 from ip2geotools.databases.noncommercial import DbIpCity
 from PyMatcha.models.report import Report
 from PyMatcha.models.tag import Tag
@@ -55,10 +56,9 @@ REQUIRED_PARAMS_EDIT_PROFILE = {
 
 
 @profile_bp.route("/profile/complete", methods=["POST"])
-@fjwt.jwt_required
+@jwt_required
 @validate_params(REQUIRED_PARAMS_COMPLETE_PROFILE)
 def complete_profile():
-    current_user = fjwt.current_user
     if current_user.is_profile_completed:
         raise BadRequestError(
             "The user has already completed his profile", "Go to your profile settings to edit your profile"
@@ -83,10 +83,9 @@ def complete_profile():
 
 
 @profile_bp.route("/profile/edit", methods=["PUT"])
-@fjwt.jwt_required
+@jwt_required
 @validate_params(REQUIRED_PARAMS_EDIT_PROFILE)
 def edit_profile():
-    current_user = fjwt.current_user
     if not current_user.is_profile_completed:
         raise BadRequestError("The user has not completed his profile", "Complete your profile and try again")
     data = request.get_json()
@@ -125,12 +124,11 @@ def edit_profile():
 
 
 @profile_bp.route("/profile/edit/email", methods=["PUT"])
-@fjwt.jwt_required
+@jwt_required
 @validate_params({"email": str})
 def edit_email():
     data = request.get_json()
     new_email = data["email"].lower()
-    current_user = fjwt.current_user
     if current_user.email == new_email:
         raise BadRequestError("The new email is the same as the old one !", "Try again")
     current_user.email = new_email
@@ -146,18 +144,16 @@ def edit_email():
 
 
 @profile_bp.route("/profile/edit/password", methods=["PUT"])
-@fjwt.jwt_required
+@jwt_required
 @validate_params({"old_password": str, "new_password": str})
 def edit_password():
     data = request.get_json()
     old_password = data["old_password"]
     new_password = data["new_password"]
-    current_user = fjwt.current_user
     if not current_user.check_password(old_password):
         raise UnauthorizedError("Incorrect password", "Try again")
     current_user.password = hash_password(new_password)
     current_user.save()
-    # TODO: Send mail
     send_mail_text.delay(
         dest=current_user.email,
         subject="Password change notification",
@@ -168,12 +164,11 @@ def edit_password():
 
 
 @profile_bp.route("/profile/edit/geolocation", methods=["PUT"])
-@fjwt.jwt_required
+@jwt_required
 @validate_params({"ip": str}, {"lat": float, "lng": float})
 def edit_geolocation():
     data = request.get_json()
     ip = data["ip"]
-    current_user = fjwt.current_user
     try:
         lat = data["lat"]
         lng = data["lng"]
@@ -193,18 +188,16 @@ def edit_geolocation():
 
 
 @profile_bp.route("/profile/views", methods=["GET"])
-@fjwt.jwt_required
+@jwt_required
 def get_profile_views():
-    current_user = fjwt.current_user
     profile_views = current_user.get_views()
     profile_views = [v.to_dict() for v in profile_views]
     return SuccessOutput("views", profile_views)
 
 
 @profile_bp.route("/profile/view/<uid>", methods=["GET"])
-@fjwt.jwt_required
+@jwt_required
 def view_profile(uid):
-    current_user = fjwt.current_user
     try:
         u = get_user(uid)
     except NotFoundError:
@@ -218,9 +211,8 @@ def view_profile(uid):
 
 @profile_bp.route("/profile/report/<uid>", methods=["POST"])
 @validate_params({"reason": str}, {"details": str})
-@fjwt.jwt_required
+@jwt_required
 def report_profile(uid):
-    current_user = fjwt.current_user
     data = request.get_json()
     reason = data["reason"]
 
