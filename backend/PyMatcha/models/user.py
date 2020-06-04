@@ -215,6 +215,9 @@ class User(Model):
         returned_dict["reports"] = {"sent": [], "received": []}
         returned_dict["reports"]["sent"] = [r.to_dict() for r in self.get_reports_sent()]
         returned_dict["reports"]["received"] = [r.to_dict() for r in self.get_reports_received()]
+        returned_dict["likes"] = {"sent": [], "received": []}
+        returned_dict["likes"]["sent"] = [l.to_dict() for l in self.get_likes_sent()]
+        returned_dict["likes"]["received"] = [l.to_dict() for l in self.get_likes_received()]
         return returned_dict
 
     @classmethod
@@ -330,6 +333,48 @@ class User(Model):
             for r in reports:
                 reports_list.append(Report(r))
         return reports_list
+
+    def get_likes_received(self):
+        logging.debug("Getting all likes received for user {}".format(self.id))
+        with self.db.cursor() as c:
+            c.execute(
+                """
+                SELECT likes.id as id, likes.liked_id as liked_id, 
+                likes.liker_id as liker_id, likes.dt_liked as dt_liked,
+                likes.is_superlike as is_superlike
+                FROM users 
+                INNER JOIN likes on users.id = likes.liked_id 
+                WHERE users.id = CAST({} AS UNSIGNED)
+                """.format(
+                    self.id
+                )
+            )
+            likes = c.fetchall()
+            like_list = []
+            for l in likes:
+                like_list.append(Report(l))
+        return like_list
+
+    def get_likes_sent(self):
+        logging.debug("Getting all likes sent for user {}".format(self.id))
+        with self.db.cursor() as c:
+            c.execute(
+                """
+                SELECT likes.id as id, likes.liked_id as liked_id, 
+                likes.liker_id as liker_id, likes.dt_liked as dt_liked,
+                likes.is_superlike as is_superlike
+                FROM users 
+                INNER JOIN likes on users.id = likes.liker_id 
+                WHERE users.id = CAST({} AS UNSIGNED)
+                """.format(
+                    self.id
+                )
+            )
+            likes = c.fetchall()
+            like_list = []
+            for l in likes:
+                like_list.append(Report(l))
+        return like_list
 
 
 def get_user(uid: Any[int, str]) -> Optional[User]:
