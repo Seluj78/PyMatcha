@@ -23,11 +23,9 @@ import hashlib
 import logging
 from typing import Any
 from typing import Dict
-from typing import List
 from typing import Optional
 
 import Geohash
-import PyMatcha.models.user_image as user_image
 from PyMatcha.errors import ConflictError
 from PyMatcha.errors import NotFoundError
 from PyMatcha.models.report import Report
@@ -37,8 +35,6 @@ from PyMatcha.utils import create_user_table
 from PyMatcha.utils import hash_password
 from PyMatcha.utils.orm import Field
 from PyMatcha.utils.orm import Model
-
-UserImage = user_image.UserImage
 
 
 class User(Model):
@@ -223,26 +219,6 @@ class User(Model):
     @classmethod
     def create_table(cls):
         create_user_table(cls.db)
-
-    def get_images(self) -> List[UserImage]:
-        logging.debug("Getting all images for user {}".format(self.id))
-        with self.db.cursor() as c:
-            c.execute(
-                """
-                SELECT user_images.id as id, user_images.user_id as user_id, user_images.description as description, 
-                user_images.timestamp as timestamp, user_images.is_primary as is_primary
-                FROM users 
-                INNER JOIN user_images on users.id = user_images.user_id 
-                WHERE users.id = CAST({} AS UNSIGNED)
-                """.format(
-                    self.id
-                )
-            )
-            images = c.fetchall()
-            image_list = []
-            for image in images:
-                image_list.append(UserImage(image))
-        return image_list
 
     def get_jwt_info(self):
         return {
