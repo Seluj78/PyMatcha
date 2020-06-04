@@ -192,8 +192,8 @@ def auth_login():
     if not u.is_confirmed:
         current_app.logger.debug("/auth/login -> User is trying to login unconfirmed")
         raise UnauthorizedError("User needs to be confirmed first.", "Try again when you have confirmed your email")
-    access_token = fjwt.create_access_token(identity=u.get_base_info(), fresh=True)
-    refresh_token = fjwt.create_refresh_token(identity=u.get_base_info())
+    access_token = fjwt.create_access_token(identity=u.get_jwt_info(), fresh=True)
+    refresh_token = fjwt.create_refresh_token(identity=u.get_jwt_info())
     access_jti = fjwt.get_jti(access_token)
     refresh_jti = fjwt.get_jti(refresh_token)
 

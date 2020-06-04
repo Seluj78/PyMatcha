@@ -1,14 +1,19 @@
 import datetime
 
+import flask_jwt_extended as fjwt
 import PyMatcha.models.user as user
 from flask import Blueprint
 from flask import current_app
 from flask import jsonify
+from flask import request
 from PyMatcha import redis
 from PyMatcha.errors import NotFoundError
+from PyMatcha.models.report import Report
+from PyMatcha.models.view import View
 from PyMatcha.success import Success
 from PyMatcha.success import SuccessDeleted
 from PyMatcha.utils.decorators import debug_token_required
+from PyMatcha.utils.decorators import validate_params
 
 debug_bp = Blueprint("debug", __name__)
 
@@ -52,8 +57,26 @@ def delete_user(uid):
         return SuccessDeleted("User {} Deleted".format(uid))
 
 
+@debug_bp.route("/debug/views/<int:amount>", methods=["POST"])
+@debug_token_required
+@fjwt.jwt_required
+def create_views(amount):
+    current_user = fjwt.current_user
+    for i in range(amount):
+        View.create(profile_id=current_user.id, viewer_id=i)
+    return Success(f"Added {amount} views to user {current_user.id}")
+
+
+@debug_bp.route("/debug/views", methods=["DELETE"])
+@debug_token_required
+def delete_views():
+    View.drop_table()
+    View.create_table()
+    return "", 204
+
+
 @debug_bp.route("/debug/redis")
-# @debug_token_required
+@debug_token_required
 def debug_show_redis():
     ret = {"users": {}, "jtis": {}}
     for key in redis.scan_iter("user:*"):
@@ -63,3 +86,45 @@ def debug_show_redis():
         value = redis.get(str(key))
         ret["jtis"][key] = value
     return jsonify(ret), 200
+
+
+@debug_bp.route("/debug/reports", methods=["DELETE"])
+@debug_token_required
+def delete_reports():
+    Report.drop_table()
+    Report.create_table()
+    return "", 204
+
+
+@debug_bp.route("/debug/reports", methods=["GET"])
+@debug_token_required
+def debug_get_all_reports():
+    report_list = []
+    for r in Report.select_all():
+        report_list.append(r.to_dict())
+    return jsonify(report_list)
+
+
+@debug_bp.route("/debug/reports/<uid>", methods=["GET"])
+@debug_token_required
+def debug_get_user_reports(uid):
+    u = get_user(uid)
+    reports_received = [r.to_dict() for r in u.get_reports_received()]
+    reports_sent = [r.to_dict() for r in u.get_reports_sent()]
+    return jsonify({"reports_received": reports_received, "reports_sent": reports_sent}), 200
+
+
+DEBUG_CREATE_FAKE_REPORT = {"reporter_id": int, "reported_id": int, "reason": str, "details": str}
+
+
+@debug_bp.route("/debug/reports", methods=["POST"])
+@debug_token_required
+@validate_params(DEBUG_CREATE_FAKE_REPORT)
+def debug_create_report():
+    data = request.get_json()
+    reporter_id = data["reporter_id"]
+    reported_id = data["reported_id"]
+    reason = data["reason"]
+    details = data["details"]
+    Report.create(reported_id=reported_id, reporter_id=reporter_id, reason=reason, details=details)
+    return "", 204

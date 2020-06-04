@@ -18,35 +18,43 @@
 """
 from __future__ import annotations
 
+import datetime
 import logging
-from datetime import datetime
 
-from PyMatcha.utils import create_user_images_table
+from PyMatcha.utils import create_reports_table
 from PyMatcha.utils.orm import Field
 from PyMatcha.utils.orm import Model
 
 
-class UserImage(Model):
-    table_name = "user_images"
+class Report(Model):
+    table_name = "reports"
 
     id = Field(int, modifiable=False)
-    user_id = Field(int)
-    description = Field(str)
-    timestamp = Field(str)
-    is_primary = Field(bool)
+    reporter_id = Field(int)
+    reported_id = Field(int)
+    dt_reported = Field(datetime.datetime)
+    details = Field(str)
+    reason = Field(str)
+    status = Field(str)
 
     def before_init(self, data):
         pass
 
     @staticmethod
     def create(
-        user_id: int, description="", timestamp=datetime.timestamp(datetime.utcnow()), is_primary=False
-    ) -> UserImage:
-        new_image = UserImage(user_id=user_id, description=description, timestamp=str(timestamp), is_primary=is_primary)
-        new_image.save()
-        logging.debug("Creating new user image")
-        return new_image
+        reported_id: int,
+        reporter_id: int,
+        reason: str,
+        details: str = None,
+        dt_reported: datetime.datetime = datetime.datetime.utcnow(),
+    ) -> Report:
+        new_report = Report(
+            reported_id=reported_id, reporter_id=reporter_id, reason=reason, details=details, dt_reported=dt_reported
+        )
+        new_report.save()
+        logging.debug("Creating new report")
+        return new_report
 
     @classmethod
     def create_table(cls):
-        create_user_images_table(cls.db)
+        create_reports_table(cls.db)

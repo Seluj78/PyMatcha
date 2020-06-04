@@ -267,3 +267,10 @@ class Model(object):
         with cls.db.cursor() as c:
             c.execute("""DROP TABLE {}""".format(cls.table_name))
             cls.db.commit()
+
+    def to_dict(self):
+        ret_dict = dict()
+        for field_name, field in self.fields.items():
+            field_value = field.value
+            ret_dict[field_name] = field_value
+        return ret_dict

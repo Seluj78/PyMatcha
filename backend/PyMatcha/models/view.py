@@ -18,35 +18,32 @@
 """
 from __future__ import annotations
 
+import datetime
 import logging
-from datetime import datetime
 
-from PyMatcha.utils import create_user_images_table
+from PyMatcha.utils import create_views_table
 from PyMatcha.utils.orm import Field
 from PyMatcha.utils.orm import Model
 
 
-class UserImage(Model):
-    table_name = "user_images"
+class View(Model):
+    table_name = "views"
 
     id = Field(int, modifiable=False)
-    user_id = Field(int)
-    description = Field(str)
-    timestamp = Field(str)
-    is_primary = Field(bool)
+    profile_id = Field(int)
+    viewer_id = Field(int)
+    dt_seen = Field(datetime.datetime)
 
     def before_init(self, data):
         pass
 
     @staticmethod
-    def create(
-        user_id: int, description="", timestamp=datetime.timestamp(datetime.utcnow()), is_primary=False
-    ) -> UserImage:
-        new_image = UserImage(user_id=user_id, description=description, timestamp=str(timestamp), is_primary=is_primary)
-        new_image.save()
-        logging.debug("Creating new user image")
-        return new_image
+    def create(profile_id: int, viewer_id: int, dt_seen: datetime.datetime = datetime.datetime.utcnow()) -> View:
+        new_view = View(profile_id=profile_id, viewer_id=viewer_id, dt_seen=dt_seen)
+        new_view.save()
+        logging.debug("Creating new view")
+        return new_view
 
     @classmethod
     def create_table(cls):
-        create_user_images_table(cls.db)
+        create_views_table(cls.db)
