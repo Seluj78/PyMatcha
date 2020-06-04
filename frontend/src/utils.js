@@ -10,11 +10,17 @@ const date2Html = d => {
 	return `${year}-${month}-${date}`;
 }
 
-const logOut = () => {
-	localStorage.removeItem("refresh_token");
-	sessionStorage.removeItem("access_token");
-	console.log("!! Expired token !!");
-	window.location.reload();
+const delete_refresh = async () => {
+	const token = getRefreshToken();
+	const options = {
+		method: "DELETE",
+		uri: `${API_URL}/auth/refresh_revoke`,
+		headers: {
+			"Authorization": `Bearer ${token}`
+		},
+		json: true
+	};
+	return request(options);
 }
 
 const refreshAcess = async () => {
@@ -108,6 +114,18 @@ const effectDuration = time => ({
 	transition: `${time}s`,
 })
 
+const logOut = async history => {
+	console.log("first call")
+	try {
+		await apiCall({ method: "DELETE", uri: "/auth/access_revoke" })
+		await delete_refresh()
+	} catch (e) { }
+	localStorage.removeItem("refresh_token");
+	sessionStorage.removeItem("access_token");
+	localStorage.removeItem("onboarding");
+	history.push('/login');
+}
+
 export {
 	getAccessToken,
 	getRefreshToken,
@@ -118,4 +136,6 @@ export {
 	apiCall,
 	date2Html,
 	discard,
+	delete_refresh,
+	logOut
 }
