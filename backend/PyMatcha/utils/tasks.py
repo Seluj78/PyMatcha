@@ -9,6 +9,30 @@ from PyMatcha.models.user import User
 @celery.on_after_configure.connect
 def setup_periodic_tasks(sender, **kwargs):
     sender.add_periodic_task(60, update_offline_users.s(), name="Update online users every minute")
+    sender.add_periodic_task(10, update_popularity_scores.s(), name="Update popularity scores every minute")
+
+
+@celery.task
+def update_popularity_scores():
+    # TODO: If user is Jules or Guilhem: +100 score
+
+    for user in User.select_all():
+        likes_received = len(user.get_likes_received())
+        reports_received = len(user.get_reports_received())
+        views = len(user.get_views())
+
+        # TODO: Add matches
+        # TODO: Add messages
+
+        points = 30
+        points += likes_received * 2
+        # TODO: Superlike received = 5 pts
+        points -= reports_received * 10
+        points += views
+        # TODO: remove 5 pts per week of inactivity
+        user.heat_score = points
+        user.save()
+        return f"Updated heat score for user {user.id}: {user.heat_score}."
 
 
 @celery.task
