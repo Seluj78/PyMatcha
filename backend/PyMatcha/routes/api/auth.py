@@ -47,7 +47,6 @@ from PyMatcha.utils.errors import ConflictError
 from PyMatcha.utils.errors import NotFoundError
 from PyMatcha.utils.errors import UnauthorizedError
 from PyMatcha.utils.mail import send_mail_html
-from PyMatcha.utils.mail import send_mail_text
 from PyMatcha.utils.success import Success
 from PyMatcha.utils.success import SuccessOutput
 from PyMatcha.utils.success import SuccessOutputMessage
@@ -132,12 +131,10 @@ def forgot_password():
         pass
     else:
         token = generate_confirmation_token(email=data["email"], token_type="reset")
+        link = os.getenv("APP_URL") + "/auth/password/forgot/" + token
+        rendered_html = render_template("password_reset.html", link=link)
         current_app.logger.debug("/auth/password/forgot -> Sending worker request to send email")
-        send_mail_text.delay(
-            dest=data["email"],
-            subject="Password reset for PyMatcha",
-            body=os.getenv("APP_URL") + "/reset_password?token=" + token,
-        )
+        send_mail_html.delay(dest=data["email"], subject="Reset your password on PyMatcha", html=rendered_html)
     current_app.logger.debug(
         "/auth/password/forgot -> Password reset mail sent successfully for user {}".format(data["email"])
     )
@@ -254,10 +251,8 @@ def request_new_email_conf():
         else:
             current_app.logger.debug("/auth/confirm/new -> User found, sending new confirmation email")
             token = generate_confirmation_token(email=email, token_type="confirm")
-            send_mail_text.delay(
-                dest=data["email"],
-                subject="Confirm your email for PyMatcha",
-                body=os.getenv("APP_URL") + "/auth/confirm/" + token,
-            )
+            link = os.getenv("APP_URL") + "/auth/confirm/" + token
+            rendered_html = render_template("confirm_email.html", link=link)
+            send_mail_html.delay(dest=data["email"], subject="Confirm your email on PyMatcha", html=rendered_html)
     current_app.logger.debug("/auth/confirm/new -> New confirmation email sent if user exists in database")
     return Success("New confirmation email sent if user exists in database")
