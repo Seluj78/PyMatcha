@@ -22,6 +22,7 @@ import os
 from flask import Blueprint
 from flask import current_app
 from flask import redirect
+from flask import render_template
 from flask import request
 from flask_jwt_extended import create_access_token
 from flask_jwt_extended import create_refresh_token
@@ -33,12 +34,6 @@ from flask_jwt_extended import jwt_required
 from itsdangerous import BadSignature
 from itsdangerous import SignatureExpired
 from PyMatcha import ACCESS_TOKEN_EXPIRES
-from flask import Blueprint, request, redirect, render_template
-
-from itsdangerous import SignatureExpired, BadSignature
-
-import flask_jwt_extended as fjwt
-
 from PyMatcha import redis
 from PyMatcha import REFRESH_TOKEN_EXPIRES
 from PyMatcha.models.user import get_user
@@ -51,18 +46,11 @@ from PyMatcha.utils.errors import BadRequestError
 from PyMatcha.utils.errors import ConflictError
 from PyMatcha.utils.errors import NotFoundError
 from PyMatcha.utils.errors import UnauthorizedError
+from PyMatcha.utils.mail import send_mail_html
 from PyMatcha.utils.mail import send_mail_text
 from PyMatcha.utils.success import Success
 from PyMatcha.utils.success import SuccessOutput
 from PyMatcha.utils.success import SuccessOutputMessage
-
-import PyMatcha.models.user as user
-from PyMatcha.errors import ConflictError, NotFoundError, BadRequestError, UnauthorizedError
-from PyMatcha.success import SuccessOutputMessage, Success, SuccessOutput
-from PyMatcha.utils.confirm_token import generate_confirmation_token, confirm_token
-from PyMatcha.utils.mail import send_mail_html, send_mail_text
-from PyMatcha.utils.decorators import validate_required_params
-from PyMatcha.utils import hash_password
 
 
 REQUIRED_KEYS_USER_CREATION = {"username": str, "email": str, "password": str, "first_name": str, "last_name": str}
