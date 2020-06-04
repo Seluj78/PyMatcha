@@ -3,8 +3,8 @@ from functools import wraps
 from typing import Optional
 
 from flask import request
-from PyMatcha.errors import BadRequestError
-from PyMatcha.errors import UnauthorizedError
+from PyMatcha.utils.errors import BadRequestError
+from PyMatcha.utils.errors import UnauthorizedError
 from werkzeug.exceptions import BadRequest
 
 

@@ -55,25 +55,6 @@ def _create_user_table(db):
         c.execute(ENABLE_SQL_NOTES)
 
 
-def _create_user_images_table(db):
-    with db.cursor() as c:
-        logging.info("Creating table user_images.")
-        c.execute(DISABLE_SQL_NOTES)
-        c.execute(
-            """
-        CREATE TABLE IF NOT EXISTS user_images
-        (
-        id            INT auto_increment PRIMARY KEY,
-        user_id       INT NOT NULL,
-        description   LONGTEXT,
-        timestamp     TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-        is_primary    BOOLEAN NOT NULL
-        )
-        """
-        )
-        c.execute(ENABLE_SQL_NOTES)
-
-
 def _create_tags_table(db):
     with db.cursor() as c:
         logging.info("Creating table tags.")
@@ -130,9 +111,28 @@ def _create_reports_table(db):
         c.execute(ENABLE_SQL_NOTES)
 
 
+def _create_likes_table(db):
+    with db.cursor() as c:
+        logging.info("Creating table likes.")
+        c.execute(DISABLE_SQL_NOTES)
+        c.execute(
+            """
+        CREATE TABLE IF NOT EXISTS likes
+        (
+        id            INT auto_increment PRIMARY KEY,
+        liked_id      INT NOT NULL,
+        liker_id      INT NOT NULL,
+        dt_liked      DATETIME DEFAULT NOW(),
+        is_superlike  BOOLEAN DEFAULT FALSE
+        )
+        """
+        )
+        c.execute(ENABLE_SQL_NOTES)
+
+
 def create_tables(db):
     _create_user_table(db)
-    _create_user_images_table(db)
     _create_tags_table(db)
     _create_views_table(db)
     _create_reports_table(db)
+    _create_likes_table(db)

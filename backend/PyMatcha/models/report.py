@@ -32,7 +32,7 @@ class Report(Model):
     id = Field(int, modifiable=False)
     reporter_id = Field(int)
     reported_id = Field(int)
-    dt_reported = Field(datetime.datetime)
+    dt_reported = Field(datetime.datetime, fmt="%Y-%m-%d %H:%M:%S")
     details = Field(str)
     reason = Field(str)
     status = Field(str)

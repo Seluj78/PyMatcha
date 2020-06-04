@@ -1,11 +1,9 @@
 import datetime
 import logging
 
-import PyMatcha.models.user as user_module
 from PyMatcha import celery
 from PyMatcha import redis
-
-User = user_module.User
+from PyMatcha.models.user import User
 
 
 @celery.on_after_configure.connect

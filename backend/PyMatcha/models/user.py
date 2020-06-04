@@ -23,22 +23,18 @@ import hashlib
 import logging
 from typing import Any
 from typing import Dict
-from typing import List
 from typing import Optional
 
 import Geohash
-import PyMatcha.models.user_image as user_image
-from PyMatcha.errors import ConflictError
-from PyMatcha.errors import NotFoundError
 from PyMatcha.models.report import Report
 from PyMatcha.models.tag import Tag
 from PyMatcha.models.view import View
 from PyMatcha.utils import create_user_table
 from PyMatcha.utils import hash_password
+from PyMatcha.utils.errors import ConflictError
+from PyMatcha.utils.errors import NotFoundError
 from PyMatcha.utils.orm import Field
 from PyMatcha.utils.orm import Model
-
-UserImage = user_image.UserImage
 
 
 class User(Model):
@@ -170,7 +166,7 @@ class User(Model):
         except ValueError:
             pass
         else:
-            logging.error("Email {} taken".format(email))
+            logging.warning("Email {} taken".format(email))
             raise ConflictError("Email {} taken".format(email), "Use another email")
 
         # Check username availability
@@ -215,31 +211,16 @@ class User(Model):
         returned_dict["reports"] = {"sent": [], "received": []}
         returned_dict["reports"]["sent"] = [r.to_dict() for r in self.get_reports_sent()]
         returned_dict["reports"]["received"] = [r.to_dict() for r in self.get_reports_received()]
+        returned_dict["likes"] = {"sent": [], "received": []}
+        returned_dict["likes"]["sent"] = [l.to_dict() for l in self.get_likes_sent()]
+        returned_dict["likes"]["received"] = [l.to_dict() for l in self.get_likes_received()]
+        returned_dict.pop("password")
+        returned_dict.pop("previous_reset_token")
         return returned_dict
 
     @classmethod
     def create_table(cls):
         create_user_table(cls.db)
-
-    def get_images(self) -> List[UserImage]:
-        logging.debug("Getting all images for user {}".format(self.id))
-        with self.db.cursor() as c:
-            c.execute(
-                """
-                SELECT user_images.id as id, user_images.user_id as user_id, user_images.description as description, 
-                user_images.timestamp as timestamp, user_images.is_primary as is_primary
-                FROM users 
-                INNER JOIN user_images on users.id = user_images.user_id 
-                WHERE users.id = CAST({} AS UNSIGNED)
-                """.format(
-                    self.id
-                )
-            )
-            images = c.fetchall()
-            image_list = []
-            for image in images:
-                image_list.append(UserImage(image))
-        return image_list
 
     def get_jwt_info(self):
         return {
@@ -331,6 +312,65 @@ class User(Model):
                 reports_list.append(Report(r))
         return reports_list
 
+    def get_likes_received(self):
+        logging.debug("Getting all likes received for user {}".format(self.id))
+        with self.db.cursor() as c:
+            c.execute(
+                """
+                SELECT likes.id as id, likes.liked_id as liked_id, 
+                likes.liker_id as liker_id, likes.dt_liked as dt_liked,
+                likes.is_superlike as is_superlike
+                FROM users 
+                INNER JOIN likes on users.id = likes.liked_id 
+                WHERE users.id = CAST({} AS UNSIGNED)
+                """.format(
+                    self.id
+                )
+            )
+            likes = c.fetchall()
+            like_list = []
+            for l in likes:
+                like_list.append(Report(l))
+        return like_list
+
+    def get_likes_sent(self):
+        logging.debug("Getting all likes sent for user {}".format(self.id))
+        with self.db.cursor() as c:
+            c.execute(
+                """
+                SELECT likes.id as id, likes.liked_id as liked_id, 
+                likes.liker_id as liker_id, likes.dt_liked as dt_liked,
+                likes.is_superlike as is_superlike
+                FROM users 
+                INNER JOIN likes on users.id = likes.liker_id 
+                WHERE users.id = CAST({} AS UNSIGNED)
+                """.format(
+                    self.id
+                )
+            )
+            likes = c.fetchall()
+            like_list = []
+            for l in likes:
+                like_list.append(Report(l))
+        return like_list
+
+    def already_likes(self, liked_id: int) -> bool:
+        with self.db.cursor() as c:
+            c.execute(
+                """
+                SELECT EXISTS(
+                  SELECT * FROM likes WHERE
+                    liker_id = CAST({} AS UNSIGNED) and 
+                    liked_id = CAST({} AS UNSIGNED)
+                )
+                """.format(
+                    self.id, liked_id
+                )
+            )
+            result = c.fetchone()
+            value = next(iter(result.values()))
+            return bool(value)
+
 
 def get_user(uid: Any[int, str]) -> Optional[User]:
     not_found = 0
@@ -360,7 +400,7 @@ def get_user(uid: Any[int, str]) -> Optional[User]:
         f_user = user
     # If none of those worked, throw an error
     if not_found == 3:
-        logging.error("User {} not found.".format(uid))
+        logging.warning("User {} not found.".format(uid))
         raise NotFoundError("User {} not found.".format(uid), "Try again with another uid")
     logging.debug("Found user {} from {}".format(f_user.id, uid))
     return f_user

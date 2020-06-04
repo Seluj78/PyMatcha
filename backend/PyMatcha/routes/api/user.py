@@ -16,22 +16,21 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 """
-import flask_jwt_extended as fjwt
-import PyMatcha.models.user as user
 from flask import Blueprint
 from flask import current_app
 from flask import jsonify
+from flask_jwt_extended import jwt_required
 from PyMatcha import redis
-from PyMatcha.errors import NotFoundError
+from PyMatcha.models.user import get_user
+from PyMatcha.models.user import User
+from PyMatcha.utils.errors import NotFoundError
 
-User = user.User
-get_user = user.get_user
 
 user_bp = Blueprint("user", __name__)
 
 
 @user_bp.route("/users/", methods=["GET"])
-@fjwt.jwt_required
+@jwt_required
 def get_all_users():
     current_app.logger.info("/users/ -> Call")
     user_list = []
@@ -42,7 +41,7 @@ def get_all_users():
 
 
 @user_bp.route("/users/<uid>", methods=["GET"])
-@fjwt.jwt_required
+@jwt_required
 def get_one_user(uid):
     current_app.logger.info("/users/{} -> Call".format(uid))
     try:
@@ -55,7 +54,7 @@ def get_one_user(uid):
 
 
 @user_bp.route("/users/online", methods=["GET"])
-@fjwt.jwt_required
+@jwt_required
 def get_all_online_users():
     user_id = None  # noqa
     date_lastseen = None  # noqa

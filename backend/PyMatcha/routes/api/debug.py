@@ -1,24 +1,23 @@
 import datetime
 
-import flask_jwt_extended as fjwt
-import PyMatcha.models.user as user
 from flask import Blueprint
 from flask import current_app
 from flask import jsonify
 from flask import request
+from flask_jwt_extended import current_user
+from flask_jwt_extended import jwt_required
 from PyMatcha import redis
-from PyMatcha.errors import NotFoundError
+from PyMatcha.models.like import Like
 from PyMatcha.models.report import Report
+from PyMatcha.models.user import get_user
 from PyMatcha.models.view import View
-from PyMatcha.success import Success
-from PyMatcha.success import SuccessDeleted
 from PyMatcha.utils.decorators import debug_token_required
 from PyMatcha.utils.decorators import validate_params
+from PyMatcha.utils.errors import NotFoundError
+from PyMatcha.utils.success import Success
+from PyMatcha.utils.success import SuccessDeleted
 
 debug_bp = Blueprint("debug", __name__)
-
-User = user.User
-get_user = user.get_user
 
 
 @debug_bp.route("/debug/users/confirm/<uid>", methods=["POST"])
@@ -59,9 +58,8 @@ def delete_user(uid):
 
 @debug_bp.route("/debug/views/<int:amount>", methods=["POST"])
 @debug_token_required
-@fjwt.jwt_required
+@jwt_required
 def create_views(amount):
-    current_user = fjwt.current_user
     for i in range(amount):
         View.create(profile_id=current_user.id, viewer_id=i)
     return Success(f"Added {amount} views to user {current_user.id}")
@@ -127,4 +125,12 @@ def debug_create_report():
     reason = data["reason"]
     details = data["details"]
     Report.create(reported_id=reported_id, reporter_id=reporter_id, reason=reason, details=details)
+    return "", 204
+
+
+@debug_bp.route("/debug/likes", methods=["DELETE"])
+@debug_token_required
+def delete_likes():
+    Like.drop_table()
+    Like.create_table()
     return "", 204

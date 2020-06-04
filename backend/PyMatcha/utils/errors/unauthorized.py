@@ -16,9 +16,8 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 """
-
 from PyMatcha import application
-from PyMatcha.errors.template import generate_error_json
+from PyMatcha.utils.errors.template import generate_error_json
 
 
 class UnauthorizedError(Exception):

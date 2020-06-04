@@ -98,7 +98,7 @@ logging.debug("Configuring JWT expired token handler callback")
 
 @jwt.expired_token_loader
 def expired_token_callback(expired_token):
-    logging.error("Token {} expired".format(expired_token))
+    logging.warning("Token {} expired".format(expired_token))
     resp = {
         "code": 401,
         "error": {
@@ -156,14 +156,13 @@ redis = Redis(
     decode_responses=True,
 )
 
-import PyMatcha.models.user as user_module
+from PyMatcha.models.user import get_user
 
-get_user = user_module.get_user
 
 logging.debug("Configuring JWT user callback loader")
 
 
-from PyMatcha.errors import NotFoundError
+from PyMatcha.utils.errors import NotFoundError
 
 
 @jwt.user_loader_callback_loader
@@ -190,12 +189,14 @@ from PyMatcha.routes.api.ping_pong import ping_pong_bp
 from PyMatcha.routes.api.user import user_bp
 from PyMatcha.routes.api.auth import auth_bp
 from PyMatcha.routes.api.profile import profile_bp
+from PyMatcha.routes.api.like import like_bp
 
 logging.debug("Registering Flask blueprints")
 application.register_blueprint(ping_pong_bp)
 application.register_blueprint(user_bp)
 application.register_blueprint(auth_bp)
 application.register_blueprint(profile_bp)
+application.register_blueprint(like_bp)
 
 if application.debug:
     logging.debug("Registering debug route")

@@ -16,31 +16,32 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 """
-
-from typing import Any
-
-from flask import jsonify
+from PyMatcha import application
+from PyMatcha.utils.errors.template import generate_error_json
 
 
-def generate_error_json(error: Any, status_code: int) -> dict:
+class ConflictError(Exception):
     """
-    This function is used to generate a json of the error passed
-
-    :param error: The error containing the message and solution
-    :param status_code: The status code of the error.
-    :return: Returns a json containing all the info
+    This is the ConflictError class for the Exception.
     """
-    success = False
-    json = {
-        "success": success,
-        "error": {
-            "type": error.__class__.__name__,
-            "name": error.name,
-            "message": error.msg,
-            "solution": error.solution,
-        },
-        "code": status_code,
-    }
-    resp = jsonify(json)
-    resp.status_code = status_code
-    return resp
+
+    def __init__(self, msg: str, solution: str) -> None:
+        self.name = "Conflict Error"
+        self.msg = msg
+        self.solution = solution
+        self.status_code = 409
+
+    pass
+
+
+@application.errorhandler(ConflictError)  # type: ignore
+def generate_conflict(error: ConflictError) -> dict:
+    """
+    This is the 409 response creator. It will create a 409 response along with
+    a custom message and the 409 code
+
+    :param error: The error body
+    :return: Returns the response formatted
+    """
+
+    return generate_error_json(error, 409)

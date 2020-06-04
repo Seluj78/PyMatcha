@@ -6,12 +6,10 @@ import string
 import Geohash
 import lorem
 import names
-import PyMatcha.models.user as user_module
-from PyMatcha.errors import ConflictError
 from PyMatcha.models.tag import Tag
-
-User = user_module.User
-get_user = user_module.get_user
+from PyMatcha.models.user import get_user
+from PyMatcha.models.user import User
+from PyMatcha.utils.errors import ConflictError
 
 
 def gen_datetime(min_year: int = 1900, max_year: int = datetime.datetime.now().year) -> datetime.datetime:

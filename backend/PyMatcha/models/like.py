@@ -18,35 +18,38 @@
 """
 from __future__ import annotations
 
+import datetime
 import logging
-from datetime import datetime
 
-from PyMatcha.utils import create_user_images_table
+from PyMatcha.utils import create_likes_table
 from PyMatcha.utils.orm import Field
 from PyMatcha.utils.orm import Model
 
 
-class UserImage(Model):
-    table_name = "user_images"
+class Like(Model):
+    table_name = "likes"
 
     id = Field(int, modifiable=False)
-    user_id = Field(int)
-    description = Field(str)
-    timestamp = Field(str)
-    is_primary = Field(bool)
+    liker_id = Field(int)
+    liked_id = Field(int)
+    dt_liked = Field(datetime.datetime, fmt="%Y-%m-%d %H:%M:%S")
+    is_superlike = Field(bool)
 
     def before_init(self, data):
         pass
 
     @staticmethod
     def create(
-        user_id: int, description="", timestamp=datetime.timestamp(datetime.utcnow()), is_primary=False
-    ) -> UserImage:
-        new_image = UserImage(user_id=user_id, description=description, timestamp=str(timestamp), is_primary=is_primary)
-        new_image.save()
-        logging.debug("Creating new user image")
-        return new_image
+        liker_id: int,
+        liked_id: int,
+        is_superlike: str = False,
+        dt_liked: datetime.datetime = datetime.datetime.utcnow(),
+    ) -> Like:
+        new_like = Like(liker_id=liker_id, liked_id=liked_id, is_superlike=is_superlike, dt_liked=dt_liked)
+        new_like.save()
+        logging.debug("Creating new like")
+        return new_like
 
     @classmethod
     def create_table(cls):
-        create_user_images_table(cls.db)
+        create_likes_table(cls.db)

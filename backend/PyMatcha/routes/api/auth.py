@@ -19,32 +19,37 @@
 import datetime
 import os
 
-import flask_jwt_extended as fjwt
-import PyMatcha.models.user as user
 from flask import Blueprint
 from flask import current_app
 from flask import redirect
 from flask import request
+from flask_jwt_extended import create_access_token
+from flask_jwt_extended import create_refresh_token
+from flask_jwt_extended import get_jti
+from flask_jwt_extended import get_jwt_identity
+from flask_jwt_extended import get_raw_jwt
+from flask_jwt_extended import jwt_refresh_token_required
+from flask_jwt_extended import jwt_required
 from itsdangerous import BadSignature
 from itsdangerous import SignatureExpired
 from PyMatcha import ACCESS_TOKEN_EXPIRES
 from PyMatcha import redis
 from PyMatcha import REFRESH_TOKEN_EXPIRES
-from PyMatcha.errors import BadRequestError
-from PyMatcha.errors import ConflictError
-from PyMatcha.errors import NotFoundError
-from PyMatcha.errors import UnauthorizedError
-from PyMatcha.success import Success
-from PyMatcha.success import SuccessOutput
-from PyMatcha.success import SuccessOutputMessage
+from PyMatcha.models.user import get_user
+from PyMatcha.models.user import User
 from PyMatcha.utils import hash_password
 from PyMatcha.utils.confirm_token import confirm_token
 from PyMatcha.utils.confirm_token import generate_confirmation_token
 from PyMatcha.utils.decorators import validate_params
+from PyMatcha.utils.errors import BadRequestError
+from PyMatcha.utils.errors import ConflictError
+from PyMatcha.utils.errors import NotFoundError
+from PyMatcha.utils.errors import UnauthorizedError
 from PyMatcha.utils.mail import send_mail_text
+from PyMatcha.utils.success import Success
+from PyMatcha.utils.success import SuccessOutput
+from PyMatcha.utils.success import SuccessOutputMessage
 
-User = user.User
-get_user = user.get_user
 
 REQUIRED_KEYS_USER_CREATION = {"username": str, "email": str, "password": str, "first_name": str, "last_name": str}
 REQUIRED_KEYS_PASSWORD_FORGOT = {"email": str}
@@ -71,7 +76,7 @@ def api_create_user():
             last_name=data["last_name"],
         )
     except ConflictError as e:
-        current_app.logger.error("Conflict error on user register: {}".format(e))
+        current_app.logger.warning("Conflict error on user register: {}".format(e))
         raise e
     else:
         token = generate_confirmation_token(email=data["email"], token_type="confirm")
@@ -192,10 +197,10 @@ def auth_login():
     if not u.is_confirmed:
         current_app.logger.debug("/auth/login -> User is trying to login unconfirmed")
         raise UnauthorizedError("User needs to be confirmed first.", "Try again when you have confirmed your email")
-    access_token = fjwt.create_access_token(identity=u.get_jwt_info(), fresh=True)
-    refresh_token = fjwt.create_refresh_token(identity=u.get_jwt_info())
-    access_jti = fjwt.get_jti(access_token)
-    refresh_jti = fjwt.get_jti(refresh_token)
+    access_token = create_access_token(identity=u.get_jwt_info(), fresh=True)
+    refresh_token = create_refresh_token(identity=u.get_jwt_info())
+    access_jti = get_jti(access_token)
+    refresh_jti = get_jti(refresh_token)
 
     redis.set("jti:" + access_jti, "false", ACCESS_TOKEN_EXPIRES * 1.2)
     redis.set("jti:" + refresh_jti, "false", REFRESH_TOKEN_EXPIRES * 1.2)
@@ -207,27 +212,27 @@ def auth_login():
 
 
 @auth_bp.route("/auth/refresh", methods=["POST"])
-@fjwt.jwt_refresh_token_required
+@jwt_refresh_token_required
 def refresh():
-    current_user = fjwt.get_jwt_identity()
-    access_token = fjwt.create_access_token(identity=current_user)
-    access_jti = fjwt.get_jti(encoded_token=access_token)
+    current_user = get_jwt_identity()
+    access_token = create_access_token(identity=current_user)
+    access_jti = get_jti(encoded_token=access_token)
     redis.set("jti:" + access_jti, "false", ACCESS_TOKEN_EXPIRES * 1.2)
     return SuccessOutput("access_token", access_token)
 
 
 @auth_bp.route("/auth/access_revoke", methods=["DELETE"])
-@fjwt.jwt_required
+@jwt_required
 def logout():
-    jti = fjwt.get_raw_jwt()["jti"]
+    jti = get_raw_jwt()["jti"]
     redis.set("jti:" + jti, "true", ACCESS_TOKEN_EXPIRES * 1.2)
     return Success("Access token revoked")
 
 
 @auth_bp.route("/auth/refresh_revoke", methods=["DELETE"])
-@fjwt.jwt_refresh_token_required
+@jwt_refresh_token_required
 def logout2():
-    jti = fjwt.get_raw_jwt()["jti"]
+    jti = get_raw_jwt()["jti"]
     redis.set("jti:" + jti, "true", REFRESH_TOKEN_EXPIRES * 1.2)
     return Success("Refresh token revoked")
 
