@@ -83,7 +83,7 @@ def api_create_user():
     else:
         token = generate_confirmation_token(email=data["email"], token_type="confirm")
         link = os.getenv("APP_URL") + "/auth/confirm/" + token
-        rendered_html = render_template("confirm_email.html.jinja2", link=link)
+        rendered_html = render_template("confirm_email.html", link=link)
         send_mail_html.delay(dest=data["email"], subject="Confirm your email on PyMatcha", html=rendered_html)
         return SuccessOutputMessage("email", new_user.email, "New user successfully created.")
 
