@@ -1,21 +1,28 @@
-Flask
-gunicorn
+Flask==1.1.1
+gunicorn==20.0.4
 
-flask-cors
+flask-cors==3.0.8
 
-python-dotenv
+python-dotenv==0.11.0
 
-Geohash
-python-geohash
+Geohash==1.0
+python-geohash==0.8.5
 
-pymysql
+pymysql==0.9.3
 
-Flask-Mail
+Flask-Mail==0.9.1
 
-celery
-redis
+celery==4.4.0
+redis==3.4.1
 
-itsdangerous
-cryptography
+itsdangerous==1.1.0
+cryptography==2.8
 
-flask_jwt_extended
+flask_jwt_extended==3.24.1
+
+flake8==3.7.9
+black==19.10b0
+pre-commit==2.1.0
+
+names==0.3.0
+lorem==0.1.1

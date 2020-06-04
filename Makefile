@@ -74,7 +74,7 @@ ifdef TRAVIS
 else
 	( \
 		source $(VENV)/bin/activate && \
-		$(PIP) install -r $(BACKEND)/requirements-dev.txt && \
+		$(PIP) install -r $(BACKEND)/requirements.txt && \
 		flake8 backend/ && \
 		black --check backend/ \
 	)
@@ -88,7 +88,7 @@ else
 	( \
 		test -d frontend/build && \
 		source $(VENV)/bin/activate && \
-		$(PIP) install -r $(BACKEND)/requirements-dev.txt && \
+		$(PIP) install -r $(BACKEND)/requirements.txt && \
 		pytest backend/ \
 	)
 endif
