@@ -240,4 +240,4 @@ def no_jwt_callback(error_message):
 
 # import tasks here to be registered by celery
 
-import PyMatcha.utils.user_online_management  # noqa
+import PyMatcha.utils.tasks  # noqa

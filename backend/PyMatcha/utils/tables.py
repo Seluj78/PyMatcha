@@ -41,7 +41,7 @@ def _create_user_table(db):
         orientation          ENUM('heterosexual', 'homosexual', 'bisexual', 'other'),
         birthdate            DATE DEFAULT NULL,
         geohash              VARCHAR(256) DEFAULT NULL,
-        heat_score           INT DEFAULT (0),
+        heat_score           INT DEFAULT NULL,
         date_joined          DATETIME DEFAULT NOW(),
         date_lastseen        DATETIME DEFAULT NOW(),
         previous_reset_token VARCHAR(256),
