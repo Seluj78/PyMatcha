@@ -26,4 +26,4 @@ pre-commit==2.4.0
 
 names==0.3.0
 lorem==0.1.1
-future
+future==0.18.2
