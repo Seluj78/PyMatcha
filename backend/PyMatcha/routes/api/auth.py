@@ -20,7 +20,6 @@ import datetime
 import os
 
 import flask_jwt_extended as fjwt
-import PyMatcha.models.user as user
 from flask import Blueprint
 from flask import current_app
 from flask import redirect
@@ -30,6 +29,8 @@ from itsdangerous import SignatureExpired
 from PyMatcha import ACCESS_TOKEN_EXPIRES
 from PyMatcha import redis
 from PyMatcha import REFRESH_TOKEN_EXPIRES
+from PyMatcha.models.user import get_user
+from PyMatcha.models.user import User
 from PyMatcha.utils import hash_password
 from PyMatcha.utils.confirm_token import confirm_token
 from PyMatcha.utils.confirm_token import generate_confirmation_token
@@ -43,8 +44,6 @@ from PyMatcha.utils.success import Success
 from PyMatcha.utils.success import SuccessOutput
 from PyMatcha.utils.success import SuccessOutputMessage
 
-User = user.User
-get_user = user.get_user
 
 REQUIRED_KEYS_USER_CREATION = {"username": str, "email": str, "password": str, "first_name": str, "last_name": str}
 REQUIRED_KEYS_PASSWORD_FORGOT = {"email": str}

@@ -156,9 +156,8 @@ redis = Redis(
     decode_responses=True,
 )
 
-import PyMatcha.models.user as user_module
+from PyMatcha.models.user import get_user
 
-get_user = user_module.get_user
 
 logging.debug("Configuring JWT user callback loader")
 

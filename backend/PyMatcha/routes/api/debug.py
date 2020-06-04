@@ -1,13 +1,13 @@
 import datetime
 
 import flask_jwt_extended as fjwt
-import PyMatcha.models.user as user
 from flask import Blueprint
 from flask import current_app
 from flask import jsonify
 from flask import request
 from PyMatcha import redis
 from PyMatcha.models.report import Report
+from PyMatcha.models.user import get_user
 from PyMatcha.models.view import View
 from PyMatcha.utils.decorators import debug_token_required
 from PyMatcha.utils.decorators import validate_params
@@ -16,9 +16,6 @@ from PyMatcha.utils.success import Success
 from PyMatcha.utils.success import SuccessDeleted
 
 debug_bp = Blueprint("debug", __name__)
-
-User = user.User
-get_user = user.get_user
 
 
 @debug_bp.route("/debug/users/confirm/<uid>", methods=["POST"])

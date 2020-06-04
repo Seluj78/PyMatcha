@@ -21,12 +21,12 @@ import os
 
 import flask_jwt_extended as fjwt
 import Geohash
-import PyMatcha.models.user as user
 from flask import Blueprint
 from flask import request
 from ip2geotools.databases.noncommercial import DbIpCity
 from PyMatcha.models.report import Report
 from PyMatcha.models.tag import Tag
+from PyMatcha.models.user import get_user
 from PyMatcha.models.view import View
 from PyMatcha.utils import hash_password
 from PyMatcha.utils.confirm_token import generate_confirmation_token
@@ -38,8 +38,6 @@ from PyMatcha.utils.mail import send_mail_text
 from PyMatcha.utils.success import Success
 from PyMatcha.utils.success import SuccessOutput
 
-User = user.User
-get_user = user.get_user
 
 profile_bp = Blueprint("profile", __name__)
 

@@ -17,15 +17,14 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 """
 import flask_jwt_extended as fjwt
-import PyMatcha.models.user as user
 from flask import Blueprint
 from flask import current_app
 from flask import jsonify
 from PyMatcha import redis
+from PyMatcha.models.user import get_user
+from PyMatcha.models.user import User
 from PyMatcha.utils.errors import NotFoundError
 
-User = user.User  # TODO: Change this
-get_user = user.get_user
 
 user_bp = Blueprint("user", __name__)
 
