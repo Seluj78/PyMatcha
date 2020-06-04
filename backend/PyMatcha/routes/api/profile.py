@@ -71,8 +71,18 @@ def complete_profile():
     gender = data["gender"]
     birthdate = data["birthdate"]
 
+    if len(bio) <= 50:
+        raise BadRequestError("Bio is too short", "Try again")
+
+    if len(tags) < 3:
+        raise BadRequestError("At least 3 tags are required", "Try again")
+
     if len(tags) != len(set(tags)):
         raise BadRequestError("Duplicate tags", "Try again")
+
+    minimum_age = 364.25 * 24 * 60 * 60 * 18
+    if datetime.datetime.utcnow().timestamp() - birthdate < minimum_age:
+        raise BadRequestError("You must be 18 years old or older", "Try again later")
 
     for tag in tags:
         Tag.create(name=tag, user_id=current_user.id)
