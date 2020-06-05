@@ -119,6 +119,17 @@ def edit_profile():
     birthdate = data["birthdate"]
 
     try:
+        birthdate = datetime.datetime.strptime(birthdate, "%d/%m/%Y").date()
+    except ValueError:
+        raise BadRequestError("Birthdate format must be %d/%m/%Y (day/month/year)", "Try again")
+
+    today = datetime.datetime.utcnow()
+
+    age = today.year - birthdate.year - ((today.month, today.day) < (birthdate.month, birthdate.day))
+    if age < 18:
+        raise BadRequestError("You must be 18 years old or older", "Try again later")
+
+    try:
         get_user(username)
     except NotFoundError:
         pass
@@ -130,8 +141,6 @@ def edit_profile():
 
     if gender not in ["male", "female", "other"]:
         raise BadRequestError("Gender must be male, female or other", "Try again")
-
-    birthdate = datetime.date.fromtimestamp(birthdate)
 
     current_user.first_name = first_name
     current_user.last_name = last_name
