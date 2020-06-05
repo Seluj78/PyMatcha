@@ -26,6 +26,8 @@ from typing import Dict
 from typing import Optional
 
 import Geohash
+from PyMatcha.models.like import Like
+from PyMatcha.models.match import Match
 from PyMatcha.models.report import Report
 from PyMatcha.models.tag import Tag
 from PyMatcha.models.view import View
@@ -330,7 +332,7 @@ class User(Model):
             likes = c.fetchall()
             like_list = []
             for like in likes:
-                like_list.append(Report(like))
+                like_list.append(Like(like))
         return like_list
 
     def get_likes_sent(self):
@@ -351,7 +353,7 @@ class User(Model):
             likes = c.fetchall()
             like_list = []
             for like in likes:
-                like_list.append(Report(like))
+                like_list.append(Like(like))
         return like_list
 
     def already_likes(self, liked_id: int) -> bool:
@@ -370,6 +372,26 @@ class User(Model):
             result = c.fetchone()
             value = next(iter(result.values()))
             return bool(value)
+
+    def get_matches(self):
+        logging.debug("Getting all matches for user {}".format(self.id))
+        with self.db.cursor() as c:
+            c.execute(
+                """
+                SELECT matches.id as id, matches.user_1 as user_1,
+                matches.user_2 as user_2, matches.dt_matched as dt_matched
+                FROM users
+                INNER JOIN matches on users.id = matches.user_1 or users.id = matches.user_2
+                WHERE users.id = CAST({} AS UNSIGNED)
+                """.format(
+                    self.id
+                )
+            )
+            matches = c.fetchall()
+            match_list = []
+            for match in matches:
+                match_list.append(Match(match))
+        return match_list
 
 
 def get_user(uid: Any[int, str]) -> Optional[User]:
