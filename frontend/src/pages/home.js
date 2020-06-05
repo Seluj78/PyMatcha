@@ -3,7 +3,7 @@ import { useHistory } from 'react-router-dom';
 import useFetchData from '../hooks/fetch_data';
 import Loading from '../components/loading';
 import Error from '../components/error';
-import { apiCall, deleteRefresh, logOut } from "../utils"
+import { logOut } from "../utils"
 
 const ApiCallTest = () => {
 	const { loading, result, error } = useFetchData('/users');
