@@ -21,6 +21,7 @@ import os
 
 import Geohash
 from flask import Blueprint
+from flask import render_template
 from flask import request
 from flask_jwt_extended import current_user
 from flask_jwt_extended import jwt_required
@@ -35,10 +36,10 @@ from PyMatcha.utils.decorators import validate_params
 from PyMatcha.utils.errors import BadRequestError
 from PyMatcha.utils.errors import NotFoundError
 from PyMatcha.utils.errors import UnauthorizedError
+from PyMatcha.utils.mail import send_mail_html
 from PyMatcha.utils.mail import send_mail_text
 from PyMatcha.utils.success import Success
 from PyMatcha.utils.success import SuccessOutput
-
 
 profile_bp = Blueprint("profile", __name__)
 
@@ -135,11 +136,9 @@ def edit_email():
     current_user.is_confirmed = False
     current_user.save()
     token = generate_confirmation_token(email=new_email, token_type="confirm")
-    send_mail_text.delay(
-        dest=data["email"],
-        subject="Confirm your new email for PyMatcha",
-        body=os.getenv("APP_URL") + "/auth/confirm/" + token,
-    )
+    link = os.getenv("APP_URL") + "/auth/confirm/" + token
+    rendered_html = render_template("confirm_email.html", link=link)
+    send_mail_html.delay(dest=data["email"], subject="Confirm your email on PyMatcha", html=rendered_html)
     return Success("Email sent for new email")
 
 
