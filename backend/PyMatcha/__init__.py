@@ -191,7 +191,10 @@ from PyMatcha.routes.api.auth.email import auth_email_bp
 from PyMatcha.routes.api.auth.password import auth_password_bp
 from PyMatcha.routes.api.auth.register import auth_register_bp
 from PyMatcha.routes.api.auth.login import auth_login_bp
-from PyMatcha.routes.api.profile import profile_bp
+from PyMatcha.routes.api.profile.view import profile_view_bp
+from PyMatcha.routes.api.profile.edit import profile_edit_bp
+from PyMatcha.routes.api.profile.complete import profile_complete_bp
+from PyMatcha.routes.api.profile.report import profile_report_bp
 from PyMatcha.routes.api.like import like_bp
 
 logging.debug("Registering Flask blueprints")
@@ -201,7 +204,10 @@ application.register_blueprint(auth_email_bp)
 application.register_blueprint(auth_password_bp)
 application.register_blueprint(auth_register_bp)
 application.register_blueprint(auth_login_bp)
-application.register_blueprint(profile_bp)
+application.register_blueprint(profile_view_bp)
+application.register_blueprint(profile_edit_bp)
+application.register_blueprint(profile_complete_bp)
+application.register_blueprint(profile_report_bp)
 application.register_blueprint(like_bp)
 
 if application.debug:
