@@ -77,10 +77,10 @@ def update_offline_users():
                 online_count += 1
             count += 1
     logging.debug(
-        "Updated online status for {} users. {} passed offline and {} passed or stayed online".format(
+        "Updated online status for {} users. {} passed offline and {} passed or stayed online.".format(
             count, offline_count, online_count
         )
     )
-    return "Updated online status for {} users. {} passed offline and {} passed or stayed online".format(
+    return "Updated online status for {} users. {} passed offline and {} passed or stayed online.".format(
         count, offline_count, online_count
     )

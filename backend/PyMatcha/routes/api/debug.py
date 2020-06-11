@@ -34,12 +34,12 @@ def debug_confirm_user(uid):
         raise NotFoundError("User {} not found".format(uid), "Check the uid and try again")
     if u.is_confirmed:
         current_app.logger.debug("/debug/users/confirm -> User already confirmed")
-        return Success("User already confirmed")
+        return Success("User already confirmed.")
     u.is_confirmed = True
     u.confirmed_on = datetime.datetime.utcnow()
     u.save()
     current_app.logger.debug("/debug/users/confirm -> User {} confirmed.".format(u.id))
-    return Success("User successfully confirmed")
+    return Success("User successfully confirmed.")
 
 
 @debug_bp.route("/debug/users/<uid>", methods=["DELETE"])
@@ -53,7 +53,7 @@ def delete_user(uid):
     else:
         current_app.logger.info("/debug/users/{} -> DELETE user {}".format(uid, uid))
         u.delete()
-        return SuccessDeleted("User {} Deleted".format(uid))
+        return SuccessDeleted("User {} Deleted.".format(uid))
 
 
 @debug_bp.route("/debug/views/<int:amount>", methods=["POST"])
@@ -62,7 +62,7 @@ def delete_user(uid):
 def create_views(amount):
     for i in range(amount):
         View.create(profile_id=current_user.id, viewer_id=i)
-    return Success(f"Added {amount} views to user {current_user.id}")
+    return Success(f"Added {amount} views to user {current_user.id}.")
 
 
 @debug_bp.route("/debug/views", methods=["DELETE"])
