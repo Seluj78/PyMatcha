@@ -20,11 +20,8 @@ from __future__ import annotations
 
 import logging
 from datetime import datetime
-from typing import Dict
 
-import PyMatcha.models.user as user_module
 from PyMatcha.utils import create_messages_table
-from PyMatcha.utils.errors import NotFoundError
 from PyMatcha.utils.orm import Field
 from PyMatcha.utils.orm import Model
 
@@ -41,9 +38,6 @@ class Message(Model):
     is_seen = Field(bool)
     is_liked = Field(bool)
 
-    def before_init(self, data):
-        pass
-
     @staticmethod
     def create(
         from_id: int,
@@ -54,20 +48,6 @@ class Message(Model):
         is_seen: bool = False,
         is_liked: bool = False,
     ) -> Message:
-
-        try:
-            user_module.get_user(from_id)
-        except NotFoundError:
-            raise NotFoundError("User from_id {} not found".format(from_id), "Try again")
-
-        try:
-            user_module.get_user(to_id)
-        except NotFoundError:
-            raise NotFoundError("User to_id {} not found".format(to_id), "Try again")
-
-        if not content:
-            raise ValueError("content must not be empty")
-
         new_message = Message(
             from_id=from_id,
             to_id=to_id,
@@ -80,19 +60,6 @@ class Message(Model):
         new_message.save()
         logging.debug("Created new message")
         return new_message
-
-    def get_all_info(self) -> Dict:
-        logging.debug("Returning all info on message {}".format(self.id))
-        return {
-            "id": self.id,
-            "from_id": self.from_id,
-            "to_id": self.to_id,
-            "content": self.content,
-            "timestamp": self.timestamp,
-            "seen_timestamp": self.seen_timestamp,
-            "is_seen": self.is_seen,
-            "is_liked": self.is_liked,
-        }
 
     @classmethod
     def create_table(cls):
