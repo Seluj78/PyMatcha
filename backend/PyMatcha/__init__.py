@@ -196,6 +196,7 @@ from PyMatcha.routes.api.profile.edit import profile_edit_bp
 from PyMatcha.routes.api.profile.complete import profile_complete_bp
 from PyMatcha.routes.api.profile.report import profile_report_bp
 from PyMatcha.routes.api.like import like_bp
+from PyMatcha.routes.api.match import match_bp
 
 logging.debug("Registering Flask blueprints")
 application.register_blueprint(ping_pong_bp)
@@ -209,6 +210,7 @@ application.register_blueprint(profile_edit_bp)
 application.register_blueprint(profile_complete_bp)
 application.register_blueprint(profile_report_bp)
 application.register_blueprint(like_bp)
+application.register_blueprint(match_bp)
 
 if application.debug:
     logging.debug("Registering debug route")
