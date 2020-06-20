@@ -98,7 +98,7 @@ logging.debug("Configuring JWT expired token handler callback")
 
 @jwt.expired_token_loader
 def expired_token_callback(expired_token):
-    logging.warning("Token {} expired".format(expired_token))
+    logging.debug("Token {} expired".format(expired_token))
     resp = {
         "code": 401,
         "error": {
