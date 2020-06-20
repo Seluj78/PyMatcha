@@ -19,16 +19,14 @@
 from __future__ import annotations
 
 import logging
-
+from datetime import datetime
 from typing import Dict
 
-from datetime import datetime
-
-from PyMatcha.utils.orm import Model, Field
-from PyMatcha.utils import create_messages_table
 import PyMatcha.models.user as user_module
-
-from PyMatcha.errors import NotFoundError
+from PyMatcha.utils import create_messages_table
+from PyMatcha.utils.errors import NotFoundError
+from PyMatcha.utils.orm import Field
+from PyMatcha.utils.orm import Model
 
 
 class Message(Model):

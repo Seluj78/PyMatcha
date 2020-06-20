@@ -16,17 +16,15 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 """
-
-from flask import Blueprint, request, current_app
-
-
 import flask_jwt_extended as fjwt
-
 import PyMatcha.models.user as user
-
-from PyMatcha.errors import NotFoundError
-from PyMatcha.success import Success, SuccessOutput
-from PyMatcha.utils.decorators import validate_required_params
+from flask import Blueprint
+from flask import current_app
+from flask import request
+from PyMatcha.utils.decorators import validate_params
+from PyMatcha.utils.errors import NotFoundError
+from PyMatcha.utils.success import Success
+from PyMatcha.utils.success import SuccessOutput
 
 REQUIRED_KEYS_NEW_MESSAGE = {"to_id": int, "content": str}
 REQUIRED_KEYS_GET_CONVERSATION = {"with_id": int}
@@ -38,7 +36,7 @@ messages_bp = Blueprint("messages", __name__)
 
 @messages_bp.route("/messages/send/", methods=["POST"])
 @fjwt.jwt_required
-@validate_required_params(REQUIRED_KEYS_NEW_MESSAGE)
+@validate_params(REQUIRED_KEYS_NEW_MESSAGE)
 def send_message():
     current_app.logger.debug("/messages -> Call")
     data = request.get_json()
@@ -56,7 +54,7 @@ def send_message():
 
 @messages_bp.route("/messages/conversation/", methods=["GET"])
 @fjwt.jwt_required
-@validate_required_params(REQUIRED_KEYS_GET_CONVERSATION)
+@validate_params(REQUIRED_KEYS_GET_CONVERSATION)
 def get_conversation():
     data = request.get_json()
     with_id: int = int(data["with_id"])

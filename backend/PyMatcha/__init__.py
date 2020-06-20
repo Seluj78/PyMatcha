@@ -115,7 +115,6 @@ def expired_token_callback(expired_token):
 logging.debug("Configuring CORS")
 CORS(application, expose_headers="Authorization", supports_credentials=True)
 
-
 if os.getenv("CI"):
     database_password = ""
 else:
@@ -203,6 +202,16 @@ from PyMatcha.routes.api.messages import messages_bp
 logging.debug("Registering Flask blueprints")
 application.register_blueprint(ping_pong_bp)
 application.register_blueprint(user_bp)
+application.register_blueprint(auth_email_bp)
+application.register_blueprint(auth_password_bp)
+application.register_blueprint(auth_register_bp)
+application.register_blueprint(auth_login_bp)
+application.register_blueprint(profile_view_bp)
+application.register_blueprint(profile_edit_bp)
+application.register_blueprint(profile_complete_bp)
+application.register_blueprint(profile_report_bp)
+application.register_blueprint(like_bp)
+application.register_blueprint(match_bp)
 application.register_blueprint(messages_bp)
 
 if application.debug:

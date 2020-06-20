@@ -23,11 +23,13 @@ import hashlib
 import logging
 from typing import Any
 from typing import Dict
+from typing import List
 from typing import Optional
 
 import Geohash
 from PyMatcha.models.like import Like
 from PyMatcha.models.match import Match
+from PyMatcha.models.message import Message
 from PyMatcha.models.report import Report
 from PyMatcha.models.tag import Tag
 from PyMatcha.models.view import View
@@ -286,75 +288,6 @@ class User(Model):
             for r in reports:
                 reports_list.append(Report(r))
         return reports_list
-    def get_messages(self) -> List[Message]:
-        with self.db.cursor() as c:
-            c.execute(
-                """
-                SELECT 
-                messages.from_id as from_id, 
-                messages.to_id as to_id, 
-                messages.id as id, 
-                messages.timestamp as timestamp, 
-                messages.seen_timestamp as seen_timestamp, 
-                messages.content as content, 
-                messages.is_liked as is_liked, 
-                messages.is_seen as is_seen
-                FROM messages 
-                INNER JOIN users on users.id = messages.from_id or users.id = messages.to_id 
-                WHERE users.id = CAST({} AS SIGNED)
-                """.format(
-                    self.id
-                )
-            )
-            messages = c.fetchall()
-            message_list = []
-            for message in messages:
-                message_list.append(message.Message(message))
-        logging.debug("Getting all messages sent or received by user {}".format(self.id))
-        return message_list
-
-    def get_messages_with_user(self, with_user_id) -> List[Message]:
-        # TODO: Create a function to get latest messages only. Maybe https://stackoverflow.com/a/41095528/6350162 ?
-        # Based on time or amount of messages https://stackoverflow.com/a/3799223/6350162
-        with self.db.cursor() as c:
-            c.execute(
-                """
-                SELECT 
-                messages.from_id as from_id, 
-                messages.to_id as to_id, 
-                messages.id as id, 
-                messages.timestamp as timestamp, 
-                messages.seen_timestamp as seen_timestamp, 
-                messages.content as content, 
-                messages.is_liked as is_liked, 
-                messages.is_seen as is_seen
-                FROM messages 
-                WHERE from_id=CAST({0} AS SIGNED) and to_id=CAST({1} AS SIGNED)
-
-                UNION ALL
-
-                SELECT messages.from_id as from_id, 
-                messages.to_id as to_id, 
-                messages.id as id, 
-                messages.timestamp as timestamp, 
-                messages.seen_timestamp as seen_timestamp, 
-                messages.content as content, 
-                messages.is_liked as is_liked, 
-                messages.is_seen as is_seen
-                FROM messages 
-                WHERE from_id=CAST({1} AS SIGNED) and to_id=CAST({0} AS SIGNED)
-                """.format(
-                    self.id, with_user_id
-                )
-            )
-            messages = c.fetchall()
-            message_list = []
-            for message in messages:
-                message_list.append(Message(message).get_all_info())
-        logging.debug(
-            "Getting all messages between user {} and {} (Total: {})".format(self.id, with_user_id, len(message_list))
-        )
-        return message_list
 
     def get_reports_sent(self):
         logging.debug("Getting all reports sent for user {}".format(self.id))
@@ -376,19 +309,6 @@ class User(Model):
             for r in reports:
                 reports_list.append(Report(r))
         return reports_list
-    def send_message(self, to_id, content):
-        # TODO: Send notification to the other user
-        logging.debug("Sending message from {} to {}".format(self.id, to_id))
-        Message.create(from_id=self.id, to_id=to_id, content=content)
-
-    def get_base_info(self):
-        return {
-            "id": self.id,
-            "email": self.email,
-            "username": self.username,
-            "is_online": self.is_online,
-            "date_lastseen": self.date_lastseen,
-        }
 
     def get_likes_received(self):
         logging.debug("Getting all likes received for user {}".format(self.id))
@@ -468,6 +388,81 @@ class User(Model):
             for match in matches:
                 match_list.append(Match(match))
         return match_list
+
+    def send_message(self, to_id, content):
+        # TODO: Send notification to the other user
+        logging.debug("Sending message from {} to {}".format(self.id, to_id))
+        Message.create(from_id=self.id, to_id=to_id, content=content)
+
+    def get_messages(self) -> List[Message]:
+        with self.db.cursor() as c:
+            c.execute(
+                """
+                SELECT 
+                messages.from_id as from_id, 
+                messages.to_id as to_id, 
+                messages.id as id, 
+                messages.timestamp as timestamp, 
+                messages.seen_timestamp as seen_timestamp, 
+                messages.content as content, 
+                messages.is_liked as is_liked, 
+                messages.is_seen as is_seen
+                FROM messages 
+                INNER JOIN users on users.id = messages.from_id or users.id = messages.to_id 
+                WHERE users.id = CAST({} AS SIGNED)
+                """.format(
+                    self.id
+                )
+            )
+            messages = c.fetchall()
+            message_list = []
+            for message in messages:
+                message_list.append(message.Message(message))
+        logging.debug("Getting all messages sent or received by user {}".format(self.id))
+        return message_list
+
+    def get_messages_with_user(self, with_user_id) -> List[Message]:
+        # TODO: Create a function to get latest messages only. Maybe https://stackoverflow.com/a/41095528/6350162 ?
+        #  Based on time or amount of messages https://stackoverflow.com/a/3799223/6350162
+        with self.db.cursor() as c:
+            c.execute(
+                """
+                SELECT 
+                messages.from_id as from_id, 
+                messages.to_id as to_id, 
+                messages.id as id, 
+                messages.timestamp as timestamp, 
+                messages.seen_timestamp as seen_timestamp, 
+                messages.content as content, 
+                messages.is_liked as is_liked, 
+                messages.is_seen as is_seen
+                FROM messages 
+                WHERE from_id=CAST({0} AS SIGNED) and to_id=CAST({1} AS SIGNED)
+
+                UNION ALL
+
+                SELECT messages.from_id as from_id, 
+                messages.to_id as to_id, 
+                messages.id as id, 
+                messages.timestamp as timestamp, 
+                messages.seen_timestamp as seen_timestamp, 
+                messages.content as content, 
+                messages.is_liked as is_liked, 
+                messages.is_seen as is_seen
+                FROM messages 
+                WHERE from_id=CAST({1} AS SIGNED) and to_id=CAST({0} AS SIGNED)
+                """.format(
+                    self.id, with_user_id
+                )
+            )
+            messages = c.fetchall()
+            message_list = []
+            for message in messages:
+                message_list.append(Message(message).get_all_info())
+        logging.debug(
+            "Getting all messages between user {} and {} (Total: {})".format(self.id, with_user_id, len(message_list))
+        )
+        return message_list
 
 
 def get_user(uid: Any[int, str]) -> Optional[User]:
