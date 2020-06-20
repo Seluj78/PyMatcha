@@ -7,6 +7,7 @@ from PyMatcha.models.user import get_user
 from PyMatcha.utils.errors import BadRequestError
 from PyMatcha.utils.errors import NotFoundError
 from PyMatcha.utils.success import Success
+from PyMatcha.utils.success import SuccessOutput
 
 like_bp = Blueprint("like", __name__)
 
@@ -46,5 +47,10 @@ def unlike_profile(uid):
     return Success(f"Unliked user {u.id}.")
 
 
-# TODO: Likes received
-# TODO: Likes sent
+@like_bp.route("/likes", methods=["GET"])
+@jwt_required
+def see_my_likes():
+    received = current_user.get_likes_received()
+    sent = current_user.get_likes_sent()
+    returned_dict = {"received": [r.to_dict() for r in received], "sent": [s.to_dict() for s in sent]}
+    return SuccessOutput("likes", returned_dict)

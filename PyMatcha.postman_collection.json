@@ -4063,6 +4063,38 @@
 						}
 					},
 					"response": []
+				},
+				{
+					"name": "Get sent and received likes",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "42cca1eb-0433-4709-a922-7037e6ddc6d5",
+								"exec": [
+									"var response = JSON.parse(responseBody);",
+									"",
+									"tests[\"Received likes != 0\"] = response.likes.received.length != 0",
+									"tests[\"Sent likes != 0\"] = response.likes.sent.length != 0"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{host}}/likes",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"likes"
+							]
+						}
+					},
+					"response": []
 				}
 			],
 			"protocolProfileBehavior": {}
@@ -4225,109 +4257,109 @@
 	],
 	"variable": [
 		{
-			"id": "af6aee14-6e91-4d11-8b5c-e8cc1438311d",
+			"id": "28a23486-a04f-4122-83dd-7876ef955760",
 			"key": "host",
 			"value": "http://127.0.0.1:5000",
 			"type": "string"
 		},
 		{
-			"id": "fdea782c-2dab-4410-b65a-73a1a22c73ea",
+			"id": "5f84e9ec-b6ef-4677-9c5b-55d4fdfce50b",
 			"key": "user_id",
 			"value": "",
 			"type": "string"
 		},
 		{
-			"id": "f0404a42-abab-428a-872e-c0e0e71df739",
+			"id": "2050da02-1090-484a-a476-7094e90d6d1a",
 			"key": "user_email",
 			"value": "foo@example.org",
 			"type": "string"
 		},
 		{
-			"id": "289e6da9-63c2-405c-aa04-dc1e7c944ae7",
+			"id": "860f9ba6-0925-4cb1-95c9-a97242b5fd9b",
 			"key": "user_username",
 			"value": "foo",
 			"type": "string"
 		},
 		{
-			"id": "106fef29-98b9-46e3-aa0c-2a720d018604",
+			"id": "c77043d9-6185-4fc1-b683-174505689ad3",
 			"key": "user_password",
 			"value": "admin",
 			"type": "string"
 		},
 		{
-			"id": "a6221612-0ff9-4299-b316-54f0f501dcec",
+			"id": "d81b203b-9f7f-43ff-b6d4-712b935d893f",
 			"key": "user_firstname",
 			"value": "Foo",
 			"type": "string"
 		},
 		{
-			"id": "939c43d6-9dad-4e7e-96ce-09c831499a1e",
+			"id": "ea2ca3b3-5f0e-4bba-9aac-ead08085e0bb",
 			"key": "user_lastname",
 			"value": "Bar",
 			"type": "string"
 		},
 		{
-			"id": "2544a319-3ac2-4083-9665-42b5bab9df10",
+			"id": "ff0c8637-acc0-41d1-bc2f-e7e82d4ae088",
 			"key": "debug_token",
 			"value": "xX69jules69Xx",
 			"type": "string"
 		},
 		{
-			"id": "fcbb3982-a60a-4797-9d53-7805b775d380",
+			"id": "94f1a459-158b-46e3-a78d-78e84507c291",
 			"key": "user_access_token",
 			"value": "",
 			"type": "string"
 		},
 		{
-			"id": "9f004407-c35e-4556-a22a-747fdf0b9f79",
+			"id": "283378eb-bf66-41f9-8ac0-54a2e4578e7f",
 			"key": "user_refresh_token",
 			"value": "",
 			"type": "string"
 		},
 		{
-			"id": "a07c4180-3179-4aff-8575-46fb9e42ea83",
+			"id": "4202671c-ac1f-45df-9861-00b5f1d0faec",
 			"key": "expired_token",
 			"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE1OTAyNDIyNjQsIm5iZiI6MTU5MDI0MjI2NCwianRpIjoiNTM0ZGI5NzQtOWE4Ni00MGViLWE1NDEtMDg3N2ZmNzQ3NDVhIiwiZXhwIjoxNTkwMjQyMzI0LCJpZGVudGl0eSI6eyJpZCI6NTEyLCJlbWFpbCI6ImZvb0BleGFtcGxlLm9yZyIsInVzZXJuYW1lIjoiYmFyIiwiaXNfb25saW5lIjp0cnVlLCJkYXRlX2xhc3RzZWVuIjoiU2F0LCAyMyBNYXkgMjAyMCAxMzo1Nzo0NCBHTVQifSwiZnJlc2giOnRydWUsInR5cGUiOiJhY2Nlc3MifQ.NTp2P0WNkXDwzuzrcNIQdeAfizQ57HQgkzBLSvY1yHU",
 			"type": "string"
 		},
 		{
-			"id": "4ba17b0e-8325-4a02-ae90-01c4a4f499f1",
+			"id": "d93bf868-d915-4b0f-9a40-13542742acb8",
 			"key": "user_orientation",
 			"value": "heterosexual",
 			"type": "string"
 		},
 		{
-			"id": "d6d9c37f-da1a-4c4e-afa2-f9214637e13c",
+			"id": "e8511aa0-b6a1-4946-bc68-1a637277989e",
 			"key": "user_bio",
 			"value": "Lorem Ipsum is the single greatest threat. We are not - we are not keeping up with other websites. Lorem Ipsum best not make any more threats to your website. It will be met with fire and fury like the world has never seen. Does everybody know that pig named Lorem Ipsum? An ‘extremely credible source’ has called my office and told me that Barack Obama’s placeholder text is a fraud.",
 			"type": "string"
 		},
 		{
-			"id": "d3900cb1-01d2-4915-9ce8-37d1d790b560",
+			"id": "711df570-f4d8-4253-9bb3-90f6428a2923",
 			"key": "user_gender",
 			"value": "male",
 			"type": "string"
 		},
 		{
-			"id": "ed9ccd93-a2ab-4dd0-9b68-57477110cbf1",
+			"id": "2c1e8e72-e272-472c-a316-a4e2d32feb52",
 			"key": "user_birthdate",
 			"value": "06/04/1998",
 			"type": "string"
 		},
 		{
-			"id": "e117a4aa-6f76-4715-bdb3-8023b1d74f81",
+			"id": "55317914-201d-40d6-923a-e250a0733436",
 			"key": "user_lat",
 			"value": "44.8404",
 			"type": "string"
 		},
 		{
-			"id": "bf8a919e-2fe7-4139-b82c-b215ea6584b3",
+			"id": "82fe60ef-d805-4317-ba54-a511524ba7ac",
 			"key": "user_lng",
 			"value": "-0.5805",
 			"type": "string"
 		},
 		{
-			"id": "6208b5f1-e496-4642-9e38-4faa9b4e950d",
+			"id": "e5163790-a8e8-482e-aafa-567565e5b0a8",
 			"key": "user_ip",
 			"value": "77.205.46.181",
 			"type": "string"
