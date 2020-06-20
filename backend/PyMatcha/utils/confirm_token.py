@@ -16,11 +16,11 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 """
-
 import logging
 
-from itsdangerous import URLSafeTimedSerializer, SignatureExpired, BadSignature
-
+from itsdangerous import BadSignature
+from itsdangerous import SignatureExpired
+from itsdangerous import URLSafeTimedSerializer
 from PyMatcha import application
 
 ACCEPTED_TOKEN_TYPES = ["confirm", "reset"]

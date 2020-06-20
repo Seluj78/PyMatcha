@@ -16,8 +16,8 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 """
-
-from flask import Blueprint, jsonify
+from flask import Blueprint
+from flask import jsonify
 
 ping_pong_bp = Blueprint("ping_pong", __name__)
 
