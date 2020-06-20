@@ -8,8 +8,11 @@ from flask_jwt_extended import current_user
 from flask_jwt_extended import jwt_required
 from PyMatcha import redis
 from PyMatcha.models.like import Like
+from PyMatcha.models.match import Match
 from PyMatcha.models.report import Report
+from PyMatcha.models.tag import Tag
 from PyMatcha.models.user import get_user
+from PyMatcha.models.user import User
 from PyMatcha.models.view import View
 from PyMatcha.utils.decorators import debug_token_required
 from PyMatcha.utils.decorators import validate_params
@@ -65,14 +68,6 @@ def create_views(amount):
     return Success(f"Added {amount} views to user {current_user.id}.")
 
 
-@debug_bp.route("/debug/views", methods=["DELETE"])
-@debug_token_required
-def delete_views():
-    View.drop_table()
-    View.create_table()
-    return "", 204
-
-
 @debug_bp.route("/debug/redis")
 @debug_token_required
 def debug_show_redis():
@@ -84,14 +79,6 @@ def debug_show_redis():
         value = redis.get(str(key))
         ret["jtis"][key] = value
     return jsonify(ret), 200
-
-
-@debug_bp.route("/debug/reports", methods=["DELETE"])
-@debug_token_required
-def delete_reports():
-    Report.drop_table()
-    Report.create_table()
-    return "", 204
 
 
 @debug_bp.route("/debug/reports", methods=["GET"])
@@ -128,14 +115,6 @@ def debug_create_report():
     return "", 204
 
 
-@debug_bp.route("/debug/likes", methods=["DELETE"])
-@debug_token_required
-def delete_likes():
-    Like.drop_table()
-    Like.create_table()
-    return "", 204
-
-
 DEBUG_CREATE_FAKE_LIKE = {"liker_uid": str, "liked_uid": str}
 
 
@@ -150,4 +129,23 @@ def create_fake_like():
     liked = get_user(liked_uid)
 
     Like.create(liker_id=liker.id, liked_id=liked.id)
+    return "", 204
+
+
+@debug_bp.route("/debug/tables", methods=["DELETE"])
+@debug_token_required
+def delete_matches():
+    Match.drop_table()
+    Like.drop_table()
+    Report.drop_table()
+    View.drop_table()
+    User.drop_table()
+    Tag.drop_table()
+
+    Match.create_table()
+    Like.create_table()
+    Report.create_table()
+    View.create_table()
+    User.create_table()
+    Tag.create_table()
     return "", 204

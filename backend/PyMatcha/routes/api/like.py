@@ -26,9 +26,9 @@ def like_profile(uid):
 
     if current_user.already_likes(u.id):
         Match.create(user_1=current_user.id, user_2=u.id)
-        return Success(f"Liked user {u.id}, it's a match !")
+        return Success("It's a match !")
 
-    return Success(f"Liked user {u.id}.")
+    return Success("Liked user.")
 
 
 @like_bp.route("/unlike/<uid>", methods=["POST"])
