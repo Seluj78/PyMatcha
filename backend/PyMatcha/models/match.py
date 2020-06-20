@@ -34,9 +34,6 @@ class Match(Model):
     user_2 = Field(int)
     dt_matched = Field(datetime.datetime, fmt="%Y-%m-%d %H:%M:%S")
 
-    def before_init(self, data):
-        pass
-
     @staticmethod
     def create(user_1: int, user_2: int, dt_matched: datetime.datetime = datetime.datetime.utcnow()) -> Match:
         new_match = Match(user_1=user_1, user_2=user_2, dt_matched=dt_matched)

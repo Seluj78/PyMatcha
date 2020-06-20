@@ -37,9 +37,6 @@ class Report(Model):
     reason = Field(str)
     status = Field(str)
 
-    def before_init(self, data):
-        pass
-
     @staticmethod
     def create(
         reported_id: int,

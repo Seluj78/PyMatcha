@@ -62,12 +62,6 @@ class User(Model):
     confirmed_on = Field(datetime.datetime, fmt="%Y-%m-%d %H:%M:%S")
     previous_reset_token = Field(str)
 
-    def before_init(self, data):
-        pass
-        # Not used, use User.create and password will be hashed.
-        # if "password" in data:
-        #     self.password.value = hash_password(data["password"])
-
     def check_password(self, password: str) -> bool:
         logging.debug("Checking password again {} hashed password".format(self.id))
         _hash, salt = self.password.split(":")

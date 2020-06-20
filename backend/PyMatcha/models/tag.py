@@ -32,9 +32,6 @@ class Tag(Model):
     user_id = Field(int)
     name = Field(str)
 
-    def before_init(self, data):
-        pass
-
     @staticmethod
     def create(user_id: int, name="") -> Tag:
         new_tag = Tag(user_id=user_id, name=name)

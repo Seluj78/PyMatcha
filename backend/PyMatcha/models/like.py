@@ -35,9 +35,6 @@ class Like(Model):
     dt_liked = Field(datetime.datetime, fmt="%Y-%m-%d %H:%M:%S")
     is_superlike = Field(bool)
 
-    def before_init(self, data):
-        pass
-
     @staticmethod
     def create(
         liker_id: int,
