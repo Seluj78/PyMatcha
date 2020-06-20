@@ -134,3 +134,20 @@ def delete_likes():
     Like.drop_table()
     Like.create_table()
     return "", 204
+
+
+DEBUG_CREATE_FAKE_LIKE = {"liker_uid": str, "liked_uid": str}
+
+
+@debug_bp.route("/debug/like", methods=["POST"])
+@debug_token_required
+@validate_params(DEBUG_CREATE_FAKE_LIKE)
+def create_fake_like():
+    data = request.get_json()
+    liker_uid = data["liker_uid"]
+    liked_uid = data["liked_uid"]
+    liker = get_user(liker_uid)
+    liked = get_user(liked_uid)
+
+    Like.create(liker_id=liker.id, liked_id=liked.id)
+    return "", 204
