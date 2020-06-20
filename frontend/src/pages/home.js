@@ -3,12 +3,7 @@ import { useHistory } from 'react-router-dom';
 import useFetchData from '../hooks/fetch_data';
 import Loading from '../components/loading';
 import Error from '../components/error';
-
-const logOut = history => () => {
-	localStorage.removeItem("refresh_token");
-	sessionStorage.removeItem("access_token");
-	history.push('login');
-}
+import { logOut } from "../utils"
 
 const ApiCallTest = () => {
 	const { loading, result, error } = useFetchData('/users');
@@ -28,7 +23,7 @@ const Home = () => {
 		<div>
 			<h1> That's my home </h1>
 			<ApiCallTest />
-			<button className='button' onClick={logOut(history)}> Log out </button>
+			<button className='button' onClick={() => logOut(history)}> Log out </button>
 		</div>
 	)
 }

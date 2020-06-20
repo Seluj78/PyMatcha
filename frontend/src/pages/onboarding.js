@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useHistory } from "react-router-dom";
-import { getRefreshToken, date2Html, apiCall } from "../utils";
+import { getRefreshToken, date2Html, apiCall, logOut } from "../utils";
 import Loading from "./../components/loading"
 
 /*
@@ -119,41 +119,37 @@ const add_tag = (form, setForm, id) => () => {
 	elem.value = '';
 }
 
-const Tags = (form, setForm, key) => {
-	const input_id = "NEW_TAGS_MF_PRIVATE";
-
-	return (
-		<div key={key}>
-			<hr className="hr" />
-			<div className="field is-horizontal is-grouped-centered">
-				<div className="field-label is-normal">
-					<label className="label">Tags:</label>
+const input_id = "NEW_TAGS_MF_PRIVATE";
+const Tags = (form, setForm, key) => (
+	<div key={key}>
+		<hr className="hr" />
+		<div className="field is-horizontal is-grouped-centered">
+			<div className="field-label is-normal">
+				<label className="label">Tags:</label>
+			</div>
+			<div className="field-body">
+				<div className="field has-addons" style={{ flexGrow: "0", minWidth: "10em" }}>
+					<div className="control">
+						<input id={input_id} className="input" type="text" placeholder="Enter a tag" onKeyPress={e => e.key === "Enter" && add_tag(form, setForm, input_id)()} />
+					</div>
+					<div className="control">
+						<span className="button is-info" onClick={add_tag(form, setForm, input_id)}>
+							OK
+							</span>
+					</div>
 				</div>
-				<div className="field-body">
-					<div className="field has-addons" style={{ flexGrow: "0", minWidth: "10em" }}>
-						<div className="control">
-							<input id={input_id} className="input" type="text" placeholder="Enter a tag" />
-						</div>
-						<div className="control">
-							{/*TODO: deplucate tags empty tags */}
-							<span className="button is-info" onClick={add_tag(form, setForm, input_id)}>
-								OK
-							</span>
-						</div>
-					</div>
-					<div className="tags">
-						{(form.tags || []).map((tag, key) => (
-							<span key={key} className="tag">
-								{tag}
-								<button className="delete is-small" onClick={() => delet_tag(form, setForm, key)}></button>
-							</span>
-						))}
-					</div>
+				<div className="tags">
+					{(form.tags || []).map((tag, key) => (
+						<span key={key} className="tag">
+							{tag}
+							<button className="delete is-small" onClick={() => delet_tag(form, setForm, key)}></button>
+						</span>
+					))}
 				</div>
 			</div>
 		</div>
-	)
-}
+	</div>
+)
 
 const Photos = (form, setForm, key) => (
 	<div key={key} >
@@ -194,13 +190,11 @@ const inputState = setState => (name, value) => setState(state => { state[name] 
 const send_info = async (form, setErrors, setIsLoading, history) => {
 	if (!form) return;
 	setIsLoading(true)
-	form.tags = undefined; // TODO: remove
-	form.birthdate = undefined; // TODO: remove
-	form.gender = undefined; // TODO: remove
-	const res = await apiCall({ uri: "/profile/complete", method: "POST", body: form })
+	const res = await apiCall({ uri: "profile/complete", method: "POST", body: form })
 	if (res.is_error) {
 		setIsLoading(false);
-		setErrors([res.error.message])
+		if (!!res.error)
+			setErrors([res.error.message])
 	} else {
 		localStorage.removeItem("onboarding");
 		setIsLoading(false);
@@ -257,6 +251,11 @@ const OnboardingPage = () => {
 					</span>
 				</p>
 			</div>
+			<p className="control" style={{ textAlign: "center", marginTop: "2em" }} onClick={() => logOut(history)}>
+				<span className="button is-danger">
+					Disconnect
+					</span>
+			</p>
 		</div>
 	)
 }

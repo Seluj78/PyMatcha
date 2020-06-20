@@ -43,7 +43,7 @@ from PyMatcha.utils.success import SuccessOutput
 
 profile_bp = Blueprint("profile", __name__)
 
-REQUIRED_PARAMS_COMPLETE_PROFILE = {"gender": str, "birthdate": int, "orientation": str, "bio": str, "tags": list}
+REQUIRED_PARAMS_COMPLETE_PROFILE = {"gender": str, "birthdate": str, "orientation": str, "bio": str, "tags": list}
 REQUIRED_PARAMS_EDIT_PROFILE = {
     "first_name": str,
     "last_name": str,
@@ -51,7 +51,7 @@ REQUIRED_PARAMS_EDIT_PROFILE = {
     "bio": str,
     "gender": str,
     "orientation": str,
-    "birthdate": int,
+    "birthdate": str,
     "tags": list,
 }
 
@@ -71,6 +71,26 @@ def complete_profile():
     gender = data["gender"]
     birthdate = data["birthdate"]
 
+    try:
+        birthdate = datetime.datetime.strptime(birthdate, "%d/%m/%Y").date()
+    except ValueError:
+        raise BadRequestError("Birthdate format must be %d/%m/%Y (day/month/year)", "Try again")
+
+    if len(bio) <= 50:
+        raise BadRequestError("Bio is too short", "Try again")
+
+    if len(tags) < 3:
+        raise BadRequestError("At least 3 tags are required", "Try again")
+
+    if len(tags) != len(set(tags)):
+        raise BadRequestError("Duplicate tags", "Try again")
+
+    today = datetime.datetime.utcnow()
+
+    age = today.year - birthdate.year - ((today.month, today.day) < (birthdate.month, birthdate.day))
+    if age < 18:
+        raise BadRequestError("You must be 18 years old or older", "Try again later")
+
     for tag in tags:
         Tag.create(name=tag, user_id=current_user.id)
 
@@ -78,7 +98,7 @@ def complete_profile():
     current_user.bio = bio
     current_user.is_profile_completed = True
     current_user.gender = gender
-    current_user.birthdate = datetime.date.fromtimestamp(int(birthdate))
+    current_user.birthdate = birthdate
     current_user.save()
     return Success("Profile completed !")
 
@@ -99,6 +119,17 @@ def edit_profile():
     birthdate = data["birthdate"]
 
     try:
+        birthdate = datetime.datetime.strptime(birthdate, "%d/%m/%Y").date()
+    except ValueError:
+        raise BadRequestError("Birthdate format must be %d/%m/%Y (day/month/year)", "Try again")
+
+    today = datetime.datetime.utcnow()
+
+    age = today.year - birthdate.year - ((today.month, today.day) < (birthdate.month, birthdate.day))
+    if age < 18:
+        raise BadRequestError("You must be 18 years old or older", "Try again later")
+
+    try:
         get_user(username)
     except NotFoundError:
         pass
@@ -110,8 +141,6 @@ def edit_profile():
 
     if gender not in ["male", "female", "other"]:
         raise BadRequestError("Gender must be male, female or other", "Try again")
-
-    birthdate = datetime.date.fromtimestamp(birthdate)
 
     current_user.first_name = first_name
     current_user.last_name = last_name

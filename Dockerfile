@@ -8,10 +8,11 @@ RUN npm run build
 
 FROM python:3.8.3-buster
 WORKDIR /www
-ADD backend .
+ADD backend/requirements.txt .
 ADD .env .
 RUN export $(cat .env | xargs)
 RUN pip install -r requirements.txt
+ADD backend .
 COPY --from=frontend /src/build frontend
 ENV PYTHONDONTWRITEBYTECODE 1
 ENV IS_DOCKER_COMPOSE true
