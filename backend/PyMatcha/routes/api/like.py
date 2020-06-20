@@ -25,7 +25,7 @@ def like_profile(uid):
         raise BadRequestError("You already liked this person", "Try again")
     Like.create(liker_id=current_user.id, liked_id=u.id)
 
-    if current_user.already_likes(u.id):
+    if u.already_likes(current_user.id):
         Match.create(user_1=current_user.id, user_2=u.id)
         return Success("It's a match !")
 
