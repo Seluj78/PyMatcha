@@ -26,6 +26,8 @@ from typing import Dict
 from typing import Optional
 
 import Geohash
+from PyMatcha.models.like import Like
+from PyMatcha.models.match import Match
 from PyMatcha.models.report import Report
 from PyMatcha.models.tag import Tag
 from PyMatcha.models.view import View
@@ -59,12 +61,6 @@ class User(Model):
     is_confirmed = Field(bool)
     confirmed_on = Field(datetime.datetime, fmt="%Y-%m-%d %H:%M:%S")
     previous_reset_token = Field(str)
-
-    def before_init(self, data):
-        pass
-        # Not used, use User.create and password will be hashed.
-        # if "password" in data:
-        #     self.password.value = hash_password(data["password"])
 
     def check_password(self, password: str) -> bool:
         logging.debug("Checking password again {} hashed password".format(self.id))
@@ -166,7 +162,7 @@ class User(Model):
         except ValueError:
             pass
         else:
-            logging.warning("Email {} taken".format(email))
+            logging.debug("Email {} taken".format(email))
             raise ConflictError("Email {} taken".format(email), "Use another email")
 
         # Check username availability
@@ -330,7 +326,7 @@ class User(Model):
             likes = c.fetchall()
             like_list = []
             for like in likes:
-                like_list.append(Report(like))
+                like_list.append(Like(like))
         return like_list
 
     def get_likes_sent(self):
@@ -351,7 +347,7 @@ class User(Model):
             likes = c.fetchall()
             like_list = []
             for like in likes:
-                like_list.append(Report(like))
+                like_list.append(Like(like))
         return like_list
 
     def already_likes(self, liked_id: int) -> bool:
@@ -370,6 +366,26 @@ class User(Model):
             result = c.fetchone()
             value = next(iter(result.values()))
             return bool(value)
+
+    def get_matches(self):
+        logging.debug("Getting all matches for user {}".format(self.id))
+        with self.db.cursor() as c:
+            c.execute(
+                """
+                SELECT matches.id as id, matches.user_1 as user_1,
+                matches.user_2 as user_2, matches.dt_matched as dt_matched
+                FROM users
+                INNER JOIN matches on users.id = matches.user_1 or users.id = matches.user_2
+                WHERE users.id = CAST({} AS UNSIGNED)
+                """.format(
+                    self.id
+                )
+            )
+            matches = c.fetchall()
+            match_list = []
+            for match in matches:
+                match_list.append(Match(match))
+        return match_list
 
 
 def get_user(uid: Any[int, str]) -> Optional[User]:
@@ -400,7 +416,7 @@ def get_user(uid: Any[int, str]) -> Optional[User]:
         f_user = user
     # If none of those worked, throw an error
     if not_found == 3:
-        logging.warning("User {} not found.".format(uid))
+        logging.debug("User {} not found.".format(uid))
         raise NotFoundError("User {} not found.".format(uid), "Try again with another uid")
     logging.debug("Found user {} from {}".format(f_user.id, uid))
     return f_user

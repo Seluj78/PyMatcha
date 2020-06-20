@@ -210,7 +210,7 @@ class Model(object):
                 self.db.commit()
                 logging.debug("deleted {} from table {}".format(self.id, self.table_name))
         else:
-            logging.warning("{} Not in table {}".format(self.id, self.table_name))
+            logging.fatal("{} Not in table {}".format(self.id, self.table_name))
             raise Exception("{} Not in table {}".format(self.id, self.table_name))
 
     @classmethod

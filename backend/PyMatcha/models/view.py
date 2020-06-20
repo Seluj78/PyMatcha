@@ -34,9 +34,6 @@ class View(Model):
     viewer_id = Field(int)
     dt_seen = Field(datetime.datetime)
 
-    def before_init(self, data):
-        pass
-
     @staticmethod
     def create(profile_id: int, viewer_id: int, dt_seen: datetime.datetime = datetime.datetime.utcnow()) -> View:
         new_view = View(profile_id=profile_id, viewer_id=viewer_id, dt_seen=dt_seen)

@@ -98,7 +98,7 @@ logging.debug("Configuring JWT expired token handler callback")
 
 @jwt.expired_token_loader
 def expired_token_callback(expired_token):
-    logging.warning("Token {} expired".format(expired_token))
+    logging.debug("Token {} expired".format(expired_token))
     resp = {
         "code": 401,
         "error": {
@@ -187,16 +187,30 @@ def check_if_token_is_revoked(decrypted_token):
 
 from PyMatcha.routes.api.ping_pong import ping_pong_bp
 from PyMatcha.routes.api.user import user_bp
-from PyMatcha.routes.api.auth import auth_bp
-from PyMatcha.routes.api.profile import profile_bp
+from PyMatcha.routes.api.auth.email import auth_email_bp
+from PyMatcha.routes.api.auth.password import auth_password_bp
+from PyMatcha.routes.api.auth.register import auth_register_bp
+from PyMatcha.routes.api.auth.login import auth_login_bp
+from PyMatcha.routes.api.profile.view import profile_view_bp
+from PyMatcha.routes.api.profile.edit import profile_edit_bp
+from PyMatcha.routes.api.profile.complete import profile_complete_bp
+from PyMatcha.routes.api.profile.report import profile_report_bp
 from PyMatcha.routes.api.like import like_bp
+from PyMatcha.routes.api.match import match_bp
 
 logging.debug("Registering Flask blueprints")
 application.register_blueprint(ping_pong_bp)
 application.register_blueprint(user_bp)
-application.register_blueprint(auth_bp)
-application.register_blueprint(profile_bp)
+application.register_blueprint(auth_email_bp)
+application.register_blueprint(auth_password_bp)
+application.register_blueprint(auth_register_bp)
+application.register_blueprint(auth_login_bp)
+application.register_blueprint(profile_view_bp)
+application.register_blueprint(profile_edit_bp)
+application.register_blueprint(profile_complete_bp)
+application.register_blueprint(profile_report_bp)
 application.register_blueprint(like_bp)
+application.register_blueprint(match_bp)
 
 if application.debug:
     logging.debug("Registering debug route")

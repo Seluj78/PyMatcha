@@ -625,7 +625,7 @@
 											"tests[\"JSON return code is 200\"] = response.code == 200",
 											"",
 											"tests[\"success is true\"] = response.success == true",
-											"tests[\"Message is correct\"] = response.message == \"User successfully confirmed\"",
+											"tests[\"Message is correct\"] = response.message == \"User successfully confirmed.\"",
 											""
 										],
 										"type": "text/javascript"
@@ -674,7 +674,7 @@
 											"tests[\"JSON return code is 200\"] = response.code == 200",
 											"",
 											"tests[\"success is true\"] = response.success == true",
-											"tests[\"Message is correct\"] = response.message == \"User already confirmed\"",
+											"tests[\"Message is correct\"] = response.message == \"User already confirmed.\"",
 											""
 										],
 										"type": "text/javascript"
@@ -2362,7 +2362,7 @@
 											"tests[\"JSON return code is 200\"] = response.code == 200",
 											"",
 											"tests[\"success is true\"] = response.success == true",
-											"tests[\"Message is correct\"] = response.message == \"User successfully confirmed\"",
+											"tests[\"Message is correct\"] = response.message == \"User successfully confirmed.\"",
 											""
 										],
 										"type": "text/javascript"
@@ -2656,7 +2656,7 @@
 											"    pm.response.to.have.status(200);",
 											"});",
 											"",
-											"tests[\"Is geohash correct\"] = response.geohash == \"ezzweqbd4wuk\""
+											"tests[\"Is geohash correct\"] = response.geohash == \"ezzw82vu4u1r\""
 										],
 										"type": "text/javascript"
 									}
@@ -3699,7 +3699,8 @@
 											"tests[\"JSON return code is 200\"] = response.code == 200",
 											"",
 											"tests[\"success is true\"] = response.success == true",
-											""
+											"",
+											"tests[\"Messag is correct\"] = response.message == \"Liked user.\""
 										],
 										"type": "text/javascript"
 									}
@@ -3936,6 +3937,92 @@
 					"_postman_isSubFolder": true
 				},
 				{
+					"name": "Match user",
+					"item": [
+						{
+							"name": "Create fake like",
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "POST",
+								"header": [
+									{
+										"key": "debug-auth-token",
+										"value": "{{debug_token}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"liker_uid\": \"like_me\",\n    \"liked_uid\": \"{{user_username}}\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{host}}/debug/like",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"debug",
+										"like"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Like like_me user match",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "df978384-30fb-4ec0-acc8-14845fee3d94",
+										"exec": [
+											"var response = JSON.parse(responseBody);",
+											"",
+											"",
+											"pm.test(\"Status code is 200\", function () {",
+											"    pm.response.to.have.status(200);",
+											"});",
+											"",
+											"tests[\"JSON return code is 200\"] = response.code == 200",
+											"",
+											"tests[\"success is true\"] = response.success == true",
+											"",
+											"",
+											"tests[\"Message is correct\"] = response.message == \"It's a match !\"",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"url": {
+									"raw": "{{host}}/like/like_me",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"like",
+										"like_me"
+									]
+								}
+							},
+							"response": []
+						}
+					],
+					"protocolProfileBehavior": {},
+					"_postman_isSubFolder": true
+				},
+				{
 					"name": "Delete user like_me",
 					"event": [
 						{
@@ -3972,6 +4059,70 @@
 								"debug",
 								"users",
 								"like_me@example.org"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get sent and received likes",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "42cca1eb-0433-4709-a922-7037e6ddc6d5",
+								"exec": [
+									"var response = JSON.parse(responseBody);",
+									"",
+									"tests[\"Received likes != 0\"] = response.likes.received.length != 0",
+									"tests[\"Sent likes != 0\"] = response.likes.sent.length != 0"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{host}}/likes",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"likes"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get user matches",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "98be5051-980e-46c1-96bd-0c5219fd0cfa",
+								"exec": [
+									"var response = JSON.parse(responseBody);",
+									"",
+									"tests[\"Matches length != 0\"] = response.matches.length != 0",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{host}}/matches",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"matches"
 							]
 						}
 					},
@@ -4035,7 +4186,7 @@
 					"response": []
 				},
 				{
-					"name": "Reset views table",
+					"name": "Reset tables",
 					"event": [
 						{
 							"listen": "test",
@@ -4064,97 +4215,13 @@
 							}
 						],
 						"url": {
-							"raw": "{{host}}/debug/views",
+							"raw": "{{host}}/debug/tables",
 							"host": [
 								"{{host}}"
 							],
 							"path": [
 								"debug",
-								"views"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Reset reports table",
-					"event": [
-						{
-							"listen": "test",
-							"script": {
-								"id": "ddc96ae3-defe-40c5-b607-aba4498c7e58",
-								"exec": [
-									"pm.test(\"Status code is 200\", function () {",
-									"    pm.response.to.have.status(204);",
-									"});",
-									""
-								],
-								"type": "text/javascript"
-							}
-						}
-					],
-					"request": {
-						"auth": {
-							"type": "noauth"
-						},
-						"method": "DELETE",
-						"header": [
-							{
-								"key": "debug-auth-token",
-								"type": "text",
-								"value": "{{debug_token}}"
-							}
-						],
-						"url": {
-							"raw": "{{host}}/debug/reports",
-							"host": [
-								"{{host}}"
-							],
-							"path": [
-								"debug",
-								"reports"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Reset likes table",
-					"event": [
-						{
-							"listen": "test",
-							"script": {
-								"id": "151579af-9a16-4ec1-9b26-9c8da7e12de2",
-								"exec": [
-									"pm.test(\"Status code is 200\", function () {",
-									"    pm.response.to.have.status(204);",
-									"});",
-									""
-								],
-								"type": "text/javascript"
-							}
-						}
-					],
-					"request": {
-						"auth": {
-							"type": "noauth"
-						},
-						"method": "DELETE",
-						"header": [
-							{
-								"key": "debug-auth-token",
-								"type": "text",
-								"value": "{{debug_token}}"
-							}
-						],
-						"url": {
-							"raw": "{{host}}/debug/likes",
-							"host": [
-								"{{host}}"
-							],
-							"path": [
-								"debug",
-								"likes"
+								"tables"
 							]
 						}
 					},
@@ -4222,109 +4289,109 @@
 	],
 	"variable": [
 		{
-			"id": "ee67a08e-cac2-4171-bfa7-e9fadea3ddc6",
+			"id": "0f90f46f-1dea-4663-9b0a-96782a775bc6",
 			"key": "host",
 			"value": "http://127.0.0.1:5000",
 			"type": "string"
 		},
 		{
-			"id": "4b4becbf-50e6-422b-880c-91f5a94ed892",
+			"id": "f69c5291-22cd-43de-8505-7e8c4bdfaa77",
 			"key": "user_id",
 			"value": "",
 			"type": "string"
 		},
 		{
-			"id": "6939f737-6b8f-4c82-9079-6a142843ce0e",
+			"id": "ae238981-115c-490b-9ae9-f149dc8ff0ca",
 			"key": "user_email",
 			"value": "foo@example.org",
 			"type": "string"
 		},
 		{
-			"id": "e2597b69-58b5-4b21-80fa-30d5ce920d37",
+			"id": "9f499eb6-f2ff-4104-b411-1ed740c08a71",
 			"key": "user_username",
 			"value": "foo",
 			"type": "string"
 		},
 		{
-			"id": "3f9ab841-953a-4497-842a-d81383492354",
+			"id": "ddd538ac-a6ec-4fd0-828c-9c3aa8f605cc",
 			"key": "user_password",
 			"value": "admin",
 			"type": "string"
 		},
 		{
-			"id": "e9b7359b-2cd6-46e8-98b1-6b99b1ec4c90",
+			"id": "9b833c1c-0e30-4994-b438-93e747e4a86a",
 			"key": "user_firstname",
 			"value": "Foo",
 			"type": "string"
 		},
 		{
-			"id": "91eaa561-d594-4d4d-a4e4-64dd2d2efd3a",
+			"id": "82b74708-71be-4819-b785-c1fd859fc49a",
 			"key": "user_lastname",
 			"value": "Bar",
 			"type": "string"
 		},
 		{
-			"id": "557b849c-f69a-4cf1-a377-a8e9e028872d",
+			"id": "b5f5abf3-a625-4d6b-a287-25d5f24c1752",
 			"key": "debug_token",
 			"value": "xX69jules69Xx",
 			"type": "string"
 		},
 		{
-			"id": "e3971560-7a70-49dd-8bb7-85d4ff29db4e",
+			"id": "bd7410a6-e043-4fcb-a4c7-6caca10fd8cd",
 			"key": "user_access_token",
 			"value": "",
 			"type": "string"
 		},
 		{
-			"id": "9b88d900-87a1-4f60-944c-2dc63d53749d",
+			"id": "45754bea-5c43-47a1-94de-4c6d74bafcbe",
 			"key": "user_refresh_token",
 			"value": "",
 			"type": "string"
 		},
 		{
-			"id": "620ed0b8-89b5-4f8d-b13e-f28bea6c9c9f",
+			"id": "b727953d-1cb9-47f6-93eb-5c98e5c3dc0f",
 			"key": "expired_token",
 			"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE1OTAyNDIyNjQsIm5iZiI6MTU5MDI0MjI2NCwianRpIjoiNTM0ZGI5NzQtOWE4Ni00MGViLWE1NDEtMDg3N2ZmNzQ3NDVhIiwiZXhwIjoxNTkwMjQyMzI0LCJpZGVudGl0eSI6eyJpZCI6NTEyLCJlbWFpbCI6ImZvb0BleGFtcGxlLm9yZyIsInVzZXJuYW1lIjoiYmFyIiwiaXNfb25saW5lIjp0cnVlLCJkYXRlX2xhc3RzZWVuIjoiU2F0LCAyMyBNYXkgMjAyMCAxMzo1Nzo0NCBHTVQifSwiZnJlc2giOnRydWUsInR5cGUiOiJhY2Nlc3MifQ.NTp2P0WNkXDwzuzrcNIQdeAfizQ57HQgkzBLSvY1yHU",
 			"type": "string"
 		},
 		{
-			"id": "a3eef71e-5568-4aba-8bca-146e2027aa7d",
+			"id": "8d73e461-be05-4fda-9759-eefd4723ae74",
 			"key": "user_orientation",
 			"value": "heterosexual",
 			"type": "string"
 		},
 		{
-			"id": "1ee06cf0-f453-40d2-ac74-a0f89c090ee9",
+			"id": "abbbfd7b-452c-48ab-a34b-c5ba746f77ed",
 			"key": "user_bio",
 			"value": "Lorem Ipsum is the single greatest threat. We are not - we are not keeping up with other websites. Lorem Ipsum best not make any more threats to your website. It will be met with fire and fury like the world has never seen. Does everybody know that pig named Lorem Ipsum? An ‘extremely credible source’ has called my office and told me that Barack Obama’s placeholder text is a fraud.",
 			"type": "string"
 		},
 		{
-			"id": "16f369cb-5586-46c9-bc93-5c57e2d64dee",
+			"id": "981e543d-c66d-4e08-95aa-8f1f56446b0d",
 			"key": "user_gender",
 			"value": "male",
 			"type": "string"
 		},
 		{
-			"id": "f959c265-7b2d-4037-88ad-64c6720cb9e2",
+			"id": "8159bc19-4baa-457a-8557-ebfd55fde080",
 			"key": "user_birthdate",
 			"value": "06/04/1998",
 			"type": "string"
 		},
 		{
-			"id": "8430e220-97ab-48af-89ad-078fb179d607",
+			"id": "c3843867-8386-4507-ac5c-51957c1d698d",
 			"key": "user_lat",
 			"value": "44.8404",
 			"type": "string"
 		},
 		{
-			"id": "070eddd1-d4a5-4a47-a2a0-56c06676f540",
+			"id": "e948632b-4a2a-4bd9-b142-daf0ccdc7c52",
 			"key": "user_lng",
 			"value": "-0.5805",
 			"type": "string"
 		},
 		{
-			"id": "9943cf39-5557-4424-8b9c-ca532d935090",
+			"id": "c9049a3d-e2e2-4907-ab32-4e94cc4d1698",
 			"key": "user_ip",
 			"value": "77.205.46.181",
 			"type": "string"

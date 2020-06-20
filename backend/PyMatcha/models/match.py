@@ -18,27 +18,29 @@
 """
 from __future__ import annotations
 
+import datetime
 import logging
 
-from PyMatcha.utils import create_tags_table
+from PyMatcha.utils import create_matches_table
 from PyMatcha.utils.orm import Field
 from PyMatcha.utils.orm import Model
 
 
-class Tag(Model):
-    table_name = "tags"
+class Match(Model):
+    table_name = "matches"
 
     id = Field(int, modifiable=False)
-    user_id = Field(int)
-    name = Field(str)
+    user_1 = Field(int)
+    user_2 = Field(int)
+    dt_matched = Field(datetime.datetime, fmt="%Y-%m-%d %H:%M:%S")
 
     @staticmethod
-    def create(user_id: int, name="") -> Tag:
-        new_tag = Tag(user_id=user_id, name=name)
-        new_tag.save()
-        logging.debug("Creating new tag")
-        return new_tag
+    def create(user_1: int, user_2: int, dt_matched: datetime.datetime = datetime.datetime.utcnow()) -> Match:
+        new_match = Match(user_1=user_1, user_2=user_2, dt_matched=dt_matched)
+        new_match.save()
+        logging.debug("Creating new match")
+        return new_match
 
     @classmethod
     def create_table(cls):
-        create_tags_table(cls.db)
+        create_matches_table(cls.db)

@@ -26,10 +26,7 @@ from flask import request
 from flask_jwt_extended import current_user
 from flask_jwt_extended import jwt_required
 from ip2geotools.databases.noncommercial import DbIpCity
-from PyMatcha.models.report import Report
-from PyMatcha.models.tag import Tag
 from PyMatcha.models.user import get_user
-from PyMatcha.models.view import View
 from PyMatcha.utils import hash_password
 from PyMatcha.utils.confirm_token import generate_confirmation_token
 from PyMatcha.utils.decorators import validate_params
@@ -39,11 +36,9 @@ from PyMatcha.utils.errors import UnauthorizedError
 from PyMatcha.utils.mail import send_mail_html
 from PyMatcha.utils.mail import send_mail_text
 from PyMatcha.utils.success import Success
-from PyMatcha.utils.success import SuccessOutput
 
-profile_bp = Blueprint("profile", __name__)
+profile_edit_bp = Blueprint("profile_edit", __name__)
 
-REQUIRED_PARAMS_COMPLETE_PROFILE = {"gender": str, "birthdate": str, "orientation": str, "bio": str, "tags": list}
 REQUIRED_PARAMS_EDIT_PROFILE = {
     "first_name": str,
     "last_name": str,
@@ -56,54 +51,7 @@ REQUIRED_PARAMS_EDIT_PROFILE = {
 }
 
 
-@profile_bp.route("/profile/complete", methods=["POST"])
-@jwt_required
-@validate_params(REQUIRED_PARAMS_COMPLETE_PROFILE)
-def complete_profile():
-    if current_user.is_profile_completed:
-        raise BadRequestError(
-            "The user has already completed his profile", "Go to your profile settings to edit your profile"
-        )
-    data = request.get_json()
-    orientation = data["orientation"]
-    bio = data["bio"]
-    tags = data["tags"]
-    gender = data["gender"]
-    birthdate = data["birthdate"]
-
-    try:
-        birthdate = datetime.datetime.strptime(birthdate, "%d/%m/%Y").date()
-    except ValueError:
-        raise BadRequestError("Birthdate format must be %d/%m/%Y (day/month/year)", "Try again")
-
-    if len(bio) <= 50:
-        raise BadRequestError("Bio is too short", "Try again")
-
-    if len(tags) < 3:
-        raise BadRequestError("At least 3 tags are required", "Try again")
-
-    if len(tags) != len(set(tags)):
-        raise BadRequestError("Duplicate tags", "Try again")
-
-    today = datetime.datetime.utcnow()
-
-    age = today.year - birthdate.year - ((today.month, today.day) < (birthdate.month, birthdate.day))
-    if age < 18:
-        raise BadRequestError("You must be 18 years old or older", "Try again later")
-
-    for tag in tags:
-        Tag.create(name=tag, user_id=current_user.id)
-
-    current_user.orientation = orientation
-    current_user.bio = bio
-    current_user.is_profile_completed = True
-    current_user.gender = gender
-    current_user.birthdate = birthdate
-    current_user.save()
-    return Success("Profile completed !")
-
-
-@profile_bp.route("/profile/edit", methods=["PUT"])
+@profile_edit_bp.route("/profile/edit", methods=["PUT"])
 @jwt_required
 @validate_params(REQUIRED_PARAMS_EDIT_PROFILE)
 def edit_profile():
@@ -153,7 +101,7 @@ def edit_profile():
     return Success("User successfully modified !")
 
 
-@profile_bp.route("/profile/edit/email", methods=["PUT"])
+@profile_edit_bp.route("/profile/edit/email", methods=["PUT"])
 @jwt_required
 @validate_params({"email": str})
 def edit_email():
@@ -171,7 +119,7 @@ def edit_email():
     return Success("Email sent for new email")
 
 
-@profile_bp.route("/profile/edit/password", methods=["PUT"])
+@profile_edit_bp.route("/profile/edit/password", methods=["PUT"])
 @jwt_required
 @validate_params({"old_password": str, "new_password": str})
 def edit_password():
@@ -191,7 +139,7 @@ def edit_password():
     return Success("User password successfully updated.")
 
 
-@profile_bp.route("/profile/edit/geolocation", methods=["PUT"])
+@profile_edit_bp.route("/profile/edit/geolocation", methods=["PUT"])
 @jwt_required
 @validate_params({"ip": str}, {"lat": float, "lng": float})
 def edit_geolocation():
@@ -213,50 +161,3 @@ def edit_geolocation():
         current_user.geohash = Geohash.encode(lat, lng)
     current_user.save()
     return Success("New location sucessfully saved.")
-
-
-@profile_bp.route("/profile/views", methods=["GET"])
-@jwt_required
-def get_profile_views():
-    profile_views = current_user.get_views()
-    profile_views = [v.to_dict() for v in profile_views]
-    return SuccessOutput("views", profile_views)
-
-
-@profile_bp.route("/profile/view/<uid>", methods=["GET"])
-@jwt_required
-def view_profile(uid):
-    try:
-        u = get_user(uid)
-    except NotFoundError:
-        raise NotFoundError(f"User {uid} not found", "try again")
-
-    if current_user.id != u.id:
-        View.create(profile_id=u.id, viewer_id=current_user.id)
-
-    return SuccessOutput("profile", u.to_dict())
-
-
-@profile_bp.route("/profile/report/<uid>", methods=["POST"])
-@validate_params({"reason": str}, {"details": str})
-@jwt_required
-def report_profile(uid):
-    data = request.get_json()
-    reason = data["reason"]
-
-    if reason not in ["harassment", "bot", "spam", "inappropriate content"]:
-        raise BadRequestError("Reason must be 'harassment', 'bot', 'spam' or 'inappropriate content'", "Try again")
-
-    try:
-        details = data["details"]
-    except KeyError:
-        details = None
-    try:
-        u = get_user(uid)
-    except NotFoundError:
-        raise NotFoundError(f"User {uid} not found", "try again")
-    if current_user.id == u.id:
-        raise BadRequestError("Cannot report yourself", "Try again")
-    Report.create(reporter_id=current_user.id, reported_id=u.id, reason=reason, details=details)
-
-    return Success(f"Report created on user {u.email}")
