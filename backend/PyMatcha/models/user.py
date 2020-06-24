@@ -417,7 +417,7 @@ class User(Model):
             messages = c.fetchall()
             message_list = []
             for message in messages:
-                message_list.append(message.Message(message))
+                message_list.append(Message(message))
         logging.debug("Getting all messages sent or received by user {}".format(self.id))
         return message_list
 
