@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useHistory } from "react-router-dom";
-import { getRefreshToken, date2Html, apiCall, logOut } from "../utils";
+import { getRefreshToken, date2Html, apiCall, logOut, date2string } from "../utils";
 import Loading from "./../components/loading"
 
 /*
@@ -86,7 +86,7 @@ const Meta = (form, setForm, key) => (
 				</div>
 				<div className="field">
 					<div className="control">
-						<input className="input" type="date" value={date2Html(form.birthdate) || ""} onChange={e => setForm('birthdate', new Date(e.target.value).valueOf())} />
+						<input className="input" type="date" value={date2Html(form.birthdate) || ""} onChange={e => setForm('birthdate', date2string(e.target.value))} />
 					</div>
 				</div>
 			</div>
