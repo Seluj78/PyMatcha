@@ -10,6 +10,14 @@ const date2Html = d => {
 	return `${year}-${month}-${date}`;
 }
 
+const date2string = d => {
+	const t = new Date(d);
+	const date = ('0' + t.getDate()).slice(-2);
+	const month = ('0' + (t.getMonth() + 1)).slice(-2);
+	const year = t.getFullYear();
+	return `${date}/${month}/${year}`;
+}
+
 const delete_refresh = async () => {
 	const token = getRefreshToken();
 	const options = {
@@ -137,5 +145,6 @@ export {
 	date2Html,
 	discard,
 	delete_refresh,
-	logOut
+	logOut,
+	date2string
 }
