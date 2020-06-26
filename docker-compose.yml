@@ -2,7 +2,7 @@ version: '3.3'
 
 services:
   mysql:
-    image: mysql:8.0.18
+    image: mysql
     restart: always
     environment:
       MYSQL_ROOT_PASSWORD:
@@ -43,6 +43,8 @@ services:
       - PYTHONUNBUFFERED=1
       - CELERY_BROKER_URL=redis://redis:6379/0
       - CELERY_RESULT_BACKEND=redis://redis:6379/0
+      - DB_PORT=3306
+      - DB_HOST=mysql
     env_file:
       - .env
     entrypoint: celery worker --workdir . -A PyMatcha.celery -B --loglevel=info
@@ -68,6 +70,8 @@ services:
     environment:
       - PYTHONUNBUFFERED=1
       - FLASK_DEBUG=true
+      - DB_PORT=3306
+      - DB_HOST=mysql
     ports:
       - "8080:5000"
     volumes:

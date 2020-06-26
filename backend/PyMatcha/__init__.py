@@ -122,7 +122,7 @@ else:
 
 logging.debug("Setting database config from environment variables")
 database_config = {
-    "host": os.getenv("DB_HOST") if not os.getenv("IS_DOCKER_COMPOSE") else "mysql",
+    "host": os.getenv("DB_HOST"),
     "port": int(os.getenv("DB_PORT")),
     "user": os.getenv("DB_USER"),
     "password": database_password,
