@@ -213,6 +213,8 @@ class Model(object):
             logging.fatal("{} Not in table {}".format(self.id, self.table_name))
             raise Exception("{} Not in table {}".format(self.id, self.table_name))
 
+    # TODO: Consolidate get, get_multi and get_multis in one function !
+
     @classmethod
     def get(cls, **kwargs):
         """
@@ -294,6 +296,55 @@ class Model(object):
             data = c.fetchone()
         if data:
             return cls(data)
+        else:
+            raise ValueError("Not found")
+
+    @classmethod
+    def get_multis(cls, **kwargs):
+        """
+        Get models from the database, using multiple keyword argument as a filter.
+
+        Class method allows you to use without instanciation eg.
+
+            model = Model.get(username="test", email="test@example.org")
+
+        Returns list of instances on success and raises an error if the row count was 0
+
+        """
+
+        keys = []
+        values = []
+        for key, value in kwargs.items():
+            keys.append(key)
+            values.append(value)
+
+        where = ""
+        length = len(keys)
+        for index, (key, value) in enumerate(zip(keys, values)):
+            if index == length - 1:
+                where = where + f"{key}={value}"
+            else:
+                where = where + f"{key}={value} and "
+
+        temp = cls()
+        with temp.db.cursor() as c:
+            c.execute(
+                """
+                SELECT 
+                    {fields}
+                FROM 
+                    {table} 
+                WHERE   {where}""".format(
+                    fields=", ".join(temp.fields.keys()), table=cls.table_name, where=where
+                )
+            )
+
+            data = c.fetchall()
+        if data:
+            ret_list = []
+            for i in data:
+                ret_list.append(cls(i))
+            return ret_list
         else:
             raise ValueError("Not found")
 
