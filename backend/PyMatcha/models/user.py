@@ -459,8 +459,6 @@ class User(Model):
         return conversation_list
 
     def get_messages_with_user(self, with_user_id) -> List[Message]:
-        # TODO: Create a function to get latest messages only. Maybe https://stackoverflow.com/a/41095528/6350162 ?
-        #  Based on time or amount of messages https://stackoverflow.com/a/3799223/6350162
         with self.db.cursor() as c:
             c.execute(
                 """
@@ -495,7 +493,7 @@ class User(Model):
             messages = c.fetchall()
             message_list = []
             for message in messages:
-                message_list.append(Message(message).get_all_info())
+                message_list.append(Message(message))
         logging.debug(
             "Getting all messages between user {} and {} (Total: {})".format(self.id, with_user_id, len(message_list))
         )

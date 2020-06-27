@@ -31,17 +31,11 @@ from PyMatcha.utils.success import SuccessOutput
 
 
 REQUIRED_KEYS_NEW_MESSAGE = {"to_id": int, "content": str}
-# REQUIRED_KEYS_GET_CONVERSATION = {"with_id": int}
 
 messages_bp = Blueprint("messages", __name__)
 
-# TODO: Route to get the last message for each open conversation
-# TODO: Route to send a new message to a conversation
 
-"""
-Route to get latest messages with user (then paginated to get the older messages)
-route to receive messages
-"""
+# TODO: route to receive messages
 
 
 @messages_bp.route("/conversations", methods=["GET"])
@@ -50,6 +44,19 @@ def get_opened_conversations():
     conv_list = current_user.get_conversation_list()
     returned_list = [c.to_dict() for c in conv_list]
     return SuccessOutput("conversations", returned_list)
+
+
+@messages_bp.route("/conversations/<with_uid>", methods=["GET"])
+@jwt_required
+def get_conversation_messsages(with_uid):
+    # TODO: Limit to 200 messages and if need be get more
+    try:
+        with_user = get_user(with_uid)
+    except NotFoundError:
+        raise NotFoundError("With user {} not found", "Try again")
+    message_list = current_user.get_messages_with_user(with_user.id)
+    message_list = [m.to_dict for m in message_list]
+    return SuccessOutput("messages", message_list)
 
 
 @messages_bp.route("/messages/see/<with_uid>", methods=["POST"])
@@ -94,12 +101,3 @@ def send_message():
     current_user.send_message(to_id=to_id, content=content)
     current_app.logger.debug("/messages -> Message successfully sent to {}".format(to_id))
     return Success("Message successfully sent to {}".format(to_id))
-
-
-# @messages_bp.route("/messages/conversation", methods=["GET"])
-# @jwt_required
-# @validate_params(REQUIRED_KEYS_GET_CONVERSATION)
-# def get_conversation():
-#     data = request.get_json()
-#     with_id: int = int(data["with_id"])
-#     return SuccessOutput("messages", current_user.get_messages_with_user(with_id))
