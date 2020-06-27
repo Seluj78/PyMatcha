@@ -103,7 +103,7 @@ def send_message():
     return Success("Message successfully sent to {}".format(to_id))
 
 
-@messages_bp.route("/messages/new", methods=["GET"])
+@messages_bp.route("/messages/unseen", methods=["GET"])
 @jwt_required
 def get_new_messages():
     message_list = current_user.get_multis(to_id=current_user.id, is_seen=False)
