@@ -29,7 +29,7 @@ from PyMatcha.utils.errors import NotFoundError
 user_bp = Blueprint("user", __name__)
 
 
-@user_bp.route("/users/", methods=["GET"])
+@user_bp.route("/users", methods=["GET"])
 @jwt_required
 def get_all_users():
     current_app.logger.info("/users/ -> Call")
