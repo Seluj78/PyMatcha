@@ -390,8 +390,6 @@ class User(Model):
         return match_list
 
     def send_message(self, to_id, content):
-        # TODO: Send notification to the other user
-        logging.debug("Sending message from {} to {}".format(self.id, to_id))
         Message.create(from_id=self.id, to_id=to_id, content=content)
 
     def get_messages(self) -> List[Message]:
@@ -420,6 +418,45 @@ class User(Model):
                 message_list.append(Message(message))
         logging.debug("Getting all messages sent or received by user {}".format(self.id))
         return message_list
+
+    def get_conversation_list(self) -> List[Message]:
+        with self.db.cursor() as c:
+            c.execute(
+                """
+                SELECT * FROM messages
+                    JOIN
+                        (
+                            SELECT user, max(timestamp) m
+                                FROM
+                                    (
+                                        (
+                                            SELECT id, to_id user, timestamp
+                                            FROM messages
+                                            WHERE from_id={0}
+                                        )
+                                        UNION
+                                        (
+                                            SELECT id, from_id user, timestamp
+                                            FROM messages
+                                            WHERE to_id={0}
+                                        )
+                                    ) t1
+                            GROUP BY user
+                        ) t2
+                    ON
+                        ((from_id={0} AND to_id=user) OR
+                        (from_id=user AND to_id={0})) AND
+                        (timestamp = m)
+                    ORDER BY timestamp DESC
+                """.format(
+                    self.id
+                )
+            )
+            conversations = c.fetchall()
+            conversation_list = []
+            for last_message in conversations:
+                conversation_list.append(Message(last_message))
+        return conversation_list
 
     def get_messages_with_user(self, with_user_id) -> List[Message]:
         # TODO: Create a function to get latest messages only. Maybe https://stackoverflow.com/a/41095528/6350162 ?
