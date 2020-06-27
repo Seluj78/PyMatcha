@@ -55,7 +55,7 @@ def get_conversation_messsages(with_uid):
     except NotFoundError:
         raise NotFoundError("With user {} not found", "Try again")
     message_list = current_user.get_messages_with_user(with_user.id)
-    message_list = [m.to_dict for m in message_list]
+    message_list = [m.to_dict() for m in message_list]
     return SuccessOutput("messages", message_list)
 
 
@@ -101,3 +101,13 @@ def send_message():
     current_user.send_message(to_id=to_id, content=content)
     current_app.logger.debug("/messages -> Message successfully sent to {}".format(to_id))
     return Success("Message successfully sent to {}".format(to_id))
+
+
+@messages_bp.route("/messages/new", methods=["GET"])
+@jwt_required
+def get_new_messages():
+    message_list = current_user.get_multis(to_id=current_user.id, is_seen=False)
+    if not message_list:
+        return Success("No new messages")
+    new_messages = [m.to_dict() for m in message_list]
+    return SuccessOutput("new_messages", new_messages)

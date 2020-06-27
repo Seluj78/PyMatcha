@@ -346,7 +346,7 @@ class Model(object):
                 ret_list.append(cls(i))
             return ret_list
         else:
-            raise ValueError("Not found")
+            return None
 
     @classmethod
     def select_all(cls):
