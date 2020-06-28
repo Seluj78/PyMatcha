@@ -29,7 +29,7 @@ from PyMatcha.utils.errors import NotFoundError
 user_bp = Blueprint("user", __name__)
 
 
-@user_bp.route("/users/", methods=["GET"])
+@user_bp.route("/users", methods=["GET"])
 @jwt_required
 def get_all_users():
     current_app.logger.info("/users/ -> Call")
@@ -47,7 +47,7 @@ def get_one_user(uid):
     try:
         u = get_user(uid)
     except NotFoundError:
-        raise NotFoundError("User {} not found".format(uid), "Check given uid and try again")
+        raise NotFoundError("User {} not found".format(uid))
     else:
         current_app.logger.info("/users/{} -> Returning info on user {}".format(uid, uid))
         return jsonify(u.to_dict())

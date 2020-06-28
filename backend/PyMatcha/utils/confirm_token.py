@@ -16,11 +16,11 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 """
-
 import logging
 
-from itsdangerous import URLSafeTimedSerializer, SignatureExpired, BadSignature
-
+from itsdangerous import BadSignature
+from itsdangerous import SignatureExpired
+from itsdangerous import URLSafeTimedSerializer
 from PyMatcha import application
 
 ACCEPTED_TOKEN_TYPES = ["confirm", "reset"]
@@ -30,7 +30,7 @@ def generate_confirmation_token(email, token_type):
     logging.debug("Generating confirmation token for email {}".format(email))
     if token_type not in ACCEPTED_TOKEN_TYPES:
         logging.error("token_type must be of {} and is {}".format(ACCEPTED_TOKEN_TYPES, token_type))
-        raise ValueError("Reset token type must be confirm or reset")
+        raise ValueError("Reset token type must be confirm or reset.")
     serializer = URLSafeTimedSerializer(application.config["FLASK_SECRET_KEY"])
     token = serializer.dumps(email + ":{}".format(token_type), salt=application.config["FLASK_SECRET_KEY"])
     logging.debug("Generated token {} for email {}".format(token, email))

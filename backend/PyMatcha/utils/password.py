@@ -16,13 +16,14 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 """
+from argon2 import PasswordHasher
 
-import hashlib
-import logging
-import uuid
+ph = PasswordHasher()
 
 
 def hash_password(password: str) -> str:
-    salt = uuid.uuid4().hex
-    logging.debug("Hashing password with salt {}".format(salt))
-    return hashlib.sha256(salt.encode() + password.encode()).hexdigest() + ":" + salt
+    return ph.hash(password)
+
+
+def check_password(hash: str, password: str) -> bool:
+    return ph.verify(hash, password)

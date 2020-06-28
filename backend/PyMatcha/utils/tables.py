@@ -149,6 +149,28 @@ def _create_matches_table(db):
         c.execute(ENABLE_SQL_NOTES)
 
 
+def _create_messages_table(db):
+    with db.cursor() as c:
+        logging.info("Creating table messages.")
+        c.execute(DISABLE_SQL_NOTES)
+        c.execute(
+            """
+        CREATE TABLE IF NOT EXISTS messages
+        (
+        id             INT auto_increment PRIMARY KEY,
+        from_id        INT NOT NULL,
+        to_id          INT NOT NULL,
+        timestamp      TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+        seen_timestamp TIMESTAMP,
+        content        LONGTEXT NOT NULL,
+        is_liked       BOOLEAN DEFAULT FALSE,
+        is_seen        BOOLEAN DEFAULT FALSE
+        )
+        """
+        )
+        c.execute(ENABLE_SQL_NOTES)
+
+
 def create_tables(db):
     _create_user_table(db)
     _create_tags_table(db)
@@ -156,3 +178,4 @@ def create_tables(db):
     _create_reports_table(db)
     _create_likes_table(db)
     _create_matches_table(db)
+    _create_messages_table(db)

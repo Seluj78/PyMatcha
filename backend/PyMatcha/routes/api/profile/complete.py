@@ -50,22 +50,22 @@ def complete_profile():
     try:
         birthdate = datetime.datetime.strptime(birthdate, "%d/%m/%Y").date()
     except ValueError:
-        raise BadRequestError("Birthdate format must be %d/%m/%Y (day/month/year)", "Try again")
+        raise BadRequestError("Birthdate format must be %d/%m/%Y (day/month/year)")
 
     if len(bio) <= 50:
-        raise BadRequestError("Bio is too short", "Try again")
+        raise BadRequestError("Bio is too short.")
 
     if len(tags) < 3:
-        raise BadRequestError("At least 3 tags are required", "Try again")
+        raise BadRequestError("At least 3 tags are required.")
 
     if len(tags) != len(set(tags)):
-        raise BadRequestError("Duplicate tags", "Try again")
+        raise BadRequestError("Duplicate tags.")
 
     today = datetime.datetime.utcnow()
 
     age = today.year - birthdate.year - ((today.month, today.day) < (birthdate.month, birthdate.day))
     if age < 18:
-        raise BadRequestError("You must be 18 years old or older", "Try again later")
+        raise BadRequestError("You must be 18 years old or older.")
 
     for tag in tags:
         Tag.create(name=tag, user_id=current_user.id)

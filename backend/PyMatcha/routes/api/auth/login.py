@@ -35,9 +35,9 @@ from PyMatcha.models.user import get_user
 from PyMatcha.utils.decorators import validate_params
 from PyMatcha.utils.errors import NotFoundError
 from PyMatcha.utils.errors import UnauthorizedError
+from PyMatcha.utils.password import check_password
 from PyMatcha.utils.success import Success
 from PyMatcha.utils.success import SuccessOutput
-
 
 REQUIRED_KEYS_LOGIN = {"username": str, "password": str}
 
@@ -55,14 +55,14 @@ def auth_login():
         u = get_user(username)
     except NotFoundError:
         current_app.logger.debug("/auth/login -> User not found")
-        raise UnauthorizedError("Incorrect username or password", "Try again")
-    if not u.check_password(password):
+        raise UnauthorizedError("Incorrect username or password.")
+    if not check_password(u.password, password):
         current_app.logger.debug("/auth/login -> Password invalid")
-        raise UnauthorizedError("Incorrect username or password", "Try again")
+        raise UnauthorizedError("Incorrect username or password.")
 
     if not u.is_confirmed:
         current_app.logger.debug("/auth/login -> User is trying to login unconfirmed")
-        raise UnauthorizedError("User needs to be confirmed first.", "Try again when you have confirmed your email")
+        raise UnauthorizedError("User needs to be confirmed first.", "Try again when you have confirmed your email.")
     access_token = create_access_token(identity=u.get_jwt_info(), fresh=True)
     refresh_token = create_refresh_token(identity=u.get_jwt_info())
     access_jti = get_jti(access_token)

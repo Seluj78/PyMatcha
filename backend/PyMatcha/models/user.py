@@ -19,15 +19,16 @@
 from __future__ import annotations
 
 import datetime
-import hashlib
 import logging
 from typing import Any
 from typing import Dict
+from typing import List
 from typing import Optional
 
 import Geohash
 from PyMatcha.models.like import Like
 from PyMatcha.models.match import Match
+from PyMatcha.models.message import Message
 from PyMatcha.models.report import Report
 from PyMatcha.models.tag import Tag
 from PyMatcha.models.view import View
@@ -62,11 +63,6 @@ class User(Model):
     confirmed_on = Field(datetime.datetime, fmt="%Y-%m-%d %H:%M:%S")
     previous_reset_token = Field(str)
 
-    def check_password(self, password: str) -> bool:
-        logging.debug("Checking password again {} hashed password".format(self.id))
-        _hash, salt = self.password.split(":")
-        return _hash == hashlib.sha256(salt.encode() + password.encode()).hexdigest()
-
     @staticmethod
     def create(
         first_name: str,
@@ -94,7 +90,7 @@ class User(Model):
             pass
         else:
             logging.error("Email {} taken".format(email))
-            raise ConflictError("Email {} taken".format(email), "Use another email")
+            raise ConflictError("Email {} taken.".format(email), "Use another email.")
 
         # Check username availability
         try:
@@ -103,21 +99,20 @@ class User(Model):
             pass
         else:
             logging.error("Username {} taken".format(username))
-            raise ConflictError("Username {} taken".format(username), "Try another username")
+            raise ConflictError("Username {} taken.".format(username), "Try another username.")
 
         # Check correct gender
         if gender not in ["male", "female", "other"]:
             logging.error("Gender must be male, female or other, not {}".format(gender))
-            raise ConflictError("Gender must be male, female or other, not {}".format(gender), "Try again")
+            raise ConflictError("Gender must be male, female or other, not {}.".format(gender))
 
         # Check correct orientation
         if orientation not in ["heterosexual", "homosexual", "bisexual", "other"]:
             logging.error(
-                "Sexual Orientation must be heterosexual, homosexual, bisexual or other, not {}".format(orientation)
+                "Sexual Orientation must be heterosexual, homosexual, bisexual or other, not {}.".format(orientation)
             )
             raise ConflictError(
-                "Sexual Orientation must be heterosexual, homosexual, bisexual or other, not {}".format(orientation),
-                "Try again",
+                "Sexual Orientation must be heterosexual, homosexual, bisexual or other, not {}.".format(orientation)
             )
 
         # Check correct geohash
@@ -163,7 +158,7 @@ class User(Model):
             pass
         else:
             logging.debug("Email {} taken".format(email))
-            raise ConflictError("Email {} taken".format(email), "Use another email")
+            raise ConflictError("Email {} taken.".format(email), "Use another email.")
 
         # Check username availability
         try:
@@ -172,7 +167,7 @@ class User(Model):
             pass
         else:
             logging.error("Username {} taken".format(username))
-            raise ConflictError("Username {} taken".format(username), "Try another username")
+            raise ConflictError("Username {} taken.".format(username), "Try another username.")
 
         # Encrypt password
         password = hash_password(password)
@@ -387,6 +382,108 @@ class User(Model):
                 match_list.append(Match(match))
         return match_list
 
+    def send_message(self, to_id, content):
+        Message.create(from_id=self.id, to_id=to_id, content=content)
+
+    def get_messages(self) -> List[Message]:
+        with self.db.cursor() as c:
+            c.execute(
+                """
+                SELECT 
+                messages.from_id as from_id, 
+                messages.to_id as to_id, 
+                messages.id as id, 
+                messages.timestamp as timestamp, 
+                messages.seen_timestamp as seen_timestamp, 
+                messages.content as content, 
+                messages.is_liked as is_liked, 
+                messages.is_seen as is_seen
+                FROM messages 
+                INNER JOIN users on users.id = messages.from_id or users.id = messages.to_id 
+                WHERE users.id = CAST({} AS SIGNED)
+                """.format(
+                    self.id
+                )
+            )
+            messages = c.fetchall()
+            message_list = []
+            for message in messages:
+                message_list.append(Message(message))
+        logging.debug("Getting all messages sent or received by user {}".format(self.id))
+        return message_list
+
+    def get_conversation_list(self) -> List[Message]:
+        with self.db.cursor() as c:
+            c.execute(
+                """
+                SELECT t1.*
+                FROM messages AS t1
+                INNER JOIN
+                (
+                    SELECT
+                        LEAST(from_id, to_id) AS from_id,
+                        GREATEST(from_id, to_id) AS to_id,
+                        MAX(id) AS max_id
+                    FROM messages
+                    GROUP BY
+                        LEAST(from_id, to_id),
+                        GREATEST(from_id, to_id)
+                ) AS t2
+                    ON LEAST(t1.from_id, t1.to_id) = t2.from_id AND
+                       GREATEST(t1.from_id, t1.to_id) = t2.to_id AND
+                       t1.id = t2.max_id
+                    WHERE t1.from_id = {0} OR t1.to_id = {0}
+                """.format(
+                    self.id
+                )
+            )
+            conversations = c.fetchall()
+            conversation_list = []
+            for last_message in conversations:
+                conversation_list.append(Message(last_message))
+        return conversation_list
+
+    def get_messages_with_user(self, with_user_id) -> List[Message]:
+        with self.db.cursor() as c:
+            c.execute(
+                """
+                SELECT 
+                messages.from_id as from_id, 
+                messages.to_id as to_id, 
+                messages.id as id, 
+                messages.timestamp as timestamp, 
+                messages.seen_timestamp as seen_timestamp, 
+                messages.content as content, 
+                messages.is_liked as is_liked, 
+                messages.is_seen as is_seen
+                FROM messages 
+                WHERE from_id=CAST({0} AS SIGNED) and to_id=CAST({1} AS SIGNED)
+
+                UNION ALL
+
+                SELECT messages.from_id as from_id, 
+                messages.to_id as to_id, 
+                messages.id as id, 
+                messages.timestamp as timestamp, 
+                messages.seen_timestamp as seen_timestamp, 
+                messages.content as content, 
+                messages.is_liked as is_liked, 
+                messages.is_seen as is_seen
+                FROM messages 
+                WHERE from_id=CAST({1} AS SIGNED) and to_id=CAST({0} AS SIGNED)
+                """.format(
+                    self.id, with_user_id
+                )
+            )
+            messages = c.fetchall()
+            message_list = []
+            for message in messages:
+                message_list.append(Message(message))
+        logging.debug(
+            "Getting all messages between user {} and {} (Total: {})".format(self.id, with_user_id, len(message_list))
+        )
+        return message_list
+
 
 def get_user(uid: Any[int, str]) -> Optional[User]:
     not_found = 0
@@ -417,6 +514,6 @@ def get_user(uid: Any[int, str]) -> Optional[User]:
     # If none of those worked, throw an error
     if not_found == 3:
         logging.debug("User {} not found.".format(uid))
-        raise NotFoundError("User {} not found.".format(uid), "Try again with another uid")
+        raise NotFoundError("User {} not found.".format(uid))
     logging.debug("Found user {} from {}".format(f_user.id, uid))
     return f_user

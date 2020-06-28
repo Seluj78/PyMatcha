@@ -54,7 +54,7 @@ REQUIRED_ENV_VARS = [
 
 for item in REQUIRED_ENV_VARS:
     if item not in os.environ:
-        raise EnvironmentError(f"{item} is not set in the server's environment or .env file. It is required")
+        raise EnvironmentError(f"{item} is not set in the server's environment or .env file. It is required.")
 
 if os.getenv("ENABLE_LOGGING") == "True":
     setup_logging()
@@ -122,7 +122,7 @@ else:
 
 logging.debug("Setting database config from environment variables")
 database_config = {
-    "host": os.getenv("DB_HOST") if not os.getenv("IS_DOCKER_COMPOSE") else "mysql",
+    "host": os.getenv("DB_HOST"),
     "port": int(os.getenv("DB_PORT")),
     "user": os.getenv("DB_USER"),
     "password": database_password,
@@ -185,7 +185,6 @@ def check_if_token_is_revoked(decrypted_token):
     return entry == "true"
 
 
-from PyMatcha.routes.api.ping_pong import ping_pong_bp
 from PyMatcha.routes.api.user import user_bp
 from PyMatcha.routes.api.auth.email import auth_email_bp
 from PyMatcha.routes.api.auth.password import auth_password_bp
@@ -197,9 +196,9 @@ from PyMatcha.routes.api.profile.complete import profile_complete_bp
 from PyMatcha.routes.api.profile.report import profile_report_bp
 from PyMatcha.routes.api.like import like_bp
 from PyMatcha.routes.api.match import match_bp
+from PyMatcha.routes.api.messages import messages_bp
 
 logging.debug("Registering Flask blueprints")
-application.register_blueprint(ping_pong_bp)
 application.register_blueprint(user_bp)
 application.register_blueprint(auth_email_bp)
 application.register_blueprint(auth_password_bp)
@@ -211,6 +210,7 @@ application.register_blueprint(profile_complete_bp)
 application.register_blueprint(profile_report_bp)
 application.register_blueprint(like_bp)
 application.register_blueprint(match_bp)
+application.register_blueprint(messages_bp)
 
 if application.debug:
     logging.debug("Registering debug route")
