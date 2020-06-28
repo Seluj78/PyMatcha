@@ -47,7 +47,7 @@ def get_one_user(uid):
     try:
         u = get_user(uid)
     except NotFoundError:
-        raise NotFoundError("User {} not found".format(uid), "Check given uid and try again")
+        raise NotFoundError("User {} not found".format(uid))
     else:
         current_app.logger.info("/users/{} -> Returning info on user {}".format(uid, uid))
         return jsonify(u.to_dict())

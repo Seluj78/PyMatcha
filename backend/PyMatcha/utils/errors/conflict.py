@@ -25,7 +25,7 @@ class ConflictError(Exception):
     This is the ConflictError class for the Exception.
     """
 
-    def __init__(self, msg: str, solution: str) -> None:
+    def __init__(self, msg: str, solution: str = "Try again.") -> None:
         self.name = "Conflict Error"
         self.msg = msg
         self.solution = solution

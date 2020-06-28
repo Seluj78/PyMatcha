@@ -55,10 +55,10 @@ def auth_login():
         u = get_user(username)
     except NotFoundError:
         current_app.logger.debug("/auth/login -> User not found")
-        raise UnauthorizedError("Incorrect username or password", "Try again")
+        raise UnauthorizedError("Incorrect username or password")
     if not u.check_password(password):
         current_app.logger.debug("/auth/login -> Password invalid")
-        raise UnauthorizedError("Incorrect username or password", "Try again")
+        raise UnauthorizedError("Incorrect username or password")
 
     if not u.is_confirmed:
         current_app.logger.debug("/auth/login -> User is trying to login unconfirmed")

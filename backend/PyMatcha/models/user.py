@@ -110,7 +110,7 @@ class User(Model):
         # Check correct gender
         if gender not in ["male", "female", "other"]:
             logging.error("Gender must be male, female or other, not {}".format(gender))
-            raise ConflictError("Gender must be male, female or other, not {}".format(gender), "Try again")
+            raise ConflictError("Gender must be male, female or other, not {}".format(gender))
 
         # Check correct orientation
         if orientation not in ["heterosexual", "homosexual", "bisexual", "other"]:
@@ -118,8 +118,7 @@ class User(Model):
                 "Sexual Orientation must be heterosexual, homosexual, bisexual or other, not {}".format(orientation)
             )
             raise ConflictError(
-                "Sexual Orientation must be heterosexual, homosexual, bisexual or other, not {}".format(orientation),
-                "Try again",
+                "Sexual Orientation must be heterosexual, homosexual, bisexual or other, not {}".format(orientation)
             )
 
         # Check correct geohash
@@ -521,6 +520,6 @@ def get_user(uid: Any[int, str]) -> Optional[User]:
     # If none of those worked, throw an error
     if not_found == 3:
         logging.debug("User {} not found.".format(uid))
-        raise NotFoundError("User {} not found.".format(uid), "Try again with another uid")
+        raise NotFoundError("User {} not found.".format(uid))
     logging.debug("Found user {} from {}".format(f_user.id, uid))
     return f_user

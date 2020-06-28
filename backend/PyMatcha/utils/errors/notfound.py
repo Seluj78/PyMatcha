@@ -25,7 +25,7 @@ class NotFoundError(Exception):
     This is the NotFoundError class for the Exception.
     """
 
-    def __init__(self, msg: str, solution: str) -> None:
+    def __init__(self, msg: str, solution: str = "Try again.") -> None:
         self.name = "Not Found Error"
         self.msg = msg
         self.solution = solution

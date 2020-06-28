@@ -68,10 +68,10 @@ def send_message():
     try:
         to_user = get_user(to_uid)
     except NotFoundError:
-        raise NotFoundError(f"Recipient {to_uid} not found", "Try again")
+        raise NotFoundError(f"Recipient {to_uid} not found")
 
     if current_user.id == to_user.id:
-        raise BadRequestError("Cannot send a message to yourself.", "Try again")
+        raise BadRequestError("Cannot send a message to yourself.")
 
     current_user.send_message(to_id=to_user.id, content=content)
     current_app.logger.debug("/messages -> Message successfully sent to {}.".format(to_uid))
@@ -85,7 +85,7 @@ def get_conversation_messsages(with_uid):
     try:
         with_user = get_user(with_uid)
     except NotFoundError:
-        raise NotFoundError("With user {} not found", "Try again")
+        raise NotFoundError("With user {} not found")
     message_list = current_user.get_messages_with_user(with_user.id)
     message_list = [m.to_dict() for m in message_list]
     return SuccessOutput("messages", message_list)
@@ -97,7 +97,7 @@ def see_conversation_messages(with_uid):
     try:
         with_user = get_user(with_uid)
     except NotFoundError:
-        raise NotFoundError(f"With user {with_uid} not found", "Try again")
+        raise NotFoundError(f"With user {with_uid} not found")
     unseen_messages = Message.get_multis(from_id=with_user.id, to_id=current_user.id, is_seen=False)
     if unseen_messages:
         for message in unseen_messages:
@@ -112,9 +112,9 @@ def like_message(message_id):
     try:
         message = Message.get(message_id)
     except NotFoundError:
-        raise NotFoundError(f"Message {message_id} not found", "Try again")
+        raise NotFoundError(f"Message {message_id} not found")
     if message.to_id != current_user.id:
-        raise BadRequestError("Cannot like a message that isn't destined to you", "Try again")
+        raise BadRequestError("Cannot like a message that isn't destined to you")
     message.is_liked = True
     message.save()
     return Success(f"Liked message {message_id}")

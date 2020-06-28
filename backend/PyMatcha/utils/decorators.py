@@ -21,11 +21,11 @@ def validate_params(required: dict, optional: Optional[dict] = None):
             try:
                 data = request.get_json()
             except BadRequest:
-                raise BadRequestError("The Json Body is malformed", "Please check it and try again")
+                raise BadRequestError("The Json Body is malformed")
 
             # If the data dict is empty
             if not data:
-                raise BadRequestError("Missing json body.", "Please fill your json body")
+                raise BadRequestError("Missing json body.")
 
             missing = []
             for item in required.keys():
@@ -48,7 +48,7 @@ def validate_params(required: dict, optional: Optional[dict] = None):
                     if required[key] == int:
                         pass
                     else:
-                        raise BadRequestError(f"The item {key} cannot be None or empty", "Please try again.")
+                        raise BadRequestError(f"The item {key} cannot be None or empty")
 
             wrong_types = [r for r in required.keys() if not isinstance(data[r], required[r])]
             wrong_types += [r for r in optional.keys() if r in data and not isinstance(data[r], optional[r])]
@@ -72,9 +72,9 @@ def debug_token_required(f):
         token = request.headers.get("debug-auth-token", None)
         if token:
             if token != os.getenv("DEBUG_AUTH_TOKEN"):
-                raise UnauthorizedError("Incorrect debug auth token.", "Try again")
+                raise UnauthorizedError("Incorrect debug auth token.")
         else:
-            raise UnauthorizedError("Missing debug auth token.", "Try again")
+            raise UnauthorizedError("Missing debug auth token.")
         return f(*args, **kwargs)
 
     return decorated_function

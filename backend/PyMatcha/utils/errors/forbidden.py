@@ -25,7 +25,7 @@ class ForbiddenError(Exception):
     This is the ForbiddenError class for the Exception.
     """
 
-    def __init__(self, msg: str, solution: str) -> None:
+    def __init__(self, msg: str, solution: str = "Try again.") -> None:
         self.name = "Forbidden Error"
         self.msg = msg
         self.solution = solution

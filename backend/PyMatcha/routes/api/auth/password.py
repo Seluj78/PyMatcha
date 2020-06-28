@@ -82,12 +82,12 @@ def reset_password():
     else:
         if token_type != "reset":
             current_app.logger.debug("/auth/password/reset -> Wrong token type")
-            raise BadRequestError("Wrong token type", "Try again with the correct type")
+            raise BadRequestError("Wrong token type")
         try:
             u = get_user(email)
         except NotFoundError:
             current_app.logger.debug("/auth/password/reset -> User not found")
-            raise NotFoundError("User not found", "Try again with another user.")
+            raise NotFoundError("User not found")
         if u.previous_reset_token == data["token"]:
             current_app.logger.debug("/auth/password/reset -> Token already used")
             raise BadRequestError("Token already used", "Please request a new one")

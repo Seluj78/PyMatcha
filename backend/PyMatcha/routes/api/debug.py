@@ -35,7 +35,7 @@ def debug_confirm_user(uid):
         u = get_user(uid)
     except NotFoundError:
         current_app.logger.debug("/debug/users/confirm -> User not found")
-        raise NotFoundError("User {} not found".format(uid), "Check the uid and try again")
+        raise NotFoundError("User {} not found".format(uid))
     if u.is_confirmed:
         current_app.logger.debug("/debug/users/confirm -> User already confirmed")
         return Success("User already confirmed.")
@@ -53,7 +53,7 @@ def delete_user(uid):
     try:
         u = get_user(uid)
     except NotFoundError:
-        raise NotFoundError("User {} not found".format(uid), "Check given id and try again")
+        raise NotFoundError("User {} not found".format(uid))
     else:
         current_app.logger.info("/debug/users/{} -> DELETE user {}".format(uid, uid))
         u.delete()
