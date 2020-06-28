@@ -36,11 +36,6 @@ REQUIRED_KEYS_NEW_MESSAGE = {"to_uid": str, "content": str}
 
 messages_bp = Blueprint("messages", __name__)
 
-"""
-test more than one conv
-conv with user route
-"""
-
 
 @messages_bp.route("/conversations", methods=["GET"])
 @jwt_required
@@ -87,6 +82,10 @@ def get_conversation_messsages(with_uid):
         with_user = get_user(with_uid)
     except NotFoundError:
         raise NotFoundError("With user {} not found")
+
+    if with_user.id == current_user.id:
+        raise BadRequestError("Cannot get conversation with yourself. Get a life...")
+
     message_list = current_user.get_messages_with_user(with_user.id)
     message_list = [m.to_dict() for m in message_list]
     return SuccessOutput("messages", message_list)

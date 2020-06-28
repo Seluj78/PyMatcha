@@ -5225,6 +5225,215 @@
 						}
 					},
 					"response": []
+				},
+				{
+					"name": "Like message_me message",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "45228336-12aa-41a5-a29a-8548f20f17b5",
+								"exec": [
+									"var response = JSON.parse(responseBody);",
+									"",
+									"",
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"tests[\"Message is correct\"] = response.message == \"Liked message 2.\""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{host}}/messages/like/2",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"messages",
+								"like",
+								"2"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get conversation with yourself",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "358bff1a-c455-4edb-8021-8ffd85ba810c",
+								"exec": [
+									"var response = JSON.parse(responseBody);",
+									"",
+									"",
+									"pm.test(\"Status code is 400\", function () {",
+									"    pm.response.to.have.status(400);",
+									"});",
+									"",
+									"tests[\"JSON return code is 400\"] = response.code == 400",
+									"",
+									"tests[\"success is false\"] = response.success == false",
+									"tests[\"Message is correct\"] = response.error.message == \"Cannot get conversation with yourself. Get a life...\"",
+									"tests[\"Error type is Bad Request\"] = response.error.type == \"BadRequestError\""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{host}}/conversations/{{user_username}}",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"conversations",
+								"{{user_username}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get conversation with message_me",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "208cbcfd-f990-4a68-9d3d-56946ebd7f13",
+								"exec": [
+									"var response = JSON.parse(responseBody);",
+									"",
+									"",
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"tests[\"Conversations is empty\"] = response.messages.length == 2",
+									"tests[\"First message content\"] = response.messages[0].content == \"Hello World !\"",
+									"tests[\"Second message content\"] = response.messages[1].content == \"My Reply\"",
+									"tests[\"First message is_liked\"] = response.messages[0].is_liked == false",
+									"tests[\"Second message is liked\"] = response.messages[1].is_liked == true",
+									"tests[\"First message is seen\"] = response.messages[0].is_seen == false",
+									"tests[\"Second message is seen\"] = response.messages[1].is_seen == true",
+									"",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{host}}/conversations/message_me",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"conversations",
+								"message_me"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Send message to message_me2",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "e106fa57-56de-4eb6-b564-5197e097ad91",
+								"exec": [
+									"var response = JSON.parse(responseBody);",
+									"",
+									"",
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"tests[\"Message is correct\"] = response.message == \"Message successfully sent to message_me2.\""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"to_uid\": \"message_me2\",\n    \"content\": \"Hello World 2 !\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/messages/send",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"messages",
+								"send"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get conversations after message to 2",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "f7240da9-b01f-4485-81ab-8461fb6bb138",
+								"exec": [
+									"var response = JSON.parse(responseBody);",
+									"",
+									"",
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"tests[\"Conversations is empty\"] = response.conversations.length == 2",
+									"tests[\"Message is not unseen because you send the message so it's not notified\"] = response.conversations[0].is_unseen == false",
+									"tests[\"Message content is correct\"] = response.conversations[1].last_message_content == \"Hello World 2 !\"",
+									"tests[\"With user is correct\"] = response.conversations[1].with_user.username == \"message_me2\""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{host}}/conversations",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"conversations"
+							]
+						}
+					},
+					"response": []
 				}
 			],
 			"protocolProfileBehavior": {}
@@ -5387,92 +5596,92 @@
 	],
 	"variable": [
 		{
-			"id": "5fcfdcdb-328d-498f-8380-16a9b5bdca8a",
+			"id": "3e3e4438-8401-4003-abcf-5d074c05f462",
 			"key": "host",
 			"value": "http://127.0.0.1:5000"
 		},
 		{
-			"id": "dab86578-2e2b-41a2-88d4-409e525be120",
+			"id": "474531ad-c989-4d92-8542-337ce9b010e1",
 			"key": "user_id",
 			"value": ""
 		},
 		{
-			"id": "c7febd70-a041-480e-90e1-0d6ea277d21f",
+			"id": "072156e0-a96d-451f-abf8-f77280d4ffda",
 			"key": "user_email",
 			"value": "foo@example.org"
 		},
 		{
-			"id": "5e40a0df-d248-4a66-9e7f-d3a1a103b283",
+			"id": "3f4e4d49-011e-453c-9117-b0a38d6adcb3",
 			"key": "user_username",
 			"value": "foo"
 		},
 		{
-			"id": "38c7c7a1-e11a-4b48-8c0c-86eba67b559d",
+			"id": "e9a11cb6-74ce-42a5-8450-47fd021358e8",
 			"key": "user_password",
 			"value": "admin"
 		},
 		{
-			"id": "ac4bd9d8-eb4a-4eab-b5cf-18cfc0570ba3",
+			"id": "1075fff5-b05b-4050-922d-00549dd85896",
 			"key": "user_firstname",
 			"value": "Foo"
 		},
 		{
-			"id": "62ba5bdf-3d88-47e4-ab81-3cb55c5afcc3",
+			"id": "f792f8dc-f93f-422d-af8e-aadf547442a3",
 			"key": "user_lastname",
 			"value": "Bar"
 		},
 		{
-			"id": "735e4af6-1136-4c7a-b26f-d872b3054d5a",
+			"id": "9b71ed57-93df-404e-baf0-35ec160bf68d",
 			"key": "debug_token",
 			"value": "xX69jules69Xx"
 		},
 		{
-			"id": "c3bf9057-c4fd-47f4-9be3-870e097c5d27",
+			"id": "da9ec2ea-a081-49e1-862b-95b0dc2b2bb7",
 			"key": "user_access_token",
 			"value": ""
 		},
 		{
-			"id": "4c6d5f6a-6502-4a17-ae46-6f8d197b66d9",
+			"id": "66dd29f6-acb0-4886-8391-b0c6f20d3956",
 			"key": "user_refresh_token",
 			"value": ""
 		},
 		{
-			"id": "e15b42ce-f7a7-4c84-b95c-4a276ac81dbb",
+			"id": "d6e6a5c5-4d70-465c-8d89-b8845a7a6d20",
 			"key": "expired_token",
 			"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE1OTAyNDIyNjQsIm5iZiI6MTU5MDI0MjI2NCwianRpIjoiNTM0ZGI5NzQtOWE4Ni00MGViLWE1NDEtMDg3N2ZmNzQ3NDVhIiwiZXhwIjoxNTkwMjQyMzI0LCJpZGVudGl0eSI6eyJpZCI6NTEyLCJlbWFpbCI6ImZvb0BleGFtcGxlLm9yZyIsInVzZXJuYW1lIjoiYmFyIiwiaXNfb25saW5lIjp0cnVlLCJkYXRlX2xhc3RzZWVuIjoiU2F0LCAyMyBNYXkgMjAyMCAxMzo1Nzo0NCBHTVQifSwiZnJlc2giOnRydWUsInR5cGUiOiJhY2Nlc3MifQ.NTp2P0WNkXDwzuzrcNIQdeAfizQ57HQgkzBLSvY1yHU"
 		},
 		{
-			"id": "e800e15b-b380-45bc-92b8-a03ddd47c2af",
+			"id": "e7b3105e-0c77-41bf-9444-d83010cb5edf",
 			"key": "user_orientation",
 			"value": "heterosexual"
 		},
 		{
-			"id": "62dae0ab-ab8c-41e2-8d0d-d8becc86493a",
+			"id": "35bff664-ee13-4ad1-84b8-ceec64e1115f",
 			"key": "user_bio",
 			"value": "Lorem Ipsum is the single greatest threat. We are not - we are not keeping up with other websites. Lorem Ipsum best not make any more threats to your website. It will be met with fire and fury like the world has never seen. Does everybody know that pig named Lorem Ipsum? An ‘extremely credible source’ has called my office and told me that Barack Obama’s placeholder text is a fraud."
 		},
 		{
-			"id": "c001f9e7-1711-4126-83a1-8a7429e24484",
+			"id": "7dc06bee-b732-42b7-9323-d00a15906a34",
 			"key": "user_gender",
 			"value": "male"
 		},
 		{
-			"id": "811072c0-a31a-4f0a-a62b-6b2e485bfb5a",
+			"id": "070c3cca-ff6a-48da-8adc-aef32fc0ef32",
 			"key": "user_birthdate",
 			"value": "06/04/1998"
 		},
 		{
-			"id": "bf3cd0e3-4f1f-45f3-ba16-c376b3f50d28",
+			"id": "1f84e84c-4b02-4fa9-8e80-21988282ee29",
 			"key": "user_lat",
 			"value": "44.8404"
 		},
 		{
-			"id": "8bcf8b8c-798d-497b-a3d7-e92639ed55d1",
+			"id": "bc34d6a4-ca83-4f7a-b3de-e62290c1084d",
 			"key": "user_lng",
 			"value": "-0.5805"
 		},
 		{
-			"id": "688313b7-700a-4f16-bafe-c0ecb27ef1b6",
+			"id": "51ec8aee-c8a3-4bae-8fdb-b40aba5dabad",
 			"key": "user_ip",
 			"value": "77.205.46.181"
 		}
