@@ -36,11 +36,8 @@ messages_bp = Blueprint("messages", __name__)
 
 """
 test get all messages
-test when is_unseen is true
 test more than one conv
-test see message
 test like message
-test unseen conversations
 """
 
 
@@ -100,11 +97,13 @@ def see_conversation_messages(with_uid):
     try:
         with_user = get_user(with_uid)
     except NotFoundError:
-        raise NotFoundError("With user {} not found", "Try again")
-    for message in Message.get_multis(from_id=with_user.id, to_id=current_user.id, is_seen=False):
-        message.is_seen = True
-        message.save()
-    return Success("Messages marked as seen")
+        raise NotFoundError(f"With user {with_uid} not found", "Try again")
+    unseen_messages = Message.get_multis(from_id=with_user.id, to_id=current_user.id, is_seen=False)
+    if unseen_messages:
+        for message in unseen_messages:
+            message.is_seen = True
+            message.save()
+    return Success("Messages marked as seen.")
 
 
 @messages_bp.route("/messages/like/<message_id>", methods=["POSt"])
