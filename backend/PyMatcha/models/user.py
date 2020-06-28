@@ -423,31 +423,23 @@ class User(Model):
         with self.db.cursor() as c:
             c.execute(
                 """
-                SELECT * FROM messages
-                    JOIN
-                        (
-                            SELECT user, max(timestamp) m
-                                FROM
-                                    (
-                                        (
-                                            SELECT id, to_id user, timestamp
-                                            FROM messages
-                                            WHERE from_id={0}
-                                        )
-                                        UNION
-                                        (
-                                            SELECT id, from_id user, timestamp
-                                            FROM messages
-                                            WHERE to_id={0}
-                                        )
-                                    ) t1
-                            GROUP BY user
-                        ) t2
-                    ON
-                        ((from_id={0} AND to_id=user) OR
-                        (from_id=user AND to_id={0})) AND
-                        (timestamp = m)
-                    ORDER BY timestamp DESC
+                SELECT t1.*
+                FROM messages AS t1
+                INNER JOIN
+                (
+                    SELECT
+                        LEAST(from_id, to_id) AS from_id,
+                        GREATEST(from_id, to_id) AS to_id,
+                        MAX(id) AS max_id
+                    FROM messages
+                    GROUP BY
+                        LEAST(from_id, to_id),
+                        GREATEST(from_id, to_id)
+                ) AS t2
+                    ON LEAST(t1.from_id, t1.to_id) = t2.from_id AND
+                       GREATEST(t1.from_id, t1.to_id) = t2.to_id AND
+                       t1.id = t2.max_id
+                    WHERE t1.from_id = {0} OR t1.to_id = {0}
                 """.format(
                     self.id
                 )
