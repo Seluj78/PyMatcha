@@ -24,4 +24,4 @@ import uuid
 def hash_password(password: str) -> str:
     salt = uuid.uuid4().hex
     logging.debug("Hashing password with salt {}".format(salt))
-    return hashlib.sha256(salt.encode() + password.encode()).hexdigest() + ":" + salt
+    return hashlib.sha3_512(salt.encode() + password.encode()).hexdigest() + ":" + salt

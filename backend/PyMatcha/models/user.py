@@ -67,7 +67,7 @@ class User(Model):
     def check_password(self, password: str) -> bool:
         logging.debug("Checking password again {} hashed password".format(self.id))
         _hash, salt = self.password.split(":")
-        return _hash == hashlib.sha256(salt.encode() + password.encode()).hexdigest()
+        return _hash == hashlib.sha3_512(salt.encode() + password.encode()).hexdigest()
 
     @staticmethod
     def create(
