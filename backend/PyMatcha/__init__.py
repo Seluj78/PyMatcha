@@ -54,7 +54,7 @@ REQUIRED_ENV_VARS = [
 
 for item in REQUIRED_ENV_VARS:
     if item not in os.environ:
-        raise EnvironmentError(f"{item} is not set in the server's environment or .env file. It is required")
+        raise EnvironmentError(f"{item} is not set in the server's environment or .env file. It is required.")
 
 if os.getenv("ENABLE_LOGGING") == "True":
     setup_logging()

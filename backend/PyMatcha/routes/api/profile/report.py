@@ -47,9 +47,9 @@ def report_profile(uid):
     try:
         u = get_user(uid)
     except NotFoundError:
-        raise NotFoundError(f"User {uid} not found")
+        raise NotFoundError(f"User {uid} not found.")
     if current_user.id == u.id:
-        raise BadRequestError("Cannot report yourself")
+        raise BadRequestError("Cannot report yourself.")
     Report.create(reporter_id=current_user.id, reported_id=u.id, reason=reason, details=details)
 
-    return Success(f"Report created on user {u.email}")
+    return Success(f"Report created on user {u.email}.")

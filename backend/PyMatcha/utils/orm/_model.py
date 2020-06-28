@@ -190,7 +190,7 @@ class Model(object):
             for k, v in data.items():
                 self[k] = v
         else:
-            raise Exception("Nothing to update")
+            raise Exception("Nothing to update.")
 
     def delete(self):
         """
@@ -251,7 +251,7 @@ class Model(object):
         if data:
             return cls(data)
         else:
-            raise ValueError("Not found")
+            raise ValueError("Not found.")
 
     @classmethod
     def get_multi(cls, **kwargs):
@@ -297,7 +297,7 @@ class Model(object):
         if data:
             return cls(data)
         else:
-            raise ValueError("Not found")
+            raise ValueError("Not found.")
 
     @classmethod
     def get_multis(cls, **kwargs):

@@ -64,7 +64,7 @@ def send_message():
     try:
         to_user = get_user(to_uid)
     except NotFoundError:
-        raise NotFoundError(f"Recipient {to_uid} not found")
+        raise NotFoundError(f"Recipient {to_uid} not found.")
 
     if current_user.id == to_user.id:
         raise BadRequestError("Cannot send a message to yourself.")
@@ -81,7 +81,7 @@ def get_conversation_messsages(with_uid):
     try:
         with_user = get_user(with_uid)
     except NotFoundError:
-        raise NotFoundError("With user {} not found")
+        raise NotFoundError("With user {} not found.")
 
     if with_user.id == current_user.id:
         raise BadRequestError("Cannot get conversation with yourself. Get a life...")
@@ -97,7 +97,7 @@ def see_conversation_messages(with_uid):
     try:
         with_user = get_user(with_uid)
     except NotFoundError:
-        raise NotFoundError(f"With user {with_uid} not found")
+        raise NotFoundError(f"With user {with_uid} not found.")
     unseen_messages = Message.get_multis(from_id=with_user.id, to_id=current_user.id, is_seen=False)
     if unseen_messages:
         for message in unseen_messages:

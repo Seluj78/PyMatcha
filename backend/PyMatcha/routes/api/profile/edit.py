@@ -57,7 +57,7 @@ REQUIRED_PARAMS_EDIT_PROFILE = {
 @validate_params(REQUIRED_PARAMS_EDIT_PROFILE)
 def edit_profile():
     if not current_user.is_profile_completed:
-        raise BadRequestError("The user has not completed his profile", "Complete your profile and try again")
+        raise BadRequestError("The user has not completed his profile.", "Complete your profile and try again.")
     data = request.get_json()
     first_name = data["first_name"]
     last_name = data["last_name"]
@@ -70,26 +70,26 @@ def edit_profile():
     try:
         birthdate = datetime.datetime.strptime(birthdate, "%d/%m/%Y").date()
     except ValueError:
-        raise BadRequestError("Birthdate format must be %d/%m/%Y (day/month/year)")
+        raise BadRequestError("Birthdate format must be %d/%m/%Y (day/month/year).")
 
     today = datetime.datetime.utcnow()
 
     age = today.year - birthdate.year - ((today.month, today.day) < (birthdate.month, birthdate.day))
     if age < 18:
-        raise BadRequestError("You must be 18 years old or older")
+        raise BadRequestError("You must be 18 years old or older.")
 
     try:
         get_user(username)
     except NotFoundError:
         pass
     else:
-        raise BadRequestError("Username taken")
+        raise BadRequestError("Username taken.")
 
     if orientation not in ["heterosexual", "homosexual", "bisexual", "other"]:
-        raise BadRequestError("Orientation must be heterosexual, homosexual, bisexual or other")
+        raise BadRequestError("Orientation must be heterosexual, homosexual, bisexual or other.")
 
     if gender not in ["male", "female", "other"]:
-        raise BadRequestError("Gender must be male, female or other")
+        raise BadRequestError("Gender must be male, female or other.")
 
     current_user.first_name = first_name
     current_user.last_name = last_name
@@ -128,7 +128,7 @@ def edit_password():
     old_password = data["old_password"]
     new_password = data["new_password"]
     if not check_password(current_user.password, old_password):
-        raise UnauthorizedError("Incorrect password")
+        raise UnauthorizedError("Incorrect password.")
     current_user.password = hash_password(new_password)
     current_user.save()
     send_mail_text.delay(

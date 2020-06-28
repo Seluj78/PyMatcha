@@ -21,7 +21,7 @@ def validate_params(required: dict, optional: Optional[dict] = None):
             try:
                 data = request.get_json()
             except BadRequest:
-                raise BadRequestError("The Json Body is malformed")
+                raise BadRequestError("The Json Body is malformed.")
 
             # If the data dict is empty
             if not data:
@@ -33,7 +33,7 @@ def validate_params(required: dict, optional: Optional[dict] = None):
                 if item not in data.keys():
                     missing.append(item)
             if missing:
-                raise BadRequestError("Missing keys {}.".format(missing), "Complete your json body and try again")
+                raise BadRequestError("Missing keys {}.".format(missing), "Complete your json body and try again.")
 
             for item in data.keys():
                 # If there's an unwanted key in the sent data
@@ -48,7 +48,7 @@ def validate_params(required: dict, optional: Optional[dict] = None):
                     if required[key] == int:
                         pass
                     else:
-                        raise BadRequestError(f"The item {key} cannot be None or empty")
+                        raise BadRequestError(f"The item {key} cannot be None or empty.")
 
             wrong_types = [r for r in required.keys() if not isinstance(data[r], required[r])]
             wrong_types += [r for r in optional.keys() if r in data and not isinstance(data[r], optional[r])]

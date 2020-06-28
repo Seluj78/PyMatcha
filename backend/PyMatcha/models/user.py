@@ -90,7 +90,7 @@ class User(Model):
             pass
         else:
             logging.error("Email {} taken".format(email))
-            raise ConflictError("Email {} taken".format(email), "Use another email")
+            raise ConflictError("Email {} taken.".format(email), "Use another email.")
 
         # Check username availability
         try:
@@ -99,20 +99,20 @@ class User(Model):
             pass
         else:
             logging.error("Username {} taken".format(username))
-            raise ConflictError("Username {} taken".format(username), "Try another username")
+            raise ConflictError("Username {} taken.".format(username), "Try another username.")
 
         # Check correct gender
         if gender not in ["male", "female", "other"]:
             logging.error("Gender must be male, female or other, not {}".format(gender))
-            raise ConflictError("Gender must be male, female or other, not {}".format(gender))
+            raise ConflictError("Gender must be male, female or other, not {}.".format(gender))
 
         # Check correct orientation
         if orientation not in ["heterosexual", "homosexual", "bisexual", "other"]:
             logging.error(
-                "Sexual Orientation must be heterosexual, homosexual, bisexual or other, not {}".format(orientation)
+                "Sexual Orientation must be heterosexual, homosexual, bisexual or other, not {}.".format(orientation)
             )
             raise ConflictError(
-                "Sexual Orientation must be heterosexual, homosexual, bisexual or other, not {}".format(orientation)
+                "Sexual Orientation must be heterosexual, homosexual, bisexual or other, not {}.".format(orientation)
             )
 
         # Check correct geohash
@@ -158,7 +158,7 @@ class User(Model):
             pass
         else:
             logging.debug("Email {} taken".format(email))
-            raise ConflictError("Email {} taken".format(email), "Use another email")
+            raise ConflictError("Email {} taken.".format(email), "Use another email.")
 
         # Check username availability
         try:
@@ -167,7 +167,7 @@ class User(Model):
             pass
         else:
             logging.error("Username {} taken".format(username))
-            raise ConflictError("Username {} taken".format(username), "Try another username")
+            raise ConflictError("Username {} taken.".format(username), "Try another username.")
 
         # Encrypt password
         password = hash_password(password)

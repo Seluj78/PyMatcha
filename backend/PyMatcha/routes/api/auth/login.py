@@ -55,14 +55,14 @@ def auth_login():
         u = get_user(username)
     except NotFoundError:
         current_app.logger.debug("/auth/login -> User not found")
-        raise UnauthorizedError("Incorrect username or password")
+        raise UnauthorizedError("Incorrect username or password.")
     if not check_password(u.password, password):
         current_app.logger.debug("/auth/login -> Password invalid")
-        raise UnauthorizedError("Incorrect username or password")
+        raise UnauthorizedError("Incorrect username or password.")
 
     if not u.is_confirmed:
         current_app.logger.debug("/auth/login -> User is trying to login unconfirmed")
-        raise UnauthorizedError("User needs to be confirmed first.", "Try again when you have confirmed your email")
+        raise UnauthorizedError("User needs to be confirmed first.", "Try again when you have confirmed your email.")
     access_token = create_access_token(identity=u.get_jwt_info(), fresh=True)
     refresh_token = create_refresh_token(identity=u.get_jwt_info())
     access_jti = get_jti(access_token)

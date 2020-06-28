@@ -73,7 +73,7 @@
 											"tests[\"JSON return code is 400\"] = response.code == 400",
 											"",
 											"tests[\"success is false\"] = response.success == false",
-											"tests[\"Message is correct\"] = response.error.message == \"The Json Body is malformed\"",
+											"tests[\"Message is correct\"] = response.error.message == \"The Json Body is malformed.\"",
 											"tests[\"Error type is Bad Request\"] = response.error.type == \"BadRequestError\""
 										],
 										"type": "text/javascript"
@@ -771,7 +771,7 @@
 											"tests[\"JSON return code is 400\"] = response.code == 400",
 											"",
 											"tests[\"success is false\"] = response.success == false",
-											"tests[\"Message is correct\"] = response.error.message == \"The Json Body is malformed\"",
+											"tests[\"Message is correct\"] = response.error.message == \"The Json Body is malformed.\"",
 											"tests[\"Error type is Bad Request\"] = response.error.type == \"BadRequestError\""
 										],
 										"type": "text/javascript"
@@ -1758,7 +1758,7 @@
 											"tests[\"JSON return code is 400\"] = response.code == 400",
 											"",
 											"tests[\"success is true\"] = response.success == false",
-											"tests[\"Message is correct\"] = response.error.message == \"Bio is too short\"",
+											"tests[\"Message is correct\"] = response.error.message == \"Bio is too short.\"",
 											"tests[\"Error type is Bad Request\"] = response.error.type == \"BadRequestError\""
 										],
 										"type": "text/javascript"
@@ -1808,7 +1808,7 @@
 											"tests[\"JSON return code is 400\"] = response.code == 400",
 											"",
 											"tests[\"success is true\"] = response.success == false",
-											"tests[\"Message is correct\"] = response.error.message == \"At least 3 tags are required\"",
+											"tests[\"Message is correct\"] = response.error.message == \"At least 3 tags are required.\"",
 											"tests[\"Error type is Bad Request\"] = response.error.type == \"BadRequestError\""
 										],
 										"type": "text/javascript"
@@ -1858,7 +1858,7 @@
 											"tests[\"JSON return code is 400\"] = response.code == 400",
 											"",
 											"tests[\"success is true\"] = response.success == false",
-											"tests[\"Message is correct\"] = response.error.message == \"Duplicate tags\"",
+											"tests[\"Message is correct\"] = response.error.message == \"Duplicate tags.\"",
 											"tests[\"Error type is Bad Request\"] = response.error.type == \"BadRequestError\""
 										],
 										"type": "text/javascript"
@@ -1908,7 +1908,7 @@
 											"tests[\"JSON return code is 400\"] = response.code == 400",
 											"",
 											"tests[\"success is true\"] = response.success == false",
-											"tests[\"Message is correct\"] = response.error.message == \"You must be 18 years old or older\"",
+											"tests[\"Message is correct\"] = response.error.message == \"You must be 18 years old or older.\"",
 											"tests[\"Error type is Bad Request\"] = response.error.type == \"BadRequestError\""
 										],
 										"type": "text/javascript"
@@ -3231,7 +3231,7 @@
 											"tests[\"JSON return code is 404\"] = response.code == 404",
 											"",
 											"tests[\"success is true\"] = response.success == false",
-											"tests[\"Message is correct\"] = response.error.message == \"User -1 not found\"",
+											"tests[\"Message is correct\"] = response.error.message == \"User -1 not found.\"",
 											"tests[\"Error type is Bad Request\"] = response.error.type == \"NotFoundError\""
 										],
 										"type": "text/javascript"
@@ -3333,8 +3333,7 @@
 											"tests[\"JSON return code is 200\"] = response.code == 200",
 											"",
 											"tests[\"success is true\"] = response.success == true",
-											"tests[\"Message is correct\"] = response.message == \"Report created on user report_me@example.org\"",
-											""
+											"tests[\"Message is correct\"] = response.message == \"Report created on user report_me@example.org.\""
 										],
 										"type": "text/javascript"
 									}
@@ -3502,7 +3501,7 @@
 											"tests[\"JSON return code is 400\"] = response.code == 400",
 											"",
 											"tests[\"success is true\"] = response.success == false",
-											"tests[\"Message is correct\"] = response.error.message == \"Cannot report yourself\"",
+											"tests[\"Message is correct\"] = response.error.message == \"Cannot report yourself.\"",
 											""
 										],
 										"type": "text/javascript"
@@ -3566,7 +3565,7 @@
 											"tests[\"JSON return code is 404\"] = response.code == 404",
 											"",
 											"tests[\"success is false\"] = response.success == false",
-											"tests[\"Message is correct\"] = response.error.message == \"User -1 not found\"",
+											"tests[\"Message is correct\"] = response.error.message == \"User -1 not found.\"",
 											"tests[\"Error type is Bad Request\"] = response.error.type == \"NotFoundError\""
 										],
 										"type": "text/javascript"
@@ -3607,7 +3606,7 @@
 											"tests[\"JSON return code is 400\"] = response.code == 400",
 											"",
 											"tests[\"success is false\"] = response.success == false",
-											"tests[\"Message is correct\"] = response.error.message == \"Cannot like yourself\"",
+											"tests[\"Message is correct\"] = response.error.message == \"Cannot like yourself.\"",
 											"tests[\"Error type is Bad Request\"] = response.error.type == \"BadRequestError\""
 										],
 										"type": "text/javascript"
@@ -3740,7 +3739,7 @@
 											"tests[\"JSON return code is 400\"] = response.code == 400",
 											"",
 											"tests[\"success is false\"] = response.success == false",
-											"tests[\"Message is correct\"] = response.error.message == \"You already liked this person\"",
+											"tests[\"Message is correct\"] = response.error.message == \"You already liked this person.\"",
 											"tests[\"Error type is Bad Request\"] = response.error.type == \"BadRequestError\""
 										],
 										"type": "text/javascript"
@@ -3788,7 +3787,7 @@
 											"tests[\"JSON return code is 404\"] = response.code == 404",
 											"",
 											"tests[\"success is false\"] = response.success == false",
-											"tests[\"Message is correct\"] = response.error.message == \"User -1 not found\"",
+											"tests[\"Message is correct\"] = response.error.message == \"User -1 not found.\"",
 											"tests[\"Error type is Bad Request\"] = response.error.type == \"NotFoundError\""
 										],
 										"type": "text/javascript"
@@ -3829,7 +3828,7 @@
 											"tests[\"JSON return code is 400\"] = response.code == 400",
 											"",
 											"tests[\"success is false\"] = response.success == false",
-											"tests[\"Message is correct\"] = response.error.message == \"Cannot unlike yourself\"",
+											"tests[\"Message is correct\"] = response.error.message == \"Cannot unlike yourself.\"",
 											"tests[\"Error type is Bad Request\"] = response.error.type == \"BadRequestError\""
 										],
 										"type": "text/javascript"
@@ -3910,7 +3909,7 @@
 											"tests[\"JSON return code is 400\"] = response.code == 400",
 											"",
 											"tests[\"success is false\"] = response.success == false",
-											"tests[\"message is ok\"] = response.error.message == \"You never liked this person in the first place\""
+											"tests[\"message is ok\"] = response.error.message == \"You never liked this person in the first place.\""
 										],
 										"type": "text/javascript"
 									}
@@ -4188,7 +4187,7 @@
 									"tests[\"JSON return code is 404\"] = response.code == 404",
 									"",
 									"tests[\"success is false\"] = response.success == false",
-									"tests[\"Message is correct\"] = response.error.message == \"Recipient -1 not found\"",
+									"tests[\"Message is correct\"] = response.error.message == \"Recipient -1 not found.\"",
 									"tests[\"Error type is Bad Request\"] = response.error.type == \"NotFoundError\""
 								],
 								"type": "text/javascript"
@@ -4555,7 +4554,7 @@
 									"tests[\"JSON return code is 404\"] = response.code == 404",
 									"",
 									"tests[\"success is false\"] = response.success == false",
-									"tests[\"Message is correct\"] = response.error.message == \"With user -1 not found\"",
+									"tests[\"Message is correct\"] = response.error.message == \"With user -1 not found.\"",
 									"tests[\"Error type is Bad Request\"] = response.error.type == \"NotFoundError\""
 								],
 								"type": "text/javascript"
@@ -5596,92 +5595,92 @@
 	],
 	"variable": [
 		{
-			"id": "3e3e4438-8401-4003-abcf-5d074c05f462",
+			"id": "461c4e89-379c-4ecc-ab3d-e9a9ac5df859",
 			"key": "host",
 			"value": "http://127.0.0.1:5000"
 		},
 		{
-			"id": "474531ad-c989-4d92-8542-337ce9b010e1",
+			"id": "b70cbb5c-c6d1-4a86-8001-5b11d2a86ebc",
 			"key": "user_id",
 			"value": ""
 		},
 		{
-			"id": "072156e0-a96d-451f-abf8-f77280d4ffda",
+			"id": "0b2b9986-ac92-4be7-9971-8c6cff053764",
 			"key": "user_email",
 			"value": "foo@example.org"
 		},
 		{
-			"id": "3f4e4d49-011e-453c-9117-b0a38d6adcb3",
+			"id": "a582fcb5-db29-4339-8734-d4c842f859a4",
 			"key": "user_username",
 			"value": "foo"
 		},
 		{
-			"id": "e9a11cb6-74ce-42a5-8450-47fd021358e8",
+			"id": "c90dc190-68cc-42dd-b3f7-79b25c8097bd",
 			"key": "user_password",
 			"value": "admin"
 		},
 		{
-			"id": "1075fff5-b05b-4050-922d-00549dd85896",
+			"id": "c94d4c0a-5eb8-40aa-bfda-81b1af3edf17",
 			"key": "user_firstname",
 			"value": "Foo"
 		},
 		{
-			"id": "f792f8dc-f93f-422d-af8e-aadf547442a3",
+			"id": "afde1579-3438-45dd-b7fc-063b6baa7d07",
 			"key": "user_lastname",
 			"value": "Bar"
 		},
 		{
-			"id": "9b71ed57-93df-404e-baf0-35ec160bf68d",
+			"id": "418dab0a-b2b3-4a6a-82c3-50f1ae99d548",
 			"key": "debug_token",
 			"value": "xX69jules69Xx"
 		},
 		{
-			"id": "da9ec2ea-a081-49e1-862b-95b0dc2b2bb7",
+			"id": "ce3f5bd7-c5d7-4d36-8b69-58fbb34c99cc",
 			"key": "user_access_token",
 			"value": ""
 		},
 		{
-			"id": "66dd29f6-acb0-4886-8391-b0c6f20d3956",
+			"id": "00529b58-2d48-49ef-b100-5717853dad2b",
 			"key": "user_refresh_token",
 			"value": ""
 		},
 		{
-			"id": "d6e6a5c5-4d70-465c-8d89-b8845a7a6d20",
+			"id": "2b58f894-ab87-46e9-a36f-e333381e9eb2",
 			"key": "expired_token",
 			"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE1OTAyNDIyNjQsIm5iZiI6MTU5MDI0MjI2NCwianRpIjoiNTM0ZGI5NzQtOWE4Ni00MGViLWE1NDEtMDg3N2ZmNzQ3NDVhIiwiZXhwIjoxNTkwMjQyMzI0LCJpZGVudGl0eSI6eyJpZCI6NTEyLCJlbWFpbCI6ImZvb0BleGFtcGxlLm9yZyIsInVzZXJuYW1lIjoiYmFyIiwiaXNfb25saW5lIjp0cnVlLCJkYXRlX2xhc3RzZWVuIjoiU2F0LCAyMyBNYXkgMjAyMCAxMzo1Nzo0NCBHTVQifSwiZnJlc2giOnRydWUsInR5cGUiOiJhY2Nlc3MifQ.NTp2P0WNkXDwzuzrcNIQdeAfizQ57HQgkzBLSvY1yHU"
 		},
 		{
-			"id": "e7b3105e-0c77-41bf-9444-d83010cb5edf",
+			"id": "7712423f-6e0e-4634-aee6-e6dde0b5a424",
 			"key": "user_orientation",
 			"value": "heterosexual"
 		},
 		{
-			"id": "35bff664-ee13-4ad1-84b8-ceec64e1115f",
+			"id": "b77f31fc-c749-418b-acfd-4387628b9d57",
 			"key": "user_bio",
 			"value": "Lorem Ipsum is the single greatest threat. We are not - we are not keeping up with other websites. Lorem Ipsum best not make any more threats to your website. It will be met with fire and fury like the world has never seen. Does everybody know that pig named Lorem Ipsum? An ‘extremely credible source’ has called my office and told me that Barack Obama’s placeholder text is a fraud."
 		},
 		{
-			"id": "7dc06bee-b732-42b7-9323-d00a15906a34",
+			"id": "ae2a77eb-02ee-4439-a20b-023432b7ea16",
 			"key": "user_gender",
 			"value": "male"
 		},
 		{
-			"id": "070c3cca-ff6a-48da-8adc-aef32fc0ef32",
+			"id": "273e5cdc-2313-4b17-a26c-f5f0a3207f30",
 			"key": "user_birthdate",
 			"value": "06/04/1998"
 		},
 		{
-			"id": "1f84e84c-4b02-4fa9-8e80-21988282ee29",
+			"id": "9942a431-5645-43b4-9e85-497d3b85be3e",
 			"key": "user_lat",
 			"value": "44.8404"
 		},
 		{
-			"id": "bc34d6a4-ca83-4f7a-b3de-e62290c1084d",
+			"id": "ead5923f-2d1b-4753-9df3-7ddd9b8e721a",
 			"key": "user_lng",
 			"value": "-0.5805"
 		},
 		{
-			"id": "51ec8aee-c8a3-4bae-8fdb-b40aba5dabad",
+			"id": "4a54ddd0-4170-429b-9123-1b7aa11ba636",
 			"key": "user_ip",
 			"value": "77.205.46.181"
 		}
