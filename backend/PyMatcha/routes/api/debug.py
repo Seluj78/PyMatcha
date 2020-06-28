@@ -9,6 +9,7 @@ from flask_jwt_extended import jwt_required
 from PyMatcha import redis
 from PyMatcha.models.like import Like
 from PyMatcha.models.match import Match
+from PyMatcha.models.message import Message
 from PyMatcha.models.report import Report
 from PyMatcha.models.tag import Tag
 from PyMatcha.models.user import get_user
@@ -141,6 +142,7 @@ def delete_matches():
     View.drop_table()
     User.drop_table()
     Tag.drop_table()
+    Message.drop_table()
 
     Match.create_table()
     Like.create_table()
@@ -148,4 +150,19 @@ def delete_matches():
     View.create_table()
     User.create_table()
     Tag.create_table()
+    Message.create_table()
+    return "", 204
+
+
+DEBUG_SEND_MESSAGE = {"from_uid": str, "to_uid": str, "content": str}
+
+
+@debug_bp.route("/debug/messages/send", methods=["POST"])
+@debug_token_required
+@validate_params(DEBUG_SEND_MESSAGE)
+def debug_send_message():
+    data = request.get_json()
+    from_id = get_user(data["from_uid"]).id
+    to_id = get_user(data["to_uid"]).id
+    Message.create(from_id=from_id, to_id=to_id, content=data["content"])
     return "", 204
