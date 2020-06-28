@@ -19,7 +19,6 @@
 from __future__ import annotations
 
 import datetime
-import hashlib
 import logging
 from typing import Any
 from typing import Dict
@@ -63,11 +62,6 @@ class User(Model):
     is_confirmed = Field(bool)
     confirmed_on = Field(datetime.datetime, fmt="%Y-%m-%d %H:%M:%S")
     previous_reset_token = Field(str)
-
-    def check_password(self, password: str) -> bool:
-        logging.debug("Checking password again {} hashed password".format(self.id))
-        _hash, salt = self.password.split(":")
-        return _hash == hashlib.sha3_512(salt.encode() + password.encode()).hexdigest()
 
     @staticmethod
     def create(

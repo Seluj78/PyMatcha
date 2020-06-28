@@ -35,6 +35,7 @@ from PyMatcha.utils.errors import NotFoundError
 from PyMatcha.utils.errors import UnauthorizedError
 from PyMatcha.utils.mail import send_mail_html
 from PyMatcha.utils.mail import send_mail_text
+from PyMatcha.utils.password import check_password
 from PyMatcha.utils.success import Success
 
 profile_edit_bp = Blueprint("profile_edit", __name__)
@@ -126,7 +127,7 @@ def edit_password():
     data = request.get_json()
     old_password = data["old_password"]
     new_password = data["new_password"]
-    if not current_user.check_password(old_password):
+    if not check_password(current_user.password, old_password):
         raise UnauthorizedError("Incorrect password")
     current_user.password = hash_password(new_password)
     current_user.save()

@@ -35,9 +35,9 @@ from PyMatcha.models.user import get_user
 from PyMatcha.utils.decorators import validate_params
 from PyMatcha.utils.errors import NotFoundError
 from PyMatcha.utils.errors import UnauthorizedError
+from PyMatcha.utils.password import check_password
 from PyMatcha.utils.success import Success
 from PyMatcha.utils.success import SuccessOutput
-
 
 REQUIRED_KEYS_LOGIN = {"username": str, "password": str}
 
@@ -56,7 +56,7 @@ def auth_login():
     except NotFoundError:
         current_app.logger.debug("/auth/login -> User not found")
         raise UnauthorizedError("Incorrect username or password")
-    if not u.check_password(password):
+    if not check_password(u.password, password):
         current_app.logger.debug("/auth/login -> Password invalid")
         raise UnauthorizedError("Incorrect username or password")
 
