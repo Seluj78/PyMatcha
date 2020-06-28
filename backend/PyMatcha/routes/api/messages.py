@@ -38,7 +38,6 @@ messages_bp = Blueprint("messages", __name__)
 
 """
 test more than one conv
-like route
 conv with user route
 """
 
@@ -109,18 +108,40 @@ def see_conversation_messages(with_uid):
     return Success("Messages marked as seen.")
 
 
-@messages_bp.route("/messages/like/<message_id>", methods=["POSt"])
+@messages_bp.route("/messages/like/<message_id>", methods=["POST"])
 @jwt_required
 def like_message(message_id):
     try:
-        message = Message.get(message_id)
-    except NotFoundError:
-        raise NotFoundError(f"Message {message_id} not found")
+        message = Message.get(id=message_id)
+    except ValueError:
+        raise NotFoundError(f"Message {message_id} not found.")
+    if message.from_id == current_user.id:
+        raise BadRequestError("Cannot like your own message.")
     if message.to_id != current_user.id:
-        raise BadRequestError("Cannot like a message that isn't destined to you")
+        raise BadRequestError("Cannot like a message that isn't destined to you.")
+    if message.is_liked:
+        raise BadRequestError("Message is already liked.")
     message.is_liked = True
     message.save()
-    return Success(f"Liked message {message_id}")
+    return Success(f"Liked message {message_id}.")
+
+
+@messages_bp.route("/messages/unlike/<message_id>", methods=["POST"])
+@jwt_required
+def unlike_message(message_id):
+    try:
+        message = Message.get(id=message_id)
+    except ValueError:
+        raise NotFoundError(f"Message {message_id} not found.")
+    if message.from_id == current_user.id:
+        raise BadRequestError("Cannot unlike your own message.")
+    if message.to_id != current_user.id:
+        raise BadRequestError("Cannot unlike a message that isn't destined to you.")
+    if not message.is_liked:
+        raise BadRequestError("Message is already unliked.")
+    message.is_liked = False
+    message.save()
+    return Success(f"Unliked message {message_id}.")
 
 
 @messages_bp.route("/messages/unseen", methods=["GET"])

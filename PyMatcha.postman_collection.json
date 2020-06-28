@@ -4710,6 +4710,521 @@
 						}
 					},
 					"response": []
+				},
+				{
+					"name": "Like message unknow id",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "09ae2560-1a35-41a3-91f4-0b54088e8b78",
+								"exec": [
+									"var response = JSON.parse(responseBody);",
+									"",
+									"",
+									"pm.test(\"Status code is 404\", function () {",
+									"    pm.response.to.have.status(404);",
+									"});",
+									"",
+									"tests[\"JSON return code is 404\"] = response.code == 404",
+									"",
+									"tests[\"success is false\"] = response.success == false",
+									"tests[\"Message is correct\"] = response.error.message == \"Message -1 not found.\"",
+									"tests[\"Error type is Bad Request\"] = response.error.type == \"NotFoundError\""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{host}}/messages/like/-1",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"messages",
+								"like",
+								"-1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create user message_me2",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "434267c4-9f50-43cb-a8a2-29ec0671479d",
+								"exec": [
+									"var response = JSON.parse(responseBody);",
+									"",
+									"",
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"tests[\"JSON return code is 200\"] = response.code == 200",
+									"",
+									"tests[\"success is true\"] = response.success == true"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"username\": \"message_me2\",\n\t\"email\": \"message_me2@example.org\",\n\t\"password\": \"dolphin78\",\n\t\"first_name\": \"Message2\",\n\t\"last_name\": \"Me2\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/auth/register",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"auth",
+								"register"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "debug message from message_me to other user",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "1f57d5d5-c092-4b3b-9625-86d594f2f81b",
+								"exec": [
+									"pm.test(\"Status code is 204\", function () {",
+									"    pm.response.to.have.status(204);",
+									"});",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "debug-auth-token",
+								"type": "text",
+								"value": "{{debug_token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"from_uid\": \"message_me\",\n    \"to_uid\": \"message_me2\",\n    \"content\": \"My Reply\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/debug/messages/send",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"debug",
+								"messages",
+								"send"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Like message not sent to you",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "59f98622-b864-4738-97c5-61819ff39491",
+								"exec": [
+									"var response = JSON.parse(responseBody);",
+									"",
+									"",
+									"pm.test(\"Status code is 400\", function () {",
+									"    pm.response.to.have.status(400);",
+									"});",
+									"",
+									"tests[\"JSON return code is 400\"] = response.code == 400",
+									"",
+									"tests[\"success is false\"] = response.success == false",
+									"tests[\"Message is correct\"] = response.error.message == \"Cannot like a message that isn't destined to you.\"",
+									"tests[\"Error type is Bad Request\"] = response.error.type == \"BadRequestError\""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{host}}/messages/like/3",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"messages",
+								"like",
+								"3"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Like your own message",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "70b76530-4fc4-4d78-9cb2-8047c1081761",
+								"exec": [
+									"var response = JSON.parse(responseBody);",
+									"",
+									"",
+									"pm.test(\"Status code is 400\", function () {",
+									"    pm.response.to.have.status(400);",
+									"});",
+									"",
+									"tests[\"JSON return code is 400\"] = response.code == 400",
+									"",
+									"tests[\"success is false\"] = response.success == false",
+									"tests[\"Message is correct\"] = response.error.message == \"Cannot like your own message.\"",
+									"tests[\"Error type is Bad Request\"] = response.error.type == \"BadRequestError\""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{host}}/messages/like/1",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"messages",
+								"like",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Like message_me message",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "d5950467-83d4-4223-b012-e1501e47ba5e",
+								"exec": [
+									"var response = JSON.parse(responseBody);",
+									"",
+									"",
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"tests[\"Message is correct\"] = response.message == \"Liked message 2.\""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{host}}/messages/like/2",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"messages",
+								"like",
+								"2"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Like already liked message",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "19920ab2-970d-4f13-a959-ba02bcb8f712",
+								"exec": [
+									"var response = JSON.parse(responseBody);",
+									"",
+									"",
+									"pm.test(\"Status code is 400\", function () {",
+									"    pm.response.to.have.status(400);",
+									"});",
+									"",
+									"tests[\"JSON return code is 400\"] = response.code == 400",
+									"",
+									"tests[\"success is false\"] = response.success == false",
+									"tests[\"Message is correct\"] = response.error.message == \"Message is already liked.\"",
+									"tests[\"Error type is Bad Request\"] = response.error.type == \"BadRequestError\""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{host}}/messages/like/2",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"messages",
+								"like",
+								"2"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Unlike unknown message",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "22917734-494e-4006-b91e-0f3cc053a779",
+								"exec": [
+									"var response = JSON.parse(responseBody);",
+									"",
+									"",
+									"pm.test(\"Status code is 404\", function () {",
+									"    pm.response.to.have.status(404);",
+									"});",
+									"",
+									"tests[\"JSON return code is 404\"] = response.code == 404",
+									"",
+									"tests[\"success is false\"] = response.success == false",
+									"tests[\"Message is correct\"] = response.error.message == \"Message -1 not found.\"",
+									"tests[\"Error type is Bad Request\"] = response.error.type == \"NotFoundError\""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{host}}/messages/unlike/-1",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"messages",
+								"unlike",
+								"-1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Unlike message not sent to you",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "2fb2f667-172f-4c98-8cf0-60827b5b3e1a",
+								"exec": [
+									"var response = JSON.parse(responseBody);",
+									"",
+									"",
+									"pm.test(\"Status code is 400\", function () {",
+									"    pm.response.to.have.status(400);",
+									"});",
+									"",
+									"tests[\"JSON return code is 400\"] = response.code == 400",
+									"",
+									"tests[\"success is false\"] = response.success == false",
+									"tests[\"Message is correct\"] = response.error.message == \"Cannot unlike a message that isn't destined to you.\"",
+									"tests[\"Error type is Bad Request\"] = response.error.type == \"BadRequestError\""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{host}}/messages/unlike/3",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"messages",
+								"unlike",
+								"3"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Unike your own message",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "01073c40-2875-4eab-8179-488ca98d7600",
+								"exec": [
+									"var response = JSON.parse(responseBody);",
+									"",
+									"",
+									"pm.test(\"Status code is 400\", function () {",
+									"    pm.response.to.have.status(400);",
+									"});",
+									"",
+									"tests[\"JSON return code is 400\"] = response.code == 400",
+									"",
+									"tests[\"success is false\"] = response.success == false",
+									"tests[\"Message is correct\"] = response.error.message == \"Cannot unlike your own message.\"",
+									"tests[\"Error type is Bad Request\"] = response.error.type == \"BadRequestError\""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{host}}/messages/unlike/1",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"messages",
+								"unlike",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Unlike message_me message",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "8410326c-cb1a-46cb-a619-f27d4d530126",
+								"exec": [
+									"var response = JSON.parse(responseBody);",
+									"",
+									"",
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"tests[\"Message is correct\"] = response.message == \"Unliked message 2.\""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{host}}/messages/unlike/2",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"messages",
+								"unlike",
+								"2"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Unlike already unliked message",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "dfb54e74-2f56-4c7b-b07a-420f7481b855",
+								"exec": [
+									"var response = JSON.parse(responseBody);",
+									"",
+									"",
+									"pm.test(\"Status code is 400\", function () {",
+									"    pm.response.to.have.status(400);",
+									"});",
+									"",
+									"tests[\"JSON return code is 400\"] = response.code == 400",
+									"",
+									"tests[\"success is false\"] = response.success == false",
+									"tests[\"Message is correct\"] = response.error.message == \"Message is already unliked.\"",
+									"tests[\"Error type is Bad Request\"] = response.error.type == \"BadRequestError\""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{host}}/messages/unlike/2",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"messages",
+								"unlike",
+								"2"
+							]
+						}
+					},
+					"response": []
 				}
 			],
 			"protocolProfileBehavior": {}
@@ -4872,92 +5387,92 @@
 	],
 	"variable": [
 		{
-			"id": "d56a13d7-6874-4212-952f-32539a07db40",
+			"id": "5fcfdcdb-328d-498f-8380-16a9b5bdca8a",
 			"key": "host",
 			"value": "http://127.0.0.1:5000"
 		},
 		{
-			"id": "623be53f-61b5-4d24-8f90-74ddcf0ce4b9",
+			"id": "dab86578-2e2b-41a2-88d4-409e525be120",
 			"key": "user_id",
 			"value": ""
 		},
 		{
-			"id": "14a84e70-a42c-4bda-8986-caf5edd0b131",
+			"id": "c7febd70-a041-480e-90e1-0d6ea277d21f",
 			"key": "user_email",
 			"value": "foo@example.org"
 		},
 		{
-			"id": "bd3f19c8-5e62-40f7-b441-a091762a447a",
+			"id": "5e40a0df-d248-4a66-9e7f-d3a1a103b283",
 			"key": "user_username",
 			"value": "foo"
 		},
 		{
-			"id": "e9404b3c-30e4-41e4-802a-17f0b898aa47",
+			"id": "38c7c7a1-e11a-4b48-8c0c-86eba67b559d",
 			"key": "user_password",
 			"value": "admin"
 		},
 		{
-			"id": "3f209e31-a678-406e-9ad7-ae23cfa83ab8",
+			"id": "ac4bd9d8-eb4a-4eab-b5cf-18cfc0570ba3",
 			"key": "user_firstname",
 			"value": "Foo"
 		},
 		{
-			"id": "b2f1c85a-bd1b-49bf-b8e0-0e4328ed95f2",
+			"id": "62ba5bdf-3d88-47e4-ab81-3cb55c5afcc3",
 			"key": "user_lastname",
 			"value": "Bar"
 		},
 		{
-			"id": "df95c185-4257-4d69-8f80-4e51b6ea84aa",
+			"id": "735e4af6-1136-4c7a-b26f-d872b3054d5a",
 			"key": "debug_token",
 			"value": "xX69jules69Xx"
 		},
 		{
-			"id": "baac5b67-e6f8-4b44-8d03-9c1de6dba09f",
+			"id": "c3bf9057-c4fd-47f4-9be3-870e097c5d27",
 			"key": "user_access_token",
 			"value": ""
 		},
 		{
-			"id": "40cf296c-1333-42e1-970f-13e03d60d1eb",
+			"id": "4c6d5f6a-6502-4a17-ae46-6f8d197b66d9",
 			"key": "user_refresh_token",
 			"value": ""
 		},
 		{
-			"id": "ed652ff2-2c51-413c-9465-9e181d80f0e5",
+			"id": "e15b42ce-f7a7-4c84-b95c-4a276ac81dbb",
 			"key": "expired_token",
 			"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE1OTAyNDIyNjQsIm5iZiI6MTU5MDI0MjI2NCwianRpIjoiNTM0ZGI5NzQtOWE4Ni00MGViLWE1NDEtMDg3N2ZmNzQ3NDVhIiwiZXhwIjoxNTkwMjQyMzI0LCJpZGVudGl0eSI6eyJpZCI6NTEyLCJlbWFpbCI6ImZvb0BleGFtcGxlLm9yZyIsInVzZXJuYW1lIjoiYmFyIiwiaXNfb25saW5lIjp0cnVlLCJkYXRlX2xhc3RzZWVuIjoiU2F0LCAyMyBNYXkgMjAyMCAxMzo1Nzo0NCBHTVQifSwiZnJlc2giOnRydWUsInR5cGUiOiJhY2Nlc3MifQ.NTp2P0WNkXDwzuzrcNIQdeAfizQ57HQgkzBLSvY1yHU"
 		},
 		{
-			"id": "87d63756-b49d-430e-a5fd-25fc048be13d",
+			"id": "e800e15b-b380-45bc-92b8-a03ddd47c2af",
 			"key": "user_orientation",
 			"value": "heterosexual"
 		},
 		{
-			"id": "ff3a467c-902b-4129-9bf5-adf5d701b732",
+			"id": "62dae0ab-ab8c-41e2-8d0d-d8becc86493a",
 			"key": "user_bio",
 			"value": "Lorem Ipsum is the single greatest threat. We are not - we are not keeping up with other websites. Lorem Ipsum best not make any more threats to your website. It will be met with fire and fury like the world has never seen. Does everybody know that pig named Lorem Ipsum? An ‘extremely credible source’ has called my office and told me that Barack Obama’s placeholder text is a fraud."
 		},
 		{
-			"id": "c80b16e5-fc1e-4d2c-b2e3-6cf8340bf274",
+			"id": "c001f9e7-1711-4126-83a1-8a7429e24484",
 			"key": "user_gender",
 			"value": "male"
 		},
 		{
-			"id": "49132f7c-7b3c-40c3-b11f-fdea73fd2acb",
+			"id": "811072c0-a31a-4f0a-a62b-6b2e485bfb5a",
 			"key": "user_birthdate",
 			"value": "06/04/1998"
 		},
 		{
-			"id": "ad9d9ed7-2330-427e-937b-9a93e0504e4a",
+			"id": "bf3cd0e3-4f1f-45f3-ba16-c376b3f50d28",
 			"key": "user_lat",
 			"value": "44.8404"
 		},
 		{
-			"id": "1f2570ff-5cab-466f-b221-97a79a631165",
+			"id": "8bcf8b8c-798d-497b-a3d7-e92639ed55d1",
 			"key": "user_lng",
 			"value": "-0.5805"
 		},
 		{
-			"id": "8436114f-4417-4821-8168-8cabee7c69ee",
+			"id": "688313b7-700a-4f16-bafe-c0ecb27ef1b6",
 			"key": "user_ip",
 			"value": "77.205.46.181"
 		}
