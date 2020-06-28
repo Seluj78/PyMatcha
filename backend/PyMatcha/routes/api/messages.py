@@ -16,6 +16,8 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 """
+import datetime
+
 from flask import Blueprint
 from flask import current_app
 from flask import request
@@ -35,9 +37,9 @@ REQUIRED_KEYS_NEW_MESSAGE = {"to_uid": str, "content": str}
 messages_bp = Blueprint("messages", __name__)
 
 """
-test get all messages
 test more than one conv
-test like message
+like route
+conv with user route
 """
 
 
@@ -102,6 +104,7 @@ def see_conversation_messages(with_uid):
     if unseen_messages:
         for message in unseen_messages:
             message.is_seen = True
+            message.seen_timestamp = datetime.datetime.utcnow()
             message.save()
     return Success("Messages marked as seen.")
 
@@ -123,8 +126,8 @@ def like_message(message_id):
 @messages_bp.route("/messages/unseen", methods=["GET"])
 @jwt_required
 def get_new_messages():
-    message_list = current_user.get_multis(to_id=current_user.id, is_seen=False)
+    message_list = Message.get_multis(to_id=current_user.id, is_seen=False)
     if not message_list:
-        return Success("No new messages")
+        return Success("No new messages.")
     new_messages = [m.to_dict() for m in message_list]
     return SuccessOutput("new_messages", new_messages)
