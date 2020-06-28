@@ -30,20 +30,55 @@ from PyMatcha.utils.success import Success
 from PyMatcha.utils.success import SuccessOutput
 
 
-REQUIRED_KEYS_NEW_MESSAGE = {"to_id": int, "content": str}
+REQUIRED_KEYS_NEW_MESSAGE = {"to_uid": str, "content": str}
 
 messages_bp = Blueprint("messages", __name__)
 
-
-# TODO: route to receive messages
+"""
+test get all messages
+test when is_unseen is true
+test more than one conv
+test see message
+test like message
+test unseen conversations
+"""
 
 
 @messages_bp.route("/conversations", methods=["GET"])
 @jwt_required
 def get_opened_conversations():
     conv_list = current_user.get_conversation_list()
-    returned_list = [c.to_dict() for c in conv_list]
+    returned_list = [
+        {
+            "last_message_timestamp": c.timestamp,
+            "last_message_content": c.content,
+            "is_unseen": True if not c.is_seen and c.to_id == current_user.id else False,
+            "with_user": get_user(c.to_id if c.to_id != current_user.id else c.from_id).to_dict(),
+        }
+        for c in conv_list
+    ]
     return SuccessOutput("conversations", returned_list)
+
+
+@messages_bp.route("/messages/send", methods=["POST"])
+@jwt_required
+@validate_params(REQUIRED_KEYS_NEW_MESSAGE)
+def send_message():
+    current_app.logger.debug("/messages -> Call")
+    data = request.get_json()
+    to_uid: str = data["to_uid"]
+    content: str = data["content"]
+    try:
+        to_user = get_user(to_uid)
+    except NotFoundError:
+        raise NotFoundError(f"Recipient {to_uid} not found", "Try again")
+
+    if current_user.id == to_user.id:
+        raise BadRequestError("Cannot send a message to yourself.", "Try again")
+
+    current_user.send_message(to_id=to_user.id, content=content)
+    current_app.logger.debug("/messages -> Message successfully sent to {}.".format(to_uid))
+    return Success("Message successfully sent to {}.".format(to_uid))
 
 
 @messages_bp.route("/conversations/<with_uid>", methods=["GET"])
@@ -84,23 +119,6 @@ def like_message(message_id):
     message.is_liked = True
     message.save()
     return Success(f"Liked message {message_id}")
-
-
-@messages_bp.route("/messages/send", methods=["POST"])
-@jwt_required
-@validate_params(REQUIRED_KEYS_NEW_MESSAGE)
-def send_message():
-    current_app.logger.debug("/messages -> Call")
-    data = request.get_json()
-    to_id: int = int(data["to_id"])
-    content: str = data["content"]
-    try:
-        get_user(to_id)
-    except NotFoundError:
-        raise NotFoundError("Recipient {} not found", "Try again")
-    current_user.send_message(to_id=to_id, content=content)
-    current_app.logger.debug("/messages -> Message successfully sent to {}".format(to_id))
-    return Success("Message successfully sent to {}".format(to_id))
 
 
 @messages_bp.route("/messages/unseen", methods=["GET"])
