@@ -8,7 +8,7 @@ python-dotenv==0.14.0
 Geohash==1.0
 python-geohash==0.8.5
 
-pymysql==0.10.0
+pymysql==0.10.1
 
 Flask-Mail==0.9.1
 
