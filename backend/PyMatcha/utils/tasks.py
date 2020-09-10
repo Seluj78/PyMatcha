@@ -17,6 +17,7 @@ from PyMatcha.utils.match_score import _get_inverted_gender
 def setup_periodic_tasks(sender, **kwargs):
     sender.add_periodic_task(60, update_offline_users.s(), name="Update online users every minute")
     sender.add_periodic_task(3600, update_heat_scores.s(), name="Update heat scores every hour")
+    sender.add_periodic_task(60, update_user_recommendations.s(), name="Update user recommendations every minute")
 
 
 @celery.task
@@ -92,3 +93,60 @@ def update_offline_users():
     return "Updated online status for {} users. {} passed offline and {} passed or stayed online.".format(
         count, offline_count, online_count
     )
+
+
+def default_date_converter(o):
+    if isinstance(o, datetime.datetime):
+        return o.__str__()
+
+
+@celery.task
+def update_user_recommendations():
+    today = datetime.datetime.utcnow()
+    count = 0
+    for user_to_update in User.select_all():
+        count += 1
+        user_to_update_recommendations = []
+
+        user_to_update_age = (
+            today.year
+            - user_to_update.birthdate.year
+            - ((today.month, today.day) < (user_to_update.birthdate.month, user_to_update.birthdate.day))
+        )
+        user_to_update_tags = [t.name for t in user_to_update.get_tags()]
+
+        inverted_gender = _get_inverted_gender(user_to_update.gender, user_to_update.orientation)
+
+        for user in User.get_multis(orientation=user_to_update.orientation, gender=inverted_gender):
+            if user.id == user_to_update.id:
+                continue
+            score = 0
+
+            distance = _get_distance(user_to_update.geohash, user.geohash)
+            score -= distance
+
+            user_age = (
+                today.year
+                - user.birthdate.year
+                - ((today.month, today.day) < (user.birthdate.month, user.birthdate.day))
+            )
+            age_diff = _get_age_diff(user_to_update_age, user_age)
+            score -= age_diff
+
+            user_tags = [t.name for t in user.get_tags()]
+            common_tags = _get_common_tags(user_to_update_tags, user_tags)
+            score += len(common_tags) * 2
+
+            score += user.heat_score
+
+            d = {"score": score, "common_tags": common_tags, "distance": distance}
+            d.update(user.to_dict())
+            user_to_update_recommendations.append(d)
+        user_to_update_recommendations_sorted = sorted(
+            user_to_update_recommendations, key=lambda x: x["score"], reverse=True
+        )
+        redis.set(
+            f"user_recommendations:{str(user_to_update.id)}",
+            json.dumps(user_to_update_recommendations_sorted, default=default_date_converter),
+        )
+    return f"Successfully updated recommendations for {count} users."
