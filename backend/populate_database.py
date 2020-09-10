@@ -23,7 +23,7 @@ def gen_datetime(min_year: int = 1900, max_year: int = datetime.datetime.now().y
 def populate_users():
     User.drop_table()
     User.create_table()
-    for i in range(0, 500):
+    for i in range(0, 150):
         gender = random.choice(["male", "female", "other"])
 
         orientation = random.choice(["heterosexual", "homosexual", "bisexual", "other"])
@@ -80,7 +80,7 @@ def populate_users():
             with open("tags.json") as handle:
                 json_list = json.load(handle)
             u = get_user(username)
-            tags = random.sample(json_list, 5)
+            tags = list(set(random.sample(json_list, 8)))
 
             for tag in tags:
                 Tag.create(name=tag, user_id=u.id)

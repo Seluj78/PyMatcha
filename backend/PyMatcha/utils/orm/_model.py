@@ -1,5 +1,6 @@
 import logging
 from copy import deepcopy
+from typing import List
 
 import pymysql
 from PyMatcha import database_config
@@ -254,7 +255,7 @@ class Model(object):
             raise ValueError("Not found.")
 
     @classmethod
-    def get_multi(cls, **kwargs):
+    def get_multi(cls, **kwargs) -> List:
         """
         Get a model from the database, using multiple keyword argument as a filter.
 
@@ -309,7 +310,6 @@ class Model(object):
             model = Model.get(username="test", email="test@example.org")
 
         Returns list of instances on success and raises an error if the row count was 0
-
         """
 
         keys = []
@@ -321,11 +321,16 @@ class Model(object):
         where = ""
         length = len(keys)
         for index, (key, value) in enumerate(zip(keys, values)):
-            if index == length - 1:
-                where = where + f"{key}={value}"
+            if isinstance(value, str):
+                if index == length - 1:
+                    where = where + f"{key}='{value}'"
+                else:
+                    where = where + f"{key}='{value}' and "
             else:
-                where = where + f"{key}={value} and "
-
+                if index == length - 1:
+                    where = where + f"{key}={value}"
+                else:
+                    where = where + f"{key}={value} and "
         temp = cls()
         with temp.db.cursor() as c:
             c.execute(
