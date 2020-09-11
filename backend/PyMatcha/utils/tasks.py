@@ -10,7 +10,7 @@ from PyMatcha.models.user import User
 from PyMatcha.utils.match_score import _get_age_diff
 from PyMatcha.utils.match_score import _get_common_tags
 from PyMatcha.utils.match_score import _get_distance
-from PyMatcha.utils.match_score import _get_inverted_gender
+from PyMatcha.utils.match_score import _get_gender_query
 
 
 @celery.on_after_configure.connect
@@ -115,9 +115,9 @@ def update_user_recommendations():
         )
         user_to_update_tags = [t.name for t in user_to_update.get_tags()]
 
-        inverted_gender = _get_inverted_gender(user_to_update.gender, user_to_update.orientation)
+        query = _get_gender_query(user_to_update.orientation, user_to_update.gender)
 
-        for user in User.get_multis(orientation=user_to_update.orientation, gender=inverted_gender):
+        for user in query:
             if user.id == user_to_update.id:
                 continue
             score = 0

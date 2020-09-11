@@ -1,8 +1,10 @@
+import itertools
 from typing import List
 
 from fuzzywuzzy import fuzz
 from Geohash import decode
 from geopy.distance import distance
+from PyMatcha.models.user import User
 
 
 def _get_distance(geohash_1: str, geohash_2: str) -> float:
@@ -26,11 +28,58 @@ def _get_age_diff(age_1: int, age_2: int) -> int:
     return -1 * (age_1 - age_2)
 
 
-def _get_inverted_gender(gender, orientation):
-    # TODO: Handle other gender and bisexual and other orientations
+def _get_gender_query(orientation, gender):
     if orientation == "heterosexual":
-        return "male" if gender == "female" else "female"
+        if gender == "female":
+            q1 = User.get_multis(orientation=orientation, gender="male")
+            q2 = User.get_multis(orientation="other", gender="male")
+            return q1.extend(q2)
+        elif gender == "male":
+            q1 = User.get_multis(orientation=orientation, gender="female")
+            q2 = User.get_multis(orientation="other", gender="female")
+            return q1.extend(q2)
+        else:
+            q1 = User.get_multis(orientation=orientation, gender="female")
+            q2 = User.get_multis(orientation=orientation, gender="male")
+            return q1.extend(q2)
     elif orientation == "homosexual":
-        return "male" if gender == "male" else "female"
+        if gender == "female":
+            q1 = User.get_multis(orientation=orientation, gender="female")
+            q2 = User.get_multis(orientation="other", gender="female")
+            return q1.extend(q2)
+        elif gender == "male":
+            q1 = User.get_multis(orientation=orientation, gender="male")
+            q2 = User.get_multis(orientation="other", gender="male")
+            return q1.extend(q2)
+        else:
+            q1 = User.get_multis(orientation=orientation, gender="female")
+            q2 = User.get_multis(orientation=orientation, gender="male")
+            return q1.extend(q2)
+    elif orientation == "bisexual":
+        q1 = User.get_multis(orientation=orientation, gender="female")
+        q3 = User.get_multis(orientation=orientation, gender="male")
+        q2 = []
+        q4 = []
+        if gender == "female":
+            q2 = User.get_multis(orientation="homosexual", gender="female")
+        if gender == "male":
+            q4 = User.get_multis(orientation="homosexual", gender="male")
+        q5 = User.get_multis(orientation="other", gender="male")
+        q6 = User.get_multis(orientation="other", gender="female")
+        return list(set(list(itertools.chain(q1, q2, q3, q4, q5, q6))))
+    elif orientation == "other":
+        q1 = User.get_multis(orientation=orientation, gender="female")
+        q3 = User.get_multis(orientation=orientation, gender="male")
+        q2 = []
+        q4 = []
+        q5 = []
+        q6 = []
+        if gender == "female":
+            q2 = User.get_multis(orientation="homosexual", gender="female")
+            q5 = User.get_multis(orientation="heterosexual", gender="male")
+        if gender == "male":
+            q4 = User.get_multis(orientation="homosexual", gender="male")
+            q6 = User.get_multis(orientation="heterosexual", gender="female")
+        return list(set(list(itertools.chain(q1, q2, q3, q4, q5, q6))))
     else:
-        return "other"
+        raise ValueError("No match found for genre. This should not happen")
