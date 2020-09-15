@@ -1,5 +1,6 @@
 import logging
 from copy import deepcopy
+from typing import List
 
 import pymysql
 from PyMatcha import database_config
@@ -176,6 +177,7 @@ class Model(object):
         with self.db.cursor() as c:
             c.execute(query, tuple(values))
             self.db.commit()
+            c.close()
 
     def update(self, _dict={}, **kwargs):
         """
@@ -209,6 +211,7 @@ class Model(object):
                 )
                 self.db.commit()
                 logging.debug("deleted {} from table {}".format(self.id, self.table_name))
+                c.close()
         else:
             logging.fatal("{} Not in table {}".format(self.id, self.table_name))
             raise Exception("{} Not in table {}".format(self.id, self.table_name))
@@ -248,13 +251,14 @@ class Model(object):
             )
 
             data = c.fetchone()
+            c.close()
         if data:
             return cls(data)
         else:
             raise ValueError("Not found.")
 
     @classmethod
-    def get_multi(cls, **kwargs):
+    def get_multi(cls, **kwargs) -> List:
         """
         Get a model from the database, using multiple keyword argument as a filter.
 
@@ -292,8 +296,8 @@ class Model(object):
                     fields=", ".join(temp.fields.keys()), table=cls.table_name, where=where
                 )
             )
-
             data = c.fetchone()
+            c.close()
         if data:
             return cls(data)
         else:
@@ -309,7 +313,6 @@ class Model(object):
             model = Model.get(username="test", email="test@example.org")
 
         Returns list of instances on success and raises an error if the row count was 0
-
         """
 
         keys = []
@@ -321,11 +324,16 @@ class Model(object):
         where = ""
         length = len(keys)
         for index, (key, value) in enumerate(zip(keys, values)):
-            if index == length - 1:
-                where = where + f"{key}={value}"
+            if isinstance(value, str):
+                if index == length - 1:
+                    where = where + f"{key}='{value}'"
+                else:
+                    where = where + f"{key}='{value}' and "
             else:
-                where = where + f"{key}={value} and "
-
+                if index == length - 1:
+                    where = where + f"{key}={value}"
+                else:
+                    where = where + f"{key}={value} and "
         temp = cls()
         with temp.db.cursor() as c:
             c.execute(
@@ -340,6 +348,7 @@ class Model(object):
             )
 
             data = c.fetchall()
+            c.close()
         if data:
             ret_list = []
             for i in data:
@@ -355,6 +364,7 @@ class Model(object):
         with temp.db.cursor() as c:
             c.execute("""SELECT * FROM {}""".format(cls.table_name))
             data = c.fetchall()
+            c.close()
         for item in data:
             yield cls(item)
 
@@ -364,6 +374,7 @@ class Model(object):
         with cls.db.cursor() as c:
             c.execute("""DROP TABLE {}""".format(cls.table_name))
             cls.db.commit()
+            c.close()
 
     def to_dict(self):
         ret_dict = dict()

@@ -59,7 +59,7 @@ def get_all_online_users():
     user_id = None  # noqa
     date_lastseen = None  # noqa
     online_user_list = []
-    for key in redis.scan_iter("user:*"):
+    for key in redis.scan_iter("online_user:*"):
         user_id = str(key).split(":")[1]
         date_lastseen = float(redis.get(key))
         online_user_list.append({"id": user_id, "date_lastseen": date_lastseen})
