@@ -175,14 +175,14 @@ def jwt_user_callback(identity):
     except NotFoundError:
         # The user who the server issues the token for was deleted in the db.
         return None
-    redis.set("user:" + str(identity["id"]), datetime.datetime.utcnow().timestamp())
+    redis.set("online_user:" + str(identity["id"]), datetime.datetime.utcnow().timestamp())
     return u
 
 
 @jwt.token_in_blacklist_loader
 def check_if_token_is_revoked(decrypted_token):
     jti = decrypted_token["jti"]
-    entry = redis.get("jti:" + jti)
+    entry = redis.get("is_revoked_jti:" + jti)
     if entry is None:
         return True
     return entry == "true"

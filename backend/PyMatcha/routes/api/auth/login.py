@@ -68,11 +68,11 @@ def auth_login():
     access_jti = get_jti(access_token)
     refresh_jti = get_jti(refresh_token)
 
-    redis.set("jti:" + access_jti, "false", ACCESS_TOKEN_EXPIRES * 1.2)
-    redis.set("jti:" + refresh_jti, "false", REFRESH_TOKEN_EXPIRES * 1.2)
+    redis.set("is_revoked_jti:" + access_jti, "false", ACCESS_TOKEN_EXPIRES * 1.2)
+    redis.set("is_revoked_jti:" + refresh_jti, "false", REFRESH_TOKEN_EXPIRES * 1.2)
 
     current_app.logger.debug("/auth/login -> Returning access token for user {}".format(username))
-    redis.set("user:" + str(u.id), datetime.datetime.utcnow().timestamp())
+    redis.set("online_user:" + str(u.id), datetime.datetime.utcnow().timestamp())
     ret = {"access_token": access_token, "refresh_token": refresh_token, "is_profile_completed": u.is_profile_completed}
     return SuccessOutput("return", ret)
 
@@ -83,7 +83,7 @@ def refresh():
     current_user = get_jwt_identity()
     access_token = create_access_token(identity=current_user)
     access_jti = get_jti(encoded_token=access_token)
-    redis.set("jti:" + access_jti, "false", ACCESS_TOKEN_EXPIRES * 1.2)
+    redis.set("is_revoked_jti:" + access_jti, "false", ACCESS_TOKEN_EXPIRES * 1.2)
     return SuccessOutput("access_token", access_token)
 
 
@@ -91,7 +91,7 @@ def refresh():
 @jwt_required
 def logout():
     jti = get_raw_jwt()["jti"]
-    redis.set("jti:" + jti, "true", ACCESS_TOKEN_EXPIRES * 1.2)
+    redis.set("is_revoked_jti:" + jti, "true", ACCESS_TOKEN_EXPIRES * 1.2)
     return Success("Access token revoked")
 
 
@@ -99,5 +99,5 @@ def logout():
 @jwt_refresh_token_required
 def logout2():
     jti = get_raw_jwt()["jti"]
-    redis.set("jti:" + jti, "true", REFRESH_TOKEN_EXPIRES * 1.2)
+    redis.set("is_revoked_jti:" + jti, "true", REFRESH_TOKEN_EXPIRES * 1.2)
     return Success("Refresh token revoked")

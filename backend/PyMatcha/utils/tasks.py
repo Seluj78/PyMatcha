@@ -53,7 +53,7 @@ def update_offline_users():
     online_count = 0
     offline_count = 0
     # For all user keys
-    for key in redis.scan_iter("user:*"):
+    for key in redis.scan_iter("online_user:*"):
         # Get the user id
         user_id = str(key).split(":")[1]
         date_lastseen = float(redis.get(key))
@@ -155,4 +155,5 @@ def update_user_recommendations():
             f"user_recommendations:{str(user_to_update.id)}",
             json.dumps(user_to_update_recommendations_sorted, default=default_date_converter),
         )
+        redis.expire(f"user_recommendations:{str(user_to_update.id)}", 3600)
     return f"Successfully updated recommendations for {count} users."
