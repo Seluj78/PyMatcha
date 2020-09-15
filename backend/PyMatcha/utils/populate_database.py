@@ -1,5 +1,6 @@
 import datetime
 import json
+import os
 import random
 import string
 
@@ -20,10 +21,11 @@ def gen_datetime(min_year: int = 1900, max_year: int = datetime.datetime.now().y
     return start + (end - start) * random.random()
 
 
-def populate_users():
-    User.drop_table()
-    User.create_table()
-    for i in range(0, 150):
+def populate_users(amount=150, drop_user_table=False):
+    if drop_user_table:
+        User.drop_table()
+        User.create_table()
+    for i in range(0, amount):
         gender = random.choice(["male", "female", "other"])
 
         orientation = random.choice(["heterosexual", "homosexual", "bisexual", "other"])
@@ -58,7 +60,7 @@ def populate_users():
         username = first_name + end_of_username
 
         try:
-            u = User.create(
+            User.create(
                 first_name=first_name,
                 last_name=last_name,
                 email=email.lower(),
@@ -77,7 +79,8 @@ def populate_users():
                 is_confirmed=True,
                 confirmed_on=datetime.datetime.utcnow(),
             )
-            with open("tags.json") as handle:
+            dir_path = os.path.dirname(os.path.realpath(__file__))
+            with open(dir_path + "/tags.json") as handle:
                 json_list = json.load(handle)
             u = get_user(username)
             tags = list(set(random.sample(json_list, 8)))
