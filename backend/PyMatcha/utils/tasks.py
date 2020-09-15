@@ -108,6 +108,11 @@ def update_user_recommendations():
         count += 1
         user_to_update_recommendations = []
 
+        if not user_to_update.birthdate:
+            continue
+        if not user_to_update.geohash:
+            continue
+
         user_to_update_age = (
             today.year
             - user_to_update.birthdate.year
@@ -123,7 +128,8 @@ def update_user_recommendations():
             score = 0
 
             distance = _get_distance(user_to_update.geohash, user.geohash)
-            score -= distance
+            if distance:
+                score -= distance
 
             user_age = (
                 today.year
