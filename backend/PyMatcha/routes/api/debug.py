@@ -18,8 +18,10 @@ from PyMatcha.models.view import View
 from PyMatcha.utils.decorators import debug_token_required
 from PyMatcha.utils.decorators import validate_params
 from PyMatcha.utils.errors import NotFoundError
+from PyMatcha.utils.populate_database import populate_users
 from PyMatcha.utils.success import Success
 from PyMatcha.utils.success import SuccessDeleted
+from PyMatcha.utils.tasks import update_user_recommendations
 
 debug_bp = Blueprint("debug", __name__)
 
@@ -72,13 +74,9 @@ def create_views(amount):
 @debug_bp.route("/debug/redis")
 @debug_token_required
 def debug_show_redis():
-    ret = {"users": {}, "jtis": {}}
-    for key in redis.scan_iter("user:*"):
-        value = redis.get(str(key))
-        ret["users"][key] = value
-    for key in redis.scan_iter("jti:*"):
-        value = redis.get(str(key))
-        ret["jtis"][key] = value
+    ret = dict()
+    for key in redis.scan_iter("*"):
+        ret[key] = redis.get(str(key))
     return jsonify(ret), 200
 
 
@@ -135,7 +133,7 @@ def create_fake_like():
 
 @debug_bp.route("/debug/tables", methods=["DELETE"])
 @debug_token_required
-def delete_matches():
+def delete_tables():
     Match.drop_table()
     Like.drop_table()
     Report.drop_table()
@@ -154,6 +152,13 @@ def delete_matches():
     return "", 204
 
 
+@debug_bp.route("/debug/redis", methods=["DELETE"])
+@debug_token_required
+def delete_redis():
+    redis.flushdb()
+    return "", 204
+
+
 DEBUG_SEND_MESSAGE = {"from_uid": str, "to_uid": str, "content": str}
 
 
@@ -166,3 +171,12 @@ def debug_send_message():
     to_id = get_user(data["to_uid"]).id
     Message.create(from_id=from_id, to_id=to_id, content=data["content"])
     return "", 204
+
+
+@debug_bp.route("/debug/recommendations/start", methods=["POST"])
+@debug_token_required
+def debug_recommendations_start_process():
+    """This function will create 100 random users and calculate recommendations"""
+    populate_users(amount=100, drop_user_table=False)
+    update_user_recommendations()
+    return Success("Done")

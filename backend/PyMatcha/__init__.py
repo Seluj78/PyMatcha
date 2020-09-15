@@ -154,7 +154,10 @@ redis = Redis(
     host=os.getenv("REDIS_HOST") if not os.getenv("IS_DOCKER_COMPOSE") else "redis",
     port=os.getenv("REDIS_PORT", 6379),
     decode_responses=True,
+    db=2,
 )
+
+redis.flushdb()
 
 from PyMatcha.models.user import get_user
 
@@ -197,6 +200,7 @@ from PyMatcha.routes.api.profile.report import profile_report_bp
 from PyMatcha.routes.api.like import like_bp
 from PyMatcha.routes.api.match import match_bp
 from PyMatcha.routes.api.messages import messages_bp
+from PyMatcha.routes.api.recommendations import recommendations_bp
 
 logging.debug("Registering Flask blueprints")
 application.register_blueprint(user_bp)
@@ -211,6 +215,7 @@ application.register_blueprint(profile_report_bp)
 application.register_blueprint(like_bp)
 application.register_blueprint(match_bp)
 application.register_blueprint(messages_bp)
+application.register_blueprint(recommendations_bp)
 
 if application.debug:
     logging.debug("Registering debug route")
