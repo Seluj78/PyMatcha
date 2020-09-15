@@ -1,5 +1,6 @@
 import itertools
 from typing import List
+from typing import Optional
 
 from fuzzywuzzy import fuzz
 from Geohash import decode
@@ -7,10 +8,14 @@ from geopy.distance import distance
 from PyMatcha.models.user import User
 
 
-def _get_distance(geohash_1: str, geohash_2: str) -> float:
-    coords_1 = decode(geohash_1)
-    coords_2 = decode(geohash_2)
-    return distance(coords_1, coords_2).kilometers
+def _get_distance(geohash_1: str, geohash_2: str) -> Optional[float]:
+    try:
+        coords_1 = decode(geohash_1)
+        coords_2 = decode(geohash_2)
+    except TypeError:
+        return None
+    else:
+        return distance(coords_1, coords_2).kilometers
 
 
 def _get_common_tags(tag_list_1: list, tag_list_2: list) -> List[str]:
@@ -33,28 +38,34 @@ def _get_gender_query(orientation, gender):
         if gender == "female":
             q1 = User.get_multis(orientation=orientation, gender="male")
             q2 = User.get_multis(orientation="other", gender="male")
-            return q1.extend(q2)
+            q1.extend(q2)
+            return q1
         elif gender == "male":
             q1 = User.get_multis(orientation=orientation, gender="female")
             q2 = User.get_multis(orientation="other", gender="female")
-            return q1.extend(q2)
+            q1.extend(q2)
+            return q1
         else:
             q1 = User.get_multis(orientation=orientation, gender="female")
             q2 = User.get_multis(orientation=orientation, gender="male")
-            return q1.extend(q2)
+            q1.extend(q2)
+            return q1
     elif orientation == "homosexual":
         if gender == "female":
             q1 = User.get_multis(orientation=orientation, gender="female")
             q2 = User.get_multis(orientation="other", gender="female")
-            return q1.extend(q2)
+            q1.extend(q2)
+            return q1
         elif gender == "male":
             q1 = User.get_multis(orientation=orientation, gender="male")
             q2 = User.get_multis(orientation="other", gender="male")
-            return q1.extend(q2)
+            q1.extend(q2)
+            return q1
         else:
             q1 = User.get_multis(orientation=orientation, gender="female")
             q2 = User.get_multis(orientation=orientation, gender="male")
-            return q1.extend(q2)
+            q1.extend(q2)
+            return q1
     elif orientation == "bisexual":
         q1 = User.get_multis(orientation=orientation, gender="female")
         q3 = User.get_multis(orientation=orientation, gender="male")
