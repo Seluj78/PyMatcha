@@ -177,6 +177,7 @@ class Model(object):
         with self.db.cursor() as c:
             c.execute(query, tuple(values))
             self.db.commit()
+            c.close()
 
     def update(self, _dict={}, **kwargs):
         """
@@ -210,6 +211,7 @@ class Model(object):
                 )
                 self.db.commit()
                 logging.debug("deleted {} from table {}".format(self.id, self.table_name))
+                c.close()
         else:
             logging.fatal("{} Not in table {}".format(self.id, self.table_name))
             raise Exception("{} Not in table {}".format(self.id, self.table_name))
@@ -249,6 +251,7 @@ class Model(object):
             )
 
             data = c.fetchone()
+            c.close()
         if data:
             return cls(data)
         else:
@@ -293,8 +296,8 @@ class Model(object):
                     fields=", ".join(temp.fields.keys()), table=cls.table_name, where=where
                 )
             )
-
             data = c.fetchone()
+            c.close()
         if data:
             return cls(data)
         else:
@@ -345,6 +348,7 @@ class Model(object):
             )
 
             data = c.fetchall()
+            c.close()
         if data:
             ret_list = []
             for i in data:
@@ -360,6 +364,7 @@ class Model(object):
         with temp.db.cursor() as c:
             c.execute("""SELECT * FROM {}""".format(cls.table_name))
             data = c.fetchall()
+            c.close()
         for item in data:
             yield cls(item)
 
@@ -369,6 +374,7 @@ class Model(object):
         with cls.db.cursor() as c:
             c.execute("""DROP TABLE {}""".format(cls.table_name))
             cls.db.commit()
+            c.close()
 
     def to_dict(self):
         ret_dict = dict()
