@@ -28,7 +28,7 @@ def _create_user_table(db):
         c.execute(DISABLE_SQL_NOTES)
         c.execute(
             """
-        CREATE TABLE IF NOT EXISTS users 
+        CREATE TABLE IF NOT EXISTS users
         (
         id                   INT auto_increment PRIMARY KEY,
         first_name           VARCHAR(256) NOT NULL,
@@ -49,10 +49,11 @@ def _create_user_table(db):
         is_profile_completed BOOLEAN DEFAULT (FALSE),
         is_confirmed         BOOLEAN DEFAULT (FALSE),
         confirmed_on         DATETIME DEFAULT NULL
-        );
+        ) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci ;
         """
         )
         c.execute(ENABLE_SQL_NOTES)
+        c.close()
 
 
 def _create_tags_table(db):
@@ -66,10 +67,11 @@ def _create_tags_table(db):
         id            INT auto_increment PRIMARY KEY,
         user_id       INT NOT NULL,
         name          VARCHAR(256)
-        )
+        ) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci ;
         """
         )
         c.execute(ENABLE_SQL_NOTES)
+        c.close()
 
 
 def _create_views_table(db):
@@ -84,10 +86,11 @@ def _create_views_table(db):
         profile_id    INT NOT NULL,
         viewer_id     INT NOT NULL,
         dt_seen       DATETIME DEFAULT NOW()
-        )
+        ) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci ;
         """
         )
         c.execute(ENABLE_SQL_NOTES)
+        c.close()
 
 
 def _create_reports_table(db):
@@ -105,10 +108,11 @@ def _create_reports_table(db):
         details       VARCHAR(256),
         reason        ENUM('harassment', 'bot', 'spam', 'inappropriate content'),
         status        ENUM('processing request', 'insufficient evidence', 'convicted and banned')
-        )
+        ) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci ;
         """
         )
         c.execute(ENABLE_SQL_NOTES)
+        c.close()
 
 
 def _create_likes_table(db):
@@ -124,10 +128,11 @@ def _create_likes_table(db):
         liker_id      INT NOT NULL,
         dt_liked      DATETIME DEFAULT NOW(),
         is_superlike  BOOLEAN DEFAULT FALSE
-        )
+        ) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci ;
         """
         )
         c.execute(ENABLE_SQL_NOTES)
+        c.close()
 
 
 def _create_matches_table(db):
@@ -142,11 +147,12 @@ def _create_matches_table(db):
         user_1        INT NOT NULL,
         user_2        INT NOT NULL,
         dt_matched    DATETIME DEFAULT NOW()
-        )
+        ) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci ;
         """
         )
         # TODO: Is conversation started boolean ?
         c.execute(ENABLE_SQL_NOTES)
+        c.close()
 
 
 def _create_messages_table(db):
@@ -165,10 +171,11 @@ def _create_messages_table(db):
         content        LONGTEXT NOT NULL,
         is_liked       BOOLEAN DEFAULT FALSE,
         is_seen        BOOLEAN DEFAULT FALSE
-        )
+        ) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci ;
         """
         )
         c.execute(ENABLE_SQL_NOTES)
+        c.close()
 
 
 def create_tables(db):
