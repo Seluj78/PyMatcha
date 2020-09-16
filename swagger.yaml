@@ -1,0 +1,133 @@
+openapi: 3.0.0
+info:
+  description: "This is the Matcha API documentation"
+  version: 0.0.0
+  title: Matcha API
+  termsOfService: https://github.com/Seluj78/PyMatcha/blob/dev/LICENSE
+  contact:
+    email: jlasne@student.42.fr
+  license:
+    name: GNU GPL 3
+    url: https://github.com/Seluj78/PyMatcha/blob/dev/LICENSE
+
+# TODO: Email and password once rewritten with new frontend
+# TODO: https://swagger.io/docs/specification/links/
+
+tags:
+  - name: Authentication
+    description: Login and register routes
+  - name: Complete Profile
+  - name: Edit Profile
+  - name: Report Profile
+  - name: View Profile
+
+  - name: Like
+    description: Like, unlike user etc...
+  - name: Match
+  - name: Messages
+    description: Send and receive messages
+  - name: Recommendations
+  - name: User
+    description: Get user info
+  - name: Debug
+    description: Debug routes
+
+paths:
+  /auth/register:
+    post:
+      tags:
+        - Authentication
+      summary: Register a new user to Matcha
+      description: ""
+      operationId: registerUser
+#      security:
+#        - bearerAuth: []
+      requestBody:
+        description: Parameters to create a user
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateUser'
+      responses:
+        "200":
+          description: User successfully created
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    description: If the request is a success
+                    example: true
+                  status_code:
+                    type: integer
+                    description: The status code
+                    example: 200
+                  email:
+                    type: string
+                    description: The user email
+                    example: foo@example.org
+        "409":
+          $ref: '#/components/responses/Conflict'
+
+servers:
+  - url: https://api.matcha.com
+
+components:
+  responses:
+    Conflict:
+      description: Conflict error
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              code:
+                type: string
+                example: 409
+                default: 409
+              success:
+                type: boolean
+                default: false
+                example: false
+              error:
+                type: object
+                properties:
+                  type:
+                    type: string
+                    default: ConflictError
+                    example: ConflictError
+                  name:
+                    type: string
+                    default: Conflict Error
+                    example: Conflict Error
+                  message:
+                    type: string
+                  solution:
+                    type: string
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+  schemas:
+    CreateUser:
+      type: object
+      properties:
+        username:
+          type: string
+          example: foobar
+        email:
+          type: string
+          example: foo@example.org
+        password:
+          type: string
+          example: dolphin2
+        first_name:
+          type: string
+          example: Foo
+        last_name:
+          type: string
+          example: Bar
