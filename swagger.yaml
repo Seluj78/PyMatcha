@@ -20,7 +20,6 @@ tags:
   - name: Edit Profile
   - name: Report Profile
   - name: View Profile
-
   - name: Like
     description: Like, unlike user etc...
   - name: Match
@@ -61,7 +60,7 @@ paths:
                     type: boolean
                     description: If the request is a success
                     example: true
-                  status_code:
+                  code:
                     type: integer
                     description: The status code
                     example: 200
@@ -71,9 +70,66 @@ paths:
                     example: foo@example.org
         "409":
           $ref: '#/components/responses/Conflict'
+        "400":
+          $ref: '#/components/responses/BadRequest'
+  /auth/login:
+    post:
+      tags:
+        - Authentication
+      summary: Login to Matcha
+      description: ""
+      operationId: loginUser
+#      security:
+#        - bearerAuth: []
+      requestBody:
+        description: Parameters to login a user. Either email or username
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LoginUser'
+      responses:
+        "200":
+          description: User successfully logged in
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    description: If the request is a success
+                    example: true
+                  code:
+                    type: integer
+                    description: The status code
+                    example: 200
+                  return:
+                    type: object
+                    properties:
+                      access_token:
+                        type: string
+                        description: The user access token to use in bearer auth
+                        example: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE2MDAyODM3NDAsIm5iZiI6MTYwMDI4Mzc0MCwianRpIjoiMTFlMmFhNzMtYWVkOS00NDQ2LWExNWItODAxZmFmYjYzYTdiIiwiZXhwIjoxNjAwMjg0NjQwLCJpZGVudGl0eSI6eyJpZCI6MSwiZW1haWwiOiJmb29AZXhhbXBsZS5vcmciLCJ1c2VybmFtZSI6ImZvbyIsImlzX29ubGluZSI6MCwiZGF0ZV9sYXN0c2VlbiI6IldlZCwgMTYgU2VwIDIwMjAgMTU6Mzk6MDQgR01UIn0sImZyZXNoIjp0cnVlLCJ0eXBlIjoiYWNjZXNzIn0.EFCIlsxSbEeHza_U9oPdVvvfx1rquItHDnoYtP19XBM
+                      refresh_token:
+                        type: string
+                        description: The user refresh token usd to refresh the access token when expired
+                        example: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE2MDAyODM3NDAsIm5iZiI6MTYwMDI4Mzc0MCwianRpIjoiNWQ2NjYwMTQtMDJkMi00YjY4LThjOTktNDQwNDZjYzYzZDNjIiwiZXhwIjoxNjAyODc1NzQwLCJpZGVudGl0eSI6eyJpZCI6MSwiZW1haWwiOiJmb29AZXhhbXBsZS5vcmciLCJ1c2VybmFtZSI6ImZvbyIsImlzX29ubGluZSI6MCwiZGF0ZV9sYXN0c2VlbiI6IldlZCwgMTYgU2VwIDIwMjAgMTU6Mzk6MDQgR01UIn0sInR5cGUiOiJyZWZyZXNoIn0.yz1QhL1QhxUdYvvacXZ0CkkVxFp2CkcNYpYRtKdRXdo
+                      is_profile_completed:
+                        type: boolean
+                        description: Is the user profile completed
+                        example: false
+        "409":
+          $ref: '#/components/responses/Conflict'
+        "400":
+          $ref: '#/components/responses/BadRequest'
+        "401":
+          $ref: '#/components/responses/Unauthorized'
+
 
 servers:
   - url: https://api.matcha.com
+
 
 components:
   responses:
@@ -191,3 +247,14 @@ components:
         last_name:
           type: string
           example: Bar
+    LoginUser:
+      type: object
+      properties:
+        username:
+          type: string
+          example: foo@example.org
+          required: true
+        password:
+          type: string
+          example: dolphin2
+          required: true
