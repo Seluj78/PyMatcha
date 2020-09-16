@@ -301,6 +301,7 @@ class Model(object):
         if data:
             return cls(data)
         else:
+            # TODO: All db gets return None instead of valuerror
             raise ValueError("Not found.")
 
     @classmethod

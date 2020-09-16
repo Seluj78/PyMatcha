@@ -54,8 +54,8 @@ def get_opened_conversations():
 
 
 @messages_bp.route("/messages/send", methods=["POST"])
-@jwt_required
 @validate_params(REQUIRED_KEYS_NEW_MESSAGE)
+@jwt_required
 def send_message():
     current_app.logger.debug("/messages -> Call")
     data = request.get_json()

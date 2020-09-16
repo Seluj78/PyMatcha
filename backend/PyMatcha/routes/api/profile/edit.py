@@ -53,8 +53,8 @@ REQUIRED_PARAMS_EDIT_PROFILE = {
 
 
 @profile_edit_bp.route("/profile/edit", methods=["PUT"])
-@jwt_required
 @validate_params(REQUIRED_PARAMS_EDIT_PROFILE)
+@jwt_required
 def edit_profile():
     if not current_user.is_profile_completed:
         raise BadRequestError("The user has not completed his profile.", "Complete your profile and try again.")
@@ -103,8 +103,8 @@ def edit_profile():
 
 
 @profile_edit_bp.route("/profile/edit/email", methods=["PUT"])
-@jwt_required
 @validate_params({"email": str})
+@jwt_required
 def edit_email():
     data = request.get_json()
     new_email = data["email"].lower()
@@ -121,8 +121,8 @@ def edit_email():
 
 
 @profile_edit_bp.route("/profile/edit/password", methods=["PUT"])
-@jwt_required
 @validate_params({"old_password": str, "new_password": str})
+@jwt_required
 def edit_password():
     data = request.get_json()
     old_password = data["old_password"]
@@ -141,8 +141,8 @@ def edit_password():
 
 
 @profile_edit_bp.route("/profile/edit/geolocation", methods=["PUT"])
-@jwt_required
 @validate_params({"ip": str}, {"lat": float, "lng": float})
+@jwt_required
 def edit_geolocation():
     data = request.get_json()
     ip = data["ip"]

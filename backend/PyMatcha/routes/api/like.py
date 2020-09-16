@@ -2,6 +2,7 @@ from flask import Blueprint
 from flask import request
 from flask_jwt_extended import current_user
 from flask_jwt_extended import jwt_required
+from PyMatcha import redis
 from PyMatcha.models.like import Like
 from PyMatcha.models.match import Match
 from PyMatcha.models.user import get_user
@@ -10,20 +11,17 @@ from PyMatcha.utils.errors import BadRequestError
 from PyMatcha.utils.errors import NotFoundError
 from PyMatcha.utils.success import Success
 from PyMatcha.utils.success import SuccessOutput
+from PyMatcha.utils.tasks import set_user_superlikes
 
 like_bp = Blueprint("like", __name__)
 
 
 @like_bp.route("/like/<uid>", methods=["POST"])
-@jwt_required
 @validate_params({"is_superlike": bool})
+@jwt_required
 def like_profile(uid):
 
     is_superlike = request.get_json()["is_superlike"]
-
-    if is_superlike:
-        # TODO: Check that user has superlikes left today
-        pass
 
     try:
         u = get_user(uid)
@@ -33,6 +31,15 @@ def like_profile(uid):
         raise BadRequestError("Cannot like yourself.")
     if current_user.already_likes(u.id):
         raise BadRequestError("You already liked this person.")
+
+    if is_superlike:
+        superlike_counter = int(redis.get(f"superlikes:{current_user.id}"))
+        if superlike_counter <= 0:
+            set_user_superlikes.apply_async(current_user.id, amount=5, eta=86400)
+            raise BadRequestError("No more superlikes today !", "Try later")
+        else:
+            redis.decr(f"superlikes:{current_user.id}")
+
     Like.create(liker_id=current_user.id, liked_id=u.id, is_superlike=is_superlike)
 
     if u.already_likes(current_user.id):
