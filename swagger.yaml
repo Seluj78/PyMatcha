@@ -107,6 +107,66 @@ components:
                     type: string
                   solution:
                     type: string
+    BadRequest:
+      description: Bad Request error
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              code:
+                type: string
+                example: 400
+                default: 400
+              success:
+                type: boolean
+                default: false
+                example: false
+              error:
+                type: object
+                properties:
+                  type:
+                    type: string
+                    default: BadRequestError
+                    example: BadRequestError
+                  name:
+                    type: string
+                    default: BadRequest Error
+                    example: BadRequest Error
+                  message:
+                    type: string
+                  solution:
+                    type: string
+    Unauthorized:
+      description: Unauthorized error
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              code:
+                type: string
+                example: 401
+                default: 401
+              success:
+                type: boolean
+                default: false
+                example: false
+              error:
+                type: object
+                properties:
+                  type:
+                    type: string
+                    default: UnauthorizedError
+                    example: UnauthorizedError
+                  name:
+                    type: string
+                    default: Unauthorized Error
+                    example: Unauthorized Error
+                  message:
+                    type: string
+                  solution:
+                    type: string
   securitySchemes:
     bearerAuth:
       type: http
