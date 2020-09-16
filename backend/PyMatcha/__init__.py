@@ -31,7 +31,7 @@ from flask_mail import Mail
 from PyMatcha.utils.logging import setup_logging
 from PyMatcha.utils.tables import create_tables
 from pymysql.cursors import DictCursor
-from redis import Redis
+from redis import StrictRedis
 
 PYMATCHA_ROOT = os.path.join(os.path.dirname(__file__), "../..")  # refers to application_top
 dotenv_path = os.path.join(PYMATCHA_ROOT, ".env")
@@ -149,7 +149,7 @@ application.config.update(
 logging.debug("Configuring mail")
 mail = Mail(application)
 
-redis = Redis(
+redis = StrictRedis(
     host=os.getenv("REDIS_HOST") if not os.getenv("IS_DOCKER_COMPOSE") else "redis",
     port=os.getenv("REDIS_PORT", 6379),
     decode_responses=True,
