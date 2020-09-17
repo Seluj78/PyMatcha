@@ -319,6 +319,8 @@ paths:
     post:
       summary: Report a profile
       operationId: reportProfile
+      security:
+        - bearerAuth: [ ]
       tags:
         - Profile
       parameters:
@@ -362,6 +364,8 @@ paths:
     get:
       summary: View a profile
       operationId: viewProfile
+      security:
+        - bearerAuth: [ ]
       tags:
         - Profile
       parameters:
@@ -395,6 +399,8 @@ paths:
     get:
       summary: Get your profile views
       operationId: getProfileViews
+      security:
+        - bearerAuth: [ ]
       tags:
         - Profile
       responses:
@@ -421,6 +427,8 @@ paths:
     post:
       summary: Like a user
       operationId: likeUser
+      security:
+        - bearerAuth: [ ]
       tags:
         - Like
       parameters:
@@ -447,6 +455,8 @@ paths:
     post:
       summary: Unike a user
       operationId: unlikeUser
+      security:
+        - bearerAuth: [ ]
       tags:
         - Like
       parameters:
@@ -483,6 +493,8 @@ paths:
     get:
       summary: Get your likes
       operationId: getLikes
+      security:
+        - bearerAuth: [ ]
       tags:
         - Like
       responses:
@@ -516,6 +528,8 @@ paths:
     get:
       summary: Get your matches
       operationId: getMatches
+      security:
+        - bearerAuth: [ ]
       tags:
         - Match
       responses:
@@ -542,6 +556,8 @@ paths:
     get:
       summary: Get your open conversations
       operationId: getConversations
+      security:
+        - bearerAuth: [ ]
       tags:
         - Messages
       responses:
@@ -568,6 +584,8 @@ paths:
     post:
       summary: Send a message
       operationId: sendMessage
+      security:
+        - bearerAuth: [ ]
       tags:
         - Messages
       responses:
@@ -597,6 +615,8 @@ paths:
     get:
       summary: Get the messages between you and another user
       operationId: conversationWithUID
+      security:
+        - bearerAuth: [ ]
       tags:
         - Messages
       parameters:
@@ -634,6 +654,8 @@ paths:
     post:
       summary: Mark as seen all the latest messages
       operationId: seeMessagesWithUID
+      security:
+        - bearerAuth: [ ]
       tags:
         - Messages
       parameters:
@@ -668,6 +690,8 @@ paths:
     post:
       summary: Like a message
       operationId: likeMessage
+      security:
+        - bearerAuth: [ ]
       tags:
         - Messages
       parameters:
@@ -704,6 +728,8 @@ paths:
     post:
       summary: Unlike a message
       operationId: unlikeMessage
+      security:
+        - bearerAuth: [ ]
       tags:
         - Messages
       parameters:
@@ -740,6 +766,8 @@ paths:
     get:
       summary: Returns all the unseen messages
       operationId: unseenMessages
+      security:
+        - bearerAuth: [ ]
       tags:
         - Messages
       responses:
@@ -765,7 +793,9 @@ paths:
   /recommendations:
     get:
       summary: Get user recommendations
-      operationId: getRecommendations
+      operationId: getOnlineUsers
+      security:
+        - bearerAuth: [ ]
       tags:
         - Recommendations
       responses:
@@ -790,6 +820,66 @@ paths:
                     type: array
                     items:
                       $ref: '#/components/schemas/Recommendation'
+  /users:
+    get:
+      summary: Get all users
+      operationId: getAllUsers
+      security:
+        - bearerAuth: [ ]
+      tags:
+        - User
+      responses:
+        "200":
+          description: Returned list of users
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/User'
+  /users/{uid}:
+    get:
+      summary: Get one user info.
+      description: Get one user info. DOESNT ADD A VIEW
+      operationId: getUser
+      security:
+        - bearerAuth: [ ]
+      tags:
+        - User
+      parameters:
+        - name: uid
+          in: path
+          required: true
+          description: The id of the user to get ingo. Either username, email or id
+          schema:
+            type: string
+      responses:
+        "404":
+          $ref: '#/components/responses/NotFound'
+        "200":
+          description: Returned user to view
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+  /users/online:
+    get:
+      summary: Get all online users
+      description: Returns list of ids of online users
+      operationId: getAllOnlineUsers
+      security:
+        - bearerAuth: [ ]
+      tags:
+        - User
+      responses:
+        "200":
+          description: Returned list of online users
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/OnlineUser'
 
 
 servers:
@@ -1433,3 +1523,14 @@ components:
           items:
             $ref: '#/components/schemas/Tag'
           uniqueItems: true
+    OnlineUser:
+      type: object
+      properties:
+        id:
+          type: integer
+          description: The user id
+          example: 1
+        date_lastseen:
+          type: timestamp
+          description: Timestamp of last time the user was online
+          example: 1600332058.537065,
