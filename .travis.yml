@@ -9,7 +9,7 @@ python:
 
 services:
   - mysql
-  - redis-server
+  - redis
 
 install: pip install -r backend/requirements.txt
 
@@ -18,7 +18,7 @@ jobs:
     - stage: build
       script:
         # login to github registry
-        - echo $DEPLOY_PERSONAL_TOKEN | docker login ghcr.io --username seluj78 --password-stdin
+        - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
         # build image
         - docker build -t PyMatchaAPI .
         # push image
@@ -26,7 +26,7 @@ jobs:
     - stage: test
       script:
         # login to github registry
-        - echo $DOCKER_TRAVIS_PERSONAL_TOKEN | docker login ghcr.io --username seluj78 --password-stdin
+        - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
         # pull images
         - docker pull PyMatchaAPI
         # run docker on port 80
