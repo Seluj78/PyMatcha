@@ -511,6 +511,32 @@ paths:
                         type: array
                         items:
                           $ref: '#/components/schemas/Like'
+  /matches:
+    get:
+      summary: Get your matches
+      operationId: getMatches
+      tags:
+        - Match
+      responses:
+        "200":
+          description: Returned list of matches
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    description: If the request is a success
+                    example: true
+                  code:
+                    type: integer
+                    description: The status code
+                    example: 200
+                  matches:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Match'
 
 servers:
   - url: https://api.matcha.com
@@ -946,3 +972,22 @@ components:
         message:
           type: string
           example: It's a match !
+    Match:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+          description: Unique identifier of this match
+        dt_matched:
+          type: date
+          example: Wed, 16 Sep 2020 15:38:15 GMT
+          description: The datetime when the match occured
+        user_1:
+          type: string
+          example: 1
+          description: The user id of one of the user for the match
+        user_2:
+          type: string
+          example: 2
+          description: The user id of one of the user for the match
