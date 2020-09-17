@@ -13,10 +13,13 @@ services:
 
 install: pip install -r backend/requirements.txt
 
+# TODO: Reformat file as it is ugly. separatee jobs in yml, and lint as the last job to run
+
 jobs:
   include:
     - stage: build
       script:
+        - openssl aes-256-cbc -K $encrypted_3c84dcdc6bbe_key -iv $encrypted_3c84dcdc6bbe_iv -in .env.enc -out .env -d
         # login to github registry
         - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin ghcr.io
         # build image
@@ -30,7 +33,7 @@ jobs:
         # login to github registry
         - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin ghcr.io
         # pull images
-        - docker pull PyMatchaAPI
+        - docker pull pymatcha-api
         # run docker on port 80
         # do not forget to add env-file an environment file in Settings/CI CD/Variables
         - docker run -d -p 5000:5000 --restart always pymatcha-api
