@@ -18,7 +18,7 @@ jobs:
     - stage: build
       script:
         # login to github registry
-        - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
+        - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin ghcr.io
         # build image
         - docker build -t PyMatchaAPI .
         # push image
@@ -26,7 +26,7 @@ jobs:
     - stage: test
       script:
         # login to github registry
-        - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
+        - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin ghcr.io
         # pull images
         - docker pull PyMatchaAPI
         # run docker on port 80
