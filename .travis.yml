@@ -11,7 +11,14 @@ services:
   - mysql
   - redis
 
-install: pip install -r backend/requirements.txt
+install:
+  - pip install -r backend/requirements.txt
+  - npm install -g newman
+
+before_script:
+  - node --version
+  - npm --version
+  - newman --version
 
 # TODO: Reformat file as it is ugly. separatee jobs in yml, and lint as the last job to run
 
