@@ -243,7 +243,43 @@ paths:
                   message:
                     type: string
                     example: Refresh token revoked
-
+  /profile/complete:
+    post:
+      tags:
+        - Complete Profile
+      summary: Complete user profile
+      description: ""
+      operationId: completeProfile
+      security:
+        - bearerAuth: []
+      requestBody:
+        description: Parameters to complete profile
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CompleteProfile'
+      responses:
+        "409":
+          $ref: "#/components/responses/BadRequest"
+        "200":
+          description: Profile completed successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    description: If the request is a success
+                    example: true
+                  code:
+                    type: integer
+                    description: The status code
+                    example: 200
+                  message:
+                    type: string
+                    example: Profile completed !
 
 servers:
   - url: https://api.matcha.com
@@ -341,6 +377,7 @@ components:
                     type: string
                   solution:
                     type: string
+
   securitySchemes:
     accessToken:
       type: http
@@ -381,3 +418,22 @@ components:
           type: string
           example: dolphin2
           required: true
+    CompleteProfile:
+      type: object
+      properties:
+        gender:
+          type: string
+          enum: ["male", "female", "other"]
+        birthdate:
+          type: date
+          example: 06/04/1998
+          description: Formatted as DAY/MONTH/YEAR
+        orientation:
+          type: string
+          enum: ["heterosexual", "homosexual", "bisexual", "other"]
+        bio:
+          type: string
+          example: I like running around on horses
+        tags:
+          type: array
+          example: ["food", "sex", "drugs"]
