@@ -125,7 +125,46 @@ paths:
           $ref: '#/components/responses/BadRequest'
         "401":
           $ref: '#/components/responses/Unauthorized'
-
+  /auth/refresh:
+    post:
+      tags:
+        - Authentication
+      summary: Refreshes the access token
+      description: ""
+      operationId: refreshToken
+      security:
+        - refreshToken: []
+      responses:
+        "409":
+          description: Unauthorized error, token revoked.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  msg:
+                    type: string
+                    example: Token has been revoked
+                    default: Token has been revoked
+        "200":
+          description: Token successfully refreshed
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    description: If the request is a success
+                    example: true
+                  code:
+                    type: integer
+                    description: The status code
+                    example: 200
+                  access_token:
+                    type: string
+                    description: The new and fresh access token
+                    example: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE2MDAzMjYzMjksIm5iZiI6MTYwMDMyNjMyOSwianRpIjoiZTA0ZWQ3NmMtMTcxMC00ZjQ4LWFkNzMtZDBmOTMxZTkxNzM0IiwiZXhwIjoxNjAwMzI3MjI5LCJpZGVudGl0eSI6eyJpZCI6MSwiZW1haWwiOiJmb29AZXhhbXBsZS5vcmciLCJ1c2VybmFtZSI6ImZvbyIsImlzX29ubGluZSI6MCwiZGF0ZV9sYXN0c2VlbiI6IldlZCwgMTYgU2VwIDIwMjAgMTU6Mzk6MDQgR01UIn0sImZyZXNoIjpmYWxzZSwidHlwZSI6ImFjY2VzcyJ9.dFJMy-04thKA9Q268bgQhiqLDrkqnCOCaiwHJ1XXook
 
 servers:
   - url: https://api.matcha.com
@@ -228,6 +267,11 @@ components:
       type: http
       scheme: bearer
       bearerFormat: JWT
+    refreshToken:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: Refresh token
   schemas:
     CreateUser:
       type: object
