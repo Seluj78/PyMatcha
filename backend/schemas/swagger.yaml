@@ -357,6 +357,65 @@ paths:
                   message:
                     type: string
                     example: Report created on user {email_adress}.
+  /profile/view/{uid}:
+    get:
+      summary: View a profile
+      operationId: viewProfile
+      tags:
+        - Profile
+      parameters:
+        - name: uid
+          in: path
+          required: true
+          description: The id of the user to view. Either username, email or id
+          schema:
+            type: string
+      responses:
+        "404":
+          $ref: '#/components/responses/NotFound'
+        "200":
+          description: Returned user to view
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    description: If the request is a success
+                    example: true
+                  code:
+                    type: integer
+                    description: The status code
+                    example: 200
+                  profile:
+                    $ref: '#/components/schemas/User'
+  /profile/views:
+    get:
+      summary: Get your profile views
+      operationId: getProfileViews
+      tags:
+        - Profile
+      responses:
+        "200":
+          description: Returned list of views
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    description: If the request is a success
+                    example: true
+                  code:
+                    type: integer
+                    description: The status code
+                    example: 200
+                  views:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/View'
 
 servers:
   - url: https://api.matcha.com
@@ -531,6 +590,7 @@ components:
         gender:
           type: string
           enum: ["male", "female", "other"]
+          example: other
         birthdate:
           type: date
           example: 06/04/1998
@@ -538,6 +598,7 @@ components:
         orientation:
           type: string
           enum: ["heterosexual", "homosexual", "bisexual", "other"]
+          example: heterosexual
         bio:
           type: string
           example: I like running around on horses
@@ -559,6 +620,7 @@ components:
         gender:
           type: string
           enum: ["male", "female", "other"]
+          example: male
         birthdate:
           type: date
           example: 06/04/1998
@@ -566,6 +628,7 @@ components:
         orientation:
           type: string
           enum: ["heterosexual", "homosexual", "bisexual", "other"]
+          example: other
         bio:
           type: string
           example: I like running around on horses
@@ -578,6 +641,185 @@ components:
         reason:
           type: string
           enum: ["harassment", "bot", "spam", "inappropriate content"]
+          example: spam
         details:
           type: string
           example: He spammed me of dick pics
+    # TODO: Add descriptions
+    User:
+      type: object
+      properties:
+        id:
+          type: integeer
+          example: 1
+        first_name:
+          type: string
+          example: Foo
+        last_name:
+          type: string
+          example: Bar
+        username:
+          type: string
+          example: FooBar
+        email:
+          type: string
+          example: foo@example.org
+        bio:
+          type: string
+          example: Lorem Ipsum is the single greatest threat. We are not - we are not keeping up with other websites. Lorem Ipsum best not make any more threats to your website. It will be met with fire and fury like the world has never seen. Does everybody know that pig named Lorem Ipsum? An ‘extremely credible source’ has called my office and told me that Barack Obama’s placeholder text is a fraud.
+        birthdate:
+          type: date
+          example: Mon, 06 Apr 1998 00:00:00 GMT
+        gender:
+          type: string
+          enum: ["male", "female", "other"]
+          example: male
+        orientation:
+          type: string
+          enum: [ "heterosexual", "homosexual", "bisexual", "other" ]
+          example: heterosexual
+        geohash:
+          type: string
+          example: u09whv25xgzn
+        heat_score:
+          type: integer
+          example: 123
+        confirmed_on:
+          type: date
+          example: Wed, 16 Sep 2020 15:20:02 GMT
+        date_joined:
+          type: date
+          example: Wed, 16 Sep 2020 15:18:02 GMT
+        date_lastseen:
+          type: date
+          example: Wed, 19 Sep 2020 19:24:02 GMT
+        is_confirmed:
+          type: boolean
+          example: true
+        is_online:
+          type: boolean
+          example: true
+        is_profile_completed:
+          type: boolean
+          example: true
+        likes:
+          type: object
+          properties:
+            sent:
+              type: array
+              items:
+                $ref: '#/components/schemas/Like'
+              uniqueItems: true
+            received:
+              type: array
+              items:
+                $ref: '#/components/schemas/Like'
+              uniqueItems: true
+        reports:
+          type: object
+          properties:
+            sent:
+              type: array
+              items:
+                $ref: '#/components/schemas/Report'
+              uniqueItems: true
+            received:
+              type: array
+              items:
+                $ref: '#/components/schemas/Report'
+              uniqueItems: true
+        tags:
+          type: array
+          items:
+            $ref: '#/components/schemas/Tag'
+          uniqueItems: true
+    Like:
+      type: object
+      properties:
+        dt_liked:
+          type: date
+          example: Wed, 16 Sep 2020 15:38:15 GMT
+          description: When was the like created
+        id:
+          type: integer
+          example: 1
+          description: The unique identifier of the like
+        is_superlike:
+          type: boolean
+          example: false
+          description: Is this like a superlike
+        liked_id:
+          type: integer
+          example: 1
+          description: The user id of the person who was liked
+        liker_id:
+          type: integer
+          example: 2
+          description: The user id of the person who liked
+    Report:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+          description: The unique identifier of the report
+        reporter_id:
+          type: integer
+          example: 2
+          description: The user id of who reported
+        reported_id:
+          type: integer
+          example: 3
+          description: The user id of who was reported
+        dt_reported:
+          type: date
+          example: Wed, 16 Sep 2020 15:38:15 GMT
+          description: When was the report created
+        details:
+          type: string
+          example: He is spamming me
+          description: The report detail
+        reason:
+          type: string
+          enum: ['harassment', 'bot', 'spam', 'inappropriate content']
+          example: spam
+          description: Type of report
+        status:
+          type: string
+          enum: ['processing request', 'insufficient evidence', 'convicted and banned']
+          example: processing request
+          description: The status of the report
+    Tag:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+          description: Unique identifier of this tag
+        name:
+          type: string
+          example: Food
+          description: The tag content
+        user_id:
+          type: string
+          example: 1
+          description: The user id to who belongs the tag
+    View:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+          description: Unique identifier of this tag
+        dt_seeen:
+          type: date
+          example: Thu, 17 Sep 2020 00:00:00 GMT
+          description: When was the profile seen
+        profile_id:
+          type: integer
+          example: 2
+          description: The user id of the profile that was viewed
+        viewer_id:
+          type: string
+          example: 3
+          description: The user id to who viewed the profile
