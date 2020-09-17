@@ -416,6 +416,101 @@ paths:
                     type: array
                     items:
                       $ref: '#/components/schemas/View'
+  /like/{uid}:
+    post:
+      summary: Like a user
+      operationId: likeUser
+      tags:
+        - Like
+      parameters:
+        - name: uid
+          in: path
+          required: true
+          description: The id of the user to like. Either username, email or id
+          schema:
+            type: string
+      responses:
+        "400":
+          $ref: '#/components/responses/BadRequest'
+        "404":
+          $ref: '#/components/responses/NotFound'
+        "200":
+          description: Like user successfully
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: '#/components/schemas/LikedUser'
+                  - $ref: '#/components/schemas/MatchedUser'
+  /unlike/{uid}:
+    post:
+      summary: Unike a user
+      operationId: unlikeUser
+      tags:
+        - Like
+      parameters:
+        - name: uid
+          in: path
+          required: true
+          description: The id of the user to unlike. Either username, email or id
+          schema:
+            type: string
+      responses:
+        "400":
+          $ref: '#/components/responses/BadRequest'
+        "404":
+          $ref: '#/components/responses/NotFound'
+        "200":
+          description: Unlike successfull
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    description: If the request is a success
+                    example: true
+                  code:
+                    type: integer
+                    description: The status code
+                    example: 200
+                  message:
+                    type: string
+                    example: Unliked user X.
+  /likes:
+    get:
+      summary: Get your likes
+      operationId: getLikes
+      tags:
+        - Like
+      responses:
+        "200":
+          description: Returned list of likes
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    description: If the request is a success
+                    example: true
+                  code:
+                    type: integer
+                    description: The status code
+                    example: 200
+                  likes:
+                    type: object
+                    properties:
+                      sent:
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/Like'
+                      received:
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/Like'
 
 servers:
   - url: https://api.matcha.com
@@ -823,3 +918,31 @@ components:
           type: string
           example: 3
           description: The user id to who viewed the profile
+    LikedUser:
+      type: object
+      properties:
+        success:
+          type: boolean
+          description: If the request is a success
+          example: true
+        code:
+          type: integer
+          description: The status code
+          example: 200
+        message:
+          type: string
+          example: Liked user.
+    MatchedUser:
+      type: object
+      properties:
+        success:
+          type: boolean
+          description: If the request is a success
+          example: true
+        code:
+          type: integer
+          description: The status code
+          example: 200
+        message:
+          type: string
+          example: It's a match !
