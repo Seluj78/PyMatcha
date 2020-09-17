@@ -12,6 +12,7 @@ info:
 
 # TODO: Email and password once rewritten with new frontend
 # TODO: https://swagger.io/docs/specification/links/
+# TODO: https://stackoverflow.com/questions/47447403/how-to-define-different-responses-for-same-http-status-code-in-openapi-swagger
 
 tags:
   - name: Authentication
@@ -537,6 +538,231 @@ paths:
                     type: array
                     items:
                       $ref: '#/components/schemas/Match'
+  /conversations:
+    get:
+      summary: Get your open conversations
+      operationId: getConversations
+      tags:
+        - Messages
+      responses:
+        "200":
+          description: Returned list of matches
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    description: If the request is a success
+                    example: true
+                  code:
+                    type: integer
+                    description: The status code
+                    example: 200
+                  conversations:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Conversation'
+  /messages/send:
+    post:
+      summary: Send a message
+      operationId: sendMessage
+      tags:
+        - Messages
+      responses:
+        "400":
+          $ref: '#/components/responses/BadRequest'
+        "404":
+          $ref: '#/components/responses/NotFound'
+        "200":
+          description: Like user successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    description: If the request is a success
+                    example: true
+                  code:
+                    type: integer
+                    description: The status code
+                    example: 200
+                  message:
+                    type: string
+                    example: Message successfully sent to X.
+  /conversations/{with_uid}:
+    get:
+      summary: Get the messages between you and another user
+      operationId: conversationWithUID
+      tags:
+        - Messages
+      parameters:
+        - name: with_uid
+          in: path
+          required: true
+          description: The id of the user to get messages with. Either username, email or id
+          schema:
+            type: string
+      responses:
+        "404":
+          $ref: '#/components/responses/NotFound'
+        "400":
+          $ref: '#/components/responses/BadRequest'
+        "200":
+          description: Returned the conversation between users
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    description: If the request is a success
+                    example: true
+                  code:
+                    type: integer
+                    description: The status code
+                    example: 200
+                  messages:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Message'
+  /messages/see/{with_uid}:
+    post:
+      summary: Mark as seen all the latest messages
+      operationId: seeMessagesWithUID
+      tags:
+        - Messages
+      parameters:
+        - name: with_uid
+          in: path
+          required: true
+          description: The id of the user to mark messages as seen. Either username, email or id
+          schema:
+            type: string
+      responses:
+        "404":
+          $ref: '#/components/responses/NotFound'
+        "200":
+          description: Messages marked as seen.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    description: If the request is a success
+                    example: true
+                  code:
+                    type: integer
+                    description: The status code
+                    example: 200
+                  message:
+                    type: string
+                    example: Messages marked as seen.
+  /messages/like/{message_id}:
+    post:
+      summary: Like a message
+      operationId: likeMessage
+      tags:
+        - Messages
+      parameters:
+        - name: message_id
+          in: path
+          required: true
+          description: The id of the message to like
+          schema:
+            type: integer
+      responses:
+        "404":
+          $ref: '#/components/responses/NotFound'
+        "400":
+          $ref: '#/components/responses/BadRequest'
+        "200":
+          description: Message liked.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    description: If the request is a success
+                    example: true
+                  code:
+                    type: integer
+                    description: The status code
+                    example: 200
+                  message:
+                    type: string
+                    example: Liked message X.
+  /messages/unlike/{message_id}:
+    post:
+      summary: Unlike a message
+      operationId: unlikeMessage
+      tags:
+        - Messages
+      parameters:
+        - name: message_id
+          in: path
+          required: true
+          description: The id of the message to unlike
+          schema:
+            type: integer
+      responses:
+        "404":
+          $ref: '#/components/responses/NotFound'
+        "400":
+          $ref: '#/components/responses/BadRequest'
+        "200":
+          description: Message unliked.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    description: If the request is a success
+                    example: true
+                  code:
+                    type: integer
+                    description: The status code
+                    example: 200
+                  message:
+                    type: string
+                    example: Unliked message X.
+  /messages/unseen:
+    get:
+      summary: Returns all the unseen messages
+      operationId: unseenMessages
+      tags:
+        - Messages
+      responses:
+        "200":
+          description: Returns a list of unseen messages
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    description: If the request is a success
+                    example: true
+                  code:
+                    type: integer
+                    description: The status code
+                    example: 200
+                  messages:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/UnseenMessage'
+
 
 servers:
   - url: https://api.matcha.com
@@ -991,3 +1217,92 @@ components:
           type: string
           example: 2
           description: The user id of one of the user for the match
+    Conversation:
+      type: object
+      properties:
+        last_message_content:
+          type: string
+          example: Ok for tonight !
+          description: The last message sent to the conversation content
+        last_message_timestamp:
+          type: date
+          example: Wed, 16 Sep 2020 15:38:15 GMT
+          description: The last message sent to the conversation timestamp
+        is_unseen:
+          type: boolean
+          example: true
+          description: Is the last message of the conversation from the other user unseen
+        with_user:
+          type: string
+          example: 2
+          description: The user id of the person the conversation is with
+    Message:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+          description: The unique id of the message
+        timestamp:
+          type: date
+          description: When was the message sent
+          example: Wed, 16 Sep 2020 15:38:15 GMT
+        seen_timestamp:
+          type: date
+          description: When was the message seen
+          example: Wed, 16 Sep 2020 15:39:15 GMT
+        content:
+          type: string
+          example: See you tonight !
+          description: The content of the message
+        is_seen:
+          type: boolean
+          example: true
+          description: Is the message seen
+        is_liked:
+          type: boolean
+          example: false
+          description: Is the message liked
+        from_user:
+          type: string
+          example: 2
+          description: The user id who sent the message
+        to_user:
+          type: string
+          example: 1
+          description: The user id who received the message
+    UnseenMessage:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+          description: The unique id of the message
+        timestamp:
+          type: date
+          description: When was the message sent
+          example: Wed, 16 Sep 2020 15:38:15 GMT
+        seen_timestamp:
+          type: date
+          description: When was the message seen
+          example: Wed, 16 Sep 2020 15:39:15 GMT
+        content:
+          type: string
+          example: See you tonight !
+          description: The content of the message
+        is_seen:
+          type: boolean
+          example: false
+          description: Is the message seen
+        is_liked:
+          type: boolean
+          example: false
+          description: Is the message liked
+        from_user:
+          type: string
+          example: 2
+          description: The user id who sent the message
+        to_user:
+          type: string
+          example: 1
+          description: The user id who received the message

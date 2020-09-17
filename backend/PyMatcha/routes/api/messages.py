@@ -148,6 +148,7 @@ def unlike_message(message_id):
 def get_new_messages():
     message_list = Message.get_multis(to_id=current_user.id, is_seen=False)
     if not message_list:
-        return Success("No new messages.")
-    new_messages = [m.to_dict() for m in message_list]
+        new_messages = []
+    else:
+        new_messages = [m.to_dict() for m in message_list]
     return SuccessOutput("new_messages", new_messages)
