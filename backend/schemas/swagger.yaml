@@ -762,6 +762,34 @@ paths:
                     type: array
                     items:
                       $ref: '#/components/schemas/UnseenMessage'
+  /recommendations:
+    get:
+      summary: Get user recommendations
+      operationId: getRecommendations
+      tags:
+        - Recommendations
+      responses:
+        "404":
+          $ref: '#/components/responses/NotFound'
+        "200":
+          description: Returns a list of recommendations
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    description: If the request is a success
+                    example: true
+                  code:
+                    type: integer
+                    description: The status code
+                    example: 200
+                  recommendations:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Recommendation'
 
 
 servers:
@@ -997,7 +1025,7 @@ components:
       type: object
       properties:
         id:
-          type: integeer
+          type: integer
           example: 1
         first_name:
           type: string
@@ -1306,3 +1334,102 @@ components:
           type: string
           example: 1
           description: The user id who received the message
+    # TODO: Add descriptions
+    Recommendation:
+      type: object
+      properties:
+        score:
+          type: integer
+          example: 10
+          description: A score to sort the recommendations by. The higher the closest the match. Score can be negative
+        common_tags:
+          type: array
+          example: [ "friends", "drinks", "sun" ]
+        distance:
+          type: integer
+          example: 50
+          description: The distance between two users
+        id:
+          type: integer
+          example: 1
+        first_name:
+          type: string
+          example: Foo
+        last_name:
+          type: string
+          example: Bar
+        username:
+          type: string
+          example: FooBar
+        email:
+          type: string
+          example: foo@example.org
+        bio:
+          type: string
+          example: Lorem Ipsum is the single greatest threat. We are not - we are not keeping up with other websites. Lorem Ipsum best not make any more threats to your website. It will be met with fire and fury like the world has never seen. Does everybody know that pig named Lorem Ipsum? An ‘extremely credible source’ has called my office and told me that Barack Obama’s placeholder text is a fraud.
+        birthdate:
+          type: date
+          example: Mon, 06 Apr 1998 00:00:00 GMT
+        gender:
+          type: string
+          enum: ["male", "female", "other"]
+          example: male
+        orientation:
+          type: string
+          enum: [ "heterosexual", "homosexual", "bisexual", "other" ]
+          example: heterosexual
+        geohash:
+          type: string
+          example: u09whv25xgzn
+        heat_score:
+          type: integer
+          example: 123
+        confirmed_on:
+          type: date
+          example: Wed, 16 Sep 2020 15:20:02 GMT
+        date_joined:
+          type: date
+          example: Wed, 16 Sep 2020 15:18:02 GMT
+        date_lastseen:
+          type: date
+          example: Wed, 19 Sep 2020 19:24:02 GMT
+        is_confirmed:
+          type: boolean
+          example: true
+        is_online:
+          type: boolean
+          example: true
+        is_profile_completed:
+          type: boolean
+          example: true
+        likes:
+          type: object
+          properties:
+            sent:
+              type: array
+              items:
+                $ref: '#/components/schemas/Like'
+              uniqueItems: true
+            received:
+              type: array
+              items:
+                $ref: '#/components/schemas/Like'
+              uniqueItems: true
+        reports:
+          type: object
+          properties:
+            sent:
+              type: array
+              items:
+                $ref: '#/components/schemas/Report'
+              uniqueItems: true
+            received:
+              type: array
+              items:
+                $ref: '#/components/schemas/Report'
+              uniqueItems: true
+        tags:
+          type: array
+          items:
+            $ref: '#/components/schemas/Tag'
+          uniqueItems: true

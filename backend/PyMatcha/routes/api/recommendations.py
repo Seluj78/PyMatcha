@@ -16,6 +16,8 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 """
+import json
+
 from flask import Blueprint
 from flask_jwt_extended import current_user
 from flask_jwt_extended import jwt_required
@@ -32,4 +34,4 @@ def get_recommendations():
     recommendations = redis.get(f"user_recommendations:{str(current_user.id)}")
     if not recommendations:
         raise NotFoundError("Recommendations not calculated yet", "Please come back later")
-    return SuccessOutput("recommendations", recommendations)
+    return SuccessOutput("recommendations", json.loads(recommendations))
