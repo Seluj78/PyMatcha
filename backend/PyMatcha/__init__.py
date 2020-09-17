@@ -70,8 +70,8 @@ application.config.update(FLASK_SECRET_KEY=os.getenv("FLASK_SECRET_KEY"))
 application.config["JWT_SECRET_KEY"] = os.environ.get("FLASK_SECRET_KEY")
 
 logging.debug("Configuring Celery Redis URLs")
-CELERY_BROKER_URL = "redis://localhost:6379/0" if not os.getenv("IS_DOCKER_COMPOSE") else "redis://redis:6379/0"
-CELERY_RESULT_BACKEND = "redis://localhost:6379/0" if not os.getenv("IS_DOCKER_COMPOSE") else "redis://redis:6379/0"
+CELERY_BROKER_URL = os.getenv("CELERY_BROKER_URL", "redis://localhost:6379/0")
+CELERY_RESULT_BACKEND = os.getenv("CELERY_RESULT_BACKEND", "redis://localhost:6379/0")
 # Celery configuration
 application.config["CELERY_BROKER_URL"] = CELERY_BROKER_URL
 application.config["CELERY_RESULT_BACKEND"] = CELERY_RESULT_BACKEND
@@ -150,10 +150,7 @@ logging.debug("Configuring mail")
 mail = Mail(application)
 
 redis = StrictRedis(
-    host=os.getenv("REDIS_HOST") if not os.getenv("IS_DOCKER_COMPOSE") else "redis",
-    port=os.getenv("REDIS_PORT", 6379),
-    decode_responses=True,
-    db=2,
+    host=os.getenv("REDIS_HOST", "localhost"), port=os.getenv("REDIS_PORT", 6379), decode_responses=True, db=2
 )
 
 redis.flushdb()

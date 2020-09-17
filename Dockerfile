@@ -6,6 +6,5 @@ RUN export $(cat .env | xargs)
 RUN pip install -r requirements.txt
 ADD backend .
 ENV PYTHONDONTWRITEBYTECODE 1
-ENV IS_DOCKER_COMPOSE true
 EXPOSE 5000
-CMD gunicorn --chdir /www app:application -w 2 --threads 2 -b 0.0.0.0:5000
+CMD exec gunicorn --chdir /www --bind :5000 --workers 1 --threads 1 PyMatcha:application
