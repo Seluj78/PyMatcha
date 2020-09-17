@@ -3566,6 +3566,15 @@
 							"request": {
 								"method": "POST",
 								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"is_superlike\": false\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
 								"url": {
 									"raw": "{{host}}/like/-1",
 									"host": [
@@ -3607,6 +3616,15 @@
 							"request": {
 								"method": "POST",
 								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"is_superlike\": false\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
 								"url": {
 									"raw": "{{host}}/like/{{user_id}}",
 									"host": [
@@ -3699,6 +3717,15 @@
 							"request": {
 								"method": "POST",
 								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"is_superlike\": false\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
 								"url": {
 									"raw": "{{host}}/like/like_me",
 									"host": [
@@ -3740,6 +3767,15 @@
 							"request": {
 								"method": "POST",
 								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"is_superlike\": false\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
 								"url": {
 									"raw": "{{host}}/like/like_me",
 									"host": [
@@ -3927,6 +3963,103 @@
 					"_postman_isSubFolder": true
 				},
 				{
+					"name": "Superlike User",
+					"item": [
+						{
+							"name": "Superlike like_me user",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "b09c0ee4-abcb-4fcc-9806-e1b48da225b3",
+										"exec": [
+											"var response = JSON.parse(responseBody);",
+											"",
+											"",
+											"pm.test(\"Status code is 200\", function () {",
+											"    pm.response.to.have.status(200);",
+											"});",
+											"",
+											"tests[\"JSON return code is 200\"] = response.code == 200",
+											"",
+											"tests[\"success is true\"] = response.success == true",
+											"",
+											"tests[\"Messag is correct\"] = response.message == \"Superliked user.\""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"is_superlike\": true\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{host}}/like/like_me",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"like",
+										"like_me"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "UnSuperlike like_me user",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "77e4cefb-3d6f-481e-91ff-c63cfc37a6aa",
+										"exec": [
+											"var response = JSON.parse(responseBody);",
+											"",
+											"",
+											"pm.test(\"Status code is 200\", function () {",
+											"    pm.response.to.have.status(200);",
+											"});",
+											"",
+											"tests[\"JSON return code is 200\"] = response.code == 200",
+											"",
+											"tests[\"success is true\"] = response.success == true",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"url": {
+									"raw": "{{host}}/unlike/like_me",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"unlike",
+										"like_me"
+									]
+								}
+							},
+							"response": []
+						}
+					],
+					"protocolProfileBehavior": {},
+					"_postman_isSubFolder": true
+				},
+				{
 					"name": "Match user",
 					"item": [
 						{
@@ -3995,6 +4128,15 @@
 							"request": {
 								"method": "POST",
 								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"is_superlike\": false\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
 								"url": {
 									"raw": "{{host}}/like/like_me",
 									"host": [
@@ -5714,92 +5856,92 @@
 	],
 	"variable": [
 		{
-			"id": "f7f62b2d-ca4f-4598-8b51-32df1933c988",
+			"id": "dff1a2e8-8383-4d1a-af74-6744539983c6",
 			"key": "host",
 			"value": "http://127.0.0.1:5000"
 		},
 		{
-			"id": "3703d537-e527-402c-bcc1-3378cc511cca",
+			"id": "2baf602e-1e34-4efc-957c-bbd23051fa18",
 			"key": "user_id",
 			"value": ""
 		},
 		{
-			"id": "8517da0b-fe71-4bbc-9323-fcf704175182",
+			"id": "dd71d2c4-7078-40ea-af2b-69ebed33895e",
 			"key": "user_email",
 			"value": "foo@example.org"
 		},
 		{
-			"id": "022a3d70-4602-4ec4-8b06-b713eb64c789",
+			"id": "2c6ace6d-9880-47c0-a303-d57c85c11826",
 			"key": "user_username",
 			"value": "foo"
 		},
 		{
-			"id": "00dc9fc9-4081-4ffc-9036-656c7ee26eb7",
+			"id": "27762741-f737-47db-9982-bb6382a1102d",
 			"key": "user_password",
 			"value": "admin"
 		},
 		{
-			"id": "d169f5ec-aa59-4f2f-902f-62cec84b7b3e",
+			"id": "32749353-1734-427a-b7e5-ea42f9bf0a81",
 			"key": "user_firstname",
 			"value": "Foo"
 		},
 		{
-			"id": "420f8b7d-f6c3-402c-a113-842a42ad643b",
+			"id": "dfd31259-5a05-45b5-9b15-00565a3621f6",
 			"key": "user_lastname",
 			"value": "Bar"
 		},
 		{
-			"id": "4a70641d-9661-44a4-9ebb-571e904760bb",
+			"id": "6fbac55b-72a7-4dda-9df6-a5b54b8e075a",
 			"key": "debug_token",
 			"value": "xX69jules69Xx"
 		},
 		{
-			"id": "84b5ef5d-4da9-47e9-96eb-16173643be25",
+			"id": "469a1742-e7ea-4784-8383-304e1a1254c8",
 			"key": "user_access_token",
 			"value": ""
 		},
 		{
-			"id": "58d485e5-54fd-48e2-b420-b685f01ec6d9",
+			"id": "b4e018f7-21e5-4cc8-aa5d-b44f1d3fe5aa",
 			"key": "user_refresh_token",
 			"value": ""
 		},
 		{
-			"id": "f49346f4-9cf4-485f-a9ff-e8c15cf52193",
+			"id": "35a30c5c-700b-4cac-a87f-e9b85b1d59d5",
 			"key": "expired_token",
 			"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE1OTAyNDIyNjQsIm5iZiI6MTU5MDI0MjI2NCwianRpIjoiNTM0ZGI5NzQtOWE4Ni00MGViLWE1NDEtMDg3N2ZmNzQ3NDVhIiwiZXhwIjoxNTkwMjQyMzI0LCJpZGVudGl0eSI6eyJpZCI6NTEyLCJlbWFpbCI6ImZvb0BleGFtcGxlLm9yZyIsInVzZXJuYW1lIjoiYmFyIiwiaXNfb25saW5lIjp0cnVlLCJkYXRlX2xhc3RzZWVuIjoiU2F0LCAyMyBNYXkgMjAyMCAxMzo1Nzo0NCBHTVQifSwiZnJlc2giOnRydWUsInR5cGUiOiJhY2Nlc3MifQ.NTp2P0WNkXDwzuzrcNIQdeAfizQ57HQgkzBLSvY1yHU"
 		},
 		{
-			"id": "7b6804b9-95bf-4ebd-9422-00a82dcb0da1",
+			"id": "f9cb0a56-3fe5-4a43-8c34-c370ea32d68c",
 			"key": "user_orientation",
 			"value": "heterosexual"
 		},
 		{
-			"id": "f3dcabd6-9135-4b98-9ae9-48754dffcc8e",
+			"id": "473c2ba6-4781-4074-8ab7-b2d593ba027f",
 			"key": "user_bio",
 			"value": "Lorem Ipsum is the single greatest threat. We are not - we are not keeping up with other websites. Lorem Ipsum best not make any more threats to your website. It will be met with fire and fury like the world has never seen. Does everybody know that pig named Lorem Ipsum? An ‘extremely credible source’ has called my office and told me that Barack Obama’s placeholder text is a fraud."
 		},
 		{
-			"id": "b36685e2-b7cb-4057-889d-4478975127fb",
+			"id": "aa576ca8-3df8-4aa9-9365-d97b17a2fae9",
 			"key": "user_gender",
 			"value": "male"
 		},
 		{
-			"id": "b90ce2a3-6bc8-4ea2-93d0-faaa3d937417",
+			"id": "7295072e-641d-4991-8d9e-5b4219ddcbe3",
 			"key": "user_birthdate",
 			"value": "06/04/1998"
 		},
 		{
-			"id": "061a7ca6-55dc-411a-8f4d-c256eadaf8a5",
+			"id": "dee264ed-d89e-4493-92c9-3329e0864680",
 			"key": "user_lat",
 			"value": "44.8404"
 		},
 		{
-			"id": "9ddd0f08-1bc5-457b-9d20-765668662af0",
+			"id": "1afbbe42-4c06-40e3-bc8c-775865907ec2",
 			"key": "user_lng",
 			"value": "-0.5805"
 		},
 		{
-			"id": "e2835d3f-b1ab-400c-9bad-66288f3ff0ee",
+			"id": "e8028fd5-ba0c-474c-99a6-99f6aef3dac1",
 			"key": "user_ip",
 			"value": "77.205.46.181"
 		}
