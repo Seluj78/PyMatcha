@@ -59,8 +59,6 @@ for item in REQUIRED_ENV_VARS:
 if os.getenv("ENABLE_LOGGING") == "True":
     setup_logging()
 
-application = Flask(__name__, static_folder=os.getenv("FRONT_STATIC_FOLDER"))
-
 if os.getenv("FLASK_DEBUG", "false") == "true" or os.getenv("FLASK_DEBUG", "false") == "1":
     application.debug = True
 else:
@@ -222,20 +220,6 @@ if application.debug:
     from PyMatcha.routes.api.debug import debug_bp
 
     application.register_blueprint(debug_bp)
-
-
-logging.debug("Registering serve route for REACT")
-
-
-# Serve React App
-@application.route("/", defaults={"path": ""})
-@application.route("/<path:path>")
-def serve(path):
-    logging.debug("Serving {}.".format(path))
-    if path != "" and os.path.exists(application.static_folder + "/" + path):
-        return send_from_directory(application.static_folder, path)
-    else:
-        return send_from_directory(application.static_folder, "index.html")
 
 
 @jwt.unauthorized_loader
