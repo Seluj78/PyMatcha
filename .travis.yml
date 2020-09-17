@@ -20,9 +20,11 @@ jobs:
         # login to github registry
         - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin ghcr.io
         # build image
-        - docker build -t PyMatchaAPI .
+        - docker build -t pymatcha-api .
         # push image
-        - docker push PyMatchaAPI
+        - docker push pymatcha-api
+    - stage: lint
+      script: make lint
     - stage: test
       script:
         # login to github registry
@@ -31,7 +33,7 @@ jobs:
         - docker pull PyMatchaAPI
         # run docker on port 80
         # do not forget to add env-file an environment file in Settings/CI CD/Variables
-        - docker run -d -p 5000:5000 --restart always PyMatchaAPI
+        - docker run -d -p 5000:5000 --restart always pymatcha-api
         # run newman tests
         - newman run --color on 'PyMatcha.postman_collection.json'
       after_script:
