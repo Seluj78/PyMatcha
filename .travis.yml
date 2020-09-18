@@ -27,29 +27,29 @@ jobs:
         - docker build -t docker.pkg.github.com/seluj78/pymatcha/pymatcha-api:latest . -f backend.Dockerfile
         # push image
         - docker push docker.pkg.github.com/seluj78/pymatcha/pymatcha-api:latest
-#    - stage: test
-#      before_script:
-#        - node --version
-#        - npm --version
-#        - npm install -g newman
-#        - newman --version
-#      script:
-#        # login to github registry
-#        - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin docker.pkg.github.com
-#        # pull images
-#        - docker pull docker.pkg.github.com/seluj78/pymatcha/pymatcha-api:latest
-#        # decrypt the env file
-#        - openssl aes-256-cbc -K $encrypted_3c84dcdc6bbe_key -iv $encrypted_3c84dcdc6bbe_iv -in .env.enc -out .env -d
-#        # Run the backend api
-#        - docker run -d -p 5000:5000 --restart always --env-file .env docker.pkg.github.com/seluj78/pymatcha/pymatcha-api:latest
-#        # Wait for docker to be up
-#        - sleep 10
-#        # run newman tests
-#        - newman run --color on 'PyMatcha.postman_collection.json'
-#      after_script:
-#        # stop and remove docker to prevent them from block port at next iteration/test
-#        - docker stop $(docker ps -a -q)
-#        - docker rm $(docker ps -a -q)
+    - stage: test
+      before_script:
+        - node --version
+        - npm --version
+        - npm install -g newman
+        - newman --version
+      script:
+        # login to github registry
+        - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin docker.pkg.github.com
+        # pull images
+        - docker pull docker.pkg.github.com/seluj78/pymatcha/pymatcha-api:latest
+        # decrypt the env file
+        - openssl aes-256-cbc -K $encrypted_3c84dcdc6bbe_key -iv $encrypted_3c84dcdc6bbe_iv -in .env.enc -out .env -d
+        # Run the backend api
+        - docker run -d -p 5000:5000 --restart always --env-file .env docker.pkg.github.com/seluj78/pymatcha/pymatcha-api:latest
+        # Wait for docker to be up
+        - sleep 10
+        # run newman tests
+        - newman run --color on 'PyMatcha.postman_collection.json'
+      after_script:
+        # stop and remove docker to prevent them from block port at next iteration/test
+        - docker stop $(docker ps -a -q)
+        - docker rm $(docker ps -a -q)
     - stage: lint
       before_script:
         - pip install -r backend/requirements.txt
