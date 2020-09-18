@@ -241,6 +241,82 @@ paths:
                   message:
                     type: string
                     example: Refresh token revoked
+  /auth/confirm/{token}:
+    post:
+      summary: Confirm a user with a token
+      operationId: confirmUser
+      tags:
+        - Authentication
+      parameters:
+        - name: token
+          in: path
+          required: true
+          description: The confirmation token
+          schema:
+            type: string
+      responses:
+        "404":
+          $ref: '#/components/responses/NotFound'
+        "400":
+          $ref: '#/components/responses/BadRequest'
+        "200":
+          description: Returned user to view
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    description: If the request is a success
+                    example: true
+                  code:
+                    type: integer
+                    description: The status code
+                    example: 200
+                  message:
+                    type: string
+                    example: Confirmation successful
+  /auth/confirm/new:
+    post:
+      summary: Request a new confirmation email
+      description: Will always return a success, even if the user is not found or already confirmed
+      operationId: newConfirmEmail
+      tags:
+        - Authentication
+      requestBody:
+        description: Parameters to request new confirmation email
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  required: true
+                  type: string
+                  example: foo@example.org
+      responses:
+        "400":
+          $ref: '#/components/responses/BadRequest'
+        "200":
+          description: Returned user to view
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    description: If the request is a success
+                    example: true
+                  code:
+                    type: integer
+                    description: The status code
+                    example: 200
+                  message:
+                    type: string
+                    example: New confirmation email sent if user exists in database and isn't already confirmed
   /profile/complete:
     post:
       tags:

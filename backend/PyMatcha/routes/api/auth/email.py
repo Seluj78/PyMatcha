@@ -69,7 +69,7 @@ def confirm_email(token):
             u.confirmed_on = datetime.datetime.utcnow()
             u.save()
         current_app.logger.debug("/auth/confirm -> User {} confirmed.".format(u.id))
-        return Success("Confirmation successfull")
+        return Success("Confirmation successful")
 
 
 @auth_email_bp.route("/auth/confirm/new", methods=["POST"])
@@ -82,11 +82,9 @@ def request_new_email_conf():
         u = get_user(email)
     except NotFoundError:
         current_app.logger.debug("/auth/confirm/new -> User not found")
-        pass
     else:
         if u.is_confirmed:
             current_app.logger.debug("/auth/confirm/new -> User found, Already confirmed.")
-            return Success("User already confirmed")
         else:
             current_app.logger.debug("/auth/confirm/new -> User found, sending new confirmation email")
             token = generate_confirmation_token(email=email, token_type="confirm")
@@ -94,4 +92,4 @@ def request_new_email_conf():
             rendered_html = render_template("confirm_email.html", link=link)
             send_mail_html.delay(dest=data["email"], subject="Confirm your email on PyMatcha", html=rendered_html)
     current_app.logger.debug("/auth/confirm/new -> New confirmation email sent if user exists in database")
-    return Success("New confirmation email sent if user exists in database")
+    return Success("New confirmation email sent if user exists in database and isn't already confirmed")
