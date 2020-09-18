@@ -77,7 +77,6 @@ def send_message():
 @messages_bp.route("/conversations/<with_uid>", methods=["GET"])
 @jwt_required
 def get_conversation_messsages(with_uid):
-    # TODO: Limit to 200 messages and if need be get more
     try:
         with_user = get_user(with_uid)
     except NotFoundError:

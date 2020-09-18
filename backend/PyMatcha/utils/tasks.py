@@ -37,11 +37,9 @@ def update_heat_scores():
             score += 100
         score += likes_received * 2
         score += matches * 4
-        # TODO: Superlike received = 5 pts
         score -= reports_received * 10
         score += views
         score += ceil(messages / 5)
-        # TODO: remove 10 pts per week of inactivity
         user.heat_score = score
         user.save()
         return f"Updated heat score for user {user.id}: {user.heat_score}."
@@ -68,7 +66,6 @@ def update_offline_users():
                 # Edge case where the user has been deleted from DB while he was still online
                 pass
             else:
-                # TODO: array of id and one DB call to update the db as offline
                 u.date_lastseen = datetime.datetime.fromtimestamp(date_lastseen)
                 u.is_online = False
                 u.save()
@@ -110,7 +107,6 @@ def update_user_recommendations():
     for user_to_update in User.select_all():
         count += 1
         user_to_update_recommendations = []
-        # TODO: Find a way to bypass that
         if not user_to_update.birthdate:
             continue
         if not user_to_update.geohash:

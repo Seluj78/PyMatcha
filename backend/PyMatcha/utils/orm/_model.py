@@ -216,8 +216,6 @@ class Model(object):
             logging.fatal("{} Not in table {}".format(self.id, self.table_name))
             raise Exception("{} Not in table {}".format(self.id, self.table_name))
 
-    # TODO: Consolidate get, get_multi and get_multis in one function !
-
     @classmethod
     def get(cls, **kwargs):
         """
@@ -301,7 +299,6 @@ class Model(object):
         if data:
             return cls(data)
         else:
-            # TODO: All db gets return None instead of valuerror
             raise ValueError("Not found.")
 
     @classmethod

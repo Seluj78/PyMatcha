@@ -11,8 +11,6 @@ services:
   - mysql
   - redis
 
-# TODO: Reformat file as it is ugly. separatee jobs in yml, and lint as the last job to run
-
 jobs:
   include:
     - stage: build

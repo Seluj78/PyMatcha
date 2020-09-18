@@ -89,7 +89,6 @@ def populate_users(amount=150, drop_user_table=False):
                 Tag.create(name=tag, user_id=u.id)
         except ConflictError:
             pass  # Pass on the conflict error, this user wont be created because the username is taken. Who cares ?
-    # TODO: Add images
 
 
 if __name__ == "__main__":
