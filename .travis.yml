@@ -51,7 +51,8 @@ jobs:
       before_script:
         - pip install -r backend/requirements.txt
       script:
-        - black --check backend
+        - black --check backend/
+        - flake8 backend/
 
 notifications:
   email:
