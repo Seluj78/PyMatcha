@@ -16,8 +16,6 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 """
-import os
-
 from flask import Blueprint
 from flask import current_app
 from flask import render_template
@@ -27,8 +25,8 @@ from PyMatcha.utils.confirm_token import generate_confirmation_token
 from PyMatcha.utils.decorators import validate_params
 from PyMatcha.utils.errors import ConflictError
 from PyMatcha.utils.mail import send_mail_html
+from PyMatcha.utils.static import FRONTEND_EMAIL_CONFIRMATION_URL
 from PyMatcha.utils.success import SuccessOutputMessage
-
 
 REQUIRED_KEYS_USER_CREATION = {"username": str, "email": str, "password": str, "first_name": str, "last_name": str}
 
@@ -55,7 +53,7 @@ def api_create_user():
         raise e
     else:
         token = generate_confirmation_token(email=data["email"], token_type="confirm")
-        link = os.getenv("APP_URL") + "/auth/confirm/" + token
+        link = FRONTEND_EMAIL_CONFIRMATION_URL + token
         rendered_html = render_template("confirm_email.html", link=link)
         send_mail_html.delay(dest=data["email"], subject="Confirm your email on PyMatcha", html=rendered_html)
         return SuccessOutputMessage("email", new_user.email, "New user successfully created.")

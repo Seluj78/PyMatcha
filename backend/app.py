@@ -31,4 +31,4 @@ if __name__ == "__main__":
         setup_logging()
 
     # Runs the main loop
-    application.run(host="0.0.0.0", port=port, debug=debug)
+    application.run(host=os.getenv("FLASK_HOST", "0.0.0.0"), port=port, debug=debug)

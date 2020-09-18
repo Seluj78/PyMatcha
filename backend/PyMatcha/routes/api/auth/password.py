@@ -16,8 +16,6 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 """
-import os
-
 from flask import Blueprint
 from flask import current_app
 from flask import render_template
@@ -32,8 +30,8 @@ from PyMatcha.utils.decorators import validate_params
 from PyMatcha.utils.errors import BadRequestError
 from PyMatcha.utils.errors import NotFoundError
 from PyMatcha.utils.mail import send_mail_html
+from PyMatcha.utils.static import FRONTEND_PASSWORD_RESET_URL
 from PyMatcha.utils.success import Success
-
 
 REQUIRED_KEYS_PASSWORD_FORGOT = {"email": str}
 REQUIRED_KEYS_PASSWORD_RESET = {"token": str, "password": str}
@@ -55,8 +53,7 @@ def forgot_password():
         pass
     else:
         token = generate_confirmation_token(email=data["email"], token_type="reset")
-        # link = os.getenv("APP_URL") + "/auth/password/forgot/" + token
-        link = f"{os.getenv('FRONT_URL')}/accounts/password/reset?token={token}"
+        link = FRONTEND_PASSWORD_RESET_URL + token
         rendered_html = render_template("password_reset.html", link=link)
         current_app.logger.debug("/auth/password/forgot -> Sending worker request to send email")
         send_mail_html.delay(dest=data["email"], subject="Reset your password on PyMatcha", html=rendered_html)

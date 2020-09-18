@@ -6,15 +6,12 @@ services:
     image: mysql
     restart: always
     environment:
-      MYSQL_ROOT_PASSWORD:
+      MYSQL_USER: 'matcha'
+      MYSQL_PASSWORD: 'matcha'
+      MYSQL_ROOT_PASSWORD: root
       MYSQL_DATABASE: pymatcha
-      MYSQL_ALLOW_EMPTY_PASSWORD: 1
     env_file:
       - .env
-#    ports:
-#      - '3306:3306'
-#    expose:
-#      - '3306'
     volumes:
       - mysql:/var/lib/mysql
     networks:
@@ -41,13 +38,7 @@ services:
     container_name: workers
     build:
       context: .
-      dockerfile: ./Dockerfile
-    environment:
-      - PYTHONUNBUFFERED=1
-      - CELERY_BROKER_URL=redis://redis:6379/0
-      - CELERY_RESULT_BACKEND=redis://redis:6379/0
-      - DB_PORT=3306
-      - DB_HOST=mysql
+      dockerfile: backend.Dockerfile
     env_file:
       - .env
     entrypoint: celery worker --workdir . -A PyMatcha.celery -B --loglevel=info
@@ -68,14 +59,9 @@ services:
     restart: always
     build:
       context: .
-      dockerfile: ./Dockerfile
+      dockerfile: backend.Dockerfile
     env_file:
       - .env
-    environment:
-      - PYTHONUNBUFFERED=1
-      - FLASK_DEBUG=true
-      - DB_PORT=3306
-      - DB_HOST=mysql
     ports:
       - "8080:5000"
     volumes:
@@ -91,17 +77,20 @@ services:
     networks:
       - redis-net
       - mysql-net
+      - backend-net
 
   frontend:
     container_name: frontend
     build:
-      context: ./frontend
-      dockerfile: Dockerfile
+      context: .
+      dockerfile: frontend.Dockerfile
     volumes:
       - './frontend:/frontend'
       - '/frontend/node_modules'
     ports:
       - '4242:8080'
+    networks:
+      - backend-net
 
   phpmyadmin:
     image: phpmyadmin/phpmyadmin
@@ -130,6 +119,7 @@ services:
 networks:
   redis-net:
   mysql-net:
+  backend-net:
 
 volumes:
   redis-data:

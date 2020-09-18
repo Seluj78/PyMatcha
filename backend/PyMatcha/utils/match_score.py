@@ -1,4 +1,3 @@
-import itertools
 from typing import List
 from typing import Optional
 
@@ -38,34 +37,64 @@ def _get_gender_query(orientation, gender):
         if gender == "female":
             q1 = User.get_multis(orientation=orientation, gender="male")
             q2 = User.get_multis(orientation="other", gender="male")
-            q1.extend(q2)
-            return q1
+            if q1 and q2:
+                q1.extend(q2)
+                return q1
+            if q1 and not q2:
+                return q1
+            if q2 and not q1:
+                return q2
         elif gender == "male":
             q1 = User.get_multis(orientation=orientation, gender="female")
             q2 = User.get_multis(orientation="other", gender="female")
-            q1.extend(q2)
-            return q1
+            if q1 and q2:
+                q1.extend(q2)
+                return q1
+            if q1 and not q2:
+                return q1
+            if q2 and not q1:
+                return q2
         else:
             q1 = User.get_multis(orientation=orientation, gender="female")
             q2 = User.get_multis(orientation=orientation, gender="male")
-            q1.extend(q2)
-            return q1
+            if q1 and q2:
+                q1.extend(q2)
+                return q1
+            if q1 and not q2:
+                return q1
+            if q2 and not q1:
+                return q2
     elif orientation == "homosexual":
         if gender == "female":
             q1 = User.get_multis(orientation=orientation, gender="female")
             q2 = User.get_multis(orientation="other", gender="female")
-            q1.extend(q2)
-            return q1
+            if q1 and q2:
+                q1.extend(q2)
+                return q1
+            if q1 and not q2:
+                return q1
+            if q2 and not q1:
+                return q2
         elif gender == "male":
             q1 = User.get_multis(orientation=orientation, gender="male")
             q2 = User.get_multis(orientation="other", gender="male")
-            q1.extend(q2)
-            return q1
+            if q1 and q2:
+                q1.extend(q2)
+                return q1
+            if q1 and not q2:
+                return q1
+            if q2 and not q1:
+                return q2
         else:
             q1 = User.get_multis(orientation=orientation, gender="female")
             q2 = User.get_multis(orientation=orientation, gender="male")
-            q1.extend(q2)
-            return q1
+            if q1 and q2:
+                q1.extend(q2)
+                return q1
+            if q1 and not q2:
+                return q1
+            if q2 and not q1:
+                return q2
     elif orientation == "bisexual":
         q1 = User.get_multis(orientation=orientation, gender="female")
         q3 = User.get_multis(orientation=orientation, gender="male")
@@ -77,7 +106,11 @@ def _get_gender_query(orientation, gender):
             q4 = User.get_multis(orientation="homosexual", gender="male")
         q5 = User.get_multis(orientation="other", gender="male")
         q6 = User.get_multis(orientation="other", gender="female")
-        return list(set(list(itertools.chain(q1, q2, q3, q4, q5, q6))))
+        final = []
+        for q in [q1, q2, q3, q4, q5, q6]:
+            if q:
+                final.extend(q)
+        return list(set(final))
     elif orientation == "other":
         q1 = User.get_multis(orientation=orientation, gender="female")
         q3 = User.get_multis(orientation=orientation, gender="male")
@@ -91,6 +124,10 @@ def _get_gender_query(orientation, gender):
         if gender == "male":
             q4 = User.get_multis(orientation="homosexual", gender="male")
             q6 = User.get_multis(orientation="heterosexual", gender="female")
-        return list(set(list(itertools.chain(q1, q2, q3, q4, q5, q6))))
+        final = []
+        for q in [q1, q2, q3, q4, q5, q6]:
+            if q:
+                final.extend(q)
+        return list(set(final))
     else:
         raise ValueError("No match found for genre. This should not happen")

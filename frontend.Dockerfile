@@ -4,7 +4,7 @@ WORKDIR /frontend
 
 ENV PATH /frontend/node_modules/.bin:$PATH
 
-COPY package.json /frontend/package.json
+COPY frontend/package.json /frontend/package.json
 RUN yarn install
 RUN yarn global add @vue/cli
 

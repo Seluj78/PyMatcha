@@ -177,6 +177,6 @@ def debug_send_message():
 @debug_token_required
 def debug_recommendations_start_process():
     """This function will create 100 random users and calculate recommendations"""
-    populate_users(amount=100, drop_user_table=False)
+    populate_users(amount=30, drop_user_table=False)
     update_user_recommendations()
     return Success("Done")

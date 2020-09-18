@@ -17,7 +17,6 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 """
 import datetime
-import os
 
 import Geohash
 from flask import Blueprint
@@ -36,6 +35,7 @@ from PyMatcha.utils.errors import UnauthorizedError
 from PyMatcha.utils.mail import send_mail_html
 from PyMatcha.utils.mail import send_mail_text
 from PyMatcha.utils.password import check_password
+from PyMatcha.utils.static import FRONTEND_EMAIL_CONFIRMATION_URL
 from PyMatcha.utils.success import Success
 
 profile_edit_bp = Blueprint("profile_edit", __name__)
@@ -114,7 +114,7 @@ def edit_email():
     current_user.is_confirmed = False
     current_user.save()
     token = generate_confirmation_token(email=new_email, token_type="confirm")
-    link = os.getenv("APP_URL") + "/auth/confirm/" + token
+    link = FRONTEND_EMAIL_CONFIRMATION_URL + token
     rendered_html = render_template("confirm_email.html", link=link)
     send_mail_html.delay(dest=data["email"], subject="Confirm your email on PyMatcha", html=rendered_html)
     return Success("Email sent for new email")
