@@ -279,7 +279,7 @@ paths:
                     type: string
                     example: Profile completed !
   /profile/edit:
-    post:
+    put:
       tags:
         - Profile
       summary: Edit user profile
@@ -880,6 +880,85 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/OnlineUser'
+  /auth/password/forgot:
+    post:
+      summary: Request a password reset
+      description: Will always return a success, no matter the email passed. Emails will be sent only to valid email adresses in the database
+      operationId: requestPasswordReset
+      tags:
+        - Authentication
+      requestBody:
+        description: Parameters to request password reset
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                  required: true
+                  example: foo@example.org
+      responses:
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: string
+                    example: 200
+                  success:
+                    type: boolean
+                    example: true
+                  message:
+                    type: string
+                    example: Password reset mail sent successfully if user exists in DB
+  /auth/password/reset:
+    post:
+      summary: Reset a password
+      operationId: passwordReset
+      tags:
+        - Authentication
+      requestBody:
+        description: Parameters to request password reset
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                  required: true
+                  example: foo@example.org
+                password:
+                  type: string
+                  required: true
+                  example: dolphin2
+      responses:
+        "404":
+          $ref: '#/components/responses/NotFound'
+        "400":
+          $ref: '#/components/responses/BadRequest'
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: string
+                    example: 200
+                  success:
+                    type: boolean
+                    example: true
+                  message:
+                    type: string
+                    example: Password reset successful.
 
 
 servers:

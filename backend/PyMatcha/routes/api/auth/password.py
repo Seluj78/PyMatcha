@@ -55,7 +55,8 @@ def forgot_password():
         pass
     else:
         token = generate_confirmation_token(email=data["email"], token_type="reset")
-        link = os.getenv("APP_URL") + "/auth/password/forgot/" + token
+        # link = os.getenv("APP_URL") + "/auth/password/forgot/" + token
+        link = f"{os.getenv('FRONT_URL')}/accounts/password/reset?token={token}"
         rendered_html = render_template("password_reset.html", link=link)
         current_app.logger.debug("/auth/password/forgot -> Sending worker request to send email")
         send_mail_html.delay(dest=data["email"], subject="Reset your password on PyMatcha", html=rendered_html)
