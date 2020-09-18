@@ -61,7 +61,22 @@ for item in REQUIRED_ENV_VARS:
     if item not in os.environ:
         raise EnvironmentError(f"{item} is not set in the server's environment or .env file. It is required.")
 
-if os.getenv("ENABLE_LOGGING") == "True":
+from PyMatcha.utils.static import (
+    ENABLE_LOGGING,
+    FLASK_SECRET_KEY,
+    CELERY_RESULT_BACKEND,
+    CELERY_BROKER_URL,
+    DB_NAME,
+    DB_USER,
+    DB_PASSWORD,
+    DB_PORT,
+    DB_HOST,
+    MAIL_PASSWORD,
+    REDIS_PORT,
+    REDIS_HOST,
+)
+
+if ENABLE_LOGGING == "True":
     setup_logging()
 
 application = Flask(__name__)
@@ -71,13 +86,11 @@ if os.getenv("FLASK_DEBUG", "false") == "true" or os.getenv("FLASK_DEBUG", "fals
 else:
     application.debug = False
 
-application.secret_key = os.getenv("FLASK_SECRET_KEY")
-application.config.update(FLASK_SECRET_KEY=os.getenv("FLASK_SECRET_KEY"))
-application.config["JWT_SECRET_KEY"] = os.environ.get("FLASK_SECRET_KEY")
+application.secret_key = FLASK_SECRET_KEY
+application.config.update(FLASK_SECRET_KEY=FLASK_SECRET_KEY)
+application.config["JWT_SECRET_KEY"] = FLASK_SECRET_KEY
 
 logging.debug("Configuring Celery Redis URLs")
-CELERY_BROKER_URL = os.getenv("CELERY_BROKER_URL")
-CELERY_RESULT_BACKEND = os.getenv("CELERY_RESULT_BACKEND")
 # Celery configuration
 application.config["CELERY_BROKER_URL"] = CELERY_BROKER_URL
 application.config["CELERY_RESULT_BACKEND"] = CELERY_RESULT_BACKEND
@@ -120,18 +133,13 @@ def expired_token_callback(expired_token):
 logging.debug("Configuring CORS")
 CORS(application, expose_headers="Authorization", supports_credentials=True)
 
-if os.getenv("CI"):
-    database_password = ""
-else:
-    database_password = os.getenv("DB_PASSWORD")
-
 logging.debug("Setting database config from environment variables")
 database_config = {
-    "host": os.getenv("DB_HOST"),
-    "port": int(os.getenv("DB_PORT")),
-    "user": os.getenv("DB_USER"),
-    "password": database_password,
-    "db": os.getenv("DB_NAME"),
+    "host": DB_HOST,
+    "port": int(DB_PORT),
+    "user": DB_USER,
+    "password": DB_PASSWORD,
+    "db": DB_NAME,
     "charset": "utf8mb4",
     "cursorclass": DictCursor,
 }
@@ -148,14 +156,14 @@ application.config.update(
     MAIL_PORT=465,
     MAIL_USE_SSL=True,
     MAIL_USERNAME="pymatcha@gmail.com",
-    MAIL_PASSWORD=os.getenv("MAIL_PASSWORD"),
+    MAIL_PASSWORD=MAIL_PASSWORD,
     MAIL_DEBUG=False,
     MAIL_DEFAULT_SENDER="pymatcha@gmail.com",
 )
 logging.debug("Configuring mail")
 mail = Mail(application)
 
-redis = StrictRedis(host=os.getenv("REDIS_HOST"), port=os.getenv("REDIS_PORT"), decode_responses=True, db=2)
+redis = StrictRedis(host=REDIS_HOST, port=REDIS_PORT, decode_responses=True, db=2)
 
 redis.flushdb()
 
