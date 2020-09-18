@@ -1,6 +1,9 @@
 <template>
   <!-- eslint-disable max-len -->
   <div class="auth-container">
+    <div class="auth-sub-container-error mb-4" v-if="error.happened">
+      <h1 class="auth-sub-container-error-message">{{error.message}}</h1>
+    </div>
     <div class="auth-sub-container">
       <div class="auth-sub-container-content" v-if="!passwordHasBeenReset">
         <img src="../../assets/auth/refresh.png" class="h-12">
@@ -29,11 +32,18 @@
 <script>
 
 export default {
+  async beforeMount() {
+    await this.checkToken();
+  },
   data: () => ({
     formData: {
       password: '',
     },
     passwordHasBeenReset: false,
+    error: {
+      happened: false,
+      message: '',
+    },
   }),
   methods: {
     passwordErrorHandler(error) {
@@ -42,8 +52,25 @@ export default {
       }
       return 'This password is too easy to guess';
     },
-    onSubmit() {
+    async onSubmit() {
+      const resetPasswordResponse = await this.$http.post('/auth/password/reset', this.formData);
+      if (resetPasswordResponse.status !== 200) {
+        this.error.message = resetPasswordResponse.data.error.message;
+        this.error.happened = true;
+        return;
+      }
       this.passwordHasBeenReset = true;
+    },
+    async checkToken() {
+      const { token } = this.$route.query;
+      if (!token) {
+        await this.$router.push('/accounts/password/reseterror');
+        return;
+      }
+      const tokenCheck = await this.$http.post('/auth/password/check_token', { token });
+      if (tokenCheck.status !== 200) {
+        await this.$router.push('/accounts/password/reseterror');
+      }
     },
   },
 };

@@ -1,6 +1,9 @@
 <template>
   <!-- eslint-disable max-len -->
   <div class="auth-container">
+    <div class="auth-sub-container-error mb-4" v-if="error.happened">
+      <h1 class="auth-sub-container-error-message">{{error.message}}</h1>
+    </div>
     <div class="auth-sub-container">
       <div class="auth-sub-container-content" v-if="!forgotPasswordEmailSent">
         <img src="../../assets/auth/lock.png" class="h-12">
@@ -40,10 +43,32 @@ export default {
       email: '',
     },
     forgotPasswordEmailSent: false,
+    error: {
+      happened: false,
+      message: '',
+    },
   }),
   methods: {
-    onSubmit() {
-      this.forgotPasswordEmailSent = true;
+    async onSubmit() {
+      try {
+        this.clearError();
+        const passwordForgotResponse = await this.$http.post('/auth/password/forgot', this.formData);
+        if (passwordForgotResponse.status !== 200) {
+          this.displayError('Something went wrong on our end. We are sorry. Please, try again later.');
+          return;
+        }
+        this.forgotPasswordEmailSent = true;
+      } catch (error) {
+        this.displayError('Something went wrong on our end. We are sorry. Please, try again later.');
+      }
+    },
+    clearError() {
+      this.error.message = '';
+      this.error.happened = false;
+    },
+    displayError(message) {
+      this.error.message = message;
+      this.error.happened = true;
     },
   },
 };

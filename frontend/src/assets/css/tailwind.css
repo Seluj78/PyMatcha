@@ -117,7 +117,7 @@
 
     .auth-sub-container-error {
         @apply bg-red-500;
-        @apply py-4;
+        @apply p-4;
         @apply flex;
         @apply justify-center;
         @apply text-center;
@@ -164,6 +164,10 @@
         @apply text-white-matcha;
         @apply py-2;
         @apply mt-4;
+    }
+
+    .auth-sub-container-content-submit-button:active, .auth-sub-container-content-submit-button:focus {
+        outline: none;
     }
 
     .auth-sub-container-content-button {
