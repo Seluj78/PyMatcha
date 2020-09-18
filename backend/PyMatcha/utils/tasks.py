@@ -23,7 +23,9 @@ def setup_periodic_tasks(sender, **kwargs):
 @celery.task
 def update_heat_scores():
     for user in User.select_all():
-        likes_received = len(user.get_likes_received())
+        likes = [like.is_superlike for like in user.get_likes_received()]
+        likes_received = likes.count(False)
+        superlikes_received = likes.count(True)
         reports_received = len(user.get_reports_received())
         views = len(user.get_views())
         matches = len(user.get_matches())
@@ -36,6 +38,7 @@ def update_heat_scores():
         if user.username == "seluj78" or user.username == "tet":
             score += 100
         score += likes_received * 2
+        score += superlikes_received * 10
         score += matches * 4
         score -= reports_received * 10
         score += views
