@@ -11,6 +11,9 @@ services:
   - mysql
   - redis
 
+before_install:
+  - mysql -e 'CREATE DATABASE pymatcha;'
+
 # TODO: Reformat file as it is ugly. separatee jobs in yml, and lint as the last job to run
 
 jobs:
@@ -21,7 +24,7 @@ jobs:
         # login to github registry
         - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin docker.pkg.github.com
         # build image
-        - docker build -t docker.pkg.github.com/seluj78/pymatcha/pymatcha-api:latest .
+        - docker build -t docker.pkg.github.com/seluj78/pymatcha/pymatcha-api:latest . -f backend.Dockerfile
         # push image
         - docker push docker.pkg.github.com/seluj78/pymatcha/pymatcha-api:latest
 #    - stage: test

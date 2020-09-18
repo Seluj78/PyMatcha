@@ -38,17 +38,23 @@ dotenv_path = os.path.join(PYMATCHA_ROOT, ".env")
 load_dotenv(dotenv_path)
 
 REQUIRED_ENV_VARS = [
+    "FLASK_PORT",
     "FLASK_DEBUG",
+    "FLASK_HOST",
     "FLASK_SECRET_KEY",
-    "FRONT_STATIC_FOLDER",
+    "ENABLE_LOGGING",
+    "CELERY_BROKER_URL",
+    "CELERY_RESULT_BACKEND",
     "DB_HOST",
     "DB_PORT",
     "DB_USER",
     "DB_PASSWORD",
+    "DB_NAME",
     "MAIL_PASSWORD",
-    "APP_URL",
-    "ENABLE_LOGGING",
+    "REDIS_HOST",
+    "REDIS_PORT",
     "DEBUG_AUTH_TOKEN",
+    "FRONTEND_BASE_URL",
 ]
 
 for item in REQUIRED_ENV_VARS:
@@ -70,8 +76,8 @@ application.config.update(FLASK_SECRET_KEY=os.getenv("FLASK_SECRET_KEY"))
 application.config["JWT_SECRET_KEY"] = os.environ.get("FLASK_SECRET_KEY")
 
 logging.debug("Configuring Celery Redis URLs")
-CELERY_BROKER_URL = os.getenv("CELERY_BROKER_URL", "redis://localhost:6379/0")
-CELERY_RESULT_BACKEND = os.getenv("CELERY_RESULT_BACKEND", "redis://localhost:6379/0")
+CELERY_BROKER_URL = os.getenv("CELERY_BROKER_URL")
+CELERY_RESULT_BACKEND = os.getenv("CELERY_RESULT_BACKEND")
 # Celery configuration
 application.config["CELERY_BROKER_URL"] = CELERY_BROKER_URL
 application.config["CELERY_RESULT_BACKEND"] = CELERY_RESULT_BACKEND
@@ -149,9 +155,7 @@ application.config.update(
 logging.debug("Configuring mail")
 mail = Mail(application)
 
-redis = StrictRedis(
-    host=os.getenv("REDIS_HOST", "localhost"), port=os.getenv("REDIS_PORT", 6379), decode_responses=True, db=2
-)
+redis = StrictRedis(host=os.getenv("REDIS_HOST"), port=os.getenv("REDIS_PORT"), decode_responses=True, db=2)
 
 redis.flushdb()
 

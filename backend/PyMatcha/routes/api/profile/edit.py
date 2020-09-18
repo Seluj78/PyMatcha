@@ -114,7 +114,7 @@ def edit_email():
     current_user.is_confirmed = False
     current_user.save()
     token = generate_confirmation_token(email=new_email, token_type="confirm")
-    link = os.getenv("APP_URL") + "/auth/confirm/" + token
+    link = os.getenv("FRONTEND_BASE_URL") + "/auth/confirm/" + token
     rendered_html = render_template("confirm_email.html", link=link)
     send_mail_html.delay(dest=data["email"], subject="Confirm your email on PyMatcha", html=rendered_html)
     return Success("Email sent for new email")
