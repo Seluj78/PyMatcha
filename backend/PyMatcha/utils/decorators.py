@@ -1,10 +1,10 @@
-import os
 from functools import wraps
 from typing import Optional
 
 from flask import request
 from PyMatcha.utils.errors import BadRequestError
 from PyMatcha.utils.errors import UnauthorizedError
+from PyMatcha.utils.static import DEBUG_AUTH_TOKEN
 from werkzeug.exceptions import BadRequest
 
 
@@ -71,7 +71,7 @@ def debug_token_required(f):
     def decorated_function(*args, **kwargs):
         token = request.headers.get("debug-auth-token", None)
         if token:
-            if token != os.getenv("DEBUG_AUTH_TOKEN"):
+            if token != DEBUG_AUTH_TOKEN:
                 raise UnauthorizedError("Incorrect debug auth token.")
         else:
             raise UnauthorizedError("Missing debug auth token.")
