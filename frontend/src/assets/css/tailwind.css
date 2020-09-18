@@ -1,0 +1,165 @@
+@tailwind base;
+
+@tailwind components;
+
+@responsive {
+    .navigation-button-logged-in {
+        @apply block;
+        @apply px-2;
+        @apply py-2;
+        @apply font-semibold;
+        @apply text-purple-matcha;
+        @apply rounded-md;
+    }
+    .navigation-button-logged-in:hover {
+        @apply bg-purple-matcha;
+        @apply text-white-matcha;
+    }
+    @screen sm {
+        .navigation-button-logged-in {
+            @apply px-5;
+        }
+    }
+
+    .button-purple {
+        @apply tracking-wide;
+        @apply bg-purple-matcha;
+        @apply text-white-matcha;
+        @apply rounded-xl;
+        @apply py-4;
+        @apply px-16;
+        @apply mx-auto;
+        @apply font-bold;
+    }
+
+    .button-purple:hover {
+        background-color: #ad1deb;
+        background-image: linear-gradient(315deg, #ad1deb 0%, #6e72fc 74%);
+    }
+
+    .button-purple:active, .button-purple:focus {
+        outline: none;
+    }
+
+    .matcha-input {
+        @apply border;
+        @apply border-gray-300;
+        @apply rounded-md;
+        @apply text-gray-800;
+        @apply bg-white-matcha;
+        @apply py-1;
+        @apply px-3;
+        @apply mt-2;
+        @apply w-full;
+    }
+
+    .matcha-input:focus {
+        @apply border-gray-500;
+        outline: none;
+    }
+
+    .matcha-input-error {
+        @apply text-red-500;
+        @apply text-sm;
+        @apply font-bold;
+    }
+
+    .auth-container {
+        @apply mx-4;
+        @apply h-screen;
+        @apply flex;
+        @apply flex-col;
+        @apply justify-center;
+        @apply items-center;
+    }
+
+    .auth-sub-container {
+        @apply flex;
+        @apply flex-col;
+        @apply justify-center;
+        @apply items-center;
+        @apply bg-white;
+        @apply border-2;
+        @apply border-gray-200;
+        @apply rounded-md;
+        @apply px-4;
+        @apply py-8;
+        @apply w-full;
+        @apply max-w-sm;
+    }
+
+    .auth-sub-container-thinner {
+        @apply flex;
+        @apply flex-col;
+        @apply justify-center;
+        @apply items-center;
+        @apply bg-white;
+        @apply border-2;
+        @apply border-gray-200;
+        @apply rounded-md;
+        @apply px-4;
+        @apply py-4;
+        @apply w-full;
+        @apply max-w-sm;
+    }
+
+    @screen sm {
+        .auth-sub-container {
+            @apply px-8;
+        }
+    }
+
+    .auth-sub-container-content {
+        @apply flex;
+        @apply flex-col;
+        @apply items-center;
+    }
+
+    .auth-sub-container-content-heading {
+        @apply text-base;
+        @apply font-bold;
+        @apply my-4;
+        @apply text-gray-matcha;
+        @apply text-center;
+    }
+
+    @screen sm {
+        .auth-sub-container-content-heading {
+            @apply text-2xl;
+        }
+    }
+
+    .auth-sub-container-content-paragraph {
+        @apply text-sm;
+        @apply text-gray-matcha;
+        @apply text-center;
+    }
+
+    .auth-sub-container-content-link {
+        @apply text-sm;
+        @apply text-blue-500;
+        @apply text-center;
+    }
+
+    .auth-sub-container-content-submit-button {
+        @apply bg-purple-matcha;
+        @apply w-full;
+        @apply rounded-md;
+        @apply text-white-matcha;
+        @apply py-2;
+        @apply mt-4;
+    }
+
+    .auth-sub-container-content-button {
+        @apply bg-purple-matcha;
+        @apply w-full;
+        @apply rounded-md;
+        @apply text-white-matcha;
+        @apply py-2;
+        @apply mt-4;
+        @apply cursor-pointer;
+        @apply text-center;
+    }
+}
+
+@tailwind utilities;
