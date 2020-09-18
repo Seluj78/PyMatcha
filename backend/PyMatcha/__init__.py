@@ -25,7 +25,6 @@ from celery import Celery
 from dotenv import load_dotenv
 from flask import Flask
 from flask import jsonify
-from flask import send_from_directory
 from flask_cors import CORS
 from flask_jwt_extended import JWTManager
 from flask_mail import Mail
@@ -58,6 +57,8 @@ for item in REQUIRED_ENV_VARS:
 
 if os.getenv("ENABLE_LOGGING") == "True":
     setup_logging()
+
+application = Flask(__name__)
 
 if os.getenv("FLASK_DEBUG", "false") == "true" or os.getenv("FLASK_DEBUG", "false") == "1":
     application.debug = True
