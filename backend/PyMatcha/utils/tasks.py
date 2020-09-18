@@ -107,7 +107,7 @@ def update_user_recommendations():
     for user_to_update in User.select_all():
         count += 1
         user_to_update_recommendations = []
-
+        # TODO: Find a way to bypass that
         if not user_to_update.birthdate:
             continue
         if not user_to_update.geohash:

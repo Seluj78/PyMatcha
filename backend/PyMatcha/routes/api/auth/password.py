@@ -55,7 +55,8 @@ def forgot_password():
         pass
     else:
         token = generate_confirmation_token(email=data["email"], token_type="reset")
-        link = os.getenv("APP_URL") + "/auth/password/forgot/" + token
+        # link = os.getenv("APP_URL") + "/auth/password/forgot/" + token
+        link = f"{os.getenv('FRONT_URL')}/accounts/password/reset?token={token}"
         rendered_html = render_template("password_reset.html", link=link)
         current_app.logger.debug("/auth/password/forgot -> Sending worker request to send email")
         send_mail_html.delay(dest=data["email"], subject="Reset your password on PyMatcha", html=rendered_html)
@@ -96,3 +97,20 @@ def reset_password():
         u.save()
         current_app.logger.debug("/auth/password/reset -> Password reset successfully")
         return Success("Password reset successful.")
+
+
+@auth_password_bp.route("/auth/password/check_token", methods=["POST"])
+@validate_params({"token": str})
+def check_token_validity():
+    data = request.get_json()
+    try:
+        confirm_token(data["token"], expiration=7200)
+    except (SignatureExpired, BadSignature) as e:
+        if e == SignatureExpired:
+            current_app.logger.debug("/auth/password/reset -> Signature Expired")
+            raise BadRequestError("Signature Expired.", "Request another password reset and try again.")
+        else:
+            current_app.logger.debug("/auth/password/reset -> Bad Signature")
+            raise BadRequestError("Bad Signature.", "Request another password reset and try again.")
+    else:
+        return Success("Reset token is correct")

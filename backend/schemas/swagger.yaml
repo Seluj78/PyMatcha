@@ -1,0 +1,1652 @@
+openapi: 3.0.0
+info:
+  description: "This is the Matcha API documentation"
+  version: 0.0.0
+  title: Matcha API
+  termsOfService: https://github.com/Seluj78/PyMatcha/blob/dev/LICENSE
+  contact:
+    email: jlasne@student.42.fr
+  license:
+    name: GNU GPL 3
+    url: https://github.com/Seluj78/PyMatcha/blob/dev/LICENSE
+
+# TODO: Email and password once rewritten with new frontend
+# TODO: https://swagger.io/docs/specification/links/
+# TODO: https://stackoverflow.com/questions/47447403/how-to-define-different-responses-for-same-http-status-code-in-openapi-swagger
+
+tags:
+  - name: Authentication
+    description: Login and register routes
+  - name: Profile
+  - name: Like
+    description: Like, unlike user etc...
+  - name: Match
+  - name: Messages
+    description: Send and receive messages
+  - name: Recommendations
+  - name: User
+    description: Get user info
+  - name: Debug
+    description: Debug routes
+
+paths:
+  /auth/register:
+    post:
+      tags:
+        - Authentication
+      summary: Register a new user to Matcha
+      description: ""
+      operationId: registerUser
+#      security:
+#        - bearerAuth: []
+      requestBody:
+        description: Parameters to create a user
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateUser'
+      responses:
+        "200":
+          description: User successfully created
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    description: If the request is a success
+                    example: true
+                  code:
+                    type: integer
+                    description: The status code
+                    example: 200
+                  email:
+                    type: string
+                    description: The user email
+                    example: foo@example.org
+        "409":
+          $ref: '#/components/responses/Conflict'
+        "400":
+          $ref: '#/components/responses/BadRequest'
+  /auth/login:
+    post:
+      tags:
+        - Authentication
+      summary: Login to Matcha
+      description: ""
+      operationId: loginUser
+#      security:
+#        - bearerAuth: []
+      requestBody:
+        description: Parameters to login a user. Either email or username
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LoginUser'
+      responses:
+        "200":
+          description: User successfully logged in
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    description: If the request is a success
+                    example: true
+                  code:
+                    type: integer
+                    description: The status code
+                    example: 200
+                  return:
+                    type: object
+                    properties:
+                      access_token:
+                        type: string
+                        description: The user access token to use in bearer auth
+                        example: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE2MDAyODM3NDAsIm5iZiI6MTYwMDI4Mzc0MCwianRpIjoiMTFlMmFhNzMtYWVkOS00NDQ2LWExNWItODAxZmFmYjYzYTdiIiwiZXhwIjoxNjAwMjg0NjQwLCJpZGVudGl0eSI6eyJpZCI6MSwiZW1haWwiOiJmb29AZXhhbXBsZS5vcmciLCJ1c2VybmFtZSI6ImZvbyIsImlzX29ubGluZSI6MCwiZGF0ZV9sYXN0c2VlbiI6IldlZCwgMTYgU2VwIDIwMjAgMTU6Mzk6MDQgR01UIn0sImZyZXNoIjp0cnVlLCJ0eXBlIjoiYWNjZXNzIn0.EFCIlsxSbEeHza_U9oPdVvvfx1rquItHDnoYtP19XBM
+                      refresh_token:
+                        type: string
+                        description: The user refresh token usd to refresh the access token when expired
+                        example: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE2MDAyODM3NDAsIm5iZiI6MTYwMDI4Mzc0MCwianRpIjoiNWQ2NjYwMTQtMDJkMi00YjY4LThjOTktNDQwNDZjYzYzZDNjIiwiZXhwIjoxNjAyODc1NzQwLCJpZGVudGl0eSI6eyJpZCI6MSwiZW1haWwiOiJmb29AZXhhbXBsZS5vcmciLCJ1c2VybmFtZSI6ImZvbyIsImlzX29ubGluZSI6MCwiZGF0ZV9sYXN0c2VlbiI6IldlZCwgMTYgU2VwIDIwMjAgMTU6Mzk6MDQgR01UIn0sInR5cGUiOiJyZWZyZXNoIn0.yz1QhL1QhxUdYvvacXZ0CkkVxFp2CkcNYpYRtKdRXdo
+                      is_profile_completed:
+                        type: boolean
+                        description: Is the user profile completed
+                        example: false
+        "409":
+          $ref: '#/components/responses/Conflict'
+        "400":
+          $ref: '#/components/responses/BadRequest'
+        "401":
+          $ref: '#/components/responses/Unauthorized'
+  /auth/refresh:
+    post:
+      tags:
+        - Authentication
+      summary: Refreshes the access token
+      description: ""
+      operationId: refreshToken
+      security:
+        - refreshToken: []
+      responses:
+        "409":
+          description: Unauthorized error, token revoked.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  msg:
+                    type: string
+                    example: Token has been revoked
+                    default: Token has been revoked
+        "200":
+          description: Token successfully refreshed
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    description: If the request is a success
+                    example: true
+                  code:
+                    type: integer
+                    description: The status code
+                    example: 200
+                  access_token:
+                    type: string
+                    description: The new and fresh access token
+                    example: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE2MDAzMjYzMjksIm5iZiI6MTYwMDMyNjMyOSwianRpIjoiZTA0ZWQ3NmMtMTcxMC00ZjQ4LWFkNzMtZDBmOTMxZTkxNzM0IiwiZXhwIjoxNjAwMzI3MjI5LCJpZGVudGl0eSI6eyJpZCI6MSwiZW1haWwiOiJmb29AZXhhbXBsZS5vcmciLCJ1c2VybmFtZSI6ImZvbyIsImlzX29ubGluZSI6MCwiZGF0ZV9sYXN0c2VlbiI6IldlZCwgMTYgU2VwIDIwMjAgMTU6Mzk6MDQgR01UIn0sImZyZXNoIjpmYWxzZSwidHlwZSI6ImFjY2VzcyJ9.dFJMy-04thKA9Q268bgQhiqLDrkqnCOCaiwHJ1XXook
+  /auth/access_revoke:
+    post:
+      tags:
+        - Authentication
+      summary: Revokes the access token
+      description: ""
+      operationId: revokeAccessToken
+      security:
+        - accessToken: [ ]
+      responses:
+        "409":
+          description: Unauthorized error, token already revoked.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  msg:
+                    type: string
+                    example: Token has been revoked
+                    default: Token has been revoked
+        "200":
+          description: Token successfully revoked
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    description: If the request is a success
+                    example: true
+                  code:
+                    type: integer
+                    description: The status code
+                    example: 200
+                  message:
+                    type: string
+                    example: Access token revoked
+  /auth/refresh_revoke:
+    post:
+      tags:
+        - Authentication
+      summary: Revokes the refresh token
+      description: ""
+      operationId: revokeRefreshToken
+      security:
+        - refreshToken: [ ]
+      responses:
+        "409":
+          description: Unauthorized error, token already revoked.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  msg:
+                    type: string
+                    example: Token has been revoked
+                    default: Token has been revoked
+        "200":
+          description: Token successfully revoked
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    description: If the request is a success
+                    example: true
+                  code:
+                    type: integer
+                    description: The status code
+                    example: 200
+                  message:
+                    type: string
+                    example: Refresh token revoked
+  /profile/complete:
+    post:
+      tags:
+        - Profile
+      summary: Complete user profile
+      description: ""
+      operationId: completeProfile
+      security:
+        - bearerAuth: []
+      requestBody:
+        description: Parameters to complete profile
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CompleteProfile'
+      responses:
+        "409":
+          $ref: "#/components/responses/BadRequest"
+        "200":
+          description: Profile completed successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    description: If the request is a success
+                    example: true
+                  code:
+                    type: integer
+                    description: The status code
+                    example: 200
+                  message:
+                    type: string
+                    example: Profile completed !
+  /profile/edit:
+    put:
+      tags:
+        - Profile
+      summary: Edit user profile
+      description: ""
+      operationId: editProfile
+      security:
+        - bearerAuth: []
+      requestBody:
+        description: Parameters to edit profile
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EditProfile'
+      responses:
+        "409":
+          $ref: "#/components/responses/BadRequest"
+        "200":
+          description: Profile edited successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    description: If the request is a success
+                    example: true
+                  code:
+                    type: integer
+                    description: The status code
+                    example: 200
+                  message:
+                    type: string
+                    example: User successfully modified !
+  /profile/report/{uid}:
+    post:
+      summary: Report a profile
+      operationId: reportProfile
+      security:
+        - bearerAuth: [ ]
+      tags:
+        - Profile
+      parameters:
+        - name: uid
+          in: path
+          required: true
+          description: The id of the user to report. Either username, email or id
+          schema:
+            type: string
+      requestBody:
+        description: Parameters to report profile
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ReportProfile'
+      responses:
+        "400":
+          $ref: '#/components/responses/BadRequest'
+        "404":
+          $ref: '#/components/responses/NotFound'
+        "200":
+          description: Report created successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    description: If the request is a success
+                    example: true
+                  code:
+                    type: integer
+                    description: The status code
+                    example: 200
+                  message:
+                    type: string
+                    example: Report created on user {email_adress}.
+  /profile/view/{uid}:
+    get:
+      summary: View a profile
+      operationId: viewProfile
+      security:
+        - bearerAuth: [ ]
+      tags:
+        - Profile
+      parameters:
+        - name: uid
+          in: path
+          required: true
+          description: The id of the user to view. Either username, email or id
+          schema:
+            type: string
+      responses:
+        "404":
+          $ref: '#/components/responses/NotFound'
+        "200":
+          description: Returned user to view
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    description: If the request is a success
+                    example: true
+                  code:
+                    type: integer
+                    description: The status code
+                    example: 200
+                  profile:
+                    $ref: '#/components/schemas/User'
+  /profile/views:
+    get:
+      summary: Get your profile views
+      operationId: getProfileViews
+      security:
+        - bearerAuth: [ ]
+      tags:
+        - Profile
+      responses:
+        "200":
+          description: Returned list of views
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    description: If the request is a success
+                    example: true
+                  code:
+                    type: integer
+                    description: The status code
+                    example: 200
+                  views:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/View'
+  /like/{uid}:
+    post:
+      summary: Like a user
+      operationId: likeUser
+      security:
+        - bearerAuth: [ ]
+      tags:
+        - Like
+      parameters:
+        - name: uid
+          in: path
+          required: true
+          description: The id of the user to like. Either username, email or id
+          schema:
+            type: string
+      responses:
+        "400":
+          $ref: '#/components/responses/BadRequest'
+        "404":
+          $ref: '#/components/responses/NotFound'
+        "200":
+          description: Like user successfully
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: '#/components/schemas/LikedUser'
+                  - $ref: '#/components/schemas/MatchedUser'
+  /unlike/{uid}:
+    post:
+      summary: Unike a user
+      operationId: unlikeUser
+      security:
+        - bearerAuth: [ ]
+      tags:
+        - Like
+      parameters:
+        - name: uid
+          in: path
+          required: true
+          description: The id of the user to unlike. Either username, email or id
+          schema:
+            type: string
+      responses:
+        "400":
+          $ref: '#/components/responses/BadRequest'
+        "404":
+          $ref: '#/components/responses/NotFound'
+        "200":
+          description: Unlike successfull
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    description: If the request is a success
+                    example: true
+                  code:
+                    type: integer
+                    description: The status code
+                    example: 200
+                  message:
+                    type: string
+                    example: Unliked user X.
+  /likes:
+    get:
+      summary: Get your likes
+      operationId: getLikes
+      security:
+        - bearerAuth: [ ]
+      tags:
+        - Like
+      responses:
+        "200":
+          description: Returned list of likes
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    description: If the request is a success
+                    example: true
+                  code:
+                    type: integer
+                    description: The status code
+                    example: 200
+                  likes:
+                    type: object
+                    properties:
+                      sent:
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/Like'
+                      received:
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/Like'
+  /matches:
+    get:
+      summary: Get your matches
+      operationId: getMatches
+      security:
+        - bearerAuth: [ ]
+      tags:
+        - Match
+      responses:
+        "200":
+          description: Returned list of matches
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    description: If the request is a success
+                    example: true
+                  code:
+                    type: integer
+                    description: The status code
+                    example: 200
+                  matches:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Match'
+  /conversations:
+    get:
+      summary: Get your open conversations
+      operationId: getConversations
+      security:
+        - bearerAuth: [ ]
+      tags:
+        - Messages
+      responses:
+        "200":
+          description: Returned list of matches
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    description: If the request is a success
+                    example: true
+                  code:
+                    type: integer
+                    description: The status code
+                    example: 200
+                  conversations:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Conversation'
+  /messages/send:
+    post:
+      summary: Send a message
+      operationId: sendMessage
+      security:
+        - bearerAuth: [ ]
+      tags:
+        - Messages
+      responses:
+        "400":
+          $ref: '#/components/responses/BadRequest'
+        "404":
+          $ref: '#/components/responses/NotFound'
+        "200":
+          description: Like user successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    description: If the request is a success
+                    example: true
+                  code:
+                    type: integer
+                    description: The status code
+                    example: 200
+                  message:
+                    type: string
+                    example: Message successfully sent to X.
+  /conversations/{with_uid}:
+    get:
+      summary: Get the messages between you and another user
+      operationId: conversationWithUID
+      security:
+        - bearerAuth: [ ]
+      tags:
+        - Messages
+      parameters:
+        - name: with_uid
+          in: path
+          required: true
+          description: The id of the user to get messages with. Either username, email or id
+          schema:
+            type: string
+      responses:
+        "404":
+          $ref: '#/components/responses/NotFound'
+        "400":
+          $ref: '#/components/responses/BadRequest'
+        "200":
+          description: Returned the conversation between users
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    description: If the request is a success
+                    example: true
+                  code:
+                    type: integer
+                    description: The status code
+                    example: 200
+                  messages:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Message'
+  /messages/see/{with_uid}:
+    post:
+      summary: Mark as seen all the latest messages
+      operationId: seeMessagesWithUID
+      security:
+        - bearerAuth: [ ]
+      tags:
+        - Messages
+      parameters:
+        - name: with_uid
+          in: path
+          required: true
+          description: The id of the user to mark messages as seen. Either username, email or id
+          schema:
+            type: string
+      responses:
+        "404":
+          $ref: '#/components/responses/NotFound'
+        "200":
+          description: Messages marked as seen.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    description: If the request is a success
+                    example: true
+                  code:
+                    type: integer
+                    description: The status code
+                    example: 200
+                  message:
+                    type: string
+                    example: Messages marked as seen.
+  /messages/like/{message_id}:
+    post:
+      summary: Like a message
+      operationId: likeMessage
+      security:
+        - bearerAuth: [ ]
+      tags:
+        - Messages
+      parameters:
+        - name: message_id
+          in: path
+          required: true
+          description: The id of the message to like
+          schema:
+            type: integer
+      responses:
+        "404":
+          $ref: '#/components/responses/NotFound'
+        "400":
+          $ref: '#/components/responses/BadRequest'
+        "200":
+          description: Message liked.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    description: If the request is a success
+                    example: true
+                  code:
+                    type: integer
+                    description: The status code
+                    example: 200
+                  message:
+                    type: string
+                    example: Liked message X.
+  /messages/unlike/{message_id}:
+    post:
+      summary: Unlike a message
+      operationId: unlikeMessage
+      security:
+        - bearerAuth: [ ]
+      tags:
+        - Messages
+      parameters:
+        - name: message_id
+          in: path
+          required: true
+          description: The id of the message to unlike
+          schema:
+            type: integer
+      responses:
+        "404":
+          $ref: '#/components/responses/NotFound'
+        "400":
+          $ref: '#/components/responses/BadRequest'
+        "200":
+          description: Message unliked.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    description: If the request is a success
+                    example: true
+                  code:
+                    type: integer
+                    description: The status code
+                    example: 200
+                  message:
+                    type: string
+                    example: Unliked message X.
+  /messages/unseen:
+    get:
+      summary: Returns all the unseen messages
+      operationId: unseenMessages
+      security:
+        - bearerAuth: [ ]
+      tags:
+        - Messages
+      responses:
+        "200":
+          description: Returns a list of unseen messages
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    description: If the request is a success
+                    example: true
+                  code:
+                    type: integer
+                    description: The status code
+                    example: 200
+                  messages:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/UnseenMessage'
+  /recommendations:
+    get:
+      summary: Get user recommendations
+      operationId: getOnlineUsers
+      security:
+        - bearerAuth: [ ]
+      tags:
+        - Recommendations
+      responses:
+        "404":
+          $ref: '#/components/responses/NotFound'
+        "200":
+          description: Returns a list of recommendations
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    description: If the request is a success
+                    example: true
+                  code:
+                    type: integer
+                    description: The status code
+                    example: 200
+                  recommendations:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Recommendation'
+  /users:
+    get:
+      summary: Get all users
+      operationId: getAllUsers
+      security:
+        - bearerAuth: [ ]
+      tags:
+        - User
+      responses:
+        "200":
+          description: Returned list of users
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/User'
+  /users/{uid}:
+    get:
+      summary: Get one user info.
+      description: Get one user info. DOESNT ADD A VIEW
+      operationId: getUser
+      security:
+        - bearerAuth: [ ]
+      tags:
+        - User
+      parameters:
+        - name: uid
+          in: path
+          required: true
+          description: The id of the user to get ingo. Either username, email or id
+          schema:
+            type: string
+      responses:
+        "404":
+          $ref: '#/components/responses/NotFound'
+        "200":
+          description: Returned user to view
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+  /users/online:
+    get:
+      summary: Get all online users
+      description: Returns list of ids of online users
+      operationId: getAllOnlineUsers
+      security:
+        - bearerAuth: [ ]
+      tags:
+        - User
+      responses:
+        "200":
+          description: Returned list of online users
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/OnlineUser'
+  /auth/password/forgot:
+    post:
+      summary: Request a password reset
+      description: Will always return a success, no matter the email passed. Emails will be sent only to valid email adresses in the database
+      operationId: requestPasswordReset
+      tags:
+        - Authentication
+      requestBody:
+        description: Parameters to request password reset
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                  required: true
+                  example: foo@example.org
+      responses:
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: string
+                    example: 200
+                  success:
+                    type: boolean
+                    example: true
+                  message:
+                    type: string
+                    example: Password reset mail sent successfully if user exists in DB
+  /auth/password/reset:
+    post:
+      summary: Reset a password
+      operationId: passwordReset
+      tags:
+        - Authentication
+      requestBody:
+        description: Parameters to request password reset
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                  required: true
+                  example: foo@example.org
+                password:
+                  type: string
+                  required: true
+                  example: dolphin2
+      responses:
+        "404":
+          $ref: '#/components/responses/NotFound'
+        "400":
+          $ref: '#/components/responses/BadRequest'
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: string
+                    example: 200
+                  success:
+                    type: boolean
+                    example: true
+                  message:
+                    type: string
+                    example: Password reset successful.
+  /auth/password/check_token:
+    post:
+      summary: Check the token validity
+      operationId: checkToken
+      tags:
+        - Authentication
+      requestBody:
+        description: Parameters to test the token
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                token:
+                  type: string
+                  required: true
+                    example: qwERg3rtyhog23mrweof5ngib4j3ktnrvwefqjskldnakms
+      responses:
+        "400":
+          $ref: '#/components/responses/BadRequest'
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: string
+                    example: 200
+                  success:
+                    type: boolean
+                    example: true
+                  message:
+                    type: string
+                    example: Reset token is correct.
+
+
+servers:
+  - url: https://api.matcha.com
+
+
+components:
+  responses:
+    Conflict:
+      description: Conflict error
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              code:
+                type: string
+                example: 409
+                default: 409
+              success:
+                type: boolean
+                default: false
+                example: false
+              error:
+                type: object
+                properties:
+                  type:
+                    type: string
+                    default: ConflictError
+                    example: ConflictError
+                  name:
+                    type: string
+                    default: Conflict Error
+                    example: Conflict Error
+                  message:
+                    type: string
+                  solution:
+                    type: string
+    BadRequest:
+      description: Bad Request error
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              code:
+                type: string
+                example: 400
+                default: 400
+              success:
+                type: boolean
+                default: false
+                example: false
+              error:
+                type: object
+                properties:
+                  type:
+                    type: string
+                    default: BadRequestError
+                    example: BadRequestError
+                  name:
+                    type: string
+                    default: BadRequest Error
+                    example: BadRequest Error
+                  message:
+                    type: string
+                  solution:
+                    type: string
+    Unauthorized:
+      description: Unauthorized error
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              code:
+                type: string
+                example: 401
+                default: 401
+              success:
+                type: boolean
+                default: false
+                example: false
+              error:
+                type: object
+                properties:
+                  type:
+                    type: string
+                    default: UnauthorizedError
+                    example: UnauthorizedError
+                  name:
+                    type: string
+                    default: Unauthorized Error
+                    example: Unauthorized Error
+                  message:
+                    type: string
+                  solution:
+                    type: string
+    NotFound:
+      description: Not Found error
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              code:
+                type: string
+                example: 401
+                default: 401
+              success:
+                type: boolean
+                default: false
+                example: false
+              error:
+                type: object
+                properties:
+                  type:
+                    type: string
+                    default: NotFoundError
+                    example: NotFoundError
+                  name:
+                    type: string
+                    default: NotFound Error
+                    example: NotFound Error
+                  message:
+                    type: string
+                  solution:
+                    type: string
+
+  securitySchemes:
+    accessToken:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+    refreshToken:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: Refresh token
+  schemas:
+    CreateUser:
+      type: object
+      properties:
+        username:
+          type: string
+          example: foobar
+        email:
+          type: string
+          example: foo@example.org
+        password:
+          type: string
+          example: dolphin2
+        first_name:
+          type: string
+          example: Foo
+        last_name:
+          type: string
+          example: Bar
+    LoginUser:
+      type: object
+      properties:
+        username:
+          type: string
+          example: foo@example.org
+          required: true
+        password:
+          type: string
+          example: dolphin2
+          required: true
+    CompleteProfile:
+      type: object
+      properties:
+        gender:
+          type: string
+          enum: ["male", "female", "other"]
+          example: other
+        birthdate:
+          type: date
+          example: 06/04/1998
+          description: Formatted as DAY/MONTH/YEAR
+        orientation:
+          type: string
+          enum: ["heterosexual", "homosexual", "bisexual", "other"]
+          example: heterosexual
+        bio:
+          type: string
+          example: I like running around on horses
+        tags:
+          type: array
+          example: ["food", "sex", "drugs"]
+    EditProfile:
+      type: object
+      properties:
+        first_name:
+          type: string
+          example: Foo
+        last_name:
+          type: string
+          example: Bar
+        username:
+          type: string
+          example: FooBar
+        gender:
+          type: string
+          enum: ["male", "female", "other"]
+          example: male
+        birthdate:
+          type: date
+          example: 06/04/1998
+          description: Formatted as DAY/MONTH/YEAR
+        orientation:
+          type: string
+          enum: ["heterosexual", "homosexual", "bisexual", "other"]
+          example: other
+        bio:
+          type: string
+          example: I like running around on horses
+        tags:
+          type: array
+          example: ["food", "sex", "drugs"]
+    ReportProfile:
+      type: object
+      properties:
+        reason:
+          type: string
+          enum: ["harassment", "bot", "spam", "inappropriate content"]
+          example: spam
+        details:
+          type: string
+          example: He spammed me of dick pics
+    # TODO: Add descriptions
+    User:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+        first_name:
+          type: string
+          example: Foo
+        last_name:
+          type: string
+          example: Bar
+        username:
+          type: string
+          example: FooBar
+        email:
+          type: string
+          example: foo@example.org
+        bio:
+          type: string
+          example: Lorem Ipsum is the single greatest threat. We are not - we are not keeping up with other websites. Lorem Ipsum best not make any more threats to your website. It will be met with fire and fury like the world has never seen. Does everybody know that pig named Lorem Ipsum? An ‘extremely credible source’ has called my office and told me that Barack Obama’s placeholder text is a fraud.
+        birthdate:
+          type: date
+          example: Mon, 06 Apr 1998 00:00:00 GMT
+        gender:
+          type: string
+          enum: ["male", "female", "other"]
+          example: male
+        orientation:
+          type: string
+          enum: [ "heterosexual", "homosexual", "bisexual", "other" ]
+          example: heterosexual
+        geohash:
+          type: string
+          example: u09whv25xgzn
+        heat_score:
+          type: integer
+          example: 123
+        confirmed_on:
+          type: date
+          example: Wed, 16 Sep 2020 15:20:02 GMT
+        date_joined:
+          type: date
+          example: Wed, 16 Sep 2020 15:18:02 GMT
+        date_lastseen:
+          type: date
+          example: Wed, 19 Sep 2020 19:24:02 GMT
+        is_confirmed:
+          type: boolean
+          example: true
+        is_online:
+          type: boolean
+          example: true
+        is_profile_completed:
+          type: boolean
+          example: true
+        likes:
+          type: object
+          properties:
+            sent:
+              type: array
+              items:
+                $ref: '#/components/schemas/Like'
+              uniqueItems: true
+            received:
+              type: array
+              items:
+                $ref: '#/components/schemas/Like'
+              uniqueItems: true
+        reports:
+          type: object
+          properties:
+            sent:
+              type: array
+              items:
+                $ref: '#/components/schemas/Report'
+              uniqueItems: true
+            received:
+              type: array
+              items:
+                $ref: '#/components/schemas/Report'
+              uniqueItems: true
+        tags:
+          type: array
+          items:
+            $ref: '#/components/schemas/Tag'
+          uniqueItems: true
+    Like:
+      type: object
+      properties:
+        dt_liked:
+          type: date
+          example: Wed, 16 Sep 2020 15:38:15 GMT
+          description: When was the like created
+        id:
+          type: integer
+          example: 1
+          description: The unique identifier of the like
+        is_superlike:
+          type: boolean
+          example: false
+          description: Is this like a superlike
+        liked_id:
+          type: integer
+          example: 1
+          description: The user id of the person who was liked
+        liker_id:
+          type: integer
+          example: 2
+          description: The user id of the person who liked
+    Report:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+          description: The unique identifier of the report
+        reporter_id:
+          type: integer
+          example: 2
+          description: The user id of who reported
+        reported_id:
+          type: integer
+          example: 3
+          description: The user id of who was reported
+        dt_reported:
+          type: date
+          example: Wed, 16 Sep 2020 15:38:15 GMT
+          description: When was the report created
+        details:
+          type: string
+          example: He is spamming me
+          description: The report detail
+        reason:
+          type: string
+          enum: ['harassment', 'bot', 'spam', 'inappropriate content']
+          example: spam
+          description: Type of report
+        status:
+          type: string
+          enum: ['processing request', 'insufficient evidence', 'convicted and banned']
+          example: processing request
+          description: The status of the report
+    Tag:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+          description: Unique identifier of this tag
+        name:
+          type: string
+          example: Food
+          description: The tag content
+        user_id:
+          type: string
+          example: 1
+          description: The user id to who belongs the tag
+    View:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+          description: Unique identifier of this tag
+        dt_seeen:
+          type: date
+          example: Thu, 17 Sep 2020 00:00:00 GMT
+          description: When was the profile seen
+        profile_id:
+          type: integer
+          example: 2
+          description: The user id of the profile that was viewed
+        viewer_id:
+          type: string
+          example: 3
+          description: The user id to who viewed the profile
+    LikedUser:
+      type: object
+      properties:
+        success:
+          type: boolean
+          description: If the request is a success
+          example: true
+        code:
+          type: integer
+          description: The status code
+          example: 200
+        message:
+          type: string
+          example: Liked user.
+    MatchedUser:
+      type: object
+      properties:
+        success:
+          type: boolean
+          description: If the request is a success
+          example: true
+        code:
+          type: integer
+          description: The status code
+          example: 200
+        message:
+          type: string
+          example: It's a match !
+    Match:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+          description: Unique identifier of this match
+        dt_matched:
+          type: date
+          example: Wed, 16 Sep 2020 15:38:15 GMT
+          description: The datetime when the match occured
+        user_1:
+          type: string
+          example: 1
+          description: The user id of one of the user for the match
+        user_2:
+          type: string
+          example: 2
+          description: The user id of one of the user for the match
+    Conversation:
+      type: object
+      properties:
+        last_message_content:
+          type: string
+          example: Ok for tonight !
+          description: The last message sent to the conversation content
+        last_message_timestamp:
+          type: date
+          example: Wed, 16 Sep 2020 15:38:15 GMT
+          description: The last message sent to the conversation timestamp
+        is_unseen:
+          type: boolean
+          example: true
+          description: Is the last message of the conversation from the other user unseen
+        with_user:
+          type: string
+          example: 2
+          description: The user id of the person the conversation is with
+    Message:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+          description: The unique id of the message
+        timestamp:
+          type: date
+          description: When was the message sent
+          example: Wed, 16 Sep 2020 15:38:15 GMT
+        seen_timestamp:
+          type: date
+          description: When was the message seen
+          example: Wed, 16 Sep 2020 15:39:15 GMT
+        content:
+          type: string
+          example: See you tonight !
+          description: The content of the message
+        is_seen:
+          type: boolean
+          example: true
+          description: Is the message seen
+        is_liked:
+          type: boolean
+          example: false
+          description: Is the message liked
+        from_user:
+          type: string
+          example: 2
+          description: The user id who sent the message
+        to_user:
+          type: string
+          example: 1
+          description: The user id who received the message
+    UnseenMessage:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+          description: The unique id of the message
+        timestamp:
+          type: date
+          description: When was the message sent
+          example: Wed, 16 Sep 2020 15:38:15 GMT
+        seen_timestamp:
+          type: date
+          description: When was the message seen
+          example: Wed, 16 Sep 2020 15:39:15 GMT
+        content:
+          type: string
+          example: See you tonight !
+          description: The content of the message
+        is_seen:
+          type: boolean
+          example: false
+          description: Is the message seen
+        is_liked:
+          type: boolean
+          example: false
+          description: Is the message liked
+        from_user:
+          type: string
+          example: 2
+          description: The user id who sent the message
+        to_user:
+          type: string
+          example: 1
+          description: The user id who received the message
+    # TODO: Add descriptions
+    Recommendation:
+      type: object
+      properties:
+        score:
+          type: integer
+          example: 10
+          description: A score to sort the recommendations by. The higher the closest the match. Score can be negative
+        common_tags:
+          type: array
+          example: [ "friends", "drinks", "sun" ]
+        distance:
+          type: integer
+          example: 50
+          description: The distance between two users
+        id:
+          type: integer
+          example: 1
+        first_name:
+          type: string
+          example: Foo
+        last_name:
+          type: string
+          example: Bar
+        username:
+          type: string
+          example: FooBar
+        email:
+          type: string
+          example: foo@example.org
+        bio:
+          type: string
+          example: Lorem Ipsum is the single greatest threat. We are not - we are not keeping up with other websites. Lorem Ipsum best not make any more threats to your website. It will be met with fire and fury like the world has never seen. Does everybody know that pig named Lorem Ipsum? An ‘extremely credible source’ has called my office and told me that Barack Obama’s placeholder text is a fraud.
+        birthdate:
+          type: date
+          example: Mon, 06 Apr 1998 00:00:00 GMT
+        gender:
+          type: string
+          enum: ["male", "female", "other"]
+          example: male
+        orientation:
+          type: string
+          enum: [ "heterosexual", "homosexual", "bisexual", "other" ]
+          example: heterosexual
+        geohash:
+          type: string
+          example: u09whv25xgzn
+        heat_score:
+          type: integer
+          example: 123
+        confirmed_on:
+          type: date
+          example: Wed, 16 Sep 2020 15:20:02 GMT
+        date_joined:
+          type: date
+          example: Wed, 16 Sep 2020 15:18:02 GMT
+        date_lastseen:
+          type: date
+          example: Wed, 19 Sep 2020 19:24:02 GMT
+        is_confirmed:
+          type: boolean
+          example: true
+        is_online:
+          type: boolean
+          example: true
+        is_profile_completed:
+          type: boolean
+          example: true
+        likes:
+          type: object
+          properties:
+            sent:
+              type: array
+              items:
+                $ref: '#/components/schemas/Like'
+              uniqueItems: true
+            received:
+              type: array
+              items:
+                $ref: '#/components/schemas/Like'
+              uniqueItems: true
+        reports:
+          type: object
+          properties:
+            sent:
+              type: array
+              items:
+                $ref: '#/components/schemas/Report'
+              uniqueItems: true
+            received:
+              type: array
+              items:
+                $ref: '#/components/schemas/Report'
+              uniqueItems: true
+        tags:
+          type: array
+          items:
+            $ref: '#/components/schemas/Tag'
+          uniqueItems: true
+    OnlineUser:
+      type: object
+      properties:
+        id:
+          type: integer
+          description: The user id
+          example: 1
+        date_lastseen:
+          type: timestamp
+          description: Timestamp of last time the user was online
+          example: 1600332058.537065,

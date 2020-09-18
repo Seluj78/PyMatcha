@@ -2,6 +2,7 @@ version: '3.3'
 
 services:
   mysql:
+    container_name: mysql
     image: mysql
     restart: always
     environment:
@@ -10,10 +11,10 @@ services:
       MYSQL_ALLOW_EMPTY_PASSWORD: 1
     env_file:
       - .env
-    ports:
-      - '3306:3306'
-    expose:
-      - '3306'
+#    ports:
+#      - '3306:3306'
+#    expose:
+#      - '3306'
     volumes:
       - mysql:/var/lib/mysql
     networks:
@@ -25,6 +26,7 @@ services:
       retries: 5
 
   redis:
+    container_name: redis
     image: redis:4.0.5-alpine
     command: ["redis-server", "--appendonly", "yes"]
     hostname: redis
@@ -35,7 +37,8 @@ services:
     volumes:
       - redis-data:/data
 
-  worker:
+  workers:
+    container_name: workers
     build:
       context: .
       dockerfile: ./Dockerfile
@@ -49,7 +52,7 @@ services:
       - .env
     entrypoint: celery worker --workdir . -A PyMatcha.celery -B --loglevel=info
     volumes:
-      - app:/app
+      - backend:/backend
     depends_on:
       - redis
       - mysql
@@ -60,7 +63,8 @@ services:
       - mysql-net
     restart: always
 
-  app:
+  backend:
+    container_name: backend
     restart: always
     build:
       context: .
@@ -75,15 +79,15 @@ services:
     ports:
       - "8080:5000"
     volumes:
-      - app:/app
+      - backend:/backend
     depends_on:
       - mysql
       - redis
-      - worker
+      - workers
     links:
       - mysql
       - redis
-      - worker
+      - workers
     networks:
       - redis-net
       - mysql-net
@@ -114,6 +118,15 @@ services:
     networks:
       - mysql-net
 
+  swagger_ui:
+    container_name: docs
+    environment:
+    - API_URL=/swagger.yaml
+    image:   "swaggerapi/swagger-ui"
+    volumes: ["./backend/schemas/swagger.yaml:/usr/share/nginx/html/swagger.yaml"]
+    restart: always
+    ports:   ["9000:8080"]
+
 networks:
   redis-net:
   mysql-net:
@@ -121,4 +134,4 @@ networks:
 volumes:
   redis-data:
   mysql:
-  app:
+  backend:
