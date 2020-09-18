@@ -4821,7 +4821,7 @@
 									"    pm.response.to.have.status(200);",
 									"});",
 									"",
-									"tests[\"Message is correct\"] = response.message == \"No new messages.\""
+									"tests[\"No new messages\"] = response.new_messages.length == 0"
 								],
 								"type": "text/javascript"
 							}
@@ -5856,92 +5856,92 @@
 	],
 	"variable": [
 		{
-			"id": "025546f0-eca9-4027-9e80-9e00e9b3934b",
+			"id": "3b1c4a05-afc9-4d76-92f8-a1eead538b43",
 			"key": "host",
 			"value": "http://127.0.0.1:5000"
 		},
 		{
-			"id": "71062daa-fc02-4715-b403-cb81e94d1a0d",
+			"id": "0f7fc70d-5f57-4d34-b25e-ec9a643d6af6",
 			"key": "user_id",
 			"value": ""
 		},
 		{
-			"id": "78034f4e-24bd-4b2f-b023-3a6c2bb840a2",
+			"id": "6b79a53d-16ca-4170-ad83-e2843c6b61ed",
 			"key": "user_email",
 			"value": "foo@example.org"
 		},
 		{
-			"id": "5347bca2-fb5c-4410-8952-e10b3128688f",
+			"id": "5cc4b3de-ea74-49db-a6b5-c729f923ca5b",
 			"key": "user_username",
 			"value": "foo"
 		},
 		{
-			"id": "66a682e9-8a4e-4de2-89ea-7ee3cb6034d2",
+			"id": "08841b46-3845-454e-96ce-838996790ab6",
 			"key": "user_password",
 			"value": "admin"
 		},
 		{
-			"id": "a8ec63d8-a98d-457b-ae99-c1a3227d808c",
+			"id": "dbe5daf6-9aa1-42ff-bd6b-e09ab2dccbf0",
 			"key": "user_firstname",
 			"value": "Foo"
 		},
 		{
-			"id": "60841476-911e-4ae3-bbf5-dbde01d74a74",
+			"id": "10b3e4e0-1da8-40b7-b4fe-e5f60617bb78",
 			"key": "user_lastname",
 			"value": "Bar"
 		},
 		{
-			"id": "79acb0bc-e9c9-44e3-999a-fe823db81787",
+			"id": "e29281ab-3bd4-4608-8b90-ee5658b81bbe",
 			"key": "debug_token",
 			"value": "xX69jules69Xx"
 		},
 		{
-			"id": "a44c9c10-a19a-4f46-8c33-b4bf3b3ad058",
+			"id": "f3296656-44a1-4108-a326-57ee1d7b7da5",
 			"key": "user_access_token",
 			"value": ""
 		},
 		{
-			"id": "05b47e79-daca-4a40-9f58-d8d1d891af1a",
+			"id": "b06ae0b3-5690-42da-a641-93f81329a487",
 			"key": "user_refresh_token",
 			"value": ""
 		},
 		{
-			"id": "ff897225-fbcf-4f81-b869-ed3b2bed3f44",
+			"id": "a72e4b18-16c0-4126-a6b3-e13d493369a6",
 			"key": "expired_token",
 			"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE1OTAyNDIyNjQsIm5iZiI6MTU5MDI0MjI2NCwianRpIjoiNTM0ZGI5NzQtOWE4Ni00MGViLWE1NDEtMDg3N2ZmNzQ3NDVhIiwiZXhwIjoxNTkwMjQyMzI0LCJpZGVudGl0eSI6eyJpZCI6NTEyLCJlbWFpbCI6ImZvb0BleGFtcGxlLm9yZyIsInVzZXJuYW1lIjoiYmFyIiwiaXNfb25saW5lIjp0cnVlLCJkYXRlX2xhc3RzZWVuIjoiU2F0LCAyMyBNYXkgMjAyMCAxMzo1Nzo0NCBHTVQifSwiZnJlc2giOnRydWUsInR5cGUiOiJhY2Nlc3MifQ.NTp2P0WNkXDwzuzrcNIQdeAfizQ57HQgkzBLSvY1yHU"
 		},
 		{
-			"id": "4baa9b95-1e9b-4cce-830e-433dff673c4a",
+			"id": "d062d4f6-53e1-4a15-a66b-a138edf786ef",
 			"key": "user_orientation",
 			"value": "heterosexual"
 		},
 		{
-			"id": "cfa43a74-4cb2-4082-b68b-e4d62c6bf8fb",
+			"id": "d4cf3d62-6dff-4da5-843b-4c124e4c122a",
 			"key": "user_bio",
 			"value": "Lorem Ipsum is the single greatest threat. We are not - we are not keeping up with other websites. Lorem Ipsum best not make any more threats to your website. It will be met with fire and fury like the world has never seen. Does everybody know that pig named Lorem Ipsum? An ‘extremely credible source’ has called my office and told me that Barack Obama’s placeholder text is a fraud."
 		},
 		{
-			"id": "f691eeab-c7b5-4ea9-a6d6-e801eb7b5f94",
+			"id": "e51923fb-9335-459b-97ea-2dee4f464a8a",
 			"key": "user_gender",
 			"value": "male"
 		},
 		{
-			"id": "a2bf07cc-7ceb-4081-8e62-f08c28a2ae2f",
+			"id": "d6eccdcb-6a27-499e-a8ac-1474ad749b5e",
 			"key": "user_birthdate",
 			"value": "06/04/1998"
 		},
 		{
-			"id": "289ce5eb-84d9-45f6-9f1d-09759cbaadb9",
+			"id": "142a5845-34bb-48bc-8895-30d467a99a6b",
 			"key": "user_lat",
 			"value": "44.8404"
 		},
 		{
-			"id": "c6c62664-fb01-4311-8967-403398a48942",
+			"id": "9584624a-8a2e-4e4d-9833-42edcbad4625",
 			"key": "user_lng",
 			"value": "-0.5805"
 		},
 		{
-			"id": "8204866c-6201-426d-95d5-f1aed0011d57",
+			"id": "09eab2dc-f84b-4982-b474-4465b7f87bb5",
 			"key": "user_ip",
 			"value": "77.205.46.181"
 		}
