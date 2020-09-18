@@ -1,5 +1,6 @@
 import Vue from 'vue';
 import { ValidationProvider, ValidationObserver, extend } from 'vee-validate/dist/vee-validate.full.esm';
+import http from './plugins/http';
 import App from './App.vue';
 import router from './router';
 import store from './store';
@@ -11,6 +12,8 @@ Vue.component('ValidationObserver', ValidationObserver);
 extend('validPassword', validPassword);
 
 Vue.config.productionTip = false;
+
+Vue.use(http);
 
 new Vue({
   router,
