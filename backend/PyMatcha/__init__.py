@@ -59,6 +59,8 @@ for item in REQUIRED_ENV_VARS:
 if os.getenv("ENABLE_LOGGING") == "True":
     setup_logging()
 
+application = Flask(__name__)
+
 if os.getenv("FLASK_DEBUG", "false") == "true" or os.getenv("FLASK_DEBUG", "false") == "1":
     application.debug = True
 else:
