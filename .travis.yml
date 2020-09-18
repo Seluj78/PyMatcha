@@ -11,15 +11,6 @@ services:
   - mysql
   - redis
 
-install:
-  - pip install -r backend/requirements.txt
-  - npm install -g newman
-
-before_script:
-  - node --version
-  - npm --version
-  - newman --version
-
 # TODO: Reformat file as it is ugly. separatee jobs in yml, and lint as the last job to run
 
 jobs:
@@ -33,9 +24,12 @@ jobs:
         - docker build -t docker.pkg.github.com/seluj78/pymatcha/pymatcha-api:latest .
         # push image
         - docker push docker.pkg.github.com/seluj78/pymatcha/pymatcha-api:latest
-    - stage: lint
-      script: make lint
     - stage: test
+      before_script:
+        - node --version
+        - npm --version
+        - npm install -g newman
+        - newman --version
       script:
         # login to github registry
         - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin docker.pkg.github.com
@@ -54,12 +48,15 @@ jobs:
         - docker stop $(docker ps -a -q)
         - docker rm $(docker ps -a -q)
     - stage: lint
-      script: black --check backend
+      before_script:
+        - pip install -r backend/requirements.txt
+      script:
+        - black --check backend
 
 notifications:
   email:
     recipients:
       - jlasne@student.42.fr
-      - gmorer@student.42.fr
+      - lauris.skraucis@gmail.com
     on_success: change
     on_failure: always

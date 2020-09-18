@@ -1,7 +1,7 @@
 """
     PyMatcha - A Python Dating Website
     Copyright (C) 2018-2019 jlasne/gmorer
-    <jlasne@student.42.fr> - <gmorer@student.42.fr>
+    <jlasne@student.42.fr> - <lauris.skraucis@gmail.com>
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
