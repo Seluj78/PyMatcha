@@ -36,7 +36,6 @@ def like_profile(uid):
         superlike_counter = int(redis.get(f"superlikes:{current_user.id}"))
         if superlike_counter <= 0:
             set_user_superlikes.apply_async(current_user.id, amount=5, eta=86400)
-            # TODO: Test this in postman
             raise BadRequestError("No more superlikes today !", "Try later")
         else:
             redis.decr(f"superlikes:{current_user.id}")

@@ -38,8 +38,6 @@ REQUIRED_KEYS_PASSWORD_RESET = {"token": str, "password": str}
 
 auth_password_bp = Blueprint("auth_password", __name__)
 
-# TODO: Test to reset password in postman
-
 
 @auth_password_bp.route("/auth/password/forgot", methods=["POST"])
 @validate_params(REQUIRED_KEYS_PASSWORD_FORGOT)

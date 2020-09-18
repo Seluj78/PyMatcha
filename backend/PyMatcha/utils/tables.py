@@ -150,7 +150,6 @@ def _create_matches_table(db):
         ) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci ;
         """
         )
-        # TODO: Is conversation started boolean ?
         c.execute(ENABLE_SQL_NOTES)
         c.close()
 

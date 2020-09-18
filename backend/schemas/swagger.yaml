@@ -10,10 +10,6 @@ info:
     name: GNU GPL 3
     url: https://github.com/Seluj78/PyMatcha/blob/dev/LICENSE
 
-# TODO: Email and password once rewritten with new frontend
-# TODO: https://swagger.io/docs/specification/links/
-# TODO: https://stackoverflow.com/questions/47447403/how-to-define-different-responses-for-same-http-status-code-in-openapi-swagger
-
 tags:
   - name: Authentication
     description: Login and register routes
@@ -1302,7 +1298,6 @@ components:
         details:
           type: string
           example: He spammed me of dick pics
-    # TODO: Add descriptions
     User:
       type: object
       properties:
@@ -1616,7 +1611,6 @@ components:
           type: string
           example: 1
           description: The user id who received the message
-    # TODO: Add descriptions
     Recommendation:
       type: object
       properties:
