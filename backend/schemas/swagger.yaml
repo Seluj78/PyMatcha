@@ -930,10 +930,10 @@ paths:
             schema:
               type: object
               properties:
-                email:
+                token:
                   type: string
                   required: true
-                  example: foo@example.org
+                  example: g4eh6584jhrhyk7486f5ghket6u87k78u
                 password:
                   type: string
                   required: true
