@@ -92,6 +92,17 @@ services:
       - redis-net
       - mysql-net
 
+  frontend:
+    container_name: frontend
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    volumes:
+      - './frontend:/frontend'
+      - '/frontend/node_modules'
+    ports:
+      - '4242:8080'
+
   phpmyadmin:
     image: phpmyadmin/phpmyadmin
     container_name: dev_pma
