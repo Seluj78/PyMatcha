@@ -15,10 +15,11 @@ install: pip install -r backend/requirements.txt
 
 jobs:
   include:
-    - stage: build
-      script: make build
+#    - stage: build
+#      script: make build
     - stage: lint
-      script: make lint
+      script: black --check backend
+#      script: make lint
 #    - stage: tests
 #      before_script:
 #        - wget https://repo.mysql.com//mysql-apt-config_0.8.14-1_all.deb
