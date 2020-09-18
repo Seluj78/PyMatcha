@@ -2,12 +2,12 @@
   <!-- eslint-disable max-len -->
   <div class="auth-container">
     <div class="auth-sub-container">
-      <div class="auth-sub-container-content" v-if="!resetPasswordEmailSent">
+      <div class="auth-sub-container-content" v-if="!forgotPasswordEmailSent">
         <img src="../../assets/auth/lock.png" class="h-12">
         <h1 class="auth-sub-container-content-heading">Forgot password?</h1>
         <h1 class="text-sm text-gray-matcha text-center">Enter your email and we will send you a link, so you can log in again</h1>
       </div>
-      <div class="auth-sub-container-content mt-4" v-if="!resetPasswordEmailSent">
+      <div class="auth-sub-container-content mt-4" v-if="!forgotPasswordEmailSent">
         <ValidationObserver v-slot="{ handleSubmit, invalid }">
           <form @submit.prevent="handleSubmit(onSubmit)">
             <ValidationProvider name="Email" rules="required|email|max:50" v-slot="{errors}">
@@ -18,7 +18,7 @@
           </form>
         </ValidationObserver>
       </div>
-      <div class="auth-sub-container-content" v-if="resetPasswordEmailSent">
+      <div class="auth-sub-container-content" v-if="forgotPasswordEmailSent">
         <img src="../../assets/auth/email.png" class="h-12">
         <h1 class="auth-sub-container-content-heading">Check your email</h1>
         <h1 class="auth-sub-container-content-paragraph">Reset password link sent to {{formData.email}}</h1>
@@ -39,11 +39,11 @@ export default {
     formData: {
       email: '',
     },
-    resetPasswordEmailSent: false,
+    forgotPasswordEmailSent: false,
   }),
   methods: {
     onSubmit() {
-      this.resetPasswordEmailSent = true;
+      this.forgotPasswordEmailSent = true;
     },
   },
 };
