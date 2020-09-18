@@ -14,7 +14,7 @@
               <input type="email" placeholder="Email" v-model="formData.email" class="matcha-input">
               <span class="matcha-input-error">{{ errors[0] }}</span>
             </ValidationProvider>
-            <input type="submit" :disabled="invalid" value="Reset password" v-bind:class="{'auth-sub-container-content-submit-button': true, 'opacity-50': invalid, 'cursor-pointer': !invalid}">
+            <input type="submit" :disabled="invalid" value="Send reset link" v-bind:class="{'auth-sub-container-content-submit-button': true, 'opacity-50': invalid, 'cursor-pointer': !invalid}">
           </form>
         </ValidationObserver>
       </div>
