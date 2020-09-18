@@ -42,7 +42,7 @@ const routes = [
     component: ResetPasswordError,
   },
   {
-    path: '/accounts/verified',
+    path: '/accounts/verify',
     name: 'AccountVerified',
     component: AccountVerified,
   },
