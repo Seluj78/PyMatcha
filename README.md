@@ -1,3 +1,4 @@
+![Travis (.com)](https://img.shields.io/travis/com/seluj78/pymatcha?label=builds%20and%20tests&style=for-the-badge)
 ## API Docs:
 
 ```
