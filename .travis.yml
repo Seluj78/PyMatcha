@@ -11,9 +11,6 @@ services:
   - mysql
   - redis
 
-before_install:
-  - mysql -e 'CREATE DATABASE pymatcha;'
-
 # TODO: Reformat file as it is ugly. separatee jobs in yml, and lint as the last job to run
 
 jobs:
@@ -33,6 +30,14 @@ jobs:
         - npm --version
         - npm install -g newman
         - newman --version
+        - wget https://repo.mysql.com//mysql-apt-config_0.8.10-1_all.deb
+        - sudo dpkg -i mysql-apt-config_0.8.10-1_all.deb
+        - sudo apt-get update -q
+        - sudo apt-get install -q -y --allow-unauthenticated -o Dpkg::Options::=--force-confnew mysql-server
+        - sudo systemctl restart mysql
+        - sudo mysql_upgrade
+        - mysql --version
+        - mysql -e 'CREATE DATABASE pymatcha;'
       script:
         # login to github registry
         - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin docker.pkg.github.com
@@ -41,7 +46,7 @@ jobs:
         # decrypt the env file
         - openssl aes-256-cbc -K $encrypted_3c84dcdc6bbe_key -iv $encrypted_3c84dcdc6bbe_iv -in .env.enc -out .env -d
         # Run the backend api
-        - docker run -d -p 5000:5000 --restart always --env-file .env docker.pkg.github.com/seluj78/pymatcha/pymatcha-api:latest
+        - docker run -d -p 5000:5000 --restart always --env-file .env --network="host" docker.pkg.github.com/seluj78/pymatcha/pymatcha-api:latest
         # Wait for docker to be up
         - sleep 10
         # run newman tests
