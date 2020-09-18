@@ -9,48 +9,55 @@ python:
 
 services:
   - mysql
-  - redis-server
+  - redis
 
-install: pip install -r backend/requirements.txt
+# TODO: Reformat file as it is ugly. separatee jobs in yml, and lint as the last job to run
 
 jobs:
   include:
-#    - stage: build
-#      script: make build
-    - stage: lint
-      script: black --check backend
-#      script: make lint
-#    - stage: tests
+    - stage: build
+      script:
+        - openssl aes-256-cbc -K $encrypted_3c84dcdc6bbe_key -iv $encrypted_3c84dcdc6bbe_iv -in .env.enc -out .env -d
+        # login to github registry
+        - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin docker.pkg.github.com
+        # build image
+        - docker build -t docker.pkg.github.com/seluj78/pymatcha/pymatcha-api:latest .
+        # push image
+        - docker push docker.pkg.github.com/seluj78/pymatcha/pymatcha-api:latest
+#    - stage: test
 #      before_script:
-#        - wget https://repo.mysql.com//mysql-apt-config_0.8.14-1_all.deb
-#        - sudo dpkg -i mysql-apt-config_0.8.14-1_all.deb
-#        - sudo apt-get update -q
-#        - sudo apt-get install -q -y --allow-unauthenticated -o Dpkg::Options::=--force-confnew mysql-server
-#        - sudo systemctl restart mysql
-#        - sudo mysql_upgrade
-#        - mysql --version
-#        - mysql -e 'CREATE DATABASE pymatcha;'
-#        - npm install newman
-#        - node_modules/.bin/newman --version
-#        - python backend/app.py &
-#        - sleep 5
-#      script: node_modules/.bin/newman run --delay-request 20 --color on --verbose PyMatcha.postman_collection.json
-#    - stage: deploy
-#      script: ./deploy
+#        - node --version
+#        - npm --version
+#        - npm install -g newman
+#        - newman --version
+#      script:
+#        # login to github registry
+#        - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin docker.pkg.github.com
+#        # pull images
+#        - docker pull docker.pkg.github.com/seluj78/pymatcha/pymatcha-api:latest
+#        # decrypt the env file
+#        - openssl aes-256-cbc -K $encrypted_3c84dcdc6bbe_key -iv $encrypted_3c84dcdc6bbe_iv -in .env.enc -out .env -d
+#        # Run the backend api
+#        - docker run -d -p 5000:5000 --restart always --env-file .env docker.pkg.github.com/seluj78/pymatcha/pymatcha-api:latest
+#        # Wait for docker to be up
+#        - sleep 10
+#        # run newman tests
+#        - newman run --color on 'PyMatcha.postman_collection.json'
+#      after_script:
+#        # stop and remove docker to prevent them from block port at next iteration/test
+#        - docker stop $(docker ps -a -q)
+#        - docker rm $(docker ps -a -q)
+    - stage: lint
+      before_script:
+        - pip install -r backend/requirements.txt
+      script:
+        - black --check backend/
+        - flake8 backend/
 
 notifications:
   email:
     recipients:
       - jlasne@student.42.fr
-      - gmorer@student.42.fr
+      - lauris.skraucis@gmail.com
     on_success: change
     on_failure: always
-
-
-#deploy:
-#  provider: heroku
-#  api_key:
-#    secure: kUtYCOzPTUlcJ8nicEynPq39xfVgUtl8LT2zdh/L1MQ6SRKYKT6V+TWSuGNXc9YRn7Sd6dVqYDimz3aK7eQrdBehZxuHy1FvL9qzdWsGeefrFDD5VKf5qyRFmX1+nSir/5WBsGRUhlcPiqMo2WvRWrrARiM+kscULJCpxUJ/rqk2XSxKY+UikWpKgmcgK8ONBdrmK0+ixEqwOHHLU/WfBPHOAdmZM7V3DIeWq75dYee7rfFSejHsUzm8nsMszy5kgsFWj82daYqUTWOVe92v/E5bwGHhqmX2qjXO9d5qm3dVwg7L7gUHB2cUL3sp5EXiH9OdmZhE+QHob155ApkwMqYJo5L7U7/4Az7i/6oiTOfbnUCyCK2g9D0Qng6T4OwlsfH1l182V5I4fWIN94sQuEhh2W+Auu5EjhmsSMwCdYYuI6K5V4ht2aCLVlQ5jdfG8rt78kjsrjLlw8Vu2aprkM1JrTiUFGr5legrAX40BpozOFl913waRScJc65BsBnVkrFeTrmlmWIXe63Gc4LKXc8XaAqVLl3cyhIIyQ4Q0km5UH8/nraKDzw0I0sLLmk2AXBDEnNHDt2E1QmacsfaX+XE2URT74YVBRmxRdpJv6vJsvZEtXpRMHrzf4DK4coS1q5rkHnUXpajf65tB//isrQkbtENnjFZ1EP0zE9OJwY=
-#  app: pymatcha
-#  on:
-#    repo: Seluj78/PyMatcha

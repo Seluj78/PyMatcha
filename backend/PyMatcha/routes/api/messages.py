@@ -1,7 +1,7 @@
 """
     PyMatcha - A Python Dating Website
     Copyright (C) 2018-2019 jlasne/gmorer
-    <jlasne@student.42.fr> - <gmorer@student.42.fr>
+    <jlasne@student.42.fr> - <lauris.skraucis@gmail.com>
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -54,8 +54,8 @@ def get_opened_conversations():
 
 
 @messages_bp.route("/messages/send", methods=["POST"])
-@jwt_required
 @validate_params(REQUIRED_KEYS_NEW_MESSAGE)
+@jwt_required
 def send_message():
     current_app.logger.debug("/messages -> Call")
     data = request.get_json()

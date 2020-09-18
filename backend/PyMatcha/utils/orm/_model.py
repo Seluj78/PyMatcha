@@ -258,7 +258,7 @@ class Model(object):
             raise ValueError("Not found.")
 
     @classmethod
-    def get_multi(cls, **kwargs) -> List:
+    def get_multi(cls, **kwargs):
         """
         Get a model from the database, using multiple keyword argument as a filter.
 
@@ -301,10 +301,11 @@ class Model(object):
         if data:
             return cls(data)
         else:
+            # TODO: All db gets return None instead of valuerror
             raise ValueError("Not found.")
 
     @classmethod
-    def get_multis(cls, **kwargs):
+    def get_multis(cls, **kwargs) -> List:
         """
         Get models from the database, using multiple keyword argument as a filter.
 

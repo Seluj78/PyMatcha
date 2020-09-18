@@ -27,7 +27,10 @@ def update_heat_scores():
         reports_received = len(user.get_reports_received())
         views = len(user.get_views())
         matches = len(user.get_matches())
-        messages = len(Message.get_multi(to_id=user.id))
+        try:
+            messages = len(Message.get_multi(to_id=user.id))
+        except ValueError:
+            messages = 0
 
         score = 30
         if user.username == "seluj78" or user.username == "tet":
@@ -157,3 +160,8 @@ def update_user_recommendations():
         )
         redis.expire(f"user_recommendations:{str(user_to_update.id)}", 3600)
     return f"Successfully updated recommendations for {count} users."
+
+
+@celery.task
+def set_user_superlikes(user_id, amount=5):
+    redis.set(f"superlikes:{user_id}", amount)

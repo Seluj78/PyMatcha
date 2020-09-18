@@ -1,7 +1,7 @@
 """
     PyMatcha - A Python Dating Website
     Copyright (C) 2018-2019 jlasne/gmorer
-    <jlasne@student.42.fr> - <gmorer@student.42.fr>
+    <jlasne@student.42.fr> - <lauris.skraucis@gmail.com>
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -22,6 +22,7 @@ from flask import Blueprint
 from flask import request
 from flask_jwt_extended import current_user
 from flask_jwt_extended import jwt_required
+from PyMatcha import redis
 from PyMatcha.models.tag import Tag
 from PyMatcha.utils.decorators import validate_params
 from PyMatcha.utils.errors import BadRequestError
@@ -33,8 +34,8 @@ REQUIRED_PARAMS_COMPLETE_PROFILE = {"gender": str, "birthdate": str, "orientatio
 
 
 @profile_complete_bp.route("/profile/complete", methods=["POST"])
-@jwt_required
 @validate_params(REQUIRED_PARAMS_COMPLETE_PROFILE)
+@jwt_required
 def complete_profile():
     if current_user.is_profile_completed:
         raise BadRequestError(
@@ -76,4 +77,5 @@ def complete_profile():
     current_user.gender = gender
     current_user.birthdate = birthdate
     current_user.save()
+    redis.set(f"superlikes:{current_user.id}", 5)
     return Success("Profile completed !")

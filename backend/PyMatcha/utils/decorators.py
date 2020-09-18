@@ -45,7 +45,7 @@ def validate_params(required: dict, optional: Optional[dict] = None):
 
             for key, value in data.items():
                 if not value:
-                    if required[key] == int:
+                    if required[key] == int or required[key] == bool:
                         pass
                     else:
                         raise BadRequestError(f"The item {key} cannot be None or empty.")

@@ -998,15 +998,6 @@
 								},
 								"method": "POST",
 								"header": [],
-								"body": {
-									"mode": "raw",
-									"raw": "{\n\t\"password\": \"{{user_password}}\",\n\t\"username\": \"{{user_email}}\"\n}",
-									"options": {
-										"raw": {
-											"language": "json"
-										}
-									}
-								},
 								"url": {
 									"raw": "{{host}}/auth/refresh",
 									"host": [
@@ -3575,6 +3566,15 @@
 							"request": {
 								"method": "POST",
 								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"is_superlike\": false\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
 								"url": {
 									"raw": "{{host}}/like/-1",
 									"host": [
@@ -3616,6 +3616,15 @@
 							"request": {
 								"method": "POST",
 								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"is_superlike\": false\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
 								"url": {
 									"raw": "{{host}}/like/{{user_id}}",
 									"host": [
@@ -3708,6 +3717,15 @@
 							"request": {
 								"method": "POST",
 								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"is_superlike\": false\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
 								"url": {
 									"raw": "{{host}}/like/like_me",
 									"host": [
@@ -3749,6 +3767,15 @@
 							"request": {
 								"method": "POST",
 								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"is_superlike\": false\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
 								"url": {
 									"raw": "{{host}}/like/like_me",
 									"host": [
@@ -3936,6 +3963,103 @@
 					"_postman_isSubFolder": true
 				},
 				{
+					"name": "Superlike User",
+					"item": [
+						{
+							"name": "Superlike like_me user",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "b09c0ee4-abcb-4fcc-9806-e1b48da225b3",
+										"exec": [
+											"var response = JSON.parse(responseBody);",
+											"",
+											"",
+											"pm.test(\"Status code is 200\", function () {",
+											"    pm.response.to.have.status(200);",
+											"});",
+											"",
+											"tests[\"JSON return code is 200\"] = response.code == 200",
+											"",
+											"tests[\"success is true\"] = response.success == true",
+											"",
+											"tests[\"Messag is correct\"] = response.message == \"Superliked user.\""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"is_superlike\": true\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{host}}/like/like_me",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"like",
+										"like_me"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "UnSuperlike like_me user",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "77e4cefb-3d6f-481e-91ff-c63cfc37a6aa",
+										"exec": [
+											"var response = JSON.parse(responseBody);",
+											"",
+											"",
+											"pm.test(\"Status code is 200\", function () {",
+											"    pm.response.to.have.status(200);",
+											"});",
+											"",
+											"tests[\"JSON return code is 200\"] = response.code == 200",
+											"",
+											"tests[\"success is true\"] = response.success == true",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"url": {
+									"raw": "{{host}}/unlike/like_me",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"unlike",
+										"like_me"
+									]
+								}
+							},
+							"response": []
+						}
+					],
+					"protocolProfileBehavior": {},
+					"_postman_isSubFolder": true
+				},
+				{
 					"name": "Match user",
 					"item": [
 						{
@@ -4004,6 +4128,15 @@
 							"request": {
 								"method": "POST",
 								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"is_superlike\": false\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
 								"url": {
 									"raw": "{{host}}/like/like_me",
 									"host": [
@@ -5723,92 +5856,92 @@
 	],
 	"variable": [
 		{
-			"id": "ae3c1742-39ab-4715-8465-cb39b5c29c05",
+			"id": "dff1a2e8-8383-4d1a-af74-6744539983c6",
 			"key": "host",
 			"value": "http://127.0.0.1:5000"
 		},
 		{
-			"id": "e7d35862-55e7-4448-88f0-e8bc244b05b0",
+			"id": "2baf602e-1e34-4efc-957c-bbd23051fa18",
 			"key": "user_id",
 			"value": ""
 		},
 		{
-			"id": "e98b5a69-255c-49c1-8fa1-003c42ace8ac",
+			"id": "dd71d2c4-7078-40ea-af2b-69ebed33895e",
 			"key": "user_email",
 			"value": "foo@example.org"
 		},
 		{
-			"id": "affc13a3-4e03-4aa3-bd3b-0c2d3e90e037",
+			"id": "2c6ace6d-9880-47c0-a303-d57c85c11826",
 			"key": "user_username",
 			"value": "foo"
 		},
 		{
-			"id": "9ca9cb60-b44c-4b96-a537-a83070ae0615",
+			"id": "27762741-f737-47db-9982-bb6382a1102d",
 			"key": "user_password",
 			"value": "admin"
 		},
 		{
-			"id": "026847e3-4dc0-4939-a4f4-0678ed0c8125",
+			"id": "32749353-1734-427a-b7e5-ea42f9bf0a81",
 			"key": "user_firstname",
 			"value": "Foo"
 		},
 		{
-			"id": "695b6e88-1415-48b8-a12b-0b9662ade9e7",
+			"id": "dfd31259-5a05-45b5-9b15-00565a3621f6",
 			"key": "user_lastname",
 			"value": "Bar"
 		},
 		{
-			"id": "7207a34c-d57b-40f2-b889-4c92033b283b",
+			"id": "6fbac55b-72a7-4dda-9df6-a5b54b8e075a",
 			"key": "debug_token",
 			"value": "xX69jules69Xx"
 		},
 		{
-			"id": "1f4d2d09-e806-4790-8a9e-84bf7f0462a2",
+			"id": "469a1742-e7ea-4784-8383-304e1a1254c8",
 			"key": "user_access_token",
 			"value": ""
 		},
 		{
-			"id": "b5761a25-0920-417f-9179-8c5be97097ac",
+			"id": "b4e018f7-21e5-4cc8-aa5d-b44f1d3fe5aa",
 			"key": "user_refresh_token",
 			"value": ""
 		},
 		{
-			"id": "2564fe00-7a58-4ce2-a10f-36692c2611f0",
+			"id": "35a30c5c-700b-4cac-a87f-e9b85b1d59d5",
 			"key": "expired_token",
 			"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE1OTAyNDIyNjQsIm5iZiI6MTU5MDI0MjI2NCwianRpIjoiNTM0ZGI5NzQtOWE4Ni00MGViLWE1NDEtMDg3N2ZmNzQ3NDVhIiwiZXhwIjoxNTkwMjQyMzI0LCJpZGVudGl0eSI6eyJpZCI6NTEyLCJlbWFpbCI6ImZvb0BleGFtcGxlLm9yZyIsInVzZXJuYW1lIjoiYmFyIiwiaXNfb25saW5lIjp0cnVlLCJkYXRlX2xhc3RzZWVuIjoiU2F0LCAyMyBNYXkgMjAyMCAxMzo1Nzo0NCBHTVQifSwiZnJlc2giOnRydWUsInR5cGUiOiJhY2Nlc3MifQ.NTp2P0WNkXDwzuzrcNIQdeAfizQ57HQgkzBLSvY1yHU"
 		},
 		{
-			"id": "2f511bbd-529c-4955-860c-67d059eac1c8",
+			"id": "f9cb0a56-3fe5-4a43-8c34-c370ea32d68c",
 			"key": "user_orientation",
 			"value": "heterosexual"
 		},
 		{
-			"id": "ca85a202-0c8b-4d10-8262-63dd3cd86beb",
+			"id": "473c2ba6-4781-4074-8ab7-b2d593ba027f",
 			"key": "user_bio",
 			"value": "Lorem Ipsum is the single greatest threat. We are not - we are not keeping up with other websites. Lorem Ipsum best not make any more threats to your website. It will be met with fire and fury like the world has never seen. Does everybody know that pig named Lorem Ipsum? An ‘extremely credible source’ has called my office and told me that Barack Obama’s placeholder text is a fraud."
 		},
 		{
-			"id": "4a4205b9-65d4-4303-bf80-0954310b2a8d",
+			"id": "aa576ca8-3df8-4aa9-9365-d97b17a2fae9",
 			"key": "user_gender",
 			"value": "male"
 		},
 		{
-			"id": "c8cf0f92-c24e-4ced-b567-d3eef6ce7789",
+			"id": "7295072e-641d-4991-8d9e-5b4219ddcbe3",
 			"key": "user_birthdate",
 			"value": "06/04/1998"
 		},
 		{
-			"id": "406075a2-5965-4491-9aa6-c879e3ac304e",
+			"id": "dee264ed-d89e-4493-92c9-3329e0864680",
 			"key": "user_lat",
 			"value": "44.8404"
 		},
 		{
-			"id": "703dc3ff-eab2-4b17-b522-7a0a7bc6f894",
+			"id": "1afbbe42-4c06-40e3-bc8c-775865907ec2",
 			"key": "user_lng",
 			"value": "-0.5805"
 		},
 		{
-			"id": "a90d387f-4d5b-4832-9136-3d226844c30b",
+			"id": "e8028fd5-ba0c-474c-99a6-99f6aef3dac1",
 			"key": "user_ip",
 			"value": "77.205.46.181"
 		}

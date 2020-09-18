@@ -1,7 +1,7 @@
 """
     PyMatcha - A Python Dating Website
     Copyright (C) 2018-2019 jlasne/gmorer
-    <jlasne@student.42.fr> - <gmorer@student.42.fr>
+    <jlasne@student.42.fr> - <lauris.skraucis@gmail.com>
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -31,7 +31,7 @@ from flask_mail import Mail
 from PyMatcha.utils.logging import setup_logging
 from PyMatcha.utils.tables import create_tables
 from pymysql.cursors import DictCursor
-from redis import Redis
+from redis import StrictRedis
 
 PYMATCHA_ROOT = os.path.join(os.path.dirname(__file__), "../..")  # refers to application_top
 dotenv_path = os.path.join(PYMATCHA_ROOT, ".env")
@@ -70,8 +70,8 @@ application.config.update(FLASK_SECRET_KEY=os.getenv("FLASK_SECRET_KEY"))
 application.config["JWT_SECRET_KEY"] = os.environ.get("FLASK_SECRET_KEY")
 
 logging.debug("Configuring Celery Redis URLs")
-CELERY_BROKER_URL = "redis://localhost:6379/0" if not os.getenv("IS_DOCKER_COMPOSE") else "redis://redis:6379/0"
-CELERY_RESULT_BACKEND = "redis://localhost:6379/0" if not os.getenv("IS_DOCKER_COMPOSE") else "redis://redis:6379/0"
+CELERY_BROKER_URL = os.getenv("CELERY_BROKER_URL", "redis://localhost:6379/0")
+CELERY_RESULT_BACKEND = os.getenv("CELERY_RESULT_BACKEND", "redis://localhost:6379/0")
 # Celery configuration
 application.config["CELERY_BROKER_URL"] = CELERY_BROKER_URL
 application.config["CELERY_RESULT_BACKEND"] = CELERY_RESULT_BACKEND
@@ -149,11 +149,8 @@ application.config.update(
 logging.debug("Configuring mail")
 mail = Mail(application)
 
-redis = Redis(
-    host=os.getenv("REDIS_HOST") if not os.getenv("IS_DOCKER_COMPOSE") else "redis",
-    port=os.getenv("REDIS_PORT", 6379),
-    decode_responses=True,
-    db=2,
+redis = StrictRedis(
+    host=os.getenv("REDIS_HOST", "localhost"), port=os.getenv("REDIS_PORT", 6379), decode_responses=True, db=2
 )
 
 redis.flushdb()
