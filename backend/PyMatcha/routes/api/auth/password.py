@@ -97,3 +97,20 @@ def reset_password():
         u.save()
         current_app.logger.debug("/auth/password/reset -> Password reset successfully")
         return Success("Password reset successful.")
+
+
+@auth_password_bp.route("/auth/password/check_token", methods=["POST"])
+@validate_params({"token": str})
+def check_token_validity():
+    data = request.get_json()
+    try:
+        confirm_token(data["token"], expiration=7200)
+    except (SignatureExpired, BadSignature) as e:
+        if e == SignatureExpired:
+            current_app.logger.debug("/auth/password/reset -> Signature Expired")
+            raise BadRequestError("Signature Expired.", "Request another password reset and try again.")
+        else:
+            current_app.logger.debug("/auth/password/reset -> Bad Signature")
+            raise BadRequestError("Bad Signature.", "Request another password reset and try again.")
+    else:
+        return Success("Reset token is correct")

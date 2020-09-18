@@ -959,6 +959,43 @@ paths:
                   message:
                     type: string
                     example: Password reset successful.
+  /auth/password/check_token:
+    post:
+      summary: Check the token validity
+      operationId: checkToken
+      tags:
+        - Authentication
+      requestBody:
+        description: Parameters to test the token
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                token:
+                  type: string
+                  required: true
+                    example: qwERg3rtyhog23mrweof5ngib4j3ktnrvwefqjskldnakms
+      responses:
+        "400":
+          $ref: '#/components/responses/BadRequest'
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: string
+                    example: 200
+                  success:
+                    type: boolean
+                    example: true
+                  message:
+                    type: string
+                    example: Reset token is correct.
 
 
 servers:
