@@ -1050,6 +1050,8 @@ paths:
                   required: true
                     example: qwERg3rtyhog23mrweof5ngib4j3ktnrvwefqjskldnakms
       responses:
+        "404":
+          $ref: '#/components/responses/NotFound'
         "400":
           $ref: '#/components/responses/BadRequest'
         "200":
