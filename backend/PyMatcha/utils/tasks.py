@@ -12,6 +12,14 @@ from PyMatcha.utils.match_score import _get_common_tags
 from PyMatcha.utils.match_score import _get_distance
 from PyMatcha.utils.match_score import _get_gender_query
 
+BASE_HEAT_SCORE = 30
+LIKES_MULTIPLIER = 2
+SUPERLIKES_MULTIPLIER = 10
+MATCHES_MULTIPLIER = 4
+REPORTS_MULTIPLIER = 10
+VIEW_MULTIPLIER = 1
+MESSAGES_DIVIDER = 5
+
 
 @celery.on_after_configure.connect
 def setup_periodic_tasks(sender, **kwargs):
@@ -23,7 +31,9 @@ def setup_periodic_tasks(sender, **kwargs):
 @celery.task
 def update_heat_scores():
     for user in User.select_all():
-        likes_received = len(user.get_likes_received())
+        likes = [like.is_superlike for like in user.get_likes_received()]
+        likes_received = likes.count(False)
+        superlikes_received = likes.count(True)
         reports_received = len(user.get_reports_received())
         views = len(user.get_views())
         matches = len(user.get_matches())
@@ -32,14 +42,15 @@ def update_heat_scores():
         except ValueError:
             messages = 0
 
-        score = 30
+        score = BASE_HEAT_SCORE
         if user.username == "seluj78" or user.username == "tet":
             score += 100
-        score += likes_received * 2
-        score += matches * 4
-        score -= reports_received * 10
-        score += views
-        score += ceil(messages / 5)
+        score += likes_received * LIKES_MULTIPLIER
+        score += superlikes_received * SUPERLIKES_MULTIPLIER
+        score += matches * MATCHES_MULTIPLIER
+        score -= reports_received * REPORTS_MULTIPLIER
+        score += views * VIEW_MULTIPLIER
+        score += ceil(messages / MESSAGES_DIVIDER)
         user.heat_score = score
         user.save()
         return f"Updated heat score for user {user.id}: {user.heat_score}."
