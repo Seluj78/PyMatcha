@@ -185,23 +185,6 @@ logging.debug("Configuring JWT user callback loader")
 
 
 from PyMatcha.utils.errors import NotFoundError
-from PyMatcha.utils.errors.base_class import CustomException
-
-
-def before_send(event, hint):
-    if "exc_info" in hint:
-        exc_type, exc_value, tb = hint["exc_info"]
-        if issubclass(exc_value, CustomException):
-            return None
-    return event
-
-
-sentry_sdk.init(
-    dsn="https://bb17c14c99d448e2804bf2f105d4ec52@o450203.ingest.sentry.io/5434438",
-    integrations=[FlaskIntegration()],
-    traces_sample_rate=1.0,
-    before_send=before_send,
-)
 
 
 @jwt.user_loader_callback_loader
