@@ -17,10 +17,11 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 """
 from PyMatcha import application
+from PyMatcha.utils.errors.base_class import CustomException
 from PyMatcha.utils.errors.template import generate_error_json
 
 
-class BadRequestError(Exception):
+class BadRequestError(CustomException):
     """
     This is the BadRequestError class for the Exception.
     """

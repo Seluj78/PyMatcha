@@ -213,7 +213,7 @@ class Model(object):
                 logging.debug("deleted {} from table {}".format(self.id, self.table_name))
                 c.close()
         else:
-            logging.fatal("{} Not in table {}".format(self.id, self.table_name))
+            logging.warning("{} Not in table {}".format(self.id, self.table_name))
             raise Exception("{} Not in table {}".format(self.id, self.table_name))
 
     @classmethod

@@ -89,7 +89,7 @@ class User(Model):
         except ValueError:
             pass
         else:
-            logging.error("Email {} taken".format(email))
+            logging.warning("Email {} taken".format(email))
             raise ConflictError("Email {} taken.".format(email), "Use another email.")
 
         # Check username availability
@@ -98,17 +98,17 @@ class User(Model):
         except ValueError:
             pass
         else:
-            logging.error("Username {} taken".format(username))
+            logging.warning("Username {} taken".format(username))
             raise ConflictError("Username {} taken.".format(username), "Try another username.")
 
         # Check correct gender
         if gender not in ["male", "female", "other"]:
-            logging.error("Gender must be male, female or other, not {}".format(gender))
+            logging.warning("Gender must be male, female or other, not {}".format(gender))
             raise ConflictError("Gender must be male, female or other, not {}.".format(gender))
 
         # Check correct orientation
         if orientation not in ["heterosexual", "homosexual", "bisexual", "other"]:
-            logging.error(
+            logging.warning(
                 "Sexual Orientation must be heterosexual, homosexual, bisexual or other, not {}.".format(orientation)
             )
             raise ConflictError(
@@ -119,7 +119,7 @@ class User(Model):
         try:
             Geohash.decode(geohash)
         except ValueError as e:
-            logging.error("Geohash error: {}".format(e))
+            logging.warning("Geohash error: {}".format(e))
             raise e
 
         # Encrypt password
@@ -166,7 +166,7 @@ class User(Model):
         except ValueError:
             pass
         else:
-            logging.error("Username {} taken".format(username))
+            logging.warning("Username {} taken".format(username))
             raise ConflictError("Username {} taken.".format(username), "Try another username.")
 
         # Encrypt password
