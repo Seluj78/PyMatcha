@@ -11,65 +11,55 @@ services:
   - mysql
   - redis
 
+before_install:
+  - openssl aes-256-cbc -K $encrypted_3c84dcdc6bbe_key -iv $encrypted_3c84dcdc6bbe_iv -in .env.enc -out .env -d
+  # login to github registry
+  - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin docker.pkg.github.com
+
 jobs:
   include:
     - stage: Build Backend
       script:
-        - openssl aes-256-cbc -K $encrypted_3c84dcdc6bbe_key -iv $encrypted_3c84dcdc6bbe_iv -in .env.enc -out .env -d
-        # login to github registry
-        - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin docker.pkg.github.com
         # build image
         - docker build -t docker.pkg.github.com/seluj78/pymatcha/pymatcha-backend:$TRAVIS_COMMIT . -f backend.Dockerfile
-        # Tag images
-        - docker tag docker.pkg.github.com/seluj78/pymatcha/pymatcha-backend:$TRAVIS_COMMIT docker.pkg.github.com/seluj78/pymatcha/pymatcha-backend:latest
+      after_success:
         # push image
         - docker push docker.pkg.github.com/seluj78/pymatcha/pymatcha-backend:$TRAVIS_COMMIT
-        - docker push docker.pkg.github.com/seluj78/pymatcha/pymatcha-backend:latest
+
     - stage: Build Frontend
       script:
-        - openssl aes-256-cbc -K $encrypted_3c84dcdc6bbe_key -iv $encrypted_3c84dcdc6bbe_iv -in .env.enc -out .env -d
-        # login to github registry
-        - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin docker.pkg.github.com
         # build image
         - docker build -t docker.pkg.github.com/seluj78/pymatcha/pymatcha-frontend:$TRAVIS_COMMIT . -f frontend.Dockerfile
-        # Tag images
-        - docker tag docker.pkg.github.com/seluj78/pymatcha/pymatcha-frontend:$TRAVIS_COMMIT docker.pkg.github.com/seluj78/pymatcha/pymatcha-frontend:latest
+      after_success:
         # push image
         - docker push docker.pkg.github.com/seluj78/pymatcha/pymatcha-frontend:$TRAVIS_COMMIT
-        - docker push docker.pkg.github.com/seluj78/pymatcha/pymatcha-frontend:latest
+
     - stage: Build Workers
       script:
-        - openssl aes-256-cbc -K $encrypted_3c84dcdc6bbe_key -iv $encrypted_3c84dcdc6bbe_iv -in .env.enc -out .env -d
-        # login to github registry
-        - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin docker.pkg.github.com
         # build image
         - docker build -t docker.pkg.github.com/seluj78/pymatcha/pymatcha-workers:$TRAVIS_COMMIT . -f workers.Dockerfile
-        # Tag images
-        - docker tag docker.pkg.github.com/seluj78/pymatcha/pymatcha-workers:$TRAVIS_COMMIT docker.pkg.github.com/seluj78/pymatcha/pymatcha-workers:latest
+      after_success:
         # push image
         - docker push docker.pkg.github.com/seluj78/pymatcha/pymatcha-workers:$TRAVIS_COMMIT
-        - docker push docker.pkg.github.com/seluj78/pymatcha/pymatcha-workers:latest
+
     - stage: Test API
-      before_script:
-        - node --version
-        - npm --version
-        - npm install -g newman
-        - newman --version
+      install:
         - wget https://repo.mysql.com//mysql-apt-config_0.8.15-1_all.deb
         - sudo dpkg -i mysql-apt-config_0.8.15-1_all.deb
         - sudo apt-get update -q
         - sudo apt-get install -q -y --allow-unauthenticated -o Dpkg::Options::=--force-confnew mysql-server
         - sudo systemctl restart mysql
         - sudo mysql_upgrade
+        - npm install -g newman
+      before_script:
+        - node --version
+        - npm --version
+        - newman --version
         - mysql --version
         - mysql -e 'CREATE DATABASE pymatcha;'
-      script:
-        # login to github registry
-        - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin docker.pkg.github.com
-        # pull images
+        # pull image
         - docker pull docker.pkg.github.com/seluj78/pymatcha/pymatcha-backend:latest
-        # decrypt the env file
-        - openssl aes-256-cbc -K $encrypted_3c84dcdc6bbe_key -iv $encrypted_3c84dcdc6bbe_iv -in .env.enc -out .env -d
+      script:
         # Run the backend api
         - docker run -d -p 5000:5000 --restart always --env-file .env --network="host" docker.pkg.github.com/seluj78/pymatcha/pymatcha-backend:latest
         # Wait for docker to be up
@@ -80,12 +70,28 @@ jobs:
         # stop and remove docker to prevent them from block port at next iteration/test
         - docker stop $(docker ps -a -q)
         - docker rm $(docker ps -a -q)
+
     - stage: Lint Backend
       before_script:
         - pip install -r backend/requirements.txt
       script:
         - black --check backend/
         - flake8 backend/
+
+    - stage: Tag new releases
+      if: branch = dev
+      script:
+        - docker pull docker.pkg.github.com/seluj78/pymatcha/pymatcha-backend:$TRAVIS_COMMIT
+        - docker pull docker.pkg.github.com/seluj78/pymatcha/pymatcha-frontend:$TRAVIS_COMMIT
+        - docker pull docker.pkg.github.com/seluj78/pymatcha/pymatcha-workers:$TRAVIS_COMMIT
+        # Tag images
+        - docker tag docker.pkg.github.com/seluj78/pymatcha/pymatcha-backend:$TRAVIS_COMMIT docker.pkg.github.com/seluj78/pymatcha/pymatcha-backend:latest
+        - docker tag docker.pkg.github.com/seluj78/pymatcha/pymatcha-frontend:$TRAVIS_COMMIT docker.pkg.github.com/seluj78/pymatcha/pymatcha-frontend:latest
+        - docker tag docker.pkg.github.com/seluj78/pymatcha/pymatcha-workers:$TRAVIS_COMMIT docker.pkg.github.com/seluj78/pymatcha/pymatcha-workers:latest
+        # push image
+        - docker push docker.pkg.github.com/seluj78/pymatcha/pymatcha-backend:latest
+        - docker push docker.pkg.github.com/seluj78/pymatcha/pymatcha-frontend:latest
+        - docker push docker.pkg.github.com/seluj78/pymatcha/pymatcha-workers:latest
 
 notifications:
   email:
