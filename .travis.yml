@@ -13,7 +13,7 @@ services:
 
 jobs:
   include:
-    - stage: build
+    - stage: Build Backend
       script:
         - openssl aes-256-cbc -K $encrypted_3c84dcdc6bbe_key -iv $encrypted_3c84dcdc6bbe_iv -in .env.enc -out .env -d
         # login to github registry
@@ -22,7 +22,25 @@ jobs:
         - docker build -t docker.pkg.github.com/seluj78/pymatcha/pymatcha-api:latest . -f backend.Dockerfile
         # push image
         - docker push docker.pkg.github.com/seluj78/pymatcha/pymatcha-api:latest
-    - stage: test
+    - stage: Build Frontend
+      script:
+        - openssl aes-256-cbc -K $encrypted_3c84dcdc6bbe_key -iv $encrypted_3c84dcdc6bbe_iv -in .env.enc -out .env -d
+        # login to github registry
+        - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin docker.pkg.github.com
+        # build image
+        - docker build -t docker.pkg.github.com/seluj78/pymatcha/pymatcha-frontend:latest . -f frontend.Dockerfile
+        # push image
+        - docker push docker.pkg.github.com/seluj78/pymatcha/pymatcha-frontend:latest
+    - stage: Build Workers
+      script:
+        - openssl aes-256-cbc -K $encrypted_3c84dcdc6bbe_key -iv $encrypted_3c84dcdc6bbe_iv -in .env.enc -out .env -d
+        # login to github registry
+        - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin docker.pkg.github.com
+        # build image
+        - docker build -t docker.pkg.github.com/seluj78/pymatcha/pymatcha-workers:latest . -f workers.Dockerfile
+        # push image
+        - docker push docker.pkg.github.com/seluj78/pymatcha/pymatcha-workers:latest
+    - stage: Test API
       before_script:
         - node --version
         - npm --version
@@ -53,7 +71,7 @@ jobs:
         # stop and remove docker to prevent them from block port at next iteration/test
         - docker stop $(docker ps -a -q)
         - docker rm $(docker ps -a -q)
-    - stage: lint
+    - stage: Lint Backend
       before_script:
         - pip install -r backend/requirements.txt
       script:
