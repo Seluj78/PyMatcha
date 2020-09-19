@@ -58,10 +58,10 @@ jobs:
         - mysql --version
         - mysql -e 'CREATE DATABASE pymatcha;'
         # pull image
-        - docker pull docker.pkg.github.com/seluj78/pymatcha/pymatcha-backend:latest
+        - docker pull docker.pkg.github.com/seluj78/pymatcha/pymatcha-backend:$TRAVIS_COMMIT
       script:
         # Run the backend api
-        - docker run -d -p 5000:5000 --restart always --env-file .env --network="host" docker.pkg.github.com/seluj78/pymatcha/pymatcha-backend:latest
+        - docker run -d -p 5000:5000 --restart always --env-file .env --network="host" docker.pkg.github.com/seluj78/pymatcha/pymatcha-backend:$TRAVIS_COMMIT
         # Wait for docker to be up
         - sleep 10
         # run newman tests
