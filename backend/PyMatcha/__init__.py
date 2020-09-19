@@ -184,13 +184,14 @@ from PyMatcha.models.user import get_user
 logging.debug("Configuring JWT user callback loader")
 
 
-from PyMatcha.utils.errors import NotFoundError, BadRequestError, ConflictError, UnauthorizedError, ForbiddenError
+from PyMatcha.utils.errors import NotFoundError
+from PyMatcha.utils.errors.base_class import CustomException
 
 
 def before_send(event, hint):
     if "exc_info" in hint:
         exc_type, exc_value, tb = hint["exc_info"]
-        if isinstance(exc_value, (NotFoundError, BadRequestError, ConflictError, UnauthorizedError, ForbiddenError)):
+        if issubclass(exc_value, CustomException):
             return None
     return event
 
