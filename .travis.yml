@@ -19,17 +19,23 @@ jobs:
         # login to github registry
         - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin docker.pkg.github.com
         # build image
-        - docker build -t docker.pkg.github.com/seluj78/pymatcha/pymatcha-api:latest . -f backend.Dockerfile
+        - docker build -t docker.pkg.github.com/seluj78/pymatcha/pymatcha-backend:$TRAVIS_COMMIT . -f backend.Dockerfile
+        # Tag images
+        - docker tag docker.pkg.github.com/seluj78/pymatcha/pymatcha-backend:$TRAVIS_COMMIT docker.pkg.github.com/seluj78/pymatcha/pymatcha-backend:latest
         # push image
-        - docker push docker.pkg.github.com/seluj78/pymatcha/pymatcha-api:latest
+        - docker push docker.pkg.github.com/seluj78/pymatcha/pymatcha-backend:$TRAVIS_COMMIT
+        - docker push docker.pkg.github.com/seluj78/pymatcha/pymatcha-backend:latest
     - stage: Build Frontend
       script:
         - openssl aes-256-cbc -K $encrypted_3c84dcdc6bbe_key -iv $encrypted_3c84dcdc6bbe_iv -in .env.enc -out .env -d
         # login to github registry
         - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin docker.pkg.github.com
         # build image
-        - docker build -t docker.pkg.github.com/seluj78/pymatcha/pymatcha-frontend:latest . -f frontend.Dockerfile
+        - docker build -t docker.pkg.github.com/seluj78/pymatcha/pymatcha-frontend:$TRAVIS_COMMIT . -f frontend.Dockerfile
+        # Tag images
+        - docker tag docker.pkg.github.com/seluj78/pymatcha/pymatcha-frontend:$TRAVIS_COMMIT docker.pkg.github.com/seluj78/pymatcha/pymatcha-frontend:latest
         # push image
+        - docker push docker.pkg.github.com/seluj78/pymatcha/pymatcha-frontend:$TRAVIS_COMMIT
         - docker push docker.pkg.github.com/seluj78/pymatcha/pymatcha-frontend:latest
     - stage: Build Workers
       script:
@@ -37,8 +43,11 @@ jobs:
         # login to github registry
         - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin docker.pkg.github.com
         # build image
-        - docker build -t docker.pkg.github.com/seluj78/pymatcha/pymatcha-workers:latest . -f workers.Dockerfile
+        - docker build -t docker.pkg.github.com/seluj78/pymatcha/pymatcha-workers:$TRAVIS_COMMIT . -f workers.Dockerfile
+        # Tag images
+        - docker tag docker.pkg.github.com/seluj78/pymatcha/pymatcha-workers:$TRAVIS_COMMIT docker.pkg.github.com/seluj78/pymatcha/pymatcha-workers:latest
         # push image
+        - docker push docker.pkg.github.com/seluj78/pymatcha/pymatcha-workers:$TRAVIS_COMMIT
         - docker push docker.pkg.github.com/seluj78/pymatcha/pymatcha-workers:latest
     - stage: Test API
       before_script:
@@ -58,11 +67,11 @@ jobs:
         # login to github registry
         - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin docker.pkg.github.com
         # pull images
-        - docker pull docker.pkg.github.com/seluj78/pymatcha/pymatcha-api:latest
+        - docker pull docker.pkg.github.com/seluj78/pymatcha/pymatcha-backend:latest
         # decrypt the env file
         - openssl aes-256-cbc -K $encrypted_3c84dcdc6bbe_key -iv $encrypted_3c84dcdc6bbe_iv -in .env.enc -out .env -d
         # Run the backend api
-        - docker run -d -p 5000:5000 --restart always --env-file .env --network="host" docker.pkg.github.com/seluj78/pymatcha/pymatcha-api:latest
+        - docker run -d -p 5000:5000 --restart always --env-file .env --network="host" docker.pkg.github.com/seluj78/pymatcha/pymatcha-backend:latest
         # Wait for docker to be up
         - sleep 10
         # run newman tests
