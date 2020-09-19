@@ -11,7 +11,7 @@ function createAxiosInstance(baseURL) {
   });
 }
 
-const axiosInstance = createAxiosInstance('http://localhost:8080');
+const axiosInstance = createAxiosInstance(process.env.VUE_APP_BACKEND_BASE_URL);
 
 export default {
   install() {

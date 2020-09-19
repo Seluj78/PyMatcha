@@ -52,15 +52,14 @@ export default {
     async onSubmit() {
       try {
         this.clearError();
-        const passwordForgotResponse = await this.$http.post('/auth/password/forgot', this.formData);
-        if (passwordForgotResponse.status !== 200) {
-          this.displayError('Something went wrong on our end. We are sorry. Please, try again later.');
-          return;
-        }
+        await this.sendResetPasswordLink();
         this.forgotPasswordEmailSent = true;
       } catch (error) {
-        this.displayError('Something went wrong on our end. We are sorry. Please, try again later.');
+        this.displayError(this.$errorMessenger(error));
       }
+    },
+    async sendResetPasswordLink() {
+      await this.$http.post('/auth/password/forgot', this.formData);
     },
     clearError() {
       this.error.message = '';

@@ -11,7 +11,7 @@ services:
       MYSQL_ROOT_PASSWORD: root
       MYSQL_DATABASE: pymatcha
     env_file:
-      - .env
+      - .env.docker
     volumes:
       - mysql:/var/lib/mysql
     networks:
@@ -40,7 +40,7 @@ services:
       context: .
       dockerfile: backend.Dockerfile
     env_file:
-      - .env
+      - .env.docker
     entrypoint: celery worker --workdir . -A PyMatcha.celery -B --loglevel=info
     volumes:
       - backend:/backend
@@ -61,7 +61,7 @@ services:
       context: .
       dockerfile: backend.Dockerfile
     env_file:
-      - .env
+      - .env.docker
     ports:
       - "8080:5000"
     volumes:

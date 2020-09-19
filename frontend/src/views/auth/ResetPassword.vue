@@ -4,7 +4,7 @@
     <div class="auth-sub-container-error mb-4" v-if="error.happened">
       <h1 class="auth-sub-container-error-message">{{error.message}}</h1>
     </div>
-    <div class="auth-sub-container">
+    <div class="auth-sub-container" v-if="!error.happened">
       <div class="auth-sub-container-content" v-if="!passwordHasBeenReset">
         <img src="../../assets/auth/refresh.png" class="h-12">
         <h1 class="auth-sub-container-content-heading">Enter your new password</h1>
@@ -32,7 +32,7 @@
 <script>
 
 export default {
-  async beforeMount() {
+  async created() {
     await this.checkToken();
   },
   data: () => ({
@@ -53,24 +53,38 @@ export default {
       return 'This password is too easy to guess';
     },
     async onSubmit() {
-      const resetPasswordResponse = await this.$http.post('/auth/password/reset', this.formData);
-      if (resetPasswordResponse.status !== 200) {
-        this.error.message = resetPasswordResponse.data.error.message;
-        this.error.happened = true;
-        return;
+      try {
+        this.clearError();
+        await this.resetPassword();
+        this.passwordHasBeenReset = true;
+      } catch (error) {
+        this.displayError(this.$errorMessenger(error));
       }
-      this.passwordHasBeenReset = true;
     },
     async checkToken() {
+      try {
+        const { token } = this.$route.query;
+        if (!token) {
+          await this.$router.push('/accounts/password/reseterror');
+          return;
+        }
+        await this.$http.post('/auth/password/check_token', { token });
+      } catch (error) {
+        await this.$router.push('/accounts/password/reseterror');
+      }
+    },
+    async resetPassword() {
+      const { password } = this.formData;
       const { token } = this.$route.query;
-      if (!token) {
-        await this.$router.push('/accounts/password/reseterror');
-        return;
-      }
-      const tokenCheck = await this.$http.post('/auth/password/check_token', { token });
-      if (tokenCheck.status !== 200) {
-        await this.$router.push('/accounts/password/reseterror');
-      }
+      await this.$http.post('/auth/password/reset', { password, token });
+    },
+    clearError() {
+      this.error.message = '';
+      this.error.happened = false;
+    },
+    displayError(message) {
+      this.error.message = message;
+      this.error.happened = true;
     },
   },
 };
