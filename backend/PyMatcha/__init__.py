@@ -21,6 +21,7 @@ import logging
 import os
 
 import pymysql
+import sentry_sdk
 from celery import Celery
 from dotenv import load_dotenv
 from flask import Flask
@@ -32,6 +33,9 @@ from PyMatcha.utils.logging import setup_logging
 from PyMatcha.utils.tables import create_tables
 from pymysql.cursors import DictCursor
 from redis import StrictRedis
+from sentry_sdk import configure_scope
+from sentry_sdk.integrations.flask import FlaskIntegration
+
 
 PYMATCHA_ROOT = os.path.join(os.path.dirname(__file__), "../..")  # refers to application_top
 dotenv_path = os.path.join(PYMATCHA_ROOT, ".env")
@@ -78,6 +82,13 @@ from PyMatcha.utils.static import (
 
 if ENABLE_LOGGING == "True":
     setup_logging()
+
+sentry_sdk.init(
+    dsn="https://bb17c14c99d448e2804bf2f105d4ec52@o450203.ingest.sentry.io/5434438",
+    integrations=[FlaskIntegration()],
+    traces_sample_rate=1.0,
+)
+
 
 application = Flask(__name__)
 
@@ -183,6 +194,9 @@ def jwt_user_callback(identity):
     except NotFoundError:
         # The user who the server issues the token for was deleted in the db.
         return None
+
+    with configure_scope() as scope:
+        scope.user = {"email": u.email, "id": u.id, "username": u.username}
     redis.set("online_user:" + str(identity["id"]), datetime.datetime.utcnow().timestamp())
     return u
 
