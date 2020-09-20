@@ -1,6 +1,9 @@
 <template>
   <!-- eslint-disable max-len -->
   <div class="auth-container">
+    <div class="auth-sub-container-error mb-4" v-if="error.happened">
+      <h1 class="auth-sub-container-error-message">{{error.message}}</h1>
+    </div>
     <div class="auth-sub-container">
       <div class="auth-sub-container-content" v-if="!confirmationEmailSent">
         <div class="flex justify-center items-center">
@@ -13,11 +16,11 @@
         <ValidationObserver v-slot="{ handleSubmit, invalid }">
           <form @submit.prevent="handleSubmit(onSubmit)" class="mt-4">
             <ValidationProvider name="First Name" rules="required|alpha|max:20" v-slot="{errors}">
-              <input type="text" placeholder="First Name" v-model="formData.firstName" class="matcha-input">
+              <input type="text" placeholder="First Name" v-model="formData.first_name" class="matcha-input">
               <span class="matcha-input-error">{{ errors[0] }}</span>
             </ValidationProvider>
             <ValidationProvider name="Last Name" rules="required|alpha|max:20" v-slot="{errors}">
-              <input type="text" placeholder="Last Name" v-model="formData.lastName" class="matcha-input">
+              <input type="text" placeholder="Last Name" v-model="formData.last_name" class="matcha-input">
               <span class="matcha-input-error">{{ errors[0] }}</span>
             </ValidationProvider>
             <ValidationProvider name="Email" rules="required|email|max:50" v-slot="{errors}">
@@ -55,13 +58,17 @@
 export default {
   data: () => ({
     formData: {
-      firstName: '',
-      lastName: '',
+      first_name: '',
+      last_name: '',
       email: '',
       username: '',
       password: '',
     },
     confirmationEmailSent: false,
+    error: {
+      happened: false,
+      message: '',
+    },
   }),
   methods: {
     passwordErrorHandler(error) {
@@ -70,8 +77,25 @@ export default {
       }
       return 'This password is too easy to guess';
     },
-    onSubmit() {
-      this.confirmationEmailSent = true;
+    async onSubmit() {
+      try {
+        this.clearError();
+        await this.signUpUser(this.formData);
+        this.confirmationEmailSent = true;
+      } catch (error) {
+        this.displayError(this.$errorMessenger(error));
+      }
+    },
+    async signUpUser(user) {
+      await this.$http.post('/auth/register', user);
+    },
+    clearError() {
+      this.error.message = '';
+      this.error.happened = false;
+    },
+    displayError(message) {
+      this.error.message = message;
+      this.error.happened = true;
     },
   },
 };

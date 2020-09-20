@@ -1,6 +1,6 @@
 <template>
   <!-- eslint-disable max-len -->
-  <div class="auth-container">
+  <div class="auth-container" v-if="verified">
     <div class="auth-sub-container">
       <div class="auth-sub-container-content">
         <h1 class="auth-sub-container-content-heading">You are now verified</h1>
@@ -13,6 +13,30 @@
 <script>
 
 export default {
+  data: () => ({
+    verified: false,
+  }),
+  async created() {
+    try {
+      await this.checkToken();
+      await this.verifyUser();
+      this.verified = true;
+    } catch (error) {
+      await this.$router.push('/accounts/verify/error');
+    }
+  },
+  methods: {
+    async checkToken() {
+      const { token } = this.$route.query;
+      if (!token) {
+        await this.$router.push('/accounts/verify/error');
+      }
+    },
+    async verifyUser() {
+      const { token } = this.$route.query;
+      await this.$http.post(`/auth/confirm/${token}`, {});
+    },
+  },
 };
 
 </script>
