@@ -5,6 +5,7 @@ import random
 
 import Geohash
 import lorem
+from PyMatcha.models.image import Image
 from PyMatcha.models.tag import Tag
 from PyMatcha.models.user import get_user
 from PyMatcha.models.user import User
@@ -73,6 +74,7 @@ def populate_users(amount=150, drop_user_table=False):
 
             for tag in tags:
                 Tag.create(name=tag, user_id=u.id)
+            Image.create(user_id=u.id, link=user.get_picture(), is_primary=True)
         except ConflictError:
             pass  # Pass on the conflict error, this user wont be created because the username is taken. Who cares ?
 
