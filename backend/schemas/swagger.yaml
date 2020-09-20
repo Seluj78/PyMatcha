@@ -1387,6 +1387,11 @@ components:
           items:
             $ref: '#/components/schemas/Tag'
           uniqueItems: true
+        images:
+          type: array
+          items:
+            $ref: '#/components/schemas/Image'
+          uniqueItems: true
     Like:
       type: object
       properties:
@@ -1711,6 +1716,11 @@ components:
           items:
             $ref: '#/components/schemas/Tag'
           uniqueItems: true
+        images:
+          type: array
+          items:
+            $ref: '#/components/schemas/Image'
+          uniqueItems: true
     OnlineUser:
       type: object
       properties:
@@ -1722,3 +1732,26 @@ components:
           type: timestamp
           description: Timestamp of last time the user was online
           example: 1600332058.537065,
+    Image:
+      type: object
+      properties:
+        id:
+          type: integer
+          description: The image id
+          example: 1
+        user_id:
+          type: integer
+          description: The user id to whom the image belongs
+          example: 1
+        link:
+          type: string
+          description: The image link
+          example: https://i.imgur.com/OCqF907.png
+        timestamp:
+          type: date
+          description: When was the image added
+          example: Wed, 19 Sep 2020 19:24:02 GMT
+        is_primary:
+          type: boolean
+          description: Is this image the profile picture of the user
+          example: true
