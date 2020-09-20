@@ -2,15 +2,14 @@ import datetime
 import json
 import os
 import random
-import string
 
 import Geohash
 import lorem
-import names
 from PyMatcha.models.tag import Tag
 from PyMatcha.models.user import get_user
 from PyMatcha.models.user import User
 from PyMatcha.utils.errors import ConflictError
+from randomuser import RandomUser
 
 
 def gen_datetime(min_year: int = 1900, max_year: int = datetime.datetime.now().year) -> datetime.datetime:
@@ -25,51 +24,38 @@ def populate_users(amount=150, drop_user_table=False):
     if drop_user_table:
         User.drop_table()
         User.create_table()
-    for i in range(0, amount):
+    users = RandomUser.generate_users(amount=amount)
+    for user in users:
         gender = random.choice(["male", "female", "other"])
-
+        if gender != "other":
+            if gender == user.get_gender():
+                pass
+            else:
+                gender = user.get_gender()
         orientation = random.choice(["heterosexual", "homosexual", "bisexual", "other"])
-
-        first_name = names.get_first_name(gender=gender if gender != "other" else None)
-
-        last_name = names.get_last_name()
-
-        password_size = random.randint(6, 14)
-        chars = string.printable
-        password = "".join(random.choice(chars) for i in range(password_size))
 
         bio = lorem.paragraph()
 
-        birthdate = gen_datetime(min_year=1960, max_year=datetime.datetime.now().year - 18)
-
-        lat = random.random() * 2.0
-        lng = random.random() * 2.0
-        geohash = Geohash.encode(lat, lng)
+        coords = user.get_coordinates()
+        geohash = Geohash.encode(float(coords["latitude"]), float(coords["longitude"]))
 
         date_joined = gen_datetime(min_year=2017, max_year=datetime.datetime.now().year)
 
         date_lastseen = gen_datetime(min_year=2017, max_year=datetime.datetime.now().year)
+        username = user.get_username()
 
-        middle_mail = random.choice([".", "", "_"])
-        number = str(random.randint(0, 999))
-        end_mail = random.choice(["", number])
-        email = first_name + middle_mail + last_name + end_mail + "@gmail.com"
-
-        end_of_username = random.choice(["", number, last_name])
-
-        username = first_name + end_of_username
-
+        birthdate = datetime.datetime.strptime(user.get_dob(), "%Y-%m-%dT%H:%M:%S.%fZ").date()
         try:
             User.create(
-                first_name=first_name,
-                last_name=last_name,
-                email=email.lower(),
+                first_name=user.get_first_name(),
+                last_name=user.get_last_name(),
+                email=user.get_email(),
                 username=username,
-                password=password,
+                password=user.get_password(),
                 bio=bio,
                 gender=gender,
                 orientation=orientation,
-                birthdate=birthdate.date(),
+                birthdate=birthdate,
                 geohash=geohash,
                 heat_score=0,
                 is_online=random.choice([True, False]),
