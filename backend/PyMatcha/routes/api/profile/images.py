@@ -27,13 +27,27 @@ def add_image_profile():
     if file.filename == "":
         raise BadRequestError("No filename passed in request")
     if file:
-        tmp_img = BytesIO()
-        file.save(tmp_img)
-        link = upload_image(tmp_img, current_user.username)
-        # TODO: Check if an image is already primary
-        # TODO: Check if no more than 5 images
-        Image.create(current_user.id, link, is_primary=is_primary)
-        return SuccessOutput("image", link)
+        if is_primary:
+            try:
+                Image.get_multi(user_id=current_user.id, is_primary=True)
+            except ValueError:
+                # That means there was no primary image before
+                tmp_img = BytesIO()
+                file.save(tmp_img)
+                link = upload_image(tmp_img, current_user.username)
+                Image.create(current_user.id, link, is_primary=True)
+                return SuccessOutput("image", link)
+            else:
+                raise BadRequestError("There already is a primary image for user {}".format(current_user.id))
+        else:
+            image_count = len(Image.get_multis(user_id=current_user.id, is_primary=False))
+            if image_count >= 4:
+                raise BadRequestError("There's already enough images for this account")
+            tmp_img = BytesIO()
+            file.save(tmp_img)
+            link = upload_image(tmp_img, current_user.username)
+            Image.create(current_user.id, link, is_primary=False)
+            return SuccessOutput("image", link)
     else:
         raise ValueError("NO FILE")
 
