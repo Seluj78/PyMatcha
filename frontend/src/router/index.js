@@ -5,6 +5,7 @@ import SignUp from '../views/auth/SignUp.vue';
 import SignIn from '../views/auth/SignIn.vue';
 import ForgotPassword from '../views/auth/ForgotPassword.vue';
 import AccountVerified from '../views/auth/AccountVerified.vue';
+import AccountVerifiedError from '../views/auth/AccountVerifiedError.vue';
 import ResetPassword from '../views/auth/ResetPassword.vue';
 import ResetPasswordError from '../views/auth/ResetPasswordError.vue';
 
@@ -45,6 +46,11 @@ const routes = [
     path: '/accounts/verify',
     name: 'AccountVerified',
     component: AccountVerified,
+  },
+  {
+    path: '/accounts/verify/error',
+    name: 'AccountVerifiedError',
+    component: AccountVerifiedError,
   },
 ];
 

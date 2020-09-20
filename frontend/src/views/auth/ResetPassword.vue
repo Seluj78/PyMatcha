@@ -1,6 +1,6 @@
 <template>
   <!-- eslint-disable max-len -->
-  <div class="auth-container">
+  <div class="auth-container" v-if="tokenIsValid">
     <div class="auth-sub-container-error" v-if="error.happened">
       <h1 class="auth-sub-container-error-message">{{error.message}}</h1>
     </div>
@@ -43,8 +43,10 @@
 export default {
   async created() {
     await this.checkToken();
+    this.tokenIsValid = true;
   },
   data: () => ({
+    tokenIsValid: false,
     formData: {
       password: '',
       passwordRepeat: '',
