@@ -16,6 +16,10 @@
               <input type="password" placeholder="New Password" v-model="formData.password" class="matcha-input mt-0">
               <span class="matcha-input-error">{{ passwordErrorHandler(errors[0]) }}</span>
             </ValidationProvider>
+            <ValidationProvider name="Repeat Password" rules="required|confirmed:Password" v-slot="{errors}">
+              <input type="password" placeholder="Repeat Password" v-model="formData.passwordRepeat" class="matcha-input mt-4">
+              <span class="matcha-input-error">{{ passwordErrorHandler(errors[0]) }}</span>
+            </ValidationProvider>
             <input type="submit" :disabled="invalid" value="Reset password" v-bind:class="{'auth-sub-container-content-submit-button': true, 'opacity-50': invalid, 'cursor-pointer': !invalid}">
           </form>
         </ValidationObserver>
@@ -38,6 +42,7 @@ export default {
   data: () => ({
     formData: {
       password: '',
+      passwordRepeat: '',
     },
     passwordHasBeenReset: false,
     error: {
@@ -47,8 +52,11 @@ export default {
   }),
   methods: {
     passwordErrorHandler(error) {
-      if (!error || error === 'The Password field is required') {
+      if (!error || error === 'The Password field is required' || error === 'The Repeat Password field is required') {
         return error;
+      }
+      if (error === 'The Repeat Password field confirmation does not match') {
+        return 'Passwords do not match';
       }
       return 'This password is too easy to guess';
     },
