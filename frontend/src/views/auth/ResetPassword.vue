@@ -1,8 +1,13 @@
 <template>
   <!-- eslint-disable max-len -->
   <div class="auth-container">
-    <div class="auth-sub-container-error mb-4" v-if="error.happened">
+    <div class="auth-sub-container-error" v-if="error.happened">
       <h1 class="auth-sub-container-error-message">{{error.message}}</h1>
+    </div>
+    <div class="auth-sub-container-thinner mt-4" v-if="error.happened">
+      <div class="auth-sub-container-content">
+        <h1 class="auth-sub-container-content-paragraph"><router-link to="/accounts/signin" class="auth-sub-container-content-link">Sign in</router-link></h1>
+      </div>
     </div>
     <div class="auth-sub-container" v-if="!error.happened">
       <div class="auth-sub-container-content" v-if="!passwordHasBeenReset">
