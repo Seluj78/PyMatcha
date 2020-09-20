@@ -115,6 +115,22 @@
         @apply items-center;
     }
 
+    .auth-sub-container-error {
+        @apply bg-red-500;
+        @apply p-4;
+        @apply flex;
+        @apply justify-center;
+        @apply text-center;
+        @apply rounded-md;
+        @apply max-w-sm;
+        @apply w-full;
+    }
+
+    .auth-sub-container-error-message {
+        @apply text-white-matcha;
+        @apply text-xl;
+    }
+
     .auth-sub-container-content-heading {
         @apply text-base;
         @apply font-bold;
@@ -148,6 +164,10 @@
         @apply text-white-matcha;
         @apply py-2;
         @apply mt-4;
+    }
+
+    .auth-sub-container-content-submit-button:active, .auth-sub-container-content-submit-button:focus {
+        outline: none;
     }
 
     .auth-sub-container-content-button {

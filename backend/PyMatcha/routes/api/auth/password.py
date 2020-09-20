@@ -99,7 +99,7 @@ def reset_password():
 def check_token_validity():
     data = request.get_json()
     try:
-        confirm_token(data["token"], expiration=7200)
+        email, token_type = confirm_token(data["token"], expiration=7200)
     except (SignatureExpired, BadSignature) as e:
         if e == SignatureExpired:
             current_app.logger.debug("/auth/password/reset -> Signature Expired")
@@ -108,4 +108,12 @@ def check_token_validity():
             current_app.logger.debug("/auth/password/reset -> Bad Signature")
             raise BadRequestError("Bad Signature.", "Request another password reset and try again.")
     else:
+        try:
+            u = get_user(email)
+        except NotFoundError:
+            current_app.logger.debug("/auth/password/reset -> User not found")
+            raise NotFoundError("User not found.")
+        if u.previous_reset_token == data["token"]:
+            current_app.logger.debug("/auth/password/reset -> Token already used")
+            raise BadRequestError("Token already used", "Please request a new one.")
         return Success("Reset token is correct")

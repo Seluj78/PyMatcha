@@ -25,7 +25,7 @@
       </div>
       <hr class="bg-gray-300 w-full my-4">
       <div class="auth-sub-container-content">
-        <router-link to="/accounts/password/reset" class="auth-sub-container-content-link">Forgot password?</router-link>
+        <router-link to="/accounts/password/forgot" class="auth-sub-container-content-link">Forgot password?</router-link>
       </div>
     </div>
     <div class="auth-sub-container-thinner mt-4">
