@@ -1048,7 +1048,7 @@ paths:
                 token:
                   type: string
                   required: true
-                    example: qwERg3rtyhog23mrweof5ngib4j3ktnrvwefqjskldnakms
+                  example: qwERg3rtyhog23mrweof5ngib4j3ktnrvwefqjskldnakms
       responses:
         "404":
           $ref: '#/components/responses/NotFound'
