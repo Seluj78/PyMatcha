@@ -20,12 +20,12 @@ def add_image_profile():
     is_primary = request.args.get("is_primary", "false") == "true"
     # check if the post request has the file part
     if "file[]" not in request.files:
-        raise BadRequestError("No file passed in request")
+        raise BadRequestError("No file body passed in request form data")
     file = request.files["file[]"]
     # if user does not select file, browser also
     # submit an empty part without filename
     if file.filename == "":
-        raise BadRequestError("No filename passed in request")
+        raise BadRequestError("No file passed in request")
     if file:
         if is_primary:
             try:
@@ -34,7 +34,10 @@ def add_image_profile():
                 # That means there was no primary image before
                 tmp_img = BytesIO()
                 file.save(tmp_img)
-                link = upload_image(tmp_img, current_user.username)
+                try:
+                    link = upload_image(tmp_img, current_user.username)
+                except BadRequestError as e:
+                    raise e
                 Image.create(current_user.id, link, is_primary=True)
                 return SuccessOutput("image", link)
             else:
@@ -45,7 +48,10 @@ def add_image_profile():
                 raise BadRequestError("There's already enough images for this account")
             tmp_img = BytesIO()
             file.save(tmp_img)
-            link = upload_image(tmp_img, current_user.username)
+            try:
+                link = upload_image(tmp_img, current_user.username)
+            except BadRequestError as e:
+                raise e
             Image.create(current_user.id, link, is_primary=False)
             return SuccessOutput("image", link)
     else:
