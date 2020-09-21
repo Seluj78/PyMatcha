@@ -9,6 +9,7 @@ from PyMatcha.utils.errors import BadRequestError
 from PyMatcha.utils.errors import NotFoundError
 from PyMatcha.utils.images import upload_image
 from PyMatcha.utils.success import Success
+from PyMatcha.utils.success import SuccessDeleted
 from PyMatcha.utils.success import SuccessOutput
 
 images_bp = Blueprint("images", __name__)
@@ -43,7 +44,11 @@ def add_image_profile():
             else:
                 raise BadRequestError("There already is a primary image for user {}".format(current_user.id))
         else:
-            image_count = len(Image.get_multis(user_id=current_user.id, is_primary=False))
+            images = Image.get_multis(user_id=current_user.id, is_primary=False)
+            if images:
+                image_count = len(Image.get_multis(user_id=current_user.id, is_primary=False))
+            else:
+                image_count = 0
             if image_count >= 4:
                 raise BadRequestError("There's already enough images for this account")
             tmp_img = BytesIO()
@@ -66,7 +71,7 @@ def delete_image_profile(image_id):
     except ValueError:
         raise NotFoundError(f"Image not found for user {current_user.id}")
     image.delete()
-    return Success("Image successfully deleted.")
+    return SuccessDeleted("Image successfully deleted.")
 
 
 @images_bp.route("/profile/images/<image_id>", methods=["PUT"])
@@ -86,6 +91,7 @@ def change_main_image(image_id):
         current_main_image.save()
     image.is_primary = True
     image.save()
+    return Success("Profile picture successfully modified")
 
 
 @images_bp.route("/profile/images", methods=["GET"])
