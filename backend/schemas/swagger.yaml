@@ -1070,6 +1070,140 @@ paths:
                   message:
                     type: string
                     example: Reset token is correct.
+  /profile/images:
+    post:
+      tags:
+        - Profile
+      summary: Add image to profile
+      description: The image must be passed in the `file[]` in form-data
+      operationId: addImage
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: is_primary
+          schema:
+            type: boolean
+          required: true
+          example: true
+          description: Is the image the primary profile image
+      requestBody:
+        content:
+          image/png:
+            schema:
+              type: string
+              format: binary
+      responses:
+        "409":
+          $ref: "#/components/responses/BadRequest"
+        "200":
+          description: Image added successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    description: If the request is a success
+                    example: true
+                  code:
+                    type: integer
+                    description: The status code
+                    example: 200
+                  image:
+                    type: string
+                    example: https://i.imgur.com/Zv9DnWh.png
+    get:
+      summary: Get all user images
+      operationId: getAllUserImages
+      security:
+        - bearerAuth: [ ]
+      tags:
+        - Profile
+      responses:
+        "200":
+          description: Returned list of user images
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Image'
+  /profile/images/{image_id}:
+    put:
+      tags:
+        - Profile
+      summary: Edit which image is the primary one
+      description: This will change the previous primary image if it exists to the passed id
+      operationId: editPrimaryImage
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: image_id
+          in: path
+          required: true
+          description: The id of the image to become primary
+          schema:
+            type: string
+      responses:
+        "409":
+          $ref: "#/components/responses/BadRequest"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "200":
+          description: Profile picture successfully modified
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    description: If the request is a success
+                    example: true
+                  code:
+                    type: integer
+                    description: The status code
+                    example: 200
+                  message:
+                    type: string
+                    example: Profile picture successfully modified
+    delete:
+      tags:
+        - Profile
+      summary: Delete an image
+      operationId: deleteImage
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: image_id
+          in: path
+          required: true
+          description: The id of the image to be delete
+          schema:
+            type: string
+      responses:
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "200":
+          description: Profile picture successfully modified
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    description: If the request is a success
+                    example: true
+                  code:
+                    type: integer
+                    description: The status code
+                    example: 200
+                  message:
+                    type: string
+                    example: Image successfully deleted.
 
 
 servers:
