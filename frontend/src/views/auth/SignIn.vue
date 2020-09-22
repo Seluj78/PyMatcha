@@ -1,6 +1,9 @@
 <template>
   <!-- eslint-disable max-len -->
   <div class="auth-container">
+    <div class="auth-sub-container-error mb-4" v-if="error.happened">
+      <h1 class="auth-sub-container-error-message">{{error.message}}</h1>
+    </div>
     <div class="auth-sub-container">
       <div class="auth-sub-container-content">
         <div class="flex">
@@ -11,7 +14,7 @@
       <div class="auth-sub-container-content mt-4">
         <ValidationObserver v-slot="{ handleSubmit, invalid }">
           <form @submit.prevent="handleSubmit(onSubmit)">
-            <ValidationProvider name="Username" rules="required|max:20" v-slot="{errors}">
+            <ValidationProvider name="Username" rules="required|max:100" v-slot="{errors}">
               <input type="text" placeholder="Username" v-model="formData.username" class="matcha-input">
               <span class="matcha-input-error">{{ errors[0] }}</span>
             </ValidationProvider>
@@ -37,6 +40,8 @@
 </template>
 
 <script>
+import jwtDecode from 'jwt-decode';
+import { setAccessToken, setRefreshToken } from '../../auth/tokens';
 
 export default {
   data: () => ({
@@ -44,10 +49,43 @@ export default {
       username: '',
       password: '',
     },
+    error: {
+      happened: false,
+      message: '',
+    },
   }),
   methods: {
-    onSubmit() {
-      console.log('nice');
+    async onSubmit() {
+      try {
+        this.clearError();
+        const response = await this.signInUser(this.formData);
+        setAccessToken(response.data.return.access_token);
+        setRefreshToken(response.data.return.refresh_token);
+        await this.$store.dispatch('login', this.getUserFromJwt(response.data.return.access_token));
+        if (response.data.return.is_profile_completed) {
+          this.$router.push('/browse');
+        } else {
+          this.$router.push('/onboarding');
+        }
+      } catch (error) {
+        this.displayError(this.$errorMessenger(error));
+      }
+    },
+    async signInUser(user) {
+      const response = await this.$http.post('/auth/login', user);
+      return response;
+    },
+    getUserFromJwt(token) {
+      const { identity } = jwtDecode(token);
+      return identity;
+    },
+    clearError() {
+      this.error.message = '';
+      this.error.happened = false;
+    },
+    displayError(message) {
+      this.error.message = message;
+      this.error.happened = true;
     },
   },
 };

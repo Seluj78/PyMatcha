@@ -8,8 +8,26 @@ import AccountVerified from '../views/auth/AccountVerified.vue';
 import AccountVerifiedError from '../views/auth/AccountVerifiedError.vue';
 import ResetPassword from '../views/auth/ResetPassword.vue';
 import ResetPasswordError from '../views/auth/ResetPasswordError.vue';
+import Onboarding from '../views/app/Onboarding.vue';
+import store from '../store/index';
 
 Vue.use(VueRouter);
+
+function loggedInRedirectBrowse(to, from, next) {
+  if (store.getters.getLoggedInUser) {
+    next('/browse');
+  } else {
+    next();
+  }
+}
+
+function notLoggedInRedirectLogin(to, from, next) {
+  if (store.getters.getLoggedInUser) {
+    next();
+  } else {
+    next('/accounts/signin');
+  }
+}
 
 const routes = [
   {
@@ -21,36 +39,49 @@ const routes = [
     path: '/accounts/signup',
     name: 'SignUp',
     component: SignUp,
+    beforeEnter: loggedInRedirectBrowse,
   },
   {
     path: '/accounts/signin',
     name: 'SignIn',
     component: SignIn,
+    beforeEnter: loggedInRedirectBrowse,
   },
   {
     path: '/accounts/password/forgot',
     name: 'ForgotPassword',
     component: ForgotPassword,
+    beforeEnter: loggedInRedirectBrowse,
   },
   {
     path: '/accounts/password/reset',
     name: 'ResetPassword',
     component: ResetPassword,
+    beforeEnter: loggedInRedirectBrowse,
   },
   {
     path: '/accounts/password/reseterror',
     name: 'ResetPasswordError',
     component: ResetPasswordError,
+    beforeEnter: loggedInRedirectBrowse,
   },
   {
     path: '/accounts/verify',
     name: 'AccountVerified',
     component: AccountVerified,
+    beforeEnter: loggedInRedirectBrowse,
   },
   {
     path: '/accounts/verify/error',
     name: 'AccountVerifiedError',
     component: AccountVerifiedError,
+    beforeEnter: loggedInRedirectBrowse,
+  },
+  {
+    path: '/onboarding',
+    name: 'Onboarding',
+    component: Onboarding,
+    beforeEnter: notLoggedInRedirectLogin,
   },
 ];
 
