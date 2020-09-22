@@ -9,8 +9,10 @@ import { getAccessToken, getRefreshToken, handleAccessTokenExpiration } from '..
 Axios.defaults.baseURL = process.env.VUE_APP_BACKEND_BASE_URL;
 
 Axios.interceptors.request.use(async function (config) {
-  if (config.url === '/auth/refresh') {
+  if (config.url === '/auth/refresh' || config.url === '/auth/refresh_revoke') {
     config.headers.Authorization = `Bearer ${getRefreshToken()}`;
+  } else if (config.url === '/auth/access_revoke') {
+    config.headers.Authorization = `Bearer ${getAccessToken()}`;
   } else if (getAccessToken()) {
     await handleAccessTokenExpiration();
     if (getAccessToken()) {
