@@ -114,6 +114,7 @@ celery.conf.update(application.config)
 logging.debug("Configuring JWT")
 
 ACCESS_TOKEN_EXPIRES = datetime.timedelta(minutes=15)
+
 REFRESH_TOKEN_EXPIRES = datetime.timedelta(days=30)
 application.config["JWT_ACCESS_TOKEN_EXPIRES"] = ACCESS_TOKEN_EXPIRES
 application.config["JWT_REFRESH_TOKEN_EXPIRES"] = REFRESH_TOKEN_EXPIRES

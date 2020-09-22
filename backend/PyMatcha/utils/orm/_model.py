@@ -233,20 +233,26 @@ class Model(object):
             return False
         key = next(iter(kwargs))
         val = kwargs[key]
-
+        if isinstance(val, str):
+            typ = "CHAR"
+        else:
+            typ = None
         temp = cls()
+        fields = ", ".join(temp.fields.keys())
         with temp.db.cursor() as c:
-            c.execute(
+            if typ:
+                query = f"""
+                    SELECT {fields}
+                    FROM {cls.table_name}
+                    WHERE {key}=CAST('{val}' AS {typ} CHARACTER SET utf8mb4);
                 """
-                SELECT 
-                    {fields}
-                FROM 
-                    {table} 
-                WHERE   {cond}=%s""".format(
-                    fields=", ".join(temp.fields.keys()), table=cls.table_name, cond=key
-                ),
-                (val,),
-            )
+            else:
+                query = f"""
+                    SELECT {fields}
+                    FROM {cls.table_name}
+                    WHERE {key}={val};
+                """
+            c.execute(query)
 
             data = c.fetchone()
             c.close()
