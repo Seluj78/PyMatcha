@@ -486,34 +486,37 @@ class User(Model):
 
 
 def get_user(uid: Any[int, str]) -> Optional[User]:
-    not_found = 0
     # These initializations are to make PEP happy and silence warnings
-    f_user = None
+    f_user = None  # noqa
 
     if isinstance(uid, str):
         uid = uid.lower()
 
     try:
-        user = User.get(id=uid)
+        uid = int(uid)
     except ValueError:
-        not_found += 1
+        try:
+            user = User.get(username=uid)
+        except ValueError:
+            pass
+        else:
+            logging.debug("Found user {} from {}".format(user.id, uid))
+            return user
+        try:
+            user = User.get(email=uid)
+        except ValueError:
+            pass
+        else:
+            logging.debug("Found user {} from {}".format(user.id, uid))
+            return user
     else:
-        f_user = user
-    try:
-        user = User.get(username=uid)
-    except ValueError:
-        not_found += 1
-    else:
-        f_user = user
-    try:
-        user = User.get(email=uid)
-    except ValueError:
-        not_found += 1
-    else:
-        f_user = user
+        try:
+            user = User.get(id=uid)
+        except ValueError:
+            pass
+        else:
+            logging.debug("Found user {} from {}".format(user.id, uid))
+            return user
     # If none of those worked, throw an error
-    if not_found == 3:
-        logging.debug("User {} not found.".format(uid))
-        raise NotFoundError("User {} not found.".format(uid))
-    logging.debug("Found user {} from {}".format(f_user.id, uid))
-    return f_user
+    logging.debug("User {} not found.".format(uid))
+    raise NotFoundError("User {} not found.".format(uid))
