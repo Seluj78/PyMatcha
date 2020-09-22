@@ -50,9 +50,12 @@
         <button v-if="!slide4.imageUploaded" class="relative onboarding-sub-container-upload-button my-8">
           <input class="cursor-pointer opacity-0 absolute top-0 left-0 w-full h-full rounded-md" type="file" v-on:change="selectFile()" ref="file">ADD
         </button>
-      <div class="relative my-8 rounded-lg" v-if="slide4.imageUploaded">
-        <img src="../../assets/onboarding/remove.png" class="absolute cursor-pointer top-0 left-0 -ml-5 -mt-5 w-10" v-on:click="deleteImage()">
-        <img v-bind:src="slide4.imageUrl" class="w-full rounded-lg">
+
+      <div class="w-full relative" v-if="slide4.imageUploaded">
+        <img src="../../assets/onboarding/remove.png" class="absolute cursor-pointer top-0 right-0 mt-6 -mr-3 w-8 z-10" v-on:click="deleteImage()">
+        <div class="relative overflow-hidden bg-red-600 rounded-lg w-full my-10" style="padding-bottom: 70%">
+          <img v-bind:src="slide4.imageUrl" class="absolute object-cover w-full h-full rounded-lg">
+        </div>
       </div>
       <button class="onboarding-sub-container-content-button-outline-light mt-0" v-on:click="nextSlide()">{{buttonText}}</button>
     </section>
