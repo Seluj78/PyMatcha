@@ -17,6 +17,7 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 """
 from argon2 import PasswordHasher
+from argon2.exceptions import VerificationError
 
 ph = PasswordHasher()
 
@@ -26,4 +27,9 @@ def hash_password(password: str) -> str:
 
 
 def check_password(hash: str, password: str) -> bool:
-    return ph.verify(hash, password)
+    try:
+        ph.verify(hash, password)
+    except VerificationError:
+        return False
+    else:
+        return True
