@@ -3656,110 +3656,6 @@
 								}
 							},
 							"response": []
-						},
-						{
-							"name": "No form data",
-							"event": [
-								{
-									"listen": "test",
-									"script": {
-										"id": "5ed3ecf7-b928-433b-8b33-d9d5711d15d9",
-										"exec": [
-											"var response = JSON.parse(responseBody);",
-											"",
-											"",
-											"pm.test(\"Status code is 400\", function () {",
-											"    pm.response.to.have.status(400);",
-											"});",
-											"",
-											"tests[\"JSON return code is 400\"] = response.code == 400",
-											"",
-											"tests[\"success is false\"] = response.success == false",
-											"tests[\"Message is correct\"] = response.error.message == \"No file body passed in request form data\"",
-											"tests[\"Error type is Bad Request\"] = response.error.type == \"BadRequestError\""
-										],
-										"type": "text/javascript"
-									}
-								}
-							],
-							"request": {
-								"method": "POST",
-								"header": [],
-								"url": {
-									"raw": "{{host}}/profile/images?is_primary=true",
-									"host": [
-										"{{host}}"
-									],
-									"path": [
-										"profile",
-										"images"
-									],
-									"query": [
-										{
-											"key": "is_primary",
-											"value": "true"
-										}
-									]
-								}
-							},
-							"response": []
-						},
-						{
-							"name": "No filename passed",
-							"event": [
-								{
-									"listen": "test",
-									"script": {
-										"id": "796e34f1-1865-44a6-94b2-952bac223588",
-										"exec": [
-											"var response = JSON.parse(responseBody);",
-											"",
-											"",
-											"pm.test(\"Status code is 400\", function () {",
-											"    pm.response.to.have.status(400);",
-											"});",
-											"",
-											"tests[\"JSON return code is 400\"] = response.code == 400",
-											"",
-											"tests[\"success is false\"] = response.success == false",
-											"tests[\"Message is correct\"] = response.error.message == \"No file body passed in request form data\"",
-											"tests[\"Error type is Bad Request\"] = response.error.type == \"BadRequestError\""
-										],
-										"type": "text/javascript"
-									}
-								}
-							],
-							"request": {
-								"method": "POST",
-								"header": [],
-								"body": {
-									"mode": "formdata",
-									"formdata": [
-										{
-											"key": "file[]",
-											"type": "file",
-											"src": []
-										}
-									]
-								},
-								"url": {
-									"raw": "{{host}}/profile/images?is_primary=true",
-									"host": [
-										"{{host}}"
-									],
-									"path": [
-										"profile",
-										"images"
-									],
-									"query": [
-										{
-											"key": "is_primary",
-											"value": "true"
-										}
-									]
-								}
-							},
-							"response": []
 						}
 					],
 					"protocolProfileBehavior": {},
@@ -6092,92 +5988,92 @@
 	],
 	"variable": [
 		{
-			"id": "dbd5ea57-ea0b-4311-9be3-d905bcdabca4",
+			"id": "53aff055-946c-43b1-91e6-d1874c8ee43d",
 			"key": "host",
 			"value": "http://127.0.0.1:5000"
 		},
 		{
-			"id": "3e82ac7a-d332-442a-a8a8-d39856c7ea89",
+			"id": "7a0eee2f-8116-47a7-b62c-0be31819b97f",
 			"key": "user_id",
 			"value": ""
 		},
 		{
-			"id": "09b1aecc-2fee-44a2-a876-447f941033e4",
+			"id": "f1e6fb80-91f4-4ef9-8f02-8661cbf2347f",
 			"key": "user_email",
 			"value": "foo@example.org"
 		},
 		{
-			"id": "668c4556-446c-4f3d-a7e8-ff7380a8ed26",
+			"id": "78e811e8-310b-4066-ade2-30246a923885",
 			"key": "user_username",
 			"value": "foo"
 		},
 		{
-			"id": "d425fd80-82fb-4a9f-b322-a00ae9e4e5d0",
+			"id": "bae904c3-7b05-445b-99bd-1420cb5163fe",
 			"key": "user_password",
 			"value": "admin"
 		},
 		{
-			"id": "6ad763cc-a8bf-4d22-991a-c238fc49f493",
+			"id": "01ba2b0c-d215-4668-b983-0373208392ac",
 			"key": "user_firstname",
 			"value": "Foo"
 		},
 		{
-			"id": "972637f0-7bf1-431a-9912-149f48169d62",
+			"id": "81c91547-a32e-43cf-bbc8-1de311d06167",
 			"key": "user_lastname",
 			"value": "Bar"
 		},
 		{
-			"id": "d1129824-8c4e-4058-bc9b-77c1250e7842",
+			"id": "15b90c7f-49f4-44b1-93a2-89dcf3a4e30b",
 			"key": "debug_token",
 			"value": "xX69jules69Xx"
 		},
 		{
-			"id": "99e98331-5d4a-4a29-b221-b3265c3b7f69",
+			"id": "316d7b20-e02c-4fe2-907d-f597dba7ed21",
 			"key": "user_access_token",
 			"value": ""
 		},
 		{
-			"id": "cf67ac74-ba7e-432f-aa37-1248340bbcdc",
+			"id": "ce1be10e-2043-4111-9bbb-3849243cf231",
 			"key": "user_refresh_token",
 			"value": ""
 		},
 		{
-			"id": "d403b769-9895-48c2-ae87-2e5ca81f8a89",
+			"id": "da19835c-ed26-4cd7-b01e-efbc462f1d6a",
 			"key": "expired_token",
 			"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE1OTAyNDIyNjQsIm5iZiI6MTU5MDI0MjI2NCwianRpIjoiNTM0ZGI5NzQtOWE4Ni00MGViLWE1NDEtMDg3N2ZmNzQ3NDVhIiwiZXhwIjoxNTkwMjQyMzI0LCJpZGVudGl0eSI6eyJpZCI6NTEyLCJlbWFpbCI6ImZvb0BleGFtcGxlLm9yZyIsInVzZXJuYW1lIjoiYmFyIiwiaXNfb25saW5lIjp0cnVlLCJkYXRlX2xhc3RzZWVuIjoiU2F0LCAyMyBNYXkgMjAyMCAxMzo1Nzo0NCBHTVQifSwiZnJlc2giOnRydWUsInR5cGUiOiJhY2Nlc3MifQ.NTp2P0WNkXDwzuzrcNIQdeAfizQ57HQgkzBLSvY1yHU"
 		},
 		{
-			"id": "1ab8729c-be33-463f-bdb8-48970d0f5e6f",
+			"id": "6a910941-9868-4523-928a-e4b7d04c2b70",
 			"key": "user_orientation",
 			"value": "heterosexual"
 		},
 		{
-			"id": "0fb694c5-a37d-4888-bff8-51d394d1885f",
+			"id": "5e6ff849-cbfa-4ed2-b570-96a2ecd08d91",
 			"key": "user_bio",
 			"value": "Lorem Ipsum is the single greatest threat. We are not - we are not keeping up with other websites. Lorem Ipsum best not make any more threats to your website. It will be met with fire and fury like the world has never seen. Does everybody know that pig named Lorem Ipsum? An ‘extremely credible source’ has called my office and told me that Barack Obama’s placeholder text is a fraud."
 		},
 		{
-			"id": "506c11b7-28bc-40a4-8b16-bb3e4c4dfb82",
+			"id": "27cc8ed7-b8d0-42fd-9420-c40a8c089306",
 			"key": "user_gender",
 			"value": "male"
 		},
 		{
-			"id": "5af737dd-f310-4cf0-a2b4-74572b4b0b33",
+			"id": "1b9d648d-5e82-4358-a17b-9c3d69c3a34f",
 			"key": "user_birthdate",
 			"value": "06/04/1998"
 		},
 		{
-			"id": "e1facd09-f9b4-4581-a2f5-ae72bebac8bf",
+			"id": "e75cc79b-c2fa-4b0f-a6aa-9562de7d3145",
 			"key": "user_lat",
 			"value": "44.8404"
 		},
 		{
-			"id": "c25008f0-5501-4dd8-8068-901781f1c72b",
+			"id": "9223b247-1c80-4560-bd03-b3dc368073c2",
 			"key": "user_lng",
 			"value": "-0.5805"
 		},
 		{
-			"id": "bae8bc29-fdda-4426-bc70-32448fd6941d",
+			"id": "4668401a-3b23-40a6-91ca-bff424a3dcfc",
 			"key": "user_ip",
 			"value": "77.205.46.181"
 		}
