@@ -85,20 +85,11 @@ class User(Model):
         confirmed_on: datetime.datetime = None,
     ) -> User:
         # Check email availability
-        try:
-            User.get(email=email)
-        except ValueError:
-            pass
-        else:
+        if User.get(email=email):
             logging.warning("Email {} taken".format(email))
             raise ConflictError("Email {} taken.".format(email), "Use another email.")
 
-        # Check username availability
-        try:
-            User.get(username=username)
-        except ValueError:
-            pass
-        else:
+        if User.get(username=username):
             logging.warning("Username {} taken".format(username))
             raise ConflictError("Username {} taken.".format(username), "Try another username.")
 
@@ -153,20 +144,12 @@ class User(Model):
     @staticmethod
     def register(email: str, username: str, password: str, first_name: str, last_name: str) -> User:
         # Check email availability
-        try:
-            User.get(email=email)
-        except ValueError:
-            pass
-        else:
+        if User.get(email=email):
             logging.debug("Email {} taken".format(email))
             raise ConflictError("Email {} taken.".format(email), "Use another email.")
 
         # Check username availability
-        try:
-            User.get(username=username)
-        except ValueError:
-            pass
-        else:
+        if User.get(username=username):
             logging.warning("Username {} taken".format(username))
             raise ConflictError("Username {} taken.".format(username), "Try another username.")
 
@@ -430,26 +413,17 @@ def get_user(uid: Any[int, str]) -> Optional[User]:
     try:
         uid = int(uid)
     except ValueError:
-        try:
-            user = User.get(username=uid)
-        except ValueError:
-            pass
-        else:
+        user = User.get(username=uid)
+        if user:
             logging.debug("Found user {} from {}".format(user.id, uid))
             return user
-        try:
-            user = User.get(email=uid)
-        except ValueError:
-            pass
-        else:
+        user = User.get(email=uid)
+        if user:
             logging.debug("Found user {} from {}".format(user.id, uid))
             return user
     else:
-        try:
-            user = User.get(id=uid)
-        except ValueError:
-            pass
-        else:
+        user = User.get(id=uid)
+        if user:
             logging.debug("Found user {} from {}".format(user.id, uid))
             return user
     # If none of those worked, throw an error

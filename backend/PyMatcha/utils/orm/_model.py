@@ -221,11 +221,11 @@ class Model(object):
         """
         Get a model from the database, using a single keyword argument as a filter.
 
-        Class method allows you to use without instanciation eg.
+        Class method allows you to use without instantiation eg.
 
             model = Model.get(username="test")
 
-        Returns a populated user instance on success and raises an error if the row count was 0
+        Returns a populated user instance on success and returns none if nothing was found
 
         """
 
@@ -259,7 +259,7 @@ class Model(object):
         if data:
             return cls(data)
         else:
-            raise ValueError("Not found.")
+            return None
 
     @classmethod
     def get_multi(cls, **kwargs):
@@ -305,7 +305,7 @@ class Model(object):
         if data:
             return cls(data)
         else:
-            raise ValueError("Not found.")
+            return None
 
     @classmethod
     def get_multis(cls, **kwargs) -> List:
@@ -359,7 +359,7 @@ class Model(object):
                 ret_list.append(cls(i))
             return ret_list
         else:
-            return None
+            return []
 
     @classmethod
     def select_all(cls):
