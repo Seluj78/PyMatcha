@@ -59,6 +59,8 @@ REQUIRED_ENV_VARS = [
     "REDIS_PORT",
     "DEBUG_AUTH_TOKEN",
     "FRONTEND_BASE_URL",
+    "IMGUR_CLIENT_ID",
+    "IMGUR_CLIENT_SECRET",
 ]
 
 for item in REQUIRED_ENV_VARS:
@@ -224,6 +226,7 @@ from PyMatcha.routes.api.like import like_bp
 from PyMatcha.routes.api.match import match_bp
 from PyMatcha.routes.api.messages import messages_bp
 from PyMatcha.routes.api.recommendations import recommendations_bp
+from PyMatcha.routes.api.profile.images import images_bp
 
 logging.debug("Registering Flask blueprints")
 application.register_blueprint(user_bp)
@@ -239,6 +242,7 @@ application.register_blueprint(like_bp)
 application.register_blueprint(match_bp)
 application.register_blueprint(messages_bp)
 application.register_blueprint(recommendations_bp)
+application.register_blueprint(images_bp)
 
 if application.debug:
     logging.debug("Registering debug route")

@@ -7,6 +7,7 @@ from flask import request
 from flask_jwt_extended import current_user
 from flask_jwt_extended import jwt_required
 from PyMatcha import redis
+from PyMatcha.models.image import Image
 from PyMatcha.models.like import Like
 from PyMatcha.models.match import Match
 from PyMatcha.models.message import Message
@@ -141,6 +142,7 @@ def delete_tables():
     User.drop_table()
     Tag.drop_table()
     Message.drop_table()
+    Image.drop_table()
 
     Match.create_table()
     Like.create_table()
@@ -149,6 +151,7 @@ def delete_tables():
     User.create_table()
     Tag.create_table()
     Message.create_table()
+    Image.create_table()
     return "", 204
 
 

@@ -1048,7 +1048,7 @@ paths:
                 token:
                   type: string
                   required: true
-                    example: qwERg3rtyhog23mrweof5ngib4j3ktnrvwefqjskldnakms
+                  example: qwERg3rtyhog23mrweof5ngib4j3ktnrvwefqjskldnakms
       responses:
         "404":
           $ref: '#/components/responses/NotFound'
@@ -1070,6 +1070,140 @@ paths:
                   message:
                     type: string
                     example: Reset token is correct.
+  /profile/images:
+    post:
+      tags:
+        - Profile
+      summary: Add image to profile
+      description: The image must be passed in the `file[]` in form-data
+      operationId: addImage
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: is_primary
+          schema:
+            type: boolean
+          required: true
+          example: true
+          description: Is the image the primary profile image
+      requestBody:
+        content:
+          image/png:
+            schema:
+              type: string
+              format: binary
+      responses:
+        "409":
+          $ref: "#/components/responses/BadRequest"
+        "200":
+          description: Image added successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    description: If the request is a success
+                    example: true
+                  code:
+                    type: integer
+                    description: The status code
+                    example: 200
+                  image:
+                    type: string
+                    example: https://i.imgur.com/Zv9DnWh.png
+    get:
+      summary: Get all user images
+      operationId: getAllUserImages
+      security:
+        - bearerAuth: [ ]
+      tags:
+        - Profile
+      responses:
+        "200":
+          description: Returned list of user images
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Image'
+  /profile/images/{image_id}:
+    put:
+      tags:
+        - Profile
+      summary: Edit which image is the primary one
+      description: This will change the previous primary image if it exists to the passed id
+      operationId: editPrimaryImage
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: image_id
+          in: path
+          required: true
+          description: The id of the image to become primary
+          schema:
+            type: string
+      responses:
+        "409":
+          $ref: "#/components/responses/BadRequest"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "200":
+          description: Profile picture successfully modified
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    description: If the request is a success
+                    example: true
+                  code:
+                    type: integer
+                    description: The status code
+                    example: 200
+                  message:
+                    type: string
+                    example: Profile picture successfully modified
+    delete:
+      tags:
+        - Profile
+      summary: Delete an image
+      operationId: deleteImage
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: image_id
+          in: path
+          required: true
+          description: The id of the image to be delete
+          schema:
+            type: string
+      responses:
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "200":
+          description: Profile picture successfully modified
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    description: If the request is a success
+                    example: true
+                  code:
+                    type: integer
+                    description: The status code
+                    example: 200
+                  message:
+                    type: string
+                    example: Image successfully deleted.
 
 
 servers:
@@ -1386,6 +1520,11 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/Tag'
+          uniqueItems: true
+        images:
+          type: array
+          items:
+            $ref: '#/components/schemas/Image'
           uniqueItems: true
     Like:
       type: object
@@ -1711,6 +1850,11 @@ components:
           items:
             $ref: '#/components/schemas/Tag'
           uniqueItems: true
+        images:
+          type: array
+          items:
+            $ref: '#/components/schemas/Image'
+          uniqueItems: true
     OnlineUser:
       type: object
       properties:
@@ -1722,3 +1866,26 @@ components:
           type: timestamp
           description: Timestamp of last time the user was online
           example: 1600332058.537065,
+    Image:
+      type: object
+      properties:
+        id:
+          type: integer
+          description: The image id
+          example: 1
+        user_id:
+          type: integer
+          description: The user id to whom the image belongs
+          example: 1
+        link:
+          type: string
+          description: The image link
+          example: https://i.imgur.com/OCqF907.png
+        timestamp:
+          type: date
+          description: When was the image added
+          example: Wed, 19 Sep 2020 19:24:02 GMT
+        is_primary:
+          type: boolean
+          description: Is this image the profile picture of the user
+          example: true
