@@ -37,13 +37,14 @@ def update_heat_scores():
         reports_received = len(user.get_reports_received())
         views = len(user.get_views())
         matches = len(user.get_matches())
-        try:
-            messages = len(Message.get_multi(to_id=user.id))
-        except ValueError:
+        messages = Message.get_multi(to_id=user.id)
+        if not messages:
             messages = 0
+        else:
+            messages = len(messages)
 
         score = BASE_HEAT_SCORE
-        if user.username == "seluj78" or user.username == "tet":
+        if user.username == "seluj78" or user.username == "lauris":
             score += 100
         score += likes_received * LIKES_MULTIPLIER
         score += superlikes_received * SUPERLIKES_MULTIPLIER
@@ -71,12 +72,8 @@ def update_offline_users():
         date_lastseen = float(redis.get(key))
         # If the user has passed the deadline
         if date_lastseen < login_deadline_timestamp:
-            try:
-                u = User.get(id=user_id)
-            except ValueError:
-                # Edge case where the user has been deleted from DB while he was still online
-                pass
-            else:
+            u = User.get(id=user_id)
+            if u:
                 u.date_lastseen = datetime.datetime.fromtimestamp(date_lastseen)
                 u.is_online = False
                 u.save()
@@ -85,9 +82,8 @@ def update_offline_users():
             redis.delete(key)
             count += 1
         else:
-            try:
-                u = User.get(id=user_id)
-            except ValueError:
+            u = User.get(id=user_id)
+            if not u:
                 # Edge case where the user has been deleted from DB while he was still online
                 redis.delete(key)
             else:

@@ -98,20 +98,18 @@ def see_conversation_messages(with_uid):
     except NotFoundError:
         raise NotFoundError(f"With user {with_uid} not found.")
     unseen_messages = Message.get_multis(from_id=with_user.id, to_id=current_user.id, is_seen=False)
-    if unseen_messages:
-        for message in unseen_messages:
-            message.is_seen = True
-            message.seen_timestamp = datetime.datetime.utcnow()
-            message.save()
+    for message in unseen_messages:
+        message.is_seen = True
+        message.seen_timestamp = datetime.datetime.utcnow()
+        message.save()
     return Success("Messages marked as seen.")
 
 
 @messages_bp.route("/messages/like/<message_id>", methods=["POST"])
 @jwt_required
 def like_message(message_id):
-    try:
-        message = Message.get(id=message_id)
-    except ValueError:
+    message = Message.get(id=message_id)
+    if not message:
         raise NotFoundError(f"Message {message_id} not found.")
     if message.from_id == current_user.id:
         raise BadRequestError("Cannot like your own message.")
@@ -127,9 +125,8 @@ def like_message(message_id):
 @messages_bp.route("/messages/unlike/<message_id>", methods=["POST"])
 @jwt_required
 def unlike_message(message_id):
-    try:
-        message = Message.get(id=message_id)
-    except ValueError:
+    message = Message.get(id=message_id)
+    if not message:
         raise NotFoundError(f"Message {message_id} not found.")
     if message.from_id == current_user.id:
         raise BadRequestError("Cannot unlike your own message.")
@@ -146,8 +143,5 @@ def unlike_message(message_id):
 @jwt_required
 def get_new_messages():
     message_list = Message.get_multis(to_id=current_user.id, is_seen=False)
-    if not message_list:
-        new_messages = []
-    else:
-        new_messages = [m.to_dict() for m in message_list]
+    new_messages = [m.to_dict() for m in message_list]
     return SuccessOutput("new_messages", new_messages)
