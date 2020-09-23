@@ -66,9 +66,8 @@ def add_image_profile():
 @images_bp.route("/profile/images/<image_id>", methods=["DELETE"])
 @jwt_required
 def delete_image_profile(image_id):
-    try:
-        image = Image.get(id=image_id)
-    except ValueError:
+    image = Image.get(id=image_id)
+    if not image:
         raise NotFoundError(f"Image not found for user {current_user.id}")
     image.delete()
     return SuccessDeleted("Image successfully deleted.")
@@ -77,9 +76,8 @@ def delete_image_profile(image_id):
 @images_bp.route("/profile/images/<image_id>", methods=["PUT"])
 @jwt_required
 def change_main_image(image_id):
-    try:
-        image = Image.get(id=image_id)
-    except ValueError:
+    image = Image.get(id=image_id)
+    if not image:
         raise NotFoundError(f"Image not found for user {current_user.id}")
     try:
         current_main_image = Image.get_multi(user_id=current_user.id, is_primary=True)
@@ -98,7 +96,5 @@ def change_main_image(image_id):
 @jwt_required
 def get_images_profile():
     images = Image.get_multis(user_id=current_user.id)
-    ret = []
-    if images:
-        ret = [image.to_dict() for image in images]
+    ret = [image.to_dict() for image in images]
     return SuccessOutput("images", ret)
