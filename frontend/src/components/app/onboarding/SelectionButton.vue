@@ -4,11 +4,14 @@
         'onboarding-sub-container-content-button-outline': true,
         'mt-2': true,
         'onboarding-sub-container-content-button-outline-selected': selected,
+        'cursor-default': invalid,
       }"
     v-on:click="select(val)">{{val}}</h1>
 </template>
 
 <script>
+/* eslint-disable max-len */
+
 export default {
   props: ['val', 'bus'],
   data: () => ({
@@ -17,6 +20,9 @@ export default {
   }),
   methods: {
     select(val) {
+      if (!this.selected && this.$parent.maxInterests && this.$parent.optionSelected.length === this.$parent.maxInterests) {
+        return;
+      }
       if (this.selected) {
         this.selected = false;
         this.selectedValue = '';
@@ -31,6 +37,11 @@ export default {
       if (this.val !== selectedVal) {
         this.selected = false;
       }
+    },
+  },
+  computed: {
+    invalid() {
+      return !this.selected && this.$parent.maxInterests && this.$parent.optionSelected.length === this.$parent.maxInterests;
     },
   },
   mounted() {

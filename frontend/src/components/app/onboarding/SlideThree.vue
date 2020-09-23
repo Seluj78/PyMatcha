@@ -50,8 +50,10 @@ export default {
       this.$emit('saveInput', 'slideThree', this.optionSelected, 0);
     },
     select(...args) {
-      const [val] = args;
-      this.optionSelected.push(val);
+      if (this.optionSelected.length < this.maxInterests) {
+        const [val] = args;
+        this.optionSelected.push(val);
+      }
     },
     deselect(val) {
       this.optionSelected = this.optionSelected.filter((e) => e !== val);
