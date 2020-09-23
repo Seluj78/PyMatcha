@@ -3591,7 +3591,7 @@
 											"tests[\"JSON return code is 404\"] = response.code == 404",
 											"",
 											"tests[\"success is false\"] = response.success == false",
-											"tests[\"Message is correct\"] = response.error.message == \"Image not found for user 1\"",
+											"tests[\"Message is correct\"] = response.error.message == \"Image not found for user 2\"",
 											"tests[\"Error type is Bad Request\"] = response.error.type == \"NotFoundError\""
 										],
 										"type": "text/javascript"
@@ -3633,7 +3633,7 @@
 											"tests[\"JSON return code is 404\"] = response.code == 404",
 											"",
 											"tests[\"success is false\"] = response.success == false",
-											"tests[\"Message is correct\"] = response.error.message == \"Image not found for user 1\"",
+											"tests[\"Message is correct\"] = response.error.message == \"Image not found for user 2\"",
 											"tests[\"Error type is Bad Request\"] = response.error.type == \"NotFoundError\""
 										],
 										"type": "text/javascript"
@@ -3722,7 +3722,7 @@
 											"tests[\"JSON return code is 400\"] = response.code == 400",
 											"",
 											"tests[\"success is false\"] = response.success == false",
-											"tests[\"Message is correct\"] = response.error.message == \"No file passed in request\"",
+											"tests[\"Message is correct\"] = response.error.message == \"No file body passed in request form data\"",
 											"tests[\"Error type is Bad Request\"] = response.error.type == \"BadRequestError\""
 										],
 										"type": "text/javascript"
@@ -3756,642 +3756,6 @@
 											"key": "is_primary",
 											"value": "true"
 										}
-									]
-								}
-							},
-							"response": []
-						},
-						{
-							"name": "Upload user's primary image",
-							"event": [
-								{
-									"listen": "test",
-									"script": {
-										"id": "1f9336e2-3198-4ede-91bc-2cfba03c1cbb",
-										"exec": [
-											"var response = JSON.parse(responseBody);",
-											"",
-											"",
-											"pm.test(\"Status code is 200\", function () {",
-											"    pm.response.to.have.status(200);",
-											"});",
-											"",
-											"tests[\"JSON return code is 200\"] = response.code == 200",
-											"",
-											"tests[\"success is true\"] = response.success == true",
-											"tests[\"Image link is returned\"] = response.image != \"\""
-										],
-										"type": "text/javascript"
-									}
-								}
-							],
-							"request": {
-								"method": "POST",
-								"header": [],
-								"body": {
-									"mode": "formdata",
-									"formdata": [
-										{
-											"key": "file[]",
-											"type": "file",
-											"src": "/Users/seluj78/Postman/files/logo.png"
-										}
-									]
-								},
-								"url": {
-									"raw": "{{host}}/profile/images?is_primary=true",
-									"host": [
-										"{{host}}"
-									],
-									"path": [
-										"profile",
-										"images"
-									],
-									"query": [
-										{
-											"key": "is_primary",
-											"value": "true"
-										}
-									]
-								}
-							},
-							"response": []
-						},
-						{
-							"name": "Upload a second primary image",
-							"event": [
-								{
-									"listen": "test",
-									"script": {
-										"id": "a6d1566f-55bb-4b0e-b683-ef22dab94edf",
-										"exec": [
-											"var response = JSON.parse(responseBody);",
-											"",
-											"",
-											"pm.test(\"Status code is 400\", function () {",
-											"    pm.response.to.have.status(400);",
-											"});",
-											"",
-											"tests[\"JSON return code is 400\"] = response.code == 400",
-											"",
-											"tests[\"success is false\"] = response.success == false",
-											"tests[\"Message is correct\"] = response.error.message == \"There already is a primary image for user 1\"",
-											"tests[\"Error type is Bad Request\"] = response.error.type == \"BadRequestError\""
-										],
-										"type": "text/javascript"
-									}
-								}
-							],
-							"request": {
-								"method": "POST",
-								"header": [],
-								"body": {
-									"mode": "formdata",
-									"formdata": [
-										{
-											"key": "file[]",
-											"type": "file",
-											"src": "/Users/seluj78/Postman/files/logo.png"
-										}
-									]
-								},
-								"url": {
-									"raw": "{{host}}/profile/images?is_primary=true",
-									"host": [
-										"{{host}}"
-									],
-									"path": [
-										"profile",
-										"images"
-									],
-									"query": [
-										{
-											"key": "is_primary",
-											"value": "true"
-										}
-									]
-								}
-							},
-							"response": []
-						},
-						{
-							"name": "Upload image 2",
-							"event": [
-								{
-									"listen": "test",
-									"script": {
-										"id": "57387540-c8f5-4822-adb1-9e841d5b85f5",
-										"exec": [
-											"var response = JSON.parse(responseBody);",
-											"",
-											"",
-											"pm.test(\"Status code is 200\", function () {",
-											"    pm.response.to.have.status(200);",
-											"});",
-											"",
-											"tests[\"JSON return code is 200\"] = response.code == 200",
-											"",
-											"tests[\"success is true\"] = response.success == true",
-											"tests[\"Image link is returned\"] = response.image != \"\""
-										],
-										"type": "text/javascript"
-									}
-								}
-							],
-							"request": {
-								"method": "POST",
-								"header": [],
-								"body": {
-									"mode": "formdata",
-									"formdata": [
-										{
-											"key": "file[]",
-											"type": "file",
-											"src": "/Users/seluj78/Postman/files/logo.png"
-										}
-									]
-								},
-								"url": {
-									"raw": "{{host}}/profile/images?is_primary=false",
-									"host": [
-										"{{host}}"
-									],
-									"path": [
-										"profile",
-										"images"
-									],
-									"query": [
-										{
-											"key": "is_primary",
-											"value": "false"
-										}
-									]
-								}
-							},
-							"response": []
-						},
-						{
-							"name": "Upload image 3",
-							"event": [
-								{
-									"listen": "test",
-									"script": {
-										"id": "8080dfae-5faa-4e43-bcfd-bd64c82287e2",
-										"exec": [
-											"var response = JSON.parse(responseBody);",
-											"",
-											"",
-											"pm.test(\"Status code is 200\", function () {",
-											"    pm.response.to.have.status(200);",
-											"});",
-											"",
-											"tests[\"JSON return code is 200\"] = response.code == 200",
-											"",
-											"tests[\"success is true\"] = response.success == true",
-											"tests[\"Image link is returned\"] = response.image != \"\""
-										],
-										"type": "text/javascript"
-									}
-								}
-							],
-							"request": {
-								"method": "POST",
-								"header": [],
-								"body": {
-									"mode": "formdata",
-									"formdata": [
-										{
-											"key": "file[]",
-											"type": "file",
-											"src": "/Users/seluj78/Postman/files/logo.png"
-										}
-									]
-								},
-								"url": {
-									"raw": "{{host}}/profile/images?is_primary=false",
-									"host": [
-										"{{host}}"
-									],
-									"path": [
-										"profile",
-										"images"
-									],
-									"query": [
-										{
-											"key": "is_primary",
-											"value": "false"
-										}
-									]
-								}
-							},
-							"response": []
-						},
-						{
-							"name": "Upload image 4",
-							"event": [
-								{
-									"listen": "test",
-									"script": {
-										"id": "72f2f391-dd36-4e36-b764-0ad5d59744af",
-										"exec": [
-											"var response = JSON.parse(responseBody);",
-											"",
-											"",
-											"pm.test(\"Status code is 200\", function () {",
-											"    pm.response.to.have.status(200);",
-											"});",
-											"",
-											"tests[\"JSON return code is 200\"] = response.code == 200",
-											"",
-											"tests[\"success is true\"] = response.success == true",
-											"tests[\"Image link is returned\"] = response.image != \"\""
-										],
-										"type": "text/javascript"
-									}
-								}
-							],
-							"request": {
-								"method": "POST",
-								"header": [],
-								"body": {
-									"mode": "formdata",
-									"formdata": [
-										{
-											"key": "file[]",
-											"type": "file",
-											"src": "/Users/seluj78/Postman/files/logo.png"
-										}
-									]
-								},
-								"url": {
-									"raw": "{{host}}/profile/images?is_primary=false",
-									"host": [
-										"{{host}}"
-									],
-									"path": [
-										"profile",
-										"images"
-									],
-									"query": [
-										{
-											"key": "is_primary",
-											"value": "false"
-										}
-									]
-								}
-							},
-							"response": []
-						},
-						{
-							"name": "Upload image 5",
-							"event": [
-								{
-									"listen": "test",
-									"script": {
-										"id": "40896fd3-f22f-41e1-ba29-99700d5f63a6",
-										"exec": [
-											"var response = JSON.parse(responseBody);",
-											"",
-											"",
-											"pm.test(\"Status code is 200\", function () {",
-											"    pm.response.to.have.status(200);",
-											"});",
-											"",
-											"tests[\"JSON return code is 200\"] = response.code == 200",
-											"",
-											"tests[\"success is true\"] = response.success == true",
-											"tests[\"Image link is returned\"] = response.image != \"\""
-										],
-										"type": "text/javascript"
-									}
-								}
-							],
-							"request": {
-								"method": "POST",
-								"header": [],
-								"body": {
-									"mode": "formdata",
-									"formdata": [
-										{
-											"key": "file[]",
-											"type": "file",
-											"src": "/Users/seluj78/Postman/files/logo.png"
-										}
-									]
-								},
-								"url": {
-									"raw": "{{host}}/profile/images?is_primary=false",
-									"host": [
-										"{{host}}"
-									],
-									"path": [
-										"profile",
-										"images"
-									],
-									"query": [
-										{
-											"key": "is_primary",
-											"value": "false"
-										}
-									]
-								}
-							},
-							"response": []
-						},
-						{
-							"name": "Upload one too many image",
-							"event": [
-								{
-									"listen": "test",
-									"script": {
-										"id": "ab80ac8e-a850-4bea-b9eb-8c6d2a777035",
-										"exec": [
-											"var response = JSON.parse(responseBody);",
-											"",
-											"",
-											"pm.test(\"Status code is 400\", function () {",
-											"    pm.response.to.have.status(400);",
-											"});",
-											"",
-											"tests[\"JSON return code is 400\"] = response.code == 400",
-											"",
-											"tests[\"success is false\"] = response.success == false",
-											"tests[\"Message is correct\"] = response.error.message == \"There's already enough images for this account\"",
-											"tests[\"Error type is Bad Request\"] = response.error.type == \"BadRequestError\""
-										],
-										"type": "text/javascript"
-									}
-								}
-							],
-							"request": {
-								"method": "POST",
-								"header": [],
-								"body": {
-									"mode": "formdata",
-									"formdata": [
-										{
-											"key": "file[]",
-											"type": "file",
-											"src": "/Users/seluj78/Postman/files/logo.png"
-										}
-									]
-								},
-								"url": {
-									"raw": "{{host}}/profile/images?is_primary=false",
-									"host": [
-										"{{host}}"
-									],
-									"path": [
-										"profile",
-										"images"
-									],
-									"query": [
-										{
-											"key": "is_primary",
-											"value": "false"
-										}
-									]
-								}
-							},
-							"response": []
-						},
-						{
-							"name": "Get 5 images",
-							"event": [
-								{
-									"listen": "test",
-									"script": {
-										"id": "f6fe7573-7f39-4c6f-b94e-8c91f3d4431d",
-										"exec": [
-											"var response = JSON.parse(responseBody);",
-											"",
-											"",
-											"pm.test(\"Status code is 200\", function () {",
-											"    pm.response.to.have.status(200);",
-											"});",
-											"",
-											"tests[\"JSON return code is 200\"] = response.code == 200",
-											"",
-											"tests[\"success is true\"] = response.success == true",
-											"",
-											"tests[\"No images are returned\"] = response.images.length == 5"
-										],
-										"type": "text/javascript"
-									}
-								}
-							],
-							"request": {
-								"method": "GET",
-								"header": [],
-								"url": {
-									"raw": "{{host}}/profile/images",
-									"host": [
-										"{{host}}"
-									],
-									"path": [
-										"profile",
-										"images"
-									]
-								}
-							},
-							"response": []
-						},
-						{
-							"name": "Delete image",
-							"event": [
-								{
-									"listen": "test",
-									"script": {
-										"id": "c4d19664-de0f-4403-b808-b1a190221d4d",
-										"exec": [
-											"pm.test(\"Status code is 204\", function () {",
-											"    pm.response.to.have.status(204);",
-											"});",
-											""
-										],
-										"type": "text/javascript"
-									}
-								}
-							],
-							"request": {
-								"method": "DELETE",
-								"header": [],
-								"url": {
-									"raw": "{{host}}/profile/images/3",
-									"host": [
-										"{{host}}"
-									],
-									"path": [
-										"profile",
-										"images",
-										"3"
-									]
-								}
-							},
-							"response": []
-						},
-						{
-							"name": "Get 4 images",
-							"event": [
-								{
-									"listen": "test",
-									"script": {
-										"id": "cfc380d0-06f6-4db4-85c6-ef5b7bdd08ec",
-										"exec": [
-											"var response = JSON.parse(responseBody);",
-											"",
-											"",
-											"pm.test(\"Status code is 200\", function () {",
-											"    pm.response.to.have.status(200);",
-											"});",
-											"",
-											"tests[\"JSON return code is 200\"] = response.code == 200",
-											"",
-											"tests[\"success is true\"] = response.success == true",
-											"",
-											"tests[\"No images are returned\"] = response.images.length == 4"
-										],
-										"type": "text/javascript"
-									}
-								}
-							],
-							"request": {
-								"method": "GET",
-								"header": [],
-								"url": {
-									"raw": "{{host}}/profile/images",
-									"host": [
-										"{{host}}"
-									],
-									"path": [
-										"profile",
-										"images"
-									]
-								}
-							},
-							"response": []
-						},
-						{
-							"name": "Get current profile image is correct",
-							"event": [
-								{
-									"listen": "test",
-									"script": {
-										"id": "b5c27875-90bc-460e-a96a-6eabb06af372",
-										"exec": [
-											"var response = JSON.parse(responseBody);",
-											"",
-											"",
-											"pm.test(\"Status code is 200\", function () {",
-											"    pm.response.to.have.status(200);",
-											"});",
-											"",
-											"tests[\"JSON return code is 200\"] = response.code == 200",
-											"",
-											"tests[\"success is true\"] = response.success == true",
-											"",
-											"tests[\"No images are returned\"] = response.images.length == 4",
-											"tests[\"Image 1 is primary\"] = response.images[0].is_primary == 1"
-										],
-										"type": "text/javascript"
-									}
-								}
-							],
-							"request": {
-								"method": "GET",
-								"header": [],
-								"url": {
-									"raw": "{{host}}/profile/images",
-									"host": [
-										"{{host}}"
-									],
-									"path": [
-										"profile",
-										"images"
-									]
-								}
-							},
-							"response": []
-						},
-						{
-							"name": "Edit profile image",
-							"event": [
-								{
-									"listen": "test",
-									"script": {
-										"id": "be836a3b-c53e-4671-9081-1977c956d643",
-										"exec": [
-											"var response = JSON.parse(responseBody);",
-											"",
-											"",
-											"pm.test(\"Status code is 200\", function () {",
-											"    pm.response.to.have.status(200);",
-											"});",
-											"",
-											"tests[\"JSON return code is 200\"] = response.code == 200",
-											"",
-											"tests[\"success is true\"] = response.success == true",
-											"",
-											"tests[\"Message is correct\"] = response.message == \"Profile picture successfully modified\""
-										],
-										"type": "text/javascript"
-									}
-								}
-							],
-							"request": {
-								"method": "PUT",
-								"header": [],
-								"url": {
-									"raw": "{{host}}/profile/images/2",
-									"host": [
-										"{{host}}"
-									],
-									"path": [
-										"profile",
-										"images",
-										"2"
-									]
-								}
-							},
-							"response": []
-						},
-						{
-							"name": "Get current profile image is correct",
-							"event": [
-								{
-									"listen": "test",
-									"script": {
-										"id": "e806e43f-9a2f-404d-8410-2aa4c05d7d38",
-										"exec": [
-											"var response = JSON.parse(responseBody);",
-											"",
-											"",
-											"pm.test(\"Status code is 200\", function () {",
-											"    pm.response.to.have.status(200);",
-											"});",
-											"",
-											"tests[\"JSON return code is 200\"] = response.code == 200",
-											"",
-											"tests[\"success is true\"] = response.success == true",
-											"",
-											"tests[\"No images are returned\"] = response.images.length == 4",
-											"tests[\"Image 1 is primary\"] = response.images[1].is_primary == 1"
-										],
-										"type": "text/javascript"
-									}
-								}
-							],
-							"request": {
-								"method": "GET",
-								"header": [],
-								"url": {
-									"raw": "{{host}}/profile/images",
-									"host": [
-										"{{host}}"
-									],
-									"path": [
-										"profile",
-										"images"
 									]
 								}
 							},
@@ -6728,92 +6092,92 @@
 	],
 	"variable": [
 		{
-			"id": "75515df0-647a-4e3a-9da7-1770a1acd3d6",
+			"id": "dbd5ea57-ea0b-4311-9be3-d905bcdabca4",
 			"key": "host",
 			"value": "http://127.0.0.1:5000"
 		},
 		{
-			"id": "1d450574-27da-4797-99f0-6455843bbc18",
+			"id": "3e82ac7a-d332-442a-a8a8-d39856c7ea89",
 			"key": "user_id",
 			"value": ""
 		},
 		{
-			"id": "6b27dafd-1553-4bc7-83ef-b8438aaa056e",
+			"id": "09b1aecc-2fee-44a2-a876-447f941033e4",
 			"key": "user_email",
 			"value": "foo@example.org"
 		},
 		{
-			"id": "06c3d428-9fd8-4fb9-95c5-e4229188eb45",
+			"id": "668c4556-446c-4f3d-a7e8-ff7380a8ed26",
 			"key": "user_username",
 			"value": "foo"
 		},
 		{
-			"id": "e6ecda21-5eb3-4b9d-b2c6-15285cea1822",
+			"id": "d425fd80-82fb-4a9f-b322-a00ae9e4e5d0",
 			"key": "user_password",
 			"value": "admin"
 		},
 		{
-			"id": "bf2bef76-8af7-4d98-9b09-6e6fad501335",
+			"id": "6ad763cc-a8bf-4d22-991a-c238fc49f493",
 			"key": "user_firstname",
 			"value": "Foo"
 		},
 		{
-			"id": "67610711-7295-44fa-8103-c0591a80bfc9",
+			"id": "972637f0-7bf1-431a-9912-149f48169d62",
 			"key": "user_lastname",
 			"value": "Bar"
 		},
 		{
-			"id": "f20acd9a-6c1f-4723-b018-689a05061478",
+			"id": "d1129824-8c4e-4058-bc9b-77c1250e7842",
 			"key": "debug_token",
 			"value": "xX69jules69Xx"
 		},
 		{
-			"id": "291d3528-9614-43d8-ade8-7787e2489afa",
+			"id": "99e98331-5d4a-4a29-b221-b3265c3b7f69",
 			"key": "user_access_token",
 			"value": ""
 		},
 		{
-			"id": "8de7d5e7-ba29-495f-9ec1-5449c95cba95",
+			"id": "cf67ac74-ba7e-432f-aa37-1248340bbcdc",
 			"key": "user_refresh_token",
 			"value": ""
 		},
 		{
-			"id": "6ba1d0c6-6a2d-4f25-bac0-8f39e20bd9ba",
+			"id": "d403b769-9895-48c2-ae87-2e5ca81f8a89",
 			"key": "expired_token",
 			"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE1OTAyNDIyNjQsIm5iZiI6MTU5MDI0MjI2NCwianRpIjoiNTM0ZGI5NzQtOWE4Ni00MGViLWE1NDEtMDg3N2ZmNzQ3NDVhIiwiZXhwIjoxNTkwMjQyMzI0LCJpZGVudGl0eSI6eyJpZCI6NTEyLCJlbWFpbCI6ImZvb0BleGFtcGxlLm9yZyIsInVzZXJuYW1lIjoiYmFyIiwiaXNfb25saW5lIjp0cnVlLCJkYXRlX2xhc3RzZWVuIjoiU2F0LCAyMyBNYXkgMjAyMCAxMzo1Nzo0NCBHTVQifSwiZnJlc2giOnRydWUsInR5cGUiOiJhY2Nlc3MifQ.NTp2P0WNkXDwzuzrcNIQdeAfizQ57HQgkzBLSvY1yHU"
 		},
 		{
-			"id": "08b0c5fe-49bc-4c7e-90b9-f21393609fa8",
+			"id": "1ab8729c-be33-463f-bdb8-48970d0f5e6f",
 			"key": "user_orientation",
 			"value": "heterosexual"
 		},
 		{
-			"id": "ab96f4ed-2b18-4477-aefd-9432825314ac",
+			"id": "0fb694c5-a37d-4888-bff8-51d394d1885f",
 			"key": "user_bio",
 			"value": "Lorem Ipsum is the single greatest threat. We are not - we are not keeping up with other websites. Lorem Ipsum best not make any more threats to your website. It will be met with fire and fury like the world has never seen. Does everybody know that pig named Lorem Ipsum? An ‘extremely credible source’ has called my office and told me that Barack Obama’s placeholder text is a fraud."
 		},
 		{
-			"id": "7e4ca358-3e40-465c-999b-3228ecd33eb1",
+			"id": "506c11b7-28bc-40a4-8b16-bb3e4c4dfb82",
 			"key": "user_gender",
 			"value": "male"
 		},
 		{
-			"id": "5e814d70-4b3f-4a1e-83db-d6782fd0c067",
+			"id": "5af737dd-f310-4cf0-a2b4-74572b4b0b33",
 			"key": "user_birthdate",
 			"value": "06/04/1998"
 		},
 		{
-			"id": "74d71fa3-806b-48bb-b7b5-84310dba9dde",
+			"id": "e1facd09-f9b4-4581-a2f5-ae72bebac8bf",
 			"key": "user_lat",
 			"value": "44.8404"
 		},
 		{
-			"id": "9d3c23ba-1384-4bcb-a7d1-737d250222db",
+			"id": "c25008f0-5501-4dd8-8068-901781f1c72b",
 			"key": "user_lng",
 			"value": "-0.5805"
 		},
 		{
-			"id": "24423f96-75b4-46f1-b7f1-d9d96b988329",
+			"id": "bae8bc29-fdda-4426-bc70-32448fd6941d",
 			"key": "user_ip",
 			"value": "77.205.46.181"
 		}
