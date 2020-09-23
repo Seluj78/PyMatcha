@@ -9,7 +9,7 @@
       <SelectionButton v-bind:val="'Bi-sexual'" v-bind:bus="bus" v-on:select="select" v-on:deselect="deselect"></SelectionButton>
       <SelectionButton v-bind:val="'Other'" v-bind:bus="bus" v-on:select="select" v-on:deselect="deselect"></SelectionButton>
     </div>
-    <button v-bind:disabled="!optionSelected" v-bind:class="{'onboarding-sub-container-content-button-outline-light': true, 'mt-0': true, 'opacity-25': !optionSelected, 'cursor-default': !optionSelected}" v-on:click="saveInput()">{{slide.buttonText}}</button>
+    <button v-bind:disabled="!optionSelected" v-bind:class="{'onboarding-sub-container-slide-button': true, 'opacity-25': !optionSelected, 'cursor-default': !optionSelected}" v-on:click="saveInput()">{{slide.buttonText}}</button>
   </section>
 </template>
 

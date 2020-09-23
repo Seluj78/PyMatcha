@@ -38,7 +38,7 @@
       v-on:imageUploaded="imageUploaded"
       v-on:imageDeleted="imageDeleted">
     </ImageUpload>
-    <button class="onboarding-sub-container-content-button-outline-light mt-0"
+    <button class="onboarding-sub-container-slide-button"
             v-on:click="saveInput()">{{buttonText}}</button>
   </section>
 </template>
