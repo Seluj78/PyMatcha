@@ -177,6 +177,26 @@ def _create_messages_table(db):
         c.close()
 
 
+def _create_images_table(db):
+    with db.cursor() as c:
+        logging.info("Creating table images.")
+        c.execute(DISABLE_SQL_NOTES)
+        c.execute(
+            """
+        CREATE TABLE IF NOT EXISTS images
+        (
+        id             INT auto_increment PRIMARY KEY,
+        user_id        INT NOT NULL,
+        timestamp      TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+        link           VARCHAR(256) NOT NULL,
+        is_primary       BOOLEAN DEFAULT FALSE
+        ) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci ;
+        """
+        )
+        c.execute(ENABLE_SQL_NOTES)
+        c.close()
+
+
 def create_tables(db):
     _create_user_table(db)
     _create_tags_table(db)
@@ -185,3 +205,4 @@ def create_tables(db):
     _create_likes_table(db)
     _create_matches_table(db)
     _create_messages_table(db)
+    _create_images_table(db)

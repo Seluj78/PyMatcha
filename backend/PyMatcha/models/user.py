@@ -26,6 +26,7 @@ from typing import List
 from typing import Optional
 
 import Geohash
+from PyMatcha.models.image import Image
 from PyMatcha.models.like import Like
 from PyMatcha.models.match import Match
 from PyMatcha.models.message import Message
@@ -199,6 +200,7 @@ class User(Model):
     def to_dict(self) -> Dict:
         returned_dict = super().to_dict()
         returned_dict["tags"] = [t.to_dict() for t in self.get_tags()]
+        returned_dict["images"] = [image.to_dict() for image in self.get_images()]
         returned_dict["reports"] = {"sent": [], "received": []}
         returned_dict["reports"]["sent"] = [r.to_dict() for r in self.get_reports_sent()]
         returned_dict["reports"]["received"] = [r.to_dict() for r in self.get_reports_received()]
@@ -222,128 +224,61 @@ class User(Model):
             "date_lastseen": self.date_lastseen,
         }
 
+    def get_images(self):
+        logging.debug("Getting all images for user {}".format(self.id))
+        image_list = Image.get_multis(user_id=self.id)
+        if not image_list:
+            return []
+        else:
+            return image_list
+
     def get_tags(self):
         logging.debug("Getting all tags for user {}".format(self.id))
-        with self.db.cursor() as c:
-            c.execute(
-                """
-                SELECT tags.id as id, tags.user_id as user_id, tags.name as name
-                FROM users 
-                INNER JOIN tags on users.id = tags.user_id 
-                WHERE users.id = CAST({} AS UNSIGNED)
-                """.format(
-                    self.id
-                )
-            )
-            tags = c.fetchall()
-            tags_list = []
-            for t in tags:
-                tags_list.append(Tag(t))
-        return tags_list
+        tag_list = Tag.get_multis(user_id=self.id)
+        if not tag_list:
+            return []
+        else:
+            return tag_list
 
     def get_views(self):
         logging.debug("Getting all views for user profile {}".format(self.id))
-        with self.db.cursor() as c:
-            c.execute(
-                """
-                SELECT views.id as id, views.profile_id as profile_id, 
-                views.viewer_id as viewer_id, views.dt_seen as dt_seen
-                FROM users 
-                INNER JOIN views on users.id = views.profile_id 
-                WHERE users.id = CAST({} AS UNSIGNED)
-                """.format(
-                    self.id
-                )
-            )
-            views = c.fetchall()
-            views_list = []
-            for v in views:
-                views_list.append(View(v))
-        return views_list
+        view_list = View.get_multis(profile_id=self.id)
+        if not view_list:
+            return []
+        else:
+            return view_list
 
     def get_reports_received(self):
         logging.debug("Getting all reports received for user {}".format(self.id))
-        with self.db.cursor() as c:
-            c.execute(
-                """
-                SELECT reports.id as id, reports.reported_id as reported_id, 
-                reports.reporter_id as reporter_id, reports.dt_reported as dt_reported,
-                reports.details as details, reports.reason as reason, reports.status as status
-                FROM users 
-                INNER JOIN reports on users.id = reports.reported_id 
-                WHERE users.id = CAST({} AS UNSIGNED)
-                """.format(
-                    self.id
-                )
-            )
-            reports = c.fetchall()
-            reports_list = []
-            for r in reports:
-                reports_list.append(Report(r))
-        return reports_list
+        reports_received_list = Report.get_multis(reported_id=self.id)
+        if not reports_received_list:
+            return []
+        else:
+            return reports_received_list
 
     def get_reports_sent(self):
         logging.debug("Getting all reports sent for user {}".format(self.id))
-        with self.db.cursor() as c:
-            c.execute(
-                """
-                SELECT reports.id as id, reports.reported_id as reported_id, 
-                reports.reporter_id as reporter_id, reports.dt_reported as dt_reported,
-                reports.details as details, reports.reason as reason, reports.status as status
-                FROM users 
-                INNER JOIN reports on users.id = reports.reporter_id 
-                WHERE users.id = CAST({} AS UNSIGNED)
-                """.format(
-                    self.id
-                )
-            )
-            reports = c.fetchall()
-            reports_list = []
-            for r in reports:
-                reports_list.append(Report(r))
-        return reports_list
+        reports_sent_list = Report.get_multis(reporter_id=self.id)
+        if not reports_sent_list:
+            return []
+        else:
+            return reports_sent_list
 
     def get_likes_received(self):
         logging.debug("Getting all likes received for user {}".format(self.id))
-        with self.db.cursor() as c:
-            c.execute(
-                """
-                SELECT likes.id as id, likes.liked_id as liked_id, 
-                likes.liker_id as liker_id, likes.dt_liked as dt_liked,
-                likes.is_superlike as is_superlike
-                FROM users 
-                INNER JOIN likes on users.id = likes.liked_id 
-                WHERE users.id = CAST({} AS UNSIGNED)
-                """.format(
-                    self.id
-                )
-            )
-            likes = c.fetchall()
-            like_list = []
-            for like in likes:
-                like_list.append(Like(like))
-        return like_list
+        likes_received_list = Like.get_multis(liked_id=self.id)
+        if not likes_received_list:
+            return []
+        else:
+            return likes_received_list
 
     def get_likes_sent(self):
         logging.debug("Getting all likes sent for user {}".format(self.id))
-        with self.db.cursor() as c:
-            c.execute(
-                """
-                SELECT likes.id as id, likes.liked_id as liked_id, 
-                likes.liker_id as liker_id, likes.dt_liked as dt_liked,
-                likes.is_superlike as is_superlike
-                FROM users 
-                INNER JOIN likes on users.id = likes.liker_id 
-                WHERE users.id = CAST({} AS UNSIGNED)
-                """.format(
-                    self.id
-                )
-            )
-            likes = c.fetchall()
-            like_list = []
-            for like in likes:
-                like_list.append(Like(like))
-        return like_list
+        likes_sent_list = Like.get_multis(liker_id=self.id)
+        if not likes_sent_list:
+            return []
+        else:
+            return likes_sent_list
 
     def already_likes(self, liked_id: int) -> bool:
         with self.db.cursor() as c:

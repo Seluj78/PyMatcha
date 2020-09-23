@@ -30,3 +30,6 @@ FRONTEND_PASSWORD_RESET_URL = FRONTEND_BASE_URL + "/accounts/password/reset?toke
 
 PYMATCHA_ROOT = os.path.join(os.path.dirname(__file__), "../..")
 BACKEND_ROOT = os.path.join(os.path.dirname(__file__), "../")
+
+IMGUR_CLIENT_ID = os.getenv("IMGUR_CLIENT_ID")
+IMGUR_CLIENT_SECRET = os.getenv("IMGUR_CLIENT_SECRET")
