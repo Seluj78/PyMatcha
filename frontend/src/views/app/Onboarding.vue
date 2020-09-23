@@ -1,129 +1,64 @@
 <template>
   <!-- eslint-disable max-len -->
   <div class="onboarding-container">
-    <section class="onboarding-sub-container" v-if="slide === 0">
+    <section class="onboarding-sub-container" v-if="slideCurrent === 0">
       <h1 class="onboarding-sub-container-content-heading text-8xl introduction mb-8 text-center leading-none">Meet<br>your<br>lover</h1>
-      <button class="onboarding-sub-container-content-button-outline w-1/2 mt-0" v-on:click="nextSlide()">{{buttonText}}</button>
+      <button class="onboarding-sub-container-content-button-outline w-1/2 mt-0" v-on:click="nextSlide(0)">{{buttonText}}</button>
     </section>
-    <section class="onboarding-sub-container" v-if="slide === 1">
-      <h1>{{slide}} / {{slideCount}}</h1>
-      <h1 class="onboarding-sub-container-content-heading leading-none">I am</h1>
-      <div class="h-64 flex flex-col items-center justify-center w-full">
-        <h1 class="onboarding-sub-container-content-button-outline mt-0">Man</h1>
-        <h1 class="onboarding-sub-container-content-button-outline mt-2">Woman</h1>
-        <h1 class="onboarding-sub-container-content-button-outline mt-2">Other</h1>
-      </div>
-      <button class="onboarding-sub-container-content-button-outline-light mt-0" v-on:click="nextSlide()">{{buttonText}}</button>
-    </section>
-    <section class="onboarding-sub-container" v-if="slide === 2">
-      <h1>{{slide}} / {{slideCount}}</h1>
-      <h1 class="onboarding-sub-container-content-heading leading-none">I want</h1>
-      <div class="h-64 flex flex-col items-center justify-center w-full">
-        <h1 class="onboarding-sub-container-content-button-outline mt-0">Men</h1>
-        <h1 class="onboarding-sub-container-content-button-outline mt-2">Women</h1>
-        <h1 class="onboarding-sub-container-content-button-outline mt-2">Other</h1>
-      </div>
-      <button class="onboarding-sub-container-content-button-outline-light mt-0" v-on:click="nextSlide()">{{buttonText}}</button>
-    </section>
-    <section class="onboarding-sub-container" v-if="slide === 3">
-      <h1>{{slide}} / {{slideCount}}</h1>
-      <h1 class="onboarding-sub-container-content-heading leading-none">I like</h1>
-      <div class="h-64 pb-4 my-8 sm:my-16 flex flex-col items-center w-full overflow-scroll">
-        <h1 class="onboarding-sub-container-content-button-outline mt-0">coffee</h1>
-        <h1 class="onboarding-sub-container-content-button-outline">yoga</h1>
-        <h1 class="onboarding-sub-container-content-button-outline">football</h1>
-        <h1 class="onboarding-sub-container-content-button-outline">rap</h1>
-        <h1 class="onboarding-sub-container-content-button-outline">travelling</h1>
-        <h1 class="onboarding-sub-container-content-button-outline">Coffee</h1>
-        <h1 class="onboarding-sub-container-content-button-outline">Coffee</h1>
-        <h1 class="onboarding-sub-container-content-button-outline">Coffee</h1>
-        <h1 class="onboarding-sub-container-content-button-outline">Coffee</h1>
-        <h1 class="onboarding-sub-container-content-button-outline">Coffee</h1>
-        <h1 class="onboarding-sub-container-content-button-outline">Coffee</h1>
-        <h1 class="onboarding-sub-container-content-button-outline">Coffee</h1>
-      </div>
-      <button class="onboarding-sub-container-content-button-outline-light mt-0" v-on:click="nextSlide()">{{buttonText}}</button>
-    </section>
-    <section class="onboarding-sub-container" v-if="slide === 4">
-      <h1>{{slide}} / {{slideCount}}</h1>
-      <h1 class="onboarding-sub-container-content-heading leading-none text-center">Profile<br>image</h1>
-        <button v-if="!slide4.imageUploaded" class="relative onboarding-sub-container-upload-button my-8">
-          <input class="cursor-pointer opacity-0 absolute top-0 left-0 w-full h-full rounded-md" type="file" v-on:change="selectFile()" ref="file">ADD
-        </button>
-
-      <div class="w-full relative" v-if="slide4.imageUploaded">
-        <img src="../../assets/onboarding/remove.png" class="absolute cursor-pointer top-0 right-0 mt-6 -mr-3 w-8 z-10" v-on:click="deleteImage()">
-        <div class="relative overflow-hidden bg-red-600 rounded-lg w-full my-10" style="padding-bottom: 70%">
-          <img v-bind:src="slide4.imageUrl" class="absolute object-cover w-full h-full rounded-lg">
-        </div>
-      </div>
-      <button class="onboarding-sub-container-content-button-outline-light mt-0" v-on:click="nextSlide()">{{buttonText}}</button>
-    </section>
-    <section class="onboarding-sub-container" v-if="slide === 5">
-      <h1>{{slide}} / {{slideCount}}</h1>
-      <h1 class="onboarding-sub-container-content-heading leading-none text-center">Other<br>images</h1>
-      <button class="onboarding-sub-container-upload-button my-8" v-on:click="nextSlide()">ADD</button>
-      <div class="uploaded-image-container">
-      </div>
-      <button class="onboarding-sub-container-content-button-outline-light mt-0" v-on:click="nextSlide()">{{buttonText}}</button>
-    </section>
+    <SlideOne v-bind:slide="{current: slideCurrent, count: slideCount, buttonText}"
+           v-on:saveInput="saveInput" v-if="slideCurrent === 1"></SlideOne>
+    <SlideTwo v-bind:slide="{current: slideCurrent, count: slideCount, buttonText}"
+              v-on:saveInput="saveInput" v-if="slideCurrent === 2"></SlideTwo>
+    <SlideThree v-bind:slide="{current: slideCurrent, count: slideCount, buttonText}"
+              v-on:saveInput="saveInput" v-if="slideCurrent === 3"></SlideThree>
+    <SlideFour v-bind:slide="{current: slideCurrent, count: slideCount, buttonText}"
+               v-on:saveInput="saveInput" v-if="slideCurrent === 4"></SlideFour>
+    <SlideFive v-bind:slide="{current: slideCurrent, count: slideCount, buttonText}"
+              v-on:saveInput="saveInput" v-if="slideCurrent === 5"></SlideFive>
   </div>
 </template>
 
 <script>
+import SlideOne from '@/components/app/onboarding/SlideOne.vue';
+import SlideTwo from '@/components/app/onboarding/SlideTwo.vue';
+import SlideThree from '@/components/app/onboarding/SlideThree.vue';
+import SlideFour from '@/components/app/onboarding/SlideFour.vue';
+import SlideFive from '@/components/app/onboarding/SlideFive.vue';
 
 export default {
+  components: {
+    SlideOne,
+    SlideTwo,
+    SlideThree,
+    SlideFour,
+    SlideFive,
+  },
   data: () => ({
-    slide: 0,
-    slideCount: 6,
-    slide4: {
-      image: null,
-      imageUrl: null,
-      imageUploaded: false,
-      imageUploadError: false,
-      errorText: '',
-    },
+    slideCurrent: 0,
+    slideCount: 5,
+    slide1: {},
   }),
   methods: {
-    nextSlide() {
-      if (this.slide === this.slideCount) {
+    saveInput(...args) {
+      const [slide, value, skip] = args;
+      this[slide] = value;
+      this.nextSlide(skip);
+    },
+    nextSlide(skip) {
+      if (this.slideCurrent === this.slideCount) {
         this.$router.push('/browse');
       }
-      if (this.slide < this.slideCount) {
-        this.slide += 1;
+      if (this.slideCurrent < this.slideCount) {
+        this.slideCurrent += (1 + skip);
       }
-    },
-    selectFile() {
-      const allowedTypes = ['image/jpeg', 'image/png', 'image/gif'];
-      const file = this.$refs.file.files[0];
-      this.slide4.file = file;
-
-      if (!allowedTypes.includes(file.type)) {
-        this.slide4.errorText = 'Only images allowed';
-        this.slide4.imageUploadError = true;
-        return;
-      }
-      if (file.size > 2000000) {
-        this.slide4.errorText = 'File too large';
-        this.slide4.imageUploadError = true;
-        return;
-      }
-      this.slide4.imageUploaded = true;
-      this.slide4.imageUrl = URL.createObjectURL(file);
-      console.log(this.slide4.imageUrl);
-    },
-    deleteImage() {
-      this.slide4.image = null;
-      this.slide4.imageUploaded = false;
-      this.slide4.imageUrl = '';
     },
   },
   computed: {
     buttonText() {
-      if (this.slide === 0) {
+      if (this.slideCurrent === 0) {
         return 'Let\'s go';
       }
-      if (this.slide < this.slideCount) {
+      if (this.slideCurrent < this.slideCount) {
         return 'Continue';
       }
       return 'Finish';

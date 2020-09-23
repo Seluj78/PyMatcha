@@ -225,6 +225,21 @@
         @apply text-center;
     }
 
+    .onboarding-sub-container-content-button-outline-selected {
+        @apply bg-purple-matcha;
+        @apply text-white-matcha;
+        @apply font-bold;
+        @apply w-full;
+        @apply max-w-xs;
+        @apply border-2;
+        @apply border-purple-matcha;
+        @apply rounded-md;
+        @apply py-2;
+        @apply mt-4;
+        @apply cursor-pointer;
+        @apply text-center;
+    }
+
     .onboarding-sub-container-content-button-outline-light {
         @apply bg-white-matcha;
         @apply text-purple-matcha;
@@ -239,6 +254,11 @@
         @apply cursor-pointer;
         @apply text-center;
         @apply w-2/3;
+    }
+
+    .onboarding-sub-container-content-button-outline-light:active,
+    .onboarding-sub-container-content-button-outline-light:focus {
+        outline: none;
     }
 
     .auth-sub-container-content-button:active, .auth-sub-container-content-button:focus,
