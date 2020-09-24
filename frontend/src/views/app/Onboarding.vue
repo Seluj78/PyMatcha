@@ -31,7 +31,7 @@
       current: slideCurrent,
       count: slideCount,
       header: 'Sexuality',
-      options: ['heterosexual', 'homosexual', 'bi-sexual', 'other'],
+      options: ['heterosexual', 'homosexual', 'bisexual', 'other'],
       buttonText}"
       v-on:saveInput="saveInput"
       v-if="slideCurrent === 3"></SingleChoice>
@@ -110,7 +110,9 @@ export default {
       if (key === 'birthdate') {
         value = this.formatBirthdate(value);
       }
-      this.userData[key] = value;
+      if (key !== 'images') {
+        this.userData[key] = value;
+      }
       console.log(this.userData);
       this.nextSlide();
     },
