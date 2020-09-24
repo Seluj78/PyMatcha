@@ -42,6 +42,7 @@
         'Language exchange', 'Sports', 'Comdey', 'Fashion', 'Disney', 'Vlogging',
         'Astrology', 'Board Games', 'Craft Beer', 'Coffee', 'Writer',
       ],
+      minOptionsForSelection: 3,
       maxOptionsForSelection: 10,
       buttonText}"
       v-on:saveInput="saveInput"

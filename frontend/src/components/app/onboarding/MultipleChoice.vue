@@ -14,11 +14,11 @@
       </SelectionButton>
     </div>
     <button
-      v-bind:disabled="!optionSelected.length"
+      v-bind:disabled="!minimumSelectionsMade"
       v-bind:class="{
         'onboarding-sub-container-slide-button': true,
-        'opacity-25': !optionSelected.length,
-        'cursor-default': !optionSelected.length}"
+        'opacity-25': !minimumSelectionsMade,
+        'cursor-default': !minimumSelectionsMade}"
       v-on:click="saveInput()">
       {{slide.buttonText}}
     </button>
@@ -59,6 +59,9 @@ export default {
     },
     canSelectMoreOptions() {
       return this.optionsSelectedCount < this.slide.maxOptionsForSelection;
+    },
+    minimumSelectionsMade() {
+      return this.optionSelected.length >= this.slide.minOptionsForSelection;
     },
   },
 };
