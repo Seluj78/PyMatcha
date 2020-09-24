@@ -1,9 +1,9 @@
 <template>
   <!-- eslint-disable max-len -->
   <section class="onboarding-sub-container">
-    <h1>{{slide.current}} / {{slide.count}}</h1>
+    <h1 class="text-gray-matcha">{{slide.current}} / {{slide.count}}</h1>
     <h1 class="onboarding-sub-container-content-heading leading-none">{{slide.header}}</h1>
-    <p class="mt-2">{{optionsSelectedCount}} / {{slide.maxOptionsForSelection}}</p>
+    <p class="mt-2 text-gray-matcha">{{optionsSelectedCount}} / {{slide.maxOptionsForSelection}}</p>
     <div class="h-64 pb-1 my-8 border-b-4 max-w-xs border-white-matcha flex flex-col items-center w-full overflow-scroll">
       <SelectionButton v-for="(option, index) in slide.options" :key="index + option"
         v-bind:val="option"

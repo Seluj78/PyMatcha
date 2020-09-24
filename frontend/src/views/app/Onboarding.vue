@@ -63,7 +63,7 @@
       key: 'bio',
       current: slideCurrent,
       count: slideCount,
-      minTextareaLength: 40,
+      minTextareaLength: 50,
       maxTextareaLength: 200,
       placeholder: 'I am best described as ...',
       buttonText}"

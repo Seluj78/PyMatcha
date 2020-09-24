@@ -1,7 +1,7 @@
 <template>
   <!-- eslint-disable max-len -->
   <section class="onboarding-sub-container relative">
-    <h1>{{slide.current}} / {{slide.count}}</h1>
+    <h1 class="text-gray-matcha">{{slide.current}} / {{slide.count}}</h1>
     <h1 class="onboarding-sub-container-content-heading leading-none text-center">{{slide.header}}</h1>
     <ImageUpload v-if="imageIndex <= slide.maxImagesAllowed"
       v-bind:explanation="explanation"
