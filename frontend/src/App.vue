@@ -1,5 +1,5 @@
 <template>
-  <div id="app" class="antialiased">
+  <div id="app" class="antialiased" v-bind:style="{background: getBackground}">
     <router-view/>
   </div>
 </template>
@@ -7,7 +7,14 @@
 <script>
 
 export default {
-  components: {
+  computed: {
+    getBackground() {
+      const currentRoute = this.$route.name;
+      if (currentRoute === 'Onboarding') {
+        return '#FDFDFD';
+      }
+      return '#FFFFFE';
+    },
   },
 };
 </script>

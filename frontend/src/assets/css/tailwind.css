@@ -211,7 +211,7 @@
     }
 
     .onboarding-sub-container-content-button-outline {
-        @apply bg-white-matcha;
+        background: #FDFDFD;
         @apply text-purple-matcha;
         @apply font-bold;
         @apply w-full;
@@ -285,11 +285,11 @@
         @apply flex-col;
         @apply justify-center;
         @apply items-center;
-        @apply bg-white-matcha;
+        background: #FDFDFD;
         @apply rounded-md;
         @apply w-full;
         @apply max-w-md;
-        @apply p-8;
+        @apply p-4;
     }
 
     .onboarding-sub-container-content {
@@ -333,6 +333,27 @@
             @apply px-0;
             background-image: linear-gradient(315deg, #ad1deb 0%, #6e72fc 74%);
         }
+    }
+
+    @screen sm {
+        .onboarding-sub-container {
+            @apply p-8;
+        }
+    }
+
+    .onboarding-textarea {
+        @apply w-full;
+        @apply h-full;
+        background: #FDFDFD;
+        @apply py-2;
+        @apply px-4;
+        @apply my-8;
+        @apply rounded-md;
+        @apply text-gray-matcha;
+    }
+
+    .onboarding-textarea:active, .onboarding-textarea:focus {
+        outline: none;
     }
 }
 

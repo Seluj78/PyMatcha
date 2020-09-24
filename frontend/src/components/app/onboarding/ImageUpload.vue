@@ -2,7 +2,10 @@
   <!-- eslint-disable max-len -->
   <div class="w-full max-w-sm flex flex-col justify-center items-center">
     <div class="w-full mt-4">
-      <p class="text-gray-matcha text-center">{{info.explanation}}</p>
+      <p class="text-gray-matcha text-center">{{explanation}}</p>
+    </div>
+    <div class="auth-sub-container-error mt-8" v-if="image.error">
+      <h1 class="auth-sub-container-error-message">{{image.error}}</h1>
     </div>
     <button v-if="!image.uploaded" class="relative onboarding-sub-container-upload-button w-full my-8">
       <input class="cursor-pointer opacity-0 absolute top-0 left-0 w-full h-full rounded-md" type="file" v-on:change="selectFile()" ref="file">
@@ -16,8 +19,10 @@
 </template>
 
 <script>
+/* eslint-disable */
+
 export default {
-  props: ['info', 'bus'],
+  props: ['explanation', 'bus'],
   data: () => ({
     image: {
       uploaded: false,
@@ -28,9 +33,9 @@ export default {
   }),
   methods: {
     selectFile() {
+      this.image.error = '';
       const allowedTypes = ['image/jpeg', 'image/png', 'image/gif'];
       const file = this.$refs.file.files[0];
-      this.image.content = file;
 
       if (!allowedTypes.includes(file.type)) {
         this.image.error = 'Only images allowed';
@@ -40,24 +45,27 @@ export default {
         this.image.error = 'File too large';
         return;
       }
+      this.image.content = file;
       this.image.url = URL.createObjectURL(file);
       this.image.uploaded = true;
-      this.$emit('imageUploaded');
+      this.$emit('imageUploaded', {
+        'content' : this.image.content,
+        'url' : this.image.url,
+      });
     },
     deleteImage() {
+      this.clearForNextImage();
+      this.$emit('imageDeleted');
+    },
+    clearForNextImage() {
       this.image.uploaded = false;
       this.image.url = null;
       this.image.content = null;
       this.image.error = null;
-      this.$emit('imageDeleted');
-    },
-    getImageObject() {
-      this.$emit('imageObjectGiven', this.image);
-      this.deleteImage();
     },
   },
   mounted() {
-    this.bus.$on('getImageObject', this.getImageObject);
+    this.bus.$on('clearForNextImage', this.clearForNextImage);
   },
 };
 </script>

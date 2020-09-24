@@ -1,55 +1,110 @@
 <template>
   <!-- eslint-disable max-len -->
   <div class="onboarding-container">
-    <section class="onboarding-sub-container" v-if="slideCurrent === 0">
-      <h1 class="onboarding-sub-container-content-heading text-8xl introduction mb-8 text-center leading-none">Meet<br>your<br>lover</h1>
-      <button class="onboarding-sub-container-content-button-outline w-1/2 mt-0" v-on:click="nextSlide(0)">{{buttonText}}</button>
-    </section>
-    <SlideOne v-bind:slide="{current: slideCurrent, count: slideCount, buttonText}"
-           v-on:saveInput="saveInput" v-if="slideCurrent === 1"></SlideOne>
-    <SlideTwo v-bind:slide="{current: slideCurrent, count: slideCount, buttonText}"
-              v-on:saveInput="saveInput" v-if="slideCurrent === 2"></SlideTwo>
-    <SlideThree v-bind:slide="{current: slideCurrent, count: slideCount, buttonText}"
-              v-on:saveInput="saveInput" v-if="slideCurrent === 3"></SlideThree>
-    <SlideFour v-bind:slide="{current: slideCurrent, count: slideCount, buttonText}"
-               v-on:saveInput="saveInput" v-if="slideCurrent === 4"></SlideFour>
-    <SlideFive v-bind:slide="{current: slideCurrent, count: slideCount, buttonText}"
-              v-on:saveInput="saveInput" v-if="slideCurrent === 5"></SlideFive>
+    <Introduction
+      v-bind:slide="{buttonText}"
+      v-on:nextSlide="nextSlide"
+      v-if="slideCurrent === 0"></Introduction>
+    <SingleChoice
+      v-bind:slide="{
+      key: 'gender',
+      current: slideCurrent,
+      count: slideCount,
+      header: 'I am',
+      options: ['Male', 'Female', 'Other'],
+      buttonText}"
+      v-on:saveInput="saveInput"
+      v-if="slideCurrent === 1"></SingleChoice>
+    <SingleChoice
+      v-bind:slide="{
+      key: 'orientation',
+      current: slideCurrent,
+      count: slideCount,
+      header: 'Sexuality',
+      options: ['Heterosexual', 'Homosexual', 'Bi-sexual', 'Other'],
+      buttonText}"
+      v-on:saveInput="saveInput"
+      v-if="slideCurrent === 2"></SingleChoice>
+    <MultipleChoice
+      v-bind:slide="{
+      key: 'interests' ,
+      current: slideCurrent,
+      count: slideCount,
+      header: 'Interests',
+      options: [
+        'Swimming', 'Wine', 'Reading', 'Foodie', 'Netflix', 'Music', 'Yoga', 'Golf',
+        'Photography', 'Baking', 'Shopping', 'Outdoors', 'Art', 'Travel', 'Hiking',
+        'Running', 'Volunteering', 'Cycling', 'Climbing', 'Tea', 'Fishing', 'Soccer',
+        'Museum', 'Dancing', 'Surfing', 'Karaoke', 'Grab a drink', 'DIY',
+        'Walking', 'Cat lover', 'Movies', 'Gardening', 'Trivia', 'Working out',
+        'Cooking', 'Gamer', 'Brunch', 'Blogging', 'Picknicking', 'Athlete',
+        'Dog lover', 'Politics', 'Environmentalism', 'Instagram', 'Spirituality',
+        'Language exchange', 'Sports', 'Comdey', 'Fashion', 'Disney', 'Vlogging',
+        'Astrology', 'Board Games', 'Craft Beer', 'Coffee', 'Writer',
+      ],
+      maxOptionsForSelection: 10,
+      buttonText}"
+      v-on:saveInput="saveInput"
+      v-if="slideCurrent === 3"></MultipleChoice>
+    <MainAndSecondaryImagesUpload
+      v-bind:slide="{
+      key: 'images',
+      current: slideCurrent,
+      count: slideCount,
+      header: 'Images',
+      mainImageExplanation: 'Profile image',
+      secondaryImageExplanation: 'Extra image',
+      maxImagesAllowed: 5,
+      buttonText}"
+      v-on:saveInput="saveInput"
+      v-if="slideCurrent === 4"></MainAndSecondaryImagesUpload>
+    <Textblock
+      v-bind:slide="{
+      key: 'bio',
+      current: slideCurrent,
+      count: slideCount,
+      minTextareaLength: 40,
+      maxTextareaLength: 200,
+      placeholder: 'I am best described as ...',
+      buttonText}"
+      v-on:saveInput="saveInput"
+      v-if="slideCurrent === 5"></Textblock>
   </div>
 </template>
 
 <script>
-import SlideOne from '@/components/app/onboarding/SlideOne.vue';
-import SlideTwo from '@/components/app/onboarding/SlideTwo.vue';
-import SlideThree from '@/components/app/onboarding/SlideThree.vue';
-import SlideFour from '@/components/app/onboarding/SlideFour.vue';
-import SlideFive from '@/components/app/onboarding/SlideFive.vue';
+import Introduction from '@/components/app/onboarding/Introduction.vue';
+import SingleChoice from '@/components/app/onboarding/SingleChoice.vue';
+import MultipleChoice from '@/components/app/onboarding/MultipleChoice.vue';
+import MainAndSecondaryImagesUpload from '@/components/app/onboarding/MainAndSecondaryImagesUpload.vue';
+import Textblock from '@/components/app/onboarding/Textblock.vue';
 
 export default {
   components: {
-    SlideOne,
-    SlideTwo,
-    SlideThree,
-    SlideFour,
-    SlideFive,
+    Introduction,
+    SingleChoice,
+    MultipleChoice,
+    MainAndSecondaryImagesUpload,
+    Textblock,
   },
   data: () => ({
     slideCurrent: 0,
     slideCount: 5,
-    slide1: {},
+    userData: {},
   }),
   methods: {
     saveInput(...args) {
-      const [slide, value, skip] = args;
-      this[slide] = value;
-      this.nextSlide(skip);
+      const [key, value] = args;
+      this.userData[key] = value;
+      console.log(this.userData);
+      this.nextSlide();
     },
-    nextSlide(skip) {
+    nextSlide() {
       if (this.slideCurrent === this.slideCount) {
         this.$router.push('/browse');
       }
       if (this.slideCurrent < this.slideCount) {
-        this.slideCurrent += (1 + skip);
+        this.slideCurrent += 1;
       }
     },
   },
@@ -67,14 +122,3 @@ export default {
 };
 
 </script>
-
-<style scoped>
-.introduction {
-  background: linear-gradient(315deg, #ad1deb 0%, #6e72fc 74%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-}
-.upload-small {
-  height: 50%;
-}
-</style>
