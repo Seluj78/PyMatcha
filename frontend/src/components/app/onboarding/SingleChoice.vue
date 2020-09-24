@@ -3,7 +3,7 @@
   <section class="onboarding-sub-container">
     <h1 class="text-gray-matcha">{{slide.current}} / {{slide.count}}</h1>
     <h1 class="onboarding-sub-container-content-heading leading-none">{{slide.header}}</h1>
-    <div class="h-64 flex flex-col items-center justify-center w-full">
+    <div v-bind:class="{'onboarding-selection-button-container': true, 'justify-center': slide.options.length < 5}">
       <SelectionButton v-for="(option, index) in slide.options" :key="index + option"
         v-bind:val="option"
         v-bind:canBeSelected="true"

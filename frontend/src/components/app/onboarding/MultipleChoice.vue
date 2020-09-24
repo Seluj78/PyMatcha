@@ -4,7 +4,7 @@
     <h1 class="text-gray-matcha">{{slide.current}} / {{slide.count}}</h1>
     <h1 class="onboarding-sub-container-content-heading leading-none">{{slide.header}}</h1>
     <p class="mt-2 text-gray-matcha">{{optionsSelectedCount}} / {{slide.maxOptionsForSelection}}</p>
-    <div class="h-64 pb-1 my-8 border-b-4 max-w-xs border-white-matcha flex flex-col items-center w-full overflow-scroll">
+    <div v-bind:class="{'onboarding-selection-button-container': true, 'justify-center': slide.options.length < 5}">
       <SelectionButton v-for="(option, index) in slide.options" :key="index + option"
         v-bind:val="option"
         v-bind:canBeSelected="canSelectMoreOptions"

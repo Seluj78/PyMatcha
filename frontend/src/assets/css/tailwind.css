@@ -355,6 +355,20 @@
     .onboarding-textarea:active, .onboarding-textarea:focus {
         outline: none;
     }
+
+    .onboarding-selection-button-container {
+        @apply h-64;
+        @apply pb-1;
+        @apply my-8;
+        @apply border-b-4;
+        @apply max-w-xs;
+        @apply border-white-matcha;
+        @apply flex;
+        @apply flex-col;
+        @apply items-center;
+        @apply w-full;
+        @apply overflow-scroll;
+    }
 }
 
 @tailwind utilities;

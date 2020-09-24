@@ -7,6 +7,16 @@
       v-if="slideCurrent === 0"></Introduction>
     <SingleChoice
       v-bind:slide="{
+      key: 'age',
+      current: slideCurrent,
+      count: slideCount,
+      header: 'My age',
+      options: generateAllowedAge(),
+      buttonText}"
+      v-on:saveInput="saveInput"
+      v-if="slideCurrent === 1"></SingleChoice>
+    <SingleChoice
+      v-bind:slide="{
       key: 'gender',
       current: slideCurrent,
       count: slideCount,
@@ -14,7 +24,7 @@
       options: ['Male', 'Female', 'Other'],
       buttonText}"
       v-on:saveInput="saveInput"
-      v-if="slideCurrent === 1"></SingleChoice>
+      v-if="slideCurrent === 2"></SingleChoice>
     <SingleChoice
       v-bind:slide="{
       key: 'orientation',
@@ -24,7 +34,7 @@
       options: ['Heterosexual', 'Homosexual', 'Bi-sexual', 'Other'],
       buttonText}"
       v-on:saveInput="saveInput"
-      v-if="slideCurrent === 2"></SingleChoice>
+      v-if="slideCurrent === 3"></SingleChoice>
     <MultipleChoice
       v-bind:slide="{
       key: 'interests' ,
@@ -46,7 +56,7 @@
       maxOptionsForSelection: 10,
       buttonText}"
       v-on:saveInput="saveInput"
-      v-if="slideCurrent === 3"></MultipleChoice>
+      v-if="slideCurrent === 4"></MultipleChoice>
     <MainAndSecondaryImagesUpload
       v-bind:slide="{
       key: 'images',
@@ -58,7 +68,7 @@
       maxImagesAllowed: 5,
       buttonText}"
       v-on:saveInput="saveInput"
-      v-if="slideCurrent === 4"></MainAndSecondaryImagesUpload>
+      v-if="slideCurrent === 5"></MainAndSecondaryImagesUpload>
     <Textblock
       v-bind:slide="{
       key: 'bio',
@@ -69,11 +79,12 @@
       placeholder: 'I am best described as ...',
       buttonText}"
       v-on:saveInput="saveInput"
-      v-if="slideCurrent === 5"></Textblock>
+      v-if="slideCurrent === 6"></Textblock>
   </div>
 </template>
 
 <script>
+/* eslint-disable */
 import Introduction from '@/components/app/onboarding/Introduction.vue';
 import SingleChoice from '@/components/app/onboarding/SingleChoice.vue';
 import MultipleChoice from '@/components/app/onboarding/MultipleChoice.vue';
@@ -90,7 +101,7 @@ export default {
   },
   data: () => ({
     slideCurrent: 0,
-    slideCount: 5,
+    slideCount: 6,
     userData: {},
   }),
   methods: {
@@ -107,6 +118,13 @@ export default {
       if (this.slideCurrent < this.slideCount) {
         this.slideCurrent += 1;
       }
+    },
+    generateAllowedAge() {
+      const ages = [];
+      for (let i = 18; i < 100; i += 1) {
+        ages.push(i);
+      }
+      return ages;
     },
   },
   computed: {
