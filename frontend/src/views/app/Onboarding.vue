@@ -7,7 +7,7 @@
       v-if="slideCurrent === 0"></Introduction>
     <SingleChoice
       v-bind:slide="{
-      key: 'age',
+      key: 'birthdate',
       current: slideCurrent,
       count: slideCount,
       header: 'My age',
@@ -21,7 +21,7 @@
       current: slideCurrent,
       count: slideCount,
       header: 'I am',
-      options: ['Male', 'Female', 'Other'],
+      options: ['male', 'female', 'other'],
       buttonText}"
       v-on:saveInput="saveInput"
       v-if="slideCurrent === 2"></SingleChoice>
@@ -31,26 +31,26 @@
       current: slideCurrent,
       count: slideCount,
       header: 'Sexuality',
-      options: ['Heterosexual', 'Homosexual', 'Bi-sexual', 'Other'],
+      options: ['heterosexual', 'homosexual', 'bi-sexual', 'other'],
       buttonText}"
       v-on:saveInput="saveInput"
       v-if="slideCurrent === 3"></SingleChoice>
     <MultipleChoice
       v-bind:slide="{
-      key: 'interests' ,
+      key: 'tags' ,
       current: slideCurrent,
       count: slideCount,
       header: 'Interests',
       options: [
-        'Swimming', 'Wine', 'Reading', 'Foodie', 'Netflix', 'Music', 'Yoga', 'Golf',
-        'Photography', 'Baking', 'Shopping', 'Outdoors', 'Art', 'Travel', 'Hiking',
-        'Running', 'Volunteering', 'Cycling', 'Climbing', 'Tea', 'Fishing', 'Soccer',
-        'Museum', 'Dancing', 'Surfing', 'Karaoke', 'Grab a drink', 'DIY',
-        'Walking', 'Cat lover', 'Movies', 'Gardening', 'Trivia', 'Working out',
-        'Cooking', 'Gamer', 'Brunch', 'Blogging', 'Picknicking', 'Athlete',
-        'Dog lover', 'Politics', 'Environmentalism', 'Instagram', 'Spirituality',
-        'Language exchange', 'Sports', 'Comdey', 'Fashion', 'Disney', 'Vlogging',
-        'Astrology', 'Board Games', 'Craft Beer', 'Coffee', 'Writer',
+        'swimming', 'wine', 'reading', 'foodie', 'netflix', 'music', 'yoga', 'golf',
+        'photography', 'baking', 'shopping', 'outdoors', 'art', 'travel', 'hiking',
+        'running', 'volunteering', 'cycling', 'climbing', 'tea', 'fishing', 'soccer',
+        'museum', 'dancing', 'surfing', 'karaoke', 'parties', 'diy',
+        'walking', 'cat lover', 'movies', 'gardening', 'trivia', 'working out',
+        'cooking', 'gamer', 'brunch', 'blogging', 'picknicking', 'athlete',
+        'dog lover', 'politics', 'environmentalism', 'instagram', 'spirituality',
+        'language exchange', 'sports', 'comedy', 'fashion', 'disney', 'vlogging',
+        'astrology', 'board games', 'craft beer', 'coffee', 'writer',
       ],
       minOptionsForSelection: 3,
       maxOptionsForSelection: 10,
@@ -106,7 +106,10 @@ export default {
   }),
   methods: {
     saveInput(...args) {
-      const [key, value] = args;
+      let [key, value] = args;
+      if (key === 'birthdate') {
+        value = this.formatBirthdate(value);
+      }
       this.userData[key] = value;
       console.log(this.userData);
       this.nextSlide();
@@ -125,6 +128,10 @@ export default {
         ages.push(i);
       }
       return ages;
+    },
+    formatBirthdate(age) {
+      let birthyear = new Date().getFullYear() - age;
+      return '01/01/' + birthyear;
     },
   },
   computed: {

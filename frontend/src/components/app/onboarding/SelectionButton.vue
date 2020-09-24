@@ -3,6 +3,7 @@
     v-bind:class="{
         'onboarding-sub-container-content-button-outline': true,
         'mt-2': true,
+        'capitalize': true,
         'onboarding-sub-container-content-button-outline-selected': selected,
         'cursor-default': invalid,
       }"
