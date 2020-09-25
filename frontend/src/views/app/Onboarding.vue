@@ -67,7 +67,7 @@
       secondaryImageExplanation: 'Extra image',
       maxImagesAllowed: 5,
       buttonText}"
-      v-on:saveInput="saveInput"
+      v-on:nextSlide="nextSlide"
       v-if="slideCurrent === 5"></MainAndSecondaryImagesUpload>
     <Textblock
       v-bind:slide="{
@@ -110,10 +110,7 @@ export default {
       if (key === 'birthdate') {
         value = this.formatBirthdate(value);
       }
-      if (key !== 'images') {
-        this.userData[key] = value;
-      }
-      console.log(this.userData);
+      this.userData[key] = value;
       this.nextSlide();
     },
     nextSlide() {

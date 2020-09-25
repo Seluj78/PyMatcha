@@ -42,24 +42,23 @@ export default {
         this.bus.$emit('clearForNextImage');
         this.imageIndex += 1;
       } else {
-        this.$emit('saveInput', this.slide.key, this.imagesUploaded);
+        this.$emit('nextSlide');
         this.sendImagesToBackend();
       }
     },
     async sendImagesToBackend() {
-      try {
-        for (let i = 0; i < this.imagesUploaded.length; i += 1) {
+      for (let i = 0; i < this.imagesUploaded.length; i += 1) {
+        try {
           const formData = new FormData();
+          formData.append('file[]', this.imagesUploaded[i].content);
           if (i === 0) {
-            formData.append('ProfileImage', this.imagesUploaded[i].content);
             await this.$http.post('/profile/images?is_primary=true', formData);
           } else {
-            formData.append('ExtraImage', this.imagesUploaded[i].content);
             await this.$http.post('/profile/images?is_primary=false', formData);
           }
+        } catch (error) {
+          console.log(error);
         }
-      } catch (error) {
-        console.log(error);
       }
     },
   },
