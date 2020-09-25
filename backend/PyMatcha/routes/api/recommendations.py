@@ -22,7 +22,8 @@ from flask import Blueprint
 from flask_jwt_extended import current_user
 from flask_jwt_extended import jwt_required
 from PyMatcha import redis
-from PyMatcha.utils.errors import NotFoundError
+from PyMatcha.utils.errors import BadRequestError
+from PyMatcha.utils.recommendations import create_user_recommendations
 from PyMatcha.utils.success import SuccessOutput
 
 recommendations_bp = Blueprint("recommendations", __name__)
@@ -33,5 +34,8 @@ recommendations_bp = Blueprint("recommendations", __name__)
 def get_recommendations():
     recommendations = redis.get(f"user_recommendations:{str(current_user.id)}")
     if not recommendations:
-        raise NotFoundError("Recommendations not calculated yet", "Please come back later")
+        create_user_recommendations(current_user)
+        recommendations = redis.get(f"user_recommendations:{str(current_user.id)}")
+        if not recommendations:
+            raise BadRequestError("User recommendations cannot be calculated")
     return SuccessOutput("recommendations", json.loads(recommendations))
