@@ -74,7 +74,7 @@
       key: 'bio',
       current: slideCurrent,
       count: slideCount,
-      minTextareaLength: 50,
+      minTextareaLength: 51,
       maxTextareaLength: 200,
       placeholder: 'I am best described as ...',
       buttonText}"
@@ -88,6 +88,7 @@
       buttonText}"
       v-on:nextSlide="nextSlide"
       v-if="slideCurrent === 7"></Location>
+    <SettingUp v-if="slideCurrent === 8"></SettingUp>
   </div>
 </template>
 
@@ -98,7 +99,8 @@ import SingleChoice from '@/components/app/onboarding/SingleChoice.vue';
 import MultipleChoice from '@/components/app/onboarding/MultipleChoice.vue';
 import MainAndSecondaryImagesUpload from '@/components/app/onboarding/MainAndSecondaryImagesUpload.vue';
 import Textblock from '@/components/app/onboarding/Textblock.vue';
-import Location from "@/components/app/onboarding/Location";
+import Location from "@/components/app/onboarding/Location.vue";
+import SettingUp from "@/components/app/onboarding/SettingUp.vue";
 
 export default {
   components: {
@@ -108,11 +110,13 @@ export default {
     MainAndSecondaryImagesUpload,
     Textblock,
     Location,
+    SettingUp,
   },
   data: () => ({
     slideCurrent: 0,
     slideCount: 7,
     userData: {},
+    userUploadedImagesCount: 0,
   }),
   methods: {
     saveInput(...args) {
@@ -127,13 +131,18 @@ export default {
     },
     async nextSlide() {
       if (this.slideCurrent === this.slideCount) {
+        this.slideCurrent += 1;
         await this.$http.post('/profile/complete', this.userData);
+        await this.$http.get('/recommendations');
         await this.$store.dispatch('profileCompleted');
-        console.log('setting up profile might take a while');
-        // await this.$router.push('/browse');
+        await this.$router.push('/browse');
       }
       if (this.slideCurrent < this.slideCount) {
-        this.slideCurrent += 1;
+        if (this.slideCurrent === 4 && this.userUploadedImagesCount) {
+          this.slideCurrent += 2;
+        } else {
+          this.slideCurrent += 1;
+        }
       }
     },
     generateAllowedAge() {
@@ -165,6 +174,11 @@ export default {
       }
       return 'Finish';
     },
+  },
+  async beforeMount() {
+    const response = await this.$http.get('/profile/images');
+    const { images } = response.data;
+    this.userUploadedImagesCount = images.length;
   },
 };
 
