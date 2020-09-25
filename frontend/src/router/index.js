@@ -9,6 +9,7 @@ import AccountVerifiedError from '../views/auth/AccountVerifiedError.vue';
 import ResetPassword from '../views/auth/ResetPassword.vue';
 import ResetPasswordError from '../views/auth/ResetPasswordError.vue';
 import Onboarding from '../views/app/Onboarding.vue';
+import Browse from '../views/app/Browse.vue';
 import store from '../store/index';
 
 Vue.use(VueRouter);
@@ -23,6 +24,17 @@ function loggedInRedirectBrowse(to, from, next) {
 
 function notLoggedInRedirectLogin(to, from, next) {
   if (store.getters.getLoggedInUser) {
+    next();
+  } else {
+    next('/accounts/signin');
+  }
+}
+
+function blockRepeatedOnboarding(to, from, next) {
+  const user = store.getters.getLoggedInUser;
+  if (user && user.is_profile_completed) {
+    next('/browse');
+  } else if (user && !user.is_profile_completed) {
     next();
   } else {
     next('/accounts/signin');
@@ -81,6 +93,12 @@ const routes = [
     path: '/onboarding',
     name: 'Onboarding',
     component: Onboarding,
+    beforeEnter: blockRepeatedOnboarding,
+  },
+  {
+    path: '/browse',
+    name: Browse,
+    component: Browse,
     beforeEnter: notLoggedInRedirectLogin,
   },
 ];

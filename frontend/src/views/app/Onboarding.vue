@@ -80,6 +80,14 @@
       buttonText}"
       v-on:saveInput="saveInput"
       v-if="slideCurrent === 6"></Textblock>
+    <Location
+      v-bind:slide="{
+      key: 'location',
+      current: slideCurrent,
+      count: slideCount,
+      buttonText}"
+      v-on:nextSlide="nextSlide"
+      v-if="slideCurrent === 7"></Location>
   </div>
 </template>
 
@@ -90,6 +98,7 @@ import SingleChoice from '@/components/app/onboarding/SingleChoice.vue';
 import MultipleChoice from '@/components/app/onboarding/MultipleChoice.vue';
 import MainAndSecondaryImagesUpload from '@/components/app/onboarding/MainAndSecondaryImagesUpload.vue';
 import Textblock from '@/components/app/onboarding/Textblock.vue';
+import Location from "@/components/app/onboarding/Location";
 
 export default {
   components: {
@@ -98,10 +107,11 @@ export default {
     MultipleChoice,
     MainAndSecondaryImagesUpload,
     Textblock,
+    Location,
   },
   data: () => ({
     slideCurrent: 0,
-    slideCount: 6,
+    slideCount: 7,
     userData: {},
   }),
   methods: {
@@ -109,13 +119,18 @@ export default {
       let [key, value] = args;
       if (key === 'birthdate') {
         value = this.formatBirthdate(value);
+      } else if (key === 'location') {
+        value = this.processLocation(value);
       }
       this.userData[key] = value;
       this.nextSlide();
     },
-    nextSlide() {
+    async nextSlide() {
       if (this.slideCurrent === this.slideCount) {
-        this.$router.push('/browse');
+        await this.$http.post('/profile/complete', this.userData);
+        await this.$store.dispatch('profileCompleted');
+        console.log('setting up profile might take a while');
+        // await this.$router.push('/browse');
       }
       if (this.slideCurrent < this.slideCount) {
         this.slideCurrent += 1;
@@ -132,6 +147,13 @@ export default {
       let birthyear = new Date().getFullYear() - age;
       return '01/01/' + birthyear;
     },
+    processLocation(allowAccessToLocation) {
+      if (allowAccessToLocation) {
+        navigator.geolocation.getCurrentPosition(function(position) {
+          console.log(position.coords.latitude + position.coords.longitude);
+        });
+      }
+    }
   },
   computed: {
     buttonText() {
