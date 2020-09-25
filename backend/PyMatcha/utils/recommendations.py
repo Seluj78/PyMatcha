@@ -30,6 +30,8 @@ def create_user_recommendations(user_to_update):
 
     query = _get_gender_query(user_to_update.orientation, user_to_update.gender)
 
+    if not query:
+        return
     for user in query:
         if user.id == user_to_update.id:
             continue
