@@ -94,15 +94,16 @@
 </template>
 
 <script>
-/* eslint-disable */
+/* eslint-disable  prefer-const */
 import Introduction from '@/components/app/onboarding/Introduction.vue';
 import SingleChoice from '@/components/app/onboarding/SingleChoice.vue';
 import MultipleChoice from '@/components/app/onboarding/MultipleChoice.vue';
 import MainAndSecondaryImagesUpload from '@/components/app/onboarding/MainAndSecondaryImagesUpload.vue';
 import Textblock from '@/components/app/onboarding/Textblock.vue';
-import Location from "@/components/app/onboarding/Location.vue";
-import SettingUp from "@/components/app/onboarding/SettingUp.vue";
+import Location from '@/components/app/onboarding/Location.vue';
+import SettingUp from '@/components/app/onboarding/SettingUp.vue';
 import Vue from 'vue';
+import Browse from '@/views/app/Browse.vue';
 
 export default {
   components: {
@@ -126,8 +127,6 @@ export default {
       let [key, value] = args;
       if (key === 'birthdate') {
         value = this.formatBirthdate(value);
-      } else if (key === 'location') {
-        value = this.processLocation(value);
       }
       this.userData[key] = value;
       this.nextSlide();
@@ -137,9 +136,10 @@ export default {
         this.slideCurrent += 1;
         await this.bus.$emit('sendUserLocationToBackend');
         await this.$http.post('/profile/complete', this.userData);
-        await this.$http.get('/recommendations');
+        const recommendationsRequest = await this.$http.get('/recommendations');
+        const recommendationsFromSettingUp = recommendationsRequest.data.recommendations;
         await this.$store.dispatch('profileCompleted');
-        await this.$router.push('/browse');
+        await this.$router.push({ name: Browse, params: { recommendationsFromSettingUp } });
       }
       if (this.slideCurrent < this.slideCount) {
         if (this.slideCurrent === 4 && this.userUploadedImagesCount) {
@@ -157,16 +157,9 @@ export default {
       return ages;
     },
     formatBirthdate(age) {
-      let birthyear = new Date().getFullYear() - age;
-      return '01/01/' + birthyear;
+      const birthyear = new Date().getFullYear() - age;
+      return `01/01/${birthyear}`;
     },
-    processLocation(allowAccessToLocation) {
-      if (allowAccessToLocation) {
-        navigator.geolocation.getCurrentPosition(function(position) {
-          console.log(position.coords.latitude + position.coords.longitude);
-        });
-      }
-    }
   },
   computed: {
     buttonText() {
