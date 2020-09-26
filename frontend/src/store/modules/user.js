@@ -17,6 +17,9 @@ const mutations = {
   logout(state) {
     state.user = null;
   },
+  profileCompleted(state) {
+    state.user.is_profile_completed = true;
+  },
 };
 
 const actions = {
@@ -25,6 +28,9 @@ const actions = {
   },
   logout(state) {
     state.commit('logout');
+  },
+  profileCompleted(state) {
+    state.commit('profileCompleted');
   },
 };
 

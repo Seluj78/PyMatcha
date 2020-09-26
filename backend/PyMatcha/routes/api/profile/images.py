@@ -29,9 +29,7 @@ def add_image_profile():
         raise BadRequestError("No file passed in request")
     if file:
         if is_primary:
-            try:
-                Image.get_multi(user_id=current_user.id, is_primary=True)
-            except ValueError:
+            if not Image.get_multi(user_id=current_user.id, is_primary=True):
                 # That means there was no primary image before
                 tmp_img = BytesIO()
                 file.save(tmp_img)
