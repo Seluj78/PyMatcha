@@ -15,7 +15,10 @@
 import SingleChoice from '@/components/app/onboarding/SingleChoice.vue';
 
 export default {
-  props: ['slide'],
+  props: ['slide', 'bus'],
+  data: () => ({
+    locationData: {},
+  }),
   components: {
     SingleChoice,
   },
@@ -37,18 +40,22 @@ export default {
     async locationAllowed(position) {
       const { latitude } = position.coords;
       const { longitude } = position.coords;
-      await this.sendLocation({ lat: latitude, lng: longitude, ip: '0.0.0.0' });
+      this.locationData = { lat: latitude, lng: longitude, ip: '0.0.0.0' };
+      this.$emit('nextSlide');
     },
     async locationDenied() {
       let ipRequest = await fetch('https://api.ipify.org?format=json');
       ipRequest = await ipRequest.json();
       const { ip } = ipRequest;
-      await this.sendLocation({ ip });
-    },
-    async sendLocation(data) {
-      await this.$http.put('/profile/edit/geolocation', data);
+      this.locationData = { ip };
       this.$emit('nextSlide');
     },
+    async sendLocation() {
+      await this.$http.put('/profile/edit/geolocation', this.locationData);
+    },
+  },
+  mounted() {
+    this.bus.$on('sendUserLocationToBackend', this.sendLocation);
   },
 };
 </script>

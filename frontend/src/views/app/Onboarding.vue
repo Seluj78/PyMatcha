@@ -86,6 +86,7 @@
       current: slideCurrent,
       count: slideCount,
       buttonText}"
+      v-bind:bus="bus"
       v-on:nextSlide="nextSlide"
       v-if="slideCurrent === 7"></Location>
     <SettingUp v-if="slideCurrent === 8"></SettingUp>
@@ -101,6 +102,7 @@ import MainAndSecondaryImagesUpload from '@/components/app/onboarding/MainAndSec
 import Textblock from '@/components/app/onboarding/Textblock.vue';
 import Location from "@/components/app/onboarding/Location.vue";
 import SettingUp from "@/components/app/onboarding/SettingUp.vue";
+import Vue from 'vue';
 
 export default {
   components: {
@@ -117,6 +119,7 @@ export default {
     slideCount: 7,
     userData: {},
     userUploadedImagesCount: 0,
+    bus: new Vue(),
   }),
   methods: {
     saveInput(...args) {
@@ -132,6 +135,7 @@ export default {
     async nextSlide() {
       if (this.slideCurrent === this.slideCount) {
         this.slideCurrent += 1;
+        await this.bus.$emit('sendUserLocationToBackend');
         await this.$http.post('/profile/complete', this.userData);
         await this.$http.get('/recommendations');
         await this.$store.dispatch('profileCompleted');
