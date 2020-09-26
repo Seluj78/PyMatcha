@@ -100,6 +100,7 @@ const routes = [
     name: Browse,
     component: Browse,
     beforeEnter: notLoggedInRedirectLogin,
+    props: true,
   },
 ];
 
