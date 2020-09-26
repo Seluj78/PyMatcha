@@ -21,20 +21,23 @@
       </div>
     </div>
     <div id="links" v-on:click="isOpen = !isOpen" v-bind:class="isOpen ? 'block' : 'hidden'" class="px-2 pb-5 text-center sm:p-0 sm:block sm:flex sm:items-center">
-      <div class="sm:flex sm:bg-purple-matcha sm:border-2 sm:border-purple-matcha sm:rounded-lg">
-        <router-link v-if="!loggedIn" to="/accounts/signin" class="navigation-button-logged-in sm:hover:bg-white-matcha sm:hover:text-purple-matcha sm:text-purple-matcha sm:bg-white-matcha sm:py-2 sm:px-8 sm:rounded-md">Sign In</router-link>
-        <router-link v-if="!loggedIn" to="/accounts/signup" class="navigation-button-logged-in sm:hover:bg-purple-matcha sm:hover:text-white-matcha sm:text-white-matcha sm:py-2 sm:px-8">Get Started</router-link>
+      <div v-if="!loggedIn" class="sm:flex sm:bg-purple-matcha sm:border-2 sm:border-purple-matcha sm:rounded-lg">
+        <router-link to="/accounts/signin" class="navigation-button-logged-in sm:hover:bg-white-matcha sm:hover:text-purple-matcha sm:text-purple-matcha sm:bg-white-matcha sm:py-2 sm:px-8 sm:rounded-md">Sign In</router-link>
+        <router-link to="/accounts/signup" class="navigation-button-logged-in sm:hover:bg-purple-matcha sm:hover:text-white-matcha sm:text-white-matcha sm:py-2 sm:px-8">Get Started</router-link>
       </div>
+      <router-link v-if="loggedIn" to="/browse" class="navigation-button-logged-in">Browse</router-link>
       <router-link v-if="loggedIn" to="/search" class="navigation-button-logged-in">Search</router-link>
-      <router-link v-if="loggedIn" to="/add" class="navigation-button-logged-in">Add</router-link>
+      <router-link v-if="loggedIn" to="/" class="navigation-button-logged-in">Matches</router-link>
+      <router-link v-if="loggedIn" to="/" class="navigation-button-logged-in">Profile</router-link>
       <router-link v-if="loggedIn" v-on:click.native="logout()" to="/" class="navigation-button-logged-in">Log Out</router-link>
     </div>
   </nav>
 </template>
 
 <script>
-
 /* eslint-disable indent */
+import { logOut } from '@/auth/logOut';
+
 export default {
   name: 'Navigation',
   data() {
@@ -44,12 +47,12 @@ export default {
   },
   computed: {
     loggedIn() {
-      return false;
+      return this.$store.getters.getLoggedInUser;
     },
   },
   methods: {
     async logout() {
-      return true;
+      await logOut();
     },
   },
 };
