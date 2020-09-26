@@ -11,6 +11,11 @@
         @apply text-purple-matcha;
         @apply rounded-md;
     }
+
+    .navigation-button-logged-in:active, .navigation-button-logged-in:focus {
+        outline: none;
+    }
+
     .navigation-button-logged-in:hover {
         @apply bg-purple-matcha;
         @apply text-white-matcha;
