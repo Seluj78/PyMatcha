@@ -6017,6 +6017,11 @@ normalize.css@^8.0.1:
   resolved "https://registry.yarnpkg.com/normalize.css/-/normalize.css-8.0.1.tgz#9b98a208738b9cc2634caacbc42d131c97487bf3"
   integrity sha512-qizSNPO93t1YUuUhP22btGOo3chcvDFqFaj2TRybP0DMxkHOCTYwp3n34fel4a31ORXy4m1Xq0Gyqpb5m33qIg==
 
+nouislider@^14.6.2:
+  version "14.6.2"
+  resolved "https://registry.yarnpkg.com/nouislider/-/nouislider-14.6.2.tgz#ecf7b7d1554672e705aab6fcd27e195ed3f67c98"
+  integrity sha512-/lJeqJBghNAZS3P2VYrHzm1RM6YJPvvC/1wNpGaHBRX+05wpzUDafrW/ohAYp4kjKhRH8+BJ0vkorCHiMmgTMQ==
+
 npm-run-path@^2.0.0:
   version "2.0.2"
   resolved "https://registry.yarnpkg.com/npm-run-path/-/npm-run-path-2.0.2.tgz#35a9232dfa35d7067b4cb2ddf2357b1871536c5f"

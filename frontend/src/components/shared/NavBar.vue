@@ -29,7 +29,7 @@
       <router-link v-if="loggedIn" to="/search" class="navigation-button-logged-in">Search</router-link>
       <router-link v-if="loggedIn" to="/" class="navigation-button-logged-in">Matches</router-link>
       <router-link v-if="loggedIn" to="/" class="navigation-button-logged-in">Profile</router-link>
-      <router-link v-if="loggedIn" v-on:click.native="logout()" to="/" class="navigation-button-logged-in">Log Out</router-link>
+      <router-link v-if="loggedIn" v-on:click.native="logout()" to="/" class="navigation-button-logged-in">Exit</router-link>
     </div>
   </nav>
 </template>

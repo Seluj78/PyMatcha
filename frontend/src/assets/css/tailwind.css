@@ -374,6 +374,9 @@
         @apply w-full;
         @apply overflow-scroll;
     }
+
+    .slider-container {
+    }
 }
 
 @tailwind utilities;
