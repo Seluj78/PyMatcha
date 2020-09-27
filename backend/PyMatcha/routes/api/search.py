@@ -23,7 +23,7 @@ REQUIRED_PARAMS_SEARCH = {
 
 
 @search_bp.route("/search", methods=["POST"])
-@validate_params(REQUIRED_PARAMS_SEARCH)
+@validate_params(REQUIRED_PARAMS_SEARCH, allow_empty=True)
 @jwt_required
 def search():
     data = request.get_json()
@@ -59,8 +59,9 @@ def search():
 
         if max_distance != -1:
             distance = _get_distance(current_user.geohash, user.geohash)
-            if distance > max_distance:
-                continue
+            if distance:
+                if distance > max_distance:
+                    continue
 
         if tags:
             user_tags = [t.name for t in user.get_tags()]
