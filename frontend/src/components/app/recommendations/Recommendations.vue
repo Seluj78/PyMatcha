@@ -1,7 +1,13 @@
 <template>
   <!-- eslint-disable max-len -->
   <section>
-    <h1 class="text-5xl mb-4 text-center sm:text-left onboarding-sub-container-content-heading">{{title}}</h1>
+    <h1 class="text-5xl my-4 text-center sm:text-left leading-none onboarding-sub-container-content-heading">{{recommendations.length}} {{title}}</h1>
+    <div class="flex mb-12 relative">
+    <Sort
+      v-bind:options="['Youngest', 'Oldest', 'Closest', 'Farest', 'Most popular', 'Least popular', 'Most common interests', 'Least common interests']"
+      v-on:sort="sort"></Sort>
+    <FilterSlider v-bind:name="'Age'" v-on:filter="filter"></FilterSlider>
+    </div>
     <div class="flex flex-wrap items-center justify-start">
     <RecommendationCard
       v-for="(recommendation, index) in recommendations" :key="index"
@@ -11,11 +17,24 @@
 </template>
 
 <script>
+/* eslint-disable */
+import Sort from '@/components/shared/Sort.vue';
+import FilterSlider from '@/components/shared/FilterSlider.vue';
 import RecommendationCard from '@/components/app/recommendations/RecommendationCard.vue';
 
 export default {
   components: {
+    Sort,
     RecommendationCard,
+    FilterSlider,
+  },
+  methods: {
+    sort() {
+      console.log('sort');
+    },
+    filter() {
+      console.log('filter');
+    },
   },
   props: ['title', 'recommendations'],
 };
