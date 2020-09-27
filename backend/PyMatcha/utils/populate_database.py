@@ -58,7 +58,7 @@ def populate_users(amount=150, drop_user_table=False):
                 orientation=orientation,
                 birthdate=birthdate,
                 geohash=geohash,
-                heat_score=0,
+                heat_score=random.randint(0, 150),
                 is_online=random.choice([True, False]),
                 date_joined=date_joined,
                 date_lastseen=date_lastseen,
