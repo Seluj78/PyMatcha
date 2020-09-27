@@ -45,7 +45,7 @@ def populate_users(amount=150, drop_user_table=False):
         date_lastseen = gen_datetime(min_year=2017, max_year=datetime.datetime.now().year)
         username = user.get_username()
 
-        birthdate = datetime.datetime.strptime(user.get_dob(), "%Y-%m-%dT%H:%M:%S.%fZ").date()
+        birthdate = gen_datetime(min_year=1985, max_year=datetime.datetime.now().year - 18).date()
         try:
             User.create(
                 first_name=user.get_first_name(),
