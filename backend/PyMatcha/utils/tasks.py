@@ -48,6 +48,8 @@ def update_heat_scores():
         score -= reports_received * REPORTS_MULTIPLIER
         score += views * VIEW_MULTIPLIER
         score += ceil(messages / MESSAGES_DIVIDER)
+        if score < 0:
+            score = 0
         user.heat_score = score
         user.save()
         return f"Updated heat score for user {user.id}: {user.heat_score}."
