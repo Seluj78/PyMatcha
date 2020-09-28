@@ -19,7 +19,7 @@ export default {
   props: ['options', 'name', 'position'],
   data: () => ({
     closed: true,
-    currentOption: '',
+    currentOption: 'Closest',
   }),
   methods: {
     select(option) {
