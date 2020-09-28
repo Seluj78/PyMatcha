@@ -1,6 +1,6 @@
 <template>
   <!-- eslint-disable max-len -->
-  <div class="mx-4 sm:mx-32">
+  <div class="mx-4 sm:mx-16 lg:mx-32">
     <NavBar v-bind:currentRoute="'Browse'"></NavBar>
     <section class="mx-auto">
       <Recommendations
