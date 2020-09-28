@@ -22,21 +22,6 @@ export default {
   },
   data: () => ({
     recommendations: [],
-    recommendationsAnalysis: {
-      age: {
-        min: null,
-        max: null,
-      },
-      distance: {
-        min: null,
-        max: null,
-      },
-      fame: {
-        min: null,
-        max: null,
-      },
-      interests: [],
-    },
   }),
   async created() {
     if (this.recommendationsFromSettingUp) {
@@ -44,9 +29,6 @@ export default {
     } else {
       const recommendationsRequest = await this.$http.get('/recommendations');
       this.recommendations = recommendationsRequest.data.recommendations;
-    }
-    for (let i = 0; i < this.recommendations.length; i += 1) {
-      console.log(this.recommendations[i]);
     }
   },
 };
