@@ -1,38 +1,13 @@
 <template>
   <!-- eslint-disable max-len -->
-  <div class="inline-block focus:outline-none">
-    <div v-bind:class="{'flex': true, 'items-center': true, 'justify-center': true, 'w-20': true, 'h-12': true, 'rounded-xl': true, 'border': true, 'border-gray-matcha': !closed, 'border-gray-300': closed, 'px-4': true, 'py-2': true, 'focus:outline-none': true, 'cursor-pointer': true}" @click="toggle" @focusout="close" tabindex="0">
-      <img v-bind:class="{ 'opacity-50': closed, 'h-8': true, }" src="../../assets/sort.png">
+  <div class="focus:outline-none flex-1 sm:flex-none" @focusout="close" tabindex="0">
+    <div v-bind:class="{'sort-button': true, 'border-gray-matcha': !closed}" @click="toggle">
+<!--      <img v-bind:class="{ 'opacity-50': closed, 'noSelect': true }" src="../../assets/sort.png">-->
+      <h1 v-bind:class="{ 'opacity-50': closed, 'noSelect': true, 'capitalize': true }">↑↓</h1>
     </div>
-    <div v-bind:class="{
-      'w-56': true,
-      'h-56': true,
-      'mt-4': true,
-      'overflow-scroll': true,
-      'rounded-md': true,
-      'shadow-2xl': true,
-      'absolute': true,
-      'rounded-md': true,
-      'bg-white': true,
-      'hidden': closed}">
-        <h1
-          v-for="(option, index) in options"
-          :key="option + index + option"
-          v-bind:class="{
-            'cursor-pointer': true,
-            'block': true,
-            'pl-4': true,
-            'border-b': index !== options.length - 1,
-            'border-gray-300': index !== options.length - 1,
-            'py-4': true,
-            'text-sm': true,
-            'leading-5': true,
-            'text-gray-700': true,
-            'hover:bg-gray-100': true,
-            'hover:text-gray-900': true,
-            'focus:outline-none': true,
-            'focus:bg-gray-100': true,
-            'focus:text-gray-900': true}"
+    <div v-bind:class="{'sort-dropdown': true, 'hidden': closed}">
+        <h1 v-for="(option, index) in options" :key="option + index + option"
+          v-bind:class="{'sort-dropdown-option': true, 'border-b': index !== options.length - 1}"
           v-on:click="select(option)">
           {{option}}
         </h1>
@@ -49,7 +24,7 @@ export default {
   methods: {
     select(option) {
       this.closed = true;
-      this.$emit('sort', this.name, option);
+      this.$emit('sort', option);
     },
     toggle() {
       this.closed = !this.closed;
