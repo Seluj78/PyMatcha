@@ -5,7 +5,7 @@
       <h1 v-bind:class="{ 'opacity-50': closed, 'noSelect': true, 'capitalize': true }">{{name}}</h1>
     </div>
     <div ref="sliderDropdown" v-bind:class="{'slider-dropdown': true, 'hidden': closed}">
-      <div class="flex my-4">
+      <div class="flex mb-4 mt-2">
         <h1><span class="font-bold">{{this.slider.startMin}} {{this.unit}}</span> to <span class="font-bold">{{this.slider.startMax}} {{this.unit}}</span></h1>
       </div>
       <div ref="slider" class="w-64 mb-4"></div>
