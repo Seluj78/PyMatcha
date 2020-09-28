@@ -8,7 +8,7 @@ from PyMatcha.utils.static import DEBUG_AUTH_TOKEN
 from werkzeug.exceptions import BadRequest
 
 
-def validate_params(required: dict, optional: Optional[dict] = None):
+def validate_params(required: dict, optional: Optional[dict] = None, allow_empty=False):
     if optional is None:
         optional = {}
 
@@ -43,12 +43,13 @@ def validate_params(required: dict, optional: Optional[dict] = None):
                         "You are only allowed to specify the fields {}" ".".format(required.keys()),
                     )
 
-            for key, value in data.items():
-                if not value:
-                    if required[key] == int or required[key] == bool:
-                        pass
-                    else:
-                        raise BadRequestError(f"The item {key} cannot be None or empty.")
+            if not allow_empty:
+                for key, value in data.items():
+                    if not value:
+                        if required[key] == int or required[key] == bool:
+                            pass
+                        else:
+                            raise BadRequestError(f"The item {key} cannot be None or empty.")
 
             wrong_types = [r for r in required.keys() if not isinstance(data[r], required[r])]
             wrong_types += [r for r in optional.keys() if r in data and not isinstance(data[r], optional[r])]
