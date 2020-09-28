@@ -2,6 +2,8 @@ import datetime
 import json
 import os
 import random
+from time import sleep
+from urllib.error import HTTPError
 
 import Geohash
 import lorem
@@ -25,7 +27,11 @@ def populate_users(amount=150, drop_user_table=False):
     if drop_user_table:
         User.drop_table()
         User.create_table()
-    users = RandomUser.generate_users(amount=amount)
+    try:
+        users = RandomUser.generate_users(amount=amount)
+    except HTTPError:
+        sleep(10)
+        users = RandomUser.generate_users(amount=amount)
     for user in users:
         gender = random.choice(["male", "female", "other"])
         if gender != "other":
