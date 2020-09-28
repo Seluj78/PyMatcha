@@ -375,7 +375,113 @@
         @apply overflow-scroll;
     }
 
-    .slider-container {
+    .sort-button {
+        @apply border-gray-300;
+        @apply rounded-md;
+        @apply border;
+        @apply px-2;
+        @apply py-2;
+        @apply cursor-pointer;
+        @apply text-sm;
+        @apply text-center;
+    }
+
+    @screen sm {
+        .sort-button {
+            @apply px-4;
+            @apply w-auto;
+            @apply rounded-xl;
+        }
+    }
+
+    .sort-button:focus {
+        @apply outline-none;
+    }
+
+    .sort-dropdown {
+        @apply w-56;
+        @apply h-56;
+        @apply mt-4;
+        @apply overflow-scroll;
+        @apply rounded-md;
+        @apply shadow-2xl;
+        @apply absolute;
+        @apply rounded-md;
+        @apply bg-white;
+    }
+
+    .sort-dropdown-option {
+        @apply cursor-pointer;
+        @apply block;
+        @apply pl-4;
+        @apply py-4;
+        @apply text-sm;
+        @apply leading-5;
+        @apply text-gray-700;
+        @apply border-gray-300;
+    }
+
+    .sort-dropdown-option:hover, .sort-dropdown-option:focus {
+        @apply bg-gray-100;
+        @apply text-gray-900;
+        @apply outline-none;
+    }
+
+    .filter-button {
+        @apply border-gray-300;
+        @apply rounded-md;
+        @apply border;
+        @apply px-2;
+        @apply py-2;
+        @apply cursor-pointer;
+        @apply text-sm;
+        @apply text-center;
+    }
+
+    @screen sm {
+        .filter-button {
+            @apply px-8;
+            @apply w-auto;
+            @apply rounded-xl;
+        }
+    }
+
+    @screen md {
+        .filter-button {
+            @apply px-8;
+        }
+    }
+
+    .filter-button:focus {
+        @apply outline-none;
+    }
+
+    .slider-dropdown {
+        @apply h-24;
+        @apply w-full;
+        @apply mt-4;
+        @apply flex;
+        @apply flex-col;
+        @apply items-center;
+        @apply justify-center;
+        @apply rounded-md;
+        @apply shadow-2xl;
+        @apply absolute;
+        @apply left-0;
+        @apply rounded-md;
+        @apply bg-white;
+        @apply outline-none;
+    }
+
+    @screen md {
+        .slider-dropdown {
+            @apply max-w-xs;
+            @apply left-auto;
+        }
+    }
+
+    .slider-dropdown:focus {
+        outline:none;
     }
 }
 
