@@ -5,6 +5,7 @@ from flask import request
 from flask_jwt_extended import current_user
 from flask_jwt_extended import jwt_required
 from PyMatcha.utils.decorators import validate_params
+from PyMatcha.utils.errors import BadRequestError
 from PyMatcha.utils.match_score import _get_common_tags
 from PyMatcha.utils.match_score import _get_distance
 from PyMatcha.utils.match_score import _get_gender_query
@@ -44,30 +45,34 @@ def search():
         )
 
         if max_age != -1:
-            if user_age > max_age:
+            if user_age >= max_age:
                 continue
         if min_age != -1:
-            if user_age < min_age:
+            if user_age <= min_age:
                 continue
 
         if max_score != -1:
-            if user.heat_score > max_score:
+            if user.heat_score >= max_score:
                 continue
         if min_score != -1:
-            if user.heat_score < min_score:
+            if user.heat_score <= min_score:
                 continue
 
-        if max_distance != -1:
-            distance = _get_distance(current_user.geohash, user.geohash)
-            if distance:
-                if distance > max_distance:
+        distance = _get_distance(current_user.geohash, user.geohash)
+        if distance:
+            if distance >= max_distance:
+                if max_distance != -1:
                     continue
+        else:
+            raise BadRequestError("user needs to sets his location first")
 
-        if tags:
-            user_tags = [t.name for t in user.get_tags()]
-            common_tags = _get_common_tags(tags, user_tags)
-            if not common_tags:
+        user_tags = [t.name for t in user.get_tags()]
+        common_tags = _get_common_tags(tags, user_tags)
+        if not common_tags:
+            if tags:
                 continue
 
-        returned_list.append(user.to_dict())
+        user_dict = user.to_dict()
+        user_dict.update({"distance": distance, "common_tags": common_tags})
+        returned_list.append(user_dict)
     return SuccessOutput("search_results", returned_list)
