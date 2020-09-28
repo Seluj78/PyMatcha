@@ -1490,6 +1490,9 @@ components:
         is_profile_completed:
           type: boolean
           example: true
+        age:
+          type: int
+          example: 22
         likes:
           type: object
           properties:
@@ -1819,6 +1822,9 @@ components:
         is_profile_completed:
           type: boolean
           example: true
+        age:
+          type: int
+          example: 22
         likes:
           type: object
           properties:

@@ -192,6 +192,11 @@ class User(Model):
         returned_dict["likes"]["received"] = [like.to_dict() for like in self.get_likes_received()]
         returned_dict.pop("password")
         returned_dict.pop("previous_reset_token")
+
+        today = datetime.datetime.utcnow()
+        returned_dict["age"] = (
+            today.year - self.birthdate.year - ((today.month, today.day) < (self.birthdate.month, self.birthdate.day))
+        )
         return returned_dict
 
     @classmethod
