@@ -399,7 +399,7 @@
     }
 
     .sort-dropdown {
-        @apply w-56;
+        @apply w-auto;
         @apply h-56;
         @apply mt-4;
         @apply overflow-scroll;
@@ -413,8 +413,7 @@
     .sort-dropdown-option {
         @apply cursor-pointer;
         @apply block;
-        @apply pl-4;
-        @apply py-4;
+        @apply p-4;
         @apply text-sm;
         @apply leading-5;
         @apply text-gray-700;
