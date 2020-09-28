@@ -7,26 +7,29 @@
         v-bind:position="'left'"
         v-bind:options="['Youngest', 'Oldest', 'Closest', 'Furthest', 'Most popular', 'Least popular', 'Most common interests', 'Least common interests']"
         v-on:sort="sort"></Sort>
-      <FilterSlider v-bind:name="'age'" v-on:filter="filter"></FilterSlider>
-      <FilterSlider v-bind:unit="'km'" v-bind:name="'distance'" v-on:filter="filter"></FilterSlider>
-      <FilterSlider v-bind:unit="'pts'" v-bind:name="'fame'" v-on:filter="filter"></FilterSlider>
+      <FilterSlider
+        v-bind:min="recommendationsAnalysis.age.min"
+        v-bind:max="recommendationsAnalysis.age.max"
+        v-bind:name="'age'"
+        v-on:filter="filter"></FilterSlider>
+      <FilterSlider
+        v-bind:min="recommendationsAnalysis.distance.min"
+        v-bind:max="recommendationsAnalysis.distance.max"
+        v-bind:unit="'km'"
+        v-bind:name="'distance'"
+        v-on:filter="filter"></FilterSlider>
+      <FilterSlider
+        v-bind:min="recommendationsAnalysis.popularity.min"
+        v-bind:max="recommendationsAnalysis.popularity.max"
+        v-bind:unit="'pts'"
+        v-bind:name="'fame'"
+        v-on:filter="filter"></FilterSlider>
       <MultipleFiltersDropdown
         v-bind:position="'right'"
-        v-bind:options="[
-          'swimming', 'wine', 'reading', 'foodie', 'netflix', 'music', 'yoga', 'golf',
-          'photography', 'baking', 'shopping', 'outdoors', 'art', 'travel', 'hiking',
-          'running', 'volunteering', 'cycling', 'climbing', 'tea', 'fishing', 'soccer',
-          'museum', 'dancing', 'surfing', 'karaoke', 'parties', 'diy',
-          'walking', 'cat lover', 'movies', 'gardening', 'trivia', 'working out',
-          'cooking', 'gamer', 'brunch', 'blogging', 'picknicking', 'athlete',
-          'dog lover', 'politics', 'environmentalism', 'instagram', 'spirituality',
-          'language exchange', 'sports', 'comedy', 'fashion', 'disney', 'vlogging',
-          'astrology', 'board games', 'craft beer', 'coffee', 'writer',
-        ]"
+        v-bind:options="recommendationsAnalysis.uniqueInterests"
         v-bind:name="'interests'"
         v-on:filter="filter"></MultipleFiltersDropdown>
     </div>
-<!--    <div class="flex flex-wrap items-center justify-start">-->
     <div class="grid grid-cols-1 md:grid-cols-2 gap-2">
     <RecommendationCard
       v-for="(recommendation, index) in recommendations" :key="index"
@@ -43,6 +46,7 @@ import RecommendationCard from '@/components/app/recommendations/RecommendationC
 import MultipleFiltersDropdown from '@/components/shared/MultipleFiltersDropdown.vue';
 
 export default {
+  props: ['title', 'recommendations', 'recommendationsAnalysis'],
   components: {
     Sort,
     RecommendationCard,
@@ -57,6 +61,5 @@ export default {
       console.log('filter');
     },
   },
-  props: ['title', 'recommendations'],
 };
 </script>

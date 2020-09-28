@@ -21,7 +21,7 @@
       </div>
       <div class="flex items-end my-2">
         <h1 class="text-4xl font-bold leading-none">{{this.recommendation.first_name}}</h1>
-        <h1 class="text-2xl ml-2 leading-none mb-1">24</h1>
+        <h1 class="text-2xl ml-2 leading-none mb-1">{{this.recommendation.age}}</h1>
       </div>
       <h1 class="text-lg">{{getDistance()}}km away</h1>
     </div>
@@ -37,6 +37,7 @@ export default {
     getPrimaryImage() {
       const userImages = this.recommendation.images;
       let imageForShowcase;
+      // console.log(this.recommendation);
       for (let i = 0; i < userImages.length; i += 1) {
         if (userImages[i].is_primary) {
           imageForShowcase = userImages[i].link;

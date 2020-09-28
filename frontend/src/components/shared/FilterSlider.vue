@@ -18,15 +18,15 @@ import noUiSlider from 'nouislider';
 import 'nouislider/distribute/nouislider.css';
 
 export default {
-  props: ['options', 'name', 'unit'],
+  props: ['options', 'name', 'unit', 'min', 'max'],
   data: () => ({
     closed: true,
     slider: {
-      startMin: 25,
-      startMax: 75,
-      min: 0,
-      max: 100,
-      start: 40,
+      startMin: null,
+      startMax: null,
+      min: null,
+      max: null,
+      start: null,
       step: 1,
     },
   }),
@@ -52,6 +52,11 @@ export default {
     },
   },
   mounted() {
+    this.slider.startMin = this.min;
+    this.slider.startMax = this.max;
+    this.slider.min = this.min;
+    this.slider.max = this.max;
+    this.slider.start = this.min;
     noUiSlider.create(this.$refs.slider, {
       start: [this.slider.startMin, this.slider.startMax],
       step: this.slider.step,
