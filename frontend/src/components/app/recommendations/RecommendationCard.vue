@@ -1,16 +1,12 @@
 <template>
   <!-- eslint-disable max-len -->
   <div v-bind:class="{
-    'card': true,
-    'flex w-full': true,
-    'ml-1': true,
+    'flex': true,
     'flex-col': true,
-    'justify-end items-start': true,
+    'justify-end': true,
     'shadow-inner': true,
     'recommendation-card': true,
-    'rounded-md': true,
-    'mb-2': true,
-    'ml-2': index % 2 === 0}"
+    'rounded-md': true}"
        v-bind:style="{
       'background-repeat': 'no-repeat',
       'background-position': 'center center',
@@ -48,7 +44,6 @@ export default {
           imageForShowcase = userImages[i].link;
         }
       }
-      console.log(imageForShowcase);
       if (imageForShowcase) {
         return imageForShowcase;
       }
@@ -71,9 +66,6 @@ export default {
       return Math.floor(this.recommendation.distance);
     },
   },
-  created() {
-    console.log(this.index);
-  },
 };
 </script>
 
@@ -82,10 +74,5 @@ export default {
   /*width: 24rem;*/
   height: 32rem;
   box-shadow: inset 0 -8rem 1rem rgba(0, 0, 0, 0.3);
-}
-@screen md {
-  .card {
-    width: 48%;
-  }
 }
 </style>
