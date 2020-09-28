@@ -49,6 +49,7 @@ export default {
       const recommendationsRequest = await this.$http.get('/recommendations');
       this.recommendations = recommendationsRequest.data.recommendations;
     }
+    this.recommendations.sort((a, b) => a.distance - b.distance);
     for (let i = 0; i < this.recommendations.length; i += 1) {
       if (this.recommendationsAnalysis.age.min === null || this.recommendations[i].age < this.recommendationsAnalysis.age.min) {
         this.recommendationsAnalysis.age.min = this.recommendations[i].age;

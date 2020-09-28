@@ -5,7 +5,7 @@
     <div class="flex w-full items-stretch sm:items-center justify-center md:justify-start mb-12 relative">
       <Sort
         v-bind:position="'left'"
-        v-bind:options="['Youngest', 'Oldest', 'Closest', 'Furthest', 'Most popular', 'Least popular', 'Most common interests', 'Least common interests']"
+        v-bind:options="['Closest', 'Furthest', 'Youngest', 'Oldest', 'Most popular', 'Least popular', 'Most common interests', 'Least common interests']"
         v-on:sort="sort"></Sort>
       <FilterSlider
         v-bind:min="recommendationsAnalysis.age.min"
@@ -53,13 +53,45 @@ export default {
     FilterSlider,
     MultipleFiltersDropdown,
   },
+  data: () => ({
+    loggedInUser: null,
+  }),
   methods: {
-    sort() {
-      console.log('sort');
+    sort(...args) {
+      const [by] = args;
+      if (by === 'Closest') {
+        this.recommendations.sort((a, b) => a.distance - b.distance);
+      } else if (by === 'Furthest') {
+        this.recommendations.sort((a, b) => b.distance - a.distance);
+      } else if (by === 'Youngest') {
+        this.recommendations.sort((a, b) => a.age - b.age);
+      } else if (by === 'Oldest') {
+        this.recommendations.sort((a, b) => b.age - a.age);
+      } else if (by === 'Most popular') {
+        this.recommendations.sort((a, b) => b.heat_score - a.heat_score);
+      } else if (by === 'Least popular') {
+        this.recommendations.sort((a, b) => a.heat_score - b.heat_score);
+      } else if (by === 'Most common interests') {
+        this.recommendations.sort((a, b) => this.count_similarities(a.tags, this.loggedInUser.tags) - this.count_similarities(b.tags, this.loggedInUser.tags));
+      } else if (by === 'Least common interests') {
+        this.recommendations.sort((a, b) => this.count_similarities(b.tags, this.loggedInUser.tags) - this.count_similarities(a.tags, this.loggedInUser.tags));
+      }
+    },
+    count_similarities(arrayA, arrayB) {
+      let matches = 0;
+      for (let i = 0 ; i < arrayA.length; i++) {
+        if (arrayB.indexOf(arrayA[i].name) != -1) {
+          matches++;
+        }
+      }
+      return matches;
     },
     filter() {
       console.log('filter');
     },
   },
+  mounted() {
+    this.loggedInUser = this.$store.getters.getLoggedInUser;
+  }
 };
 </script>
