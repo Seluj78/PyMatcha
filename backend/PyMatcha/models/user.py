@@ -200,6 +200,8 @@ class User(Model):
                 - self.birthdate.year
                 - ((today.month, today.day) < (self.birthdate.month, self.birthdate.day))
             )
+        else:
+            returned_dict["age"] = None
         return returned_dict
 
     @classmethod
