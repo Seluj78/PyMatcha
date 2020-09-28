@@ -72,7 +72,13 @@ export default {
 <style scoped>
 .recommendation-card {
   /*width: 24rem;*/
-  height: 32rem;
+  height: 24rem;
   box-shadow: inset 0 -8rem 1rem rgba(0, 0, 0, 0.3);
+}
+
+@screen lg {
+  .recommendation-card {
+    height:32rem;
+  }
 }
 </style>
