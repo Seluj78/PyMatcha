@@ -61,7 +61,9 @@ export default {
         const response = await this.signInUser(this.formData);
         setAccessToken(response.data.return.access_token);
         setRefreshToken(response.data.return.refresh_token);
-        await this.$store.dispatch('login', this.getUserFromJwt(response.data.return.access_token));
+        const userId = this.getUserFromJwt(response.data.return.access_token).id;
+        const user = await this.$http.get(`/users/${userId}`);
+        await this.$store.dispatch('login', user.data);
         if (response.data.return.is_profile_completed) {
           this.$router.push('/browse');
         } else {
