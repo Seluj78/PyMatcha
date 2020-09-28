@@ -38,8 +38,15 @@ def search():
     today = datetime.datetime.utcnow()
 
     query = _get_gender_query(current_user.orientation, current_user.gender)
+    matches_id = [match.id for match in current_user.get_matches()]
+    likes_sent_user_ids = [like.liked_id for like in current_user.get_likes_sent()]
     returned_list = []
     for user in query:
+        if user.id == current_user.id:
+            continue
+        if user.id in matches_id or user.id in likes_sent_user_ids:
+            continue
+
         user_age = (
             today.year - user.birthdate.year - ((today.month, today.day) < (user.birthdate.month, user.birthdate.day))
         )
