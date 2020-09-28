@@ -1,27 +1,14 @@
 <template>
   <!-- eslint-disable max-len -->
-  <div class="inline-block focus:outline-none ml-2" @focusout="close" tabindex="1">
-    <div v-bind:class="{'flex': true, 'items-center': true, 'justify-center': true, 'w-20': true, 'h-12': true, 'rounded-xl': true, 'border': true, 'border-gray-matcha': !closed, 'border border-gray-300': closed, 'px-12': true, 'py-2': true, 'focus:outline-none': true, 'cursor-pointer': true}" @click="toggle">
-      <h1 v-bind:class="{ 'opacity-50': closed }">{{name}}</h1>
+  <div class="focus:outline-none ml-2 flex-1 sm:flex-none" @focusout="close" tabindex="1">
+    <div v-bind:class="{'filter-button': true, 'border-gray-matcha': !closed}" @click="toggle">
+      <h1 v-bind:class="{ 'opacity-50': closed, 'noSelect': true, 'capitalize': true }">{{name}}</h1>
     </div>
-    <div id="sliderContainer" ref="afterClick" v-bind:class="{
-      'h-16': true,
-      'w-full': true,
-      'max-w-xs': true,
-      'mt-4': true,
-      'flex': true,
-      'items-center': true,
-      'justify-center': true,
-      'overflow-scroll': true,
-      'rounded-md': true,
-      'shadow-2xl': true,
-      'absolute': true,
-      'left-0': true,
-      'rounded-md': true,
-      'bg-white': true,
-      'slider-bg': true,
-      'hidden': closed}">
-      <div ref="slider" class="focus:outline-none w-64"></div>
+    <div ref="sliderDropdown" v-bind:class="{'slider-dropdown': true, 'hidden': closed}">
+      <div class="flex my-4">
+        <h1><span class="font-bold">{{this.slider.startMin}} {{this.unit}}</span> to <span class="font-bold">{{this.slider.startMax}} {{this.unit}}</span></h1>
+      </div>
+      <div ref="slider" class="w-64 mb-4"></div>
     </div>
   </div>
 </template>
@@ -31,7 +18,7 @@ import noUiSlider from 'nouislider';
 import 'nouislider/distribute/nouislider.css';
 
 export default {
-  props: ['options', 'name'],
+  props: ['options', 'name', 'unit'],
   data: () => ({
     closed: true,
     slider: {
@@ -44,20 +31,21 @@ export default {
     },
   }),
   methods: {
-    select(option) {
+    select() {
       this.closed = true;
-      this.$emit('sort', this.name, option);
+      const { min } = this.slider;
+      const { max } = this.slider;
+      this.$emit('filter', this.name, { min, max });
     },
     toggle() {
       this.closed = !this.closed;
       if (!this.closed) {
         this.$nextTick(function () {
-          this.$refs.afterClick.focus();
+          this.$refs.sliderDropdown.focus();
         });
       }
     },
     close(event) {
-      // console.log(event.currentTarget.id);
       if (!event.currentTarget.contains(event.relatedTarget)) {
         this.closed = true;
       }
@@ -72,15 +60,19 @@ export default {
         max: this.slider.max,
       },
     });
+    this.$refs.slider.noUiSlider.on('update', (values) => {
+      this.slider.startMin = parseInt(values[0], 10);
+      this.slider.startMax = parseInt(values[1], 10);
+    });
   },
 };
 </script>
 
 <style>
-.noUi-handle, .slider-bg {
+.noUi-handle {
   outline: none;
 }
-.noUi-handle:focus, .slider-bg:focus {
+.noUi-handle:focus {
   outline: none;
 }
 </style>
