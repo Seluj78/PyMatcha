@@ -23,7 +23,7 @@ export default {
   }),
   methods: {
     select(option) {
-      this.closed = true;
+      this.close();
       this.currentOption = option;
       this.$emit('saveSort', option);
     },
