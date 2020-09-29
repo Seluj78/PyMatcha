@@ -26,6 +26,8 @@ from celery import Celery
 from dotenv import load_dotenv
 from flask import Flask
 from flask import jsonify
+from flask import redirect
+from flask import url_for
 from flask_cors import CORS
 from flask_jwt_extended import JWTManager
 from flask_mail import Mail
@@ -275,3 +277,35 @@ def no_jwt_callback(error_message):
 # import tasks here to be registered by celery
 
 import PyMatcha.utils.tasks  # noqa
+
+
+@application.route("/")
+def home():
+    return redirect(url_for("site_map"))
+
+
+@application.route("/site-map")
+def site_map():
+    links = []
+    for rule in application.url_map.iter_rules():
+        # Filter out rules we can't navigate to in a browser
+        # and rules that require parameters
+        url = url_for(
+            rule.endpoint,
+            **(rule.defaults or {}),
+            uid=-1,
+            message_id=-1,
+            with_uid=-1,
+            image_id=-1,
+            amount=-1,
+            token=-1,
+            filename=-1,
+        )
+        methods = ""
+        for m in rule.methods:
+            if m == "HEAD" or m == "OPTIONS":
+                continue
+            methods += f"{m}"
+        links.append(f"{methods} {url}".split("?")[0])
+    # links is now a list of url, endpoint tuples
+    return jsonify(links), 200
