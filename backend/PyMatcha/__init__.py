@@ -26,6 +26,8 @@ from celery import Celery
 from dotenv import load_dotenv
 from flask import Flask
 from flask import jsonify
+from flask import redirect
+from flask import url_for
 from flask_cors import CORS
 from flask_jwt_extended import JWTManager
 from flask_mail import Mail
@@ -275,13 +277,6 @@ def no_jwt_callback(error_message):
 # import tasks here to be registered by celery
 
 import PyMatcha.utils.tasks  # noqa
-from flask import url_for, redirect
-
-
-def has_no_empty_params(rule):
-    defaults = rule.defaults if rule.defaults is not None else ()
-    arguments = rule.arguments if rule.arguments is not None else ()
-    return len(defaults) >= len(arguments)
 
 
 @application.route("/")
@@ -295,13 +290,22 @@ def site_map():
     for rule in application.url_map.iter_rules():
         # Filter out rules we can't navigate to in a browser
         # and rules that require parameters
-        if has_no_empty_params(rule):
-            url = url_for(rule.endpoint, **(rule.defaults or {}))
-            methods = ""
-            for m in rule.methods:
-                if m == "HEAD" or m == "OPTIONS":
-                    continue
-                methods += f"{m}"
-            links.append(f"{methods} {url}")
+        url = url_for(
+            rule.endpoint,
+            **(rule.defaults or {}),
+            uid=-1,
+            message_id=-1,
+            with_uid=-1,
+            image_id=-1,
+            amount=-1,
+            token=-1,
+            filename=-1,
+        )
+        methods = ""
+        for m in rule.methods:
+            if m == "HEAD" or m == "OPTIONS":
+                continue
+            methods += f"{m}"
+        links.append(f"{methods} {url}".split("?")[0])
     # links is now a list of url, endpoint tuples
     return jsonify(links), 200
