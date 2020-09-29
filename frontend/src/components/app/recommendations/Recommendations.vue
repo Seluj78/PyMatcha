@@ -54,7 +54,6 @@ export default {
     MultipleFiltersDropdown,
   },
   data: () => ({
-    loggedInUser: null,
   }),
   methods: {
     sort(...args) {
@@ -72,26 +71,14 @@ export default {
       } else if (by === 'Least popular') {
         this.recommendations.sort((a, b) => a.heat_score - b.heat_score);
       } else if (by === 'Most common interests') {
-        this.recommendations.sort((a, b) => this.count_similarities(a.tags, this.loggedInUser.tags) - this.count_similarities(b.tags, this.loggedInUser.tags));
+        this.recommendations.sort((a, b) => b.common_interests - a.common_interests);
       } else if (by === 'Least common interests') {
-        this.recommendations.sort((a, b) => this.count_similarities(b.tags, this.loggedInUser.tags) - this.count_similarities(a.tags, this.loggedInUser.tags));
+        this.recommendations.sort((a, b) => a.common_interests - b.common_interests);
       }
-    },
-    count_similarities(arrayA, arrayB) {
-      let matches = 0;
-      for (let i = 0 ; i < arrayA.length; i++) {
-        if (arrayB.indexOf(arrayA[i].name) != -1) {
-          matches++;
-        }
-      }
-      return matches;
     },
     filter() {
       console.log('filter');
     },
   },
-  mounted() {
-    this.loggedInUser = this.$store.getters.getLoggedInUser;
-  }
 };
 </script>
