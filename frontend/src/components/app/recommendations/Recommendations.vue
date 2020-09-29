@@ -1,11 +1,15 @@
 <template>
   <!-- eslint-disable max-len -->
   <section>
-    <h1 class="text-5xl my-4 text-center md:text-left leading-none onboarding-sub-container-content-heading">{{recommendations.length}} {{title}}</h1>
+    <h1
+      class="text-5xl my-4 text-center md:text-left leading-none onboarding-sub-container-content-heading">
+      {{recommendations.length}} {{title}}</h1>
     <div class="flex w-full items-stretch sm:items-center justify-center md:justify-start mb-12 relative">
       <Sort
         v-bind:position="'left'"
-        v-bind:options="['Closest', 'Furthest', 'Youngest', 'Oldest', 'Most popular', 'Least popular', 'Most common interests', 'Least common interests']"
+        v-bind:startingOption="'Closest'"
+        v-bind:options="['Closest', 'Furthest', 'Youngest',
+        'Oldest', 'Most popular', 'Least popular', 'Most common interests', 'Least common interests']"
         v-on:saveSort="saveSort"></Sort>
       <FilterSlider
         v-bind:min="recommendationsAnalysis.age.min"
