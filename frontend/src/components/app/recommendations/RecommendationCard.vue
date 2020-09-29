@@ -1,12 +1,13 @@
 <template>
   <!-- eslint-disable max-len -->
-  <div v-bind:class="{
-    'flex': true,
-    'flex-col': true,
-    'justify-end': true,
-    'shadow-inner': true,
-    'recommendation-card': true,
-    'rounded-md': true}"
+  <div
+      v-bind:class="{
+      'flex': true,
+      'flex-col': true,
+      'justify-end': true,
+      'shadow-inner': true,
+      'recommendation-card': true,
+      'rounded-md': true}"
        v-bind:style="{
       'background-repeat': 'no-repeat',
       'background-position': 'center center',
