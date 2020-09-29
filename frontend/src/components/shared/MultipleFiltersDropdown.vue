@@ -6,7 +6,8 @@
     </div>
     <div v-bind:class="{'sort-dropdown': true, 'hidden': closed, 'right-0': position === 'right', 'md:right-auto': position === 'right'}">
       <h1 v-for="(option, index) in options" :key="option + index + option"
-          v-bind:class="{'sort-dropdown-option': true, 'border-b': index !== options.length - 1, 'capitalize': true}"
+          v-bind:class="{'sort-dropdown-option': true, 'border-b': index !== options.length - 1, 'capitalize': true,
+          'font-extrabold': selectedFilters.indexOf(option) !== -1, 'text-gray-matcha': selectedFilters.indexOf(option) !== -1}"
           v-on:click="select(option)">
         {{option}}
       </h1>
@@ -23,8 +24,14 @@ export default {
   }),
   methods: {
     select(option) {
-      this.selectedFilters.push(option);
-      this.$emit('sort', option);
+      const optionIndex = this.selectedFilters.indexOf(option);
+      if (optionIndex !== -1) {
+        this.selectedFilters.splice(optionIndex, 1);
+        this.$emit('saveFilterMultiple', this.name, this.selectedFilters);
+      } else {
+        this.selectedFilters.push(option);
+        this.$emit('saveFilterMultiple', this.name, this.selectedFilters);
+      }
     },
     toggle() {
       this.closed = !this.closed;
