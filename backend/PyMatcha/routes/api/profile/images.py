@@ -77,12 +77,8 @@ def change_main_image(image_id):
     image = Image.get(id=image_id)
     if not image:
         raise NotFoundError(f"Image not found for user {current_user.id}")
-    try:
-        current_main_image = Image.get_multi(user_id=current_user.id, is_primary=True)
-    except NotFoundError:
-        # That means there was no primary image before
-        pass
-    else:
+    current_main_image = Image.get_multi(user_id=current_user.id, is_primary=True)
+    if current_main_image:
         current_main_image.is_primary = False
         current_main_image.save()
     image.is_primary = True

@@ -7,22 +7,17 @@ from flask import request
 from flask_jwt_extended import current_user
 from flask_jwt_extended import jwt_required
 from PyMatcha import redis
-from PyMatcha.models.image import Image
 from PyMatcha.models.like import Like
-from PyMatcha.models.match import Match
 from PyMatcha.models.message import Message
 from PyMatcha.models.report import Report
-from PyMatcha.models.tag import Tag
 from PyMatcha.models.user import get_user
 from PyMatcha.models.user import User
 from PyMatcha.models.view import View
 from PyMatcha.utils.decorators import debug_token_required
 from PyMatcha.utils.decorators import validate_params
 from PyMatcha.utils.errors import NotFoundError
-from PyMatcha.utils.populate_database import populate_users
 from PyMatcha.utils.success import Success
 from PyMatcha.utils.success import SuccessDeleted
-from PyMatcha.utils.tasks import update_user_recommendations
 
 debug_bp = Blueprint("debug", __name__)
 
@@ -132,29 +127,6 @@ def create_fake_like():
     return "", 204
 
 
-@debug_bp.route("/debug/tables", methods=["DELETE"])
-@debug_token_required
-def delete_tables():
-    Match.drop_table()
-    Like.drop_table()
-    Report.drop_table()
-    View.drop_table()
-    User.drop_table()
-    Tag.drop_table()
-    Message.drop_table()
-    Image.drop_table()
-
-    Match.create_table()
-    Like.create_table()
-    Report.create_table()
-    View.create_table()
-    User.create_table()
-    Tag.create_table()
-    Message.create_table()
-    Image.create_table()
-    return "", 204
-
-
 @debug_bp.route("/debug/redis", methods=["DELETE"])
 @debug_token_required
 def delete_redis():
@@ -176,10 +148,28 @@ def debug_send_message():
     return "", 204
 
 
-@debug_bp.route("/debug/recommendations/start", methods=["POST"])
+@debug_bp.route("/debug/reset_ci", methods=["DELETE"])
 @debug_token_required
-def debug_recommendations_start_process():
-    """This function will create 100 random users and calculate recommendations"""
-    populate_users(amount=30, drop_user_table=False)
-    update_user_recommendations()
+def debug_reset_ci():
+    data = request.get_json()
+    user_id = data["username"]
+    user = User.get(username=user_id)
+    for like in user.get_likes_sent():
+        like.delete()
+    for like in user.get_likes_received():
+        like.delete()
+    for image in user.get_images():
+        image.delete()
+    for match in user.get_matches():
+        match.delete()
+    for message in user.get_messages():
+        message.delete()
+    for report in user.get_reports_received():
+        report.delete()
+    for report in user.get_reports_sent():
+        report.delete()
+    for tag in user.get_tags():
+        tag.delete()
+    for view in user.get_views():
+        view.delete()
     return Success("Done")

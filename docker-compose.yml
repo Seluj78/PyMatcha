@@ -13,7 +13,7 @@ services:
     env_file:
       - .env.docker
     volumes:
-      - mysql:/var/lib/mysql
+      - ./mysql_dump:/docker-entrypoint-initdb.d
     networks:
       - mysql-net
     healthcheck:

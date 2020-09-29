@@ -7,12 +7,16 @@ from urllib.error import HTTPError
 
 import Geohash
 import lorem
+import requests
 from PyMatcha.models.image import Image
 from PyMatcha.models.tag import Tag
 from PyMatcha.models.user import get_user
 from PyMatcha.models.user import User
 from PyMatcha.utils.errors import ConflictError
 from randomuser import RandomUser
+
+FRANCE_GEOHASH_START = ("u0", "gb", "ez", "sp")
+NATIONALITIES_PARAMS = {"nat": "fr"}
 
 
 def gen_datetime(min_year: int = 1900, max_year: int = datetime.datetime.now().year) -> datetime.datetime:
@@ -28,10 +32,10 @@ def populate_users(amount=150, drop_user_table=False):
         User.drop_table()
         User.create_table()
     try:
-        users = RandomUser.generate_users(amount=amount)
+        users = RandomUser.generate_users(amount=amount, get_params=NATIONALITIES_PARAMS)
     except HTTPError:
         sleep(10)
-        users = RandomUser.generate_users(amount=amount)
+        users = RandomUser.generate_users(amount=amount, get_params=NATIONALITIES_PARAMS)
     for user in users:
         gender = random.choice(["male", "female", "other"])
         if gender != "other":
@@ -44,7 +48,10 @@ def populate_users(amount=150, drop_user_table=False):
         bio = lorem.paragraph()
 
         coords = user.get_coordinates()
-        geohash = Geohash.encode(float(coords["latitude"]), float(coords["longitude"]))
+        geohash = str(Geohash.encode(float(coords["latitude"]), float(coords["longitude"])))
+        if not geohash.startswith(FRANCE_GEOHASH_START):
+            old = geohash[0:2]
+            geohash = geohash.replace(old, FRANCE_GEOHASH_START[0], 1)
 
         date_joined = gen_datetime(min_year=2017, max_year=datetime.datetime.now().year)
 
@@ -80,7 +87,8 @@ def populate_users(amount=150, drop_user_table=False):
 
             for tag in tags:
                 Tag.create(name=tag, user_id=u.id)
-            Image.create(user_id=u.id, link=user.get_picture(), is_primary=True)
+            image_url = requests.get(f"https://picsum.photos/seed/{username}/1000/1000").url
+            Image.create(user_id=u.id, link=image_url, is_primary=True)
         except ConflictError:
             pass  # Pass on the conflict error, this user wont be created because the username is taken. Who cares ?
 
