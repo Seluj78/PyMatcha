@@ -16,10 +16,10 @@
 
 <script>
 export default {
-  props: ['options', 'name', 'position'],
+  props: ['options', 'name', 'position', 'startingOption'],
   data: () => ({
     closed: true,
-    currentOption: 'Closest',
+    currentOption: '',
   }),
   methods: {
     select(option) {
@@ -33,6 +33,9 @@ export default {
     close() {
       this.closed = true;
     },
+  },
+  beforeMount() {
+    this.currentOption = this.startingOption;
   },
 };
 </script>
