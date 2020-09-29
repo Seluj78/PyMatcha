@@ -42,6 +42,16 @@ export default {
     },
     recommendationsAnalysisDone: false,
   }),
+  methods: {
+    interestsIdsOfUser(user) {
+      const interestsIds = [];
+      const interestObjects = user.tags;
+      for (let i = 0; i < interestObjects.length; i += 1) {
+        interestsIds.push(interestObjects[i].id);
+      }
+      return interestsIds;
+    },
+  },
   async created() {
     if (this.recommendationsFromSettingUp) {
       this.recommendations = this.recommendationsFromSettingUp;
@@ -70,9 +80,14 @@ export default {
         this.recommendationsAnalysis.popularity.max = this.recommendations[i].heat_score;
       }
       const interests = this.recommendations[i].tags;
+      const interestsIdsOfLoggedInUser = this.interestsIdsOfUser(this.$store.getters.getLoggedInUser);
+      this.recommendations[i].common_interests = 0;
       for (let j = 0; j < interests.length; j += 1) {
         if (this.recommendationsAnalysis.uniqueInterests.indexOf(interests[j].name) === -1) {
           this.recommendationsAnalysis.uniqueInterests.push(interests[j].name);
+        }
+        if (interestsIdsOfLoggedInUser.indexOf(interests[j].id) !== -1) {
+          this.recommendations[i].common_interests += 1;
         }
       }
     }
