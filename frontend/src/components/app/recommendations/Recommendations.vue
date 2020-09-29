@@ -147,10 +147,7 @@ export default {
   watch: {
     sorting: {
       handler() {
-        let base = this.recommendationsBackup.slice();
-        base = this.filter(base);
-        this.sort(base, this.sorting);
-        this.recommendations = base;
+        this.sort(this.recommendations, this.sorting);
       },
     },
     filters: {
