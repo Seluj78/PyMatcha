@@ -15,6 +15,9 @@ from PyMatcha.models.user import User
 from PyMatcha.utils.errors import ConflictError
 from randomuser import RandomUser
 
+FRANCE_GEOHASH_START = ("u0", "gb", "ez", "sp")
+NATIONALITIES_PARAMS = {"nat": "fr"}
+
 
 def gen_datetime(min_year: int = 1900, max_year: int = datetime.datetime.now().year) -> datetime.datetime:
     # generate a datetime in format yyyy-mm-dd hh:mm:ss.000000
@@ -29,10 +32,10 @@ def populate_users(amount=150, drop_user_table=False):
         User.drop_table()
         User.create_table()
     try:
-        users = RandomUser.generate_users(amount=amount)
+        users = RandomUser.generate_users(amount=amount, get_params=NATIONALITIES_PARAMS)
     except HTTPError:
         sleep(10)
-        users = RandomUser.generate_users(amount=amount, get_params={"nat": "fr"})
+        users = RandomUser.generate_users(amount=amount, get_params=NATIONALITIES_PARAMS)
     for user in users:
         gender = random.choice(["male", "female", "other"])
         if gender != "other":
@@ -46,10 +49,9 @@ def populate_users(amount=150, drop_user_table=False):
 
         coords = user.get_coordinates()
         geohash = str(Geohash.encode(float(coords["latitude"]), float(coords["longitude"])))
-        # u0, gb, ez, sp corresponds to the start of geohash inside of France
-        if not geohash.startswith(("u0", "gb", "ez", "sp")):
+        if not geohash.startswith(FRANCE_GEOHASH_START):
             old = geohash[0:2]
-            geohash = geohash.replace(old, "u0", 1)
+            geohash = geohash.replace(old, FRANCE_GEOHASH_START[0], 1)
 
         date_joined = gen_datetime(min_year=2017, max_year=datetime.datetime.now().year)
 
