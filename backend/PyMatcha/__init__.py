@@ -275,3 +275,33 @@ def no_jwt_callback(error_message):
 # import tasks here to be registered by celery
 
 import PyMatcha.utils.tasks  # noqa
+from flask import url_for, redirect
+
+
+def has_no_empty_params(rule):
+    defaults = rule.defaults if rule.defaults is not None else ()
+    arguments = rule.arguments if rule.arguments is not None else ()
+    return len(defaults) >= len(arguments)
+
+
+@application.route("/")
+def home():
+    return redirect(url_for("site_map"))
+
+
+@application.route("/site-map")
+def site_map():
+    links = []
+    for rule in application.url_map.iter_rules():
+        # Filter out rules we can't navigate to in a browser
+        # and rules that require parameters
+        if has_no_empty_params(rule):
+            url = url_for(rule.endpoint, **(rule.defaults or {}))
+            methods = ""
+            for m in rule.methods:
+                if m == "HEAD" or m == "OPTIONS":
+                    continue
+                methods += f"{m}"
+            links.append(f"{methods} {url}")
+    # links is now a list of url, endpoint tuples
+    return jsonify(links), 200
