@@ -31,12 +31,6 @@ export default {
     },
   }),
   methods: {
-    select() {
-      this.closed = true;
-      const { min } = this.slider;
-      const { max } = this.slider;
-      this.$emit('filter', this.name, { min, max });
-    },
     toggle() {
       this.closed = !this.closed;
       if (!this.closed) {
@@ -68,6 +62,7 @@ export default {
     this.$refs.slider.noUiSlider.on('update', (values) => {
       this.slider.startMin = parseInt(values[0], 10);
       this.slider.startMax = parseInt(values[1], 10);
+      this.$emit('saveFilter', this.name, this.slider.startMin, this.slider.startMax);
     });
   },
 };
