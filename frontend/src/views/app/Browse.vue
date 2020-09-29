@@ -6,7 +6,7 @@
       <Recommendations
         v-if="recommendationsAnalysisDone"
         v-bind:title="'Potential matches'"
-        v-bind:recommendations="recommendations"
+        v-bind:recommendationsReceived="recommendations"
         v-bind:recommendationsAnalysis="recommendationsAnalysis"></Recommendations>
     </section>
   </div>
@@ -42,16 +42,6 @@ export default {
     },
     recommendationsAnalysisDone: false,
   }),
-  methods: {
-    interestsIdsOfUser(user) {
-      const interestsIds = [];
-      const interestObjects = user.tags;
-      for (let i = 0; i < interestObjects.length; i += 1) {
-        interestsIds.push(interestObjects[i].id);
-      }
-      return interestsIds;
-    },
-  },
   async created() {
     if (this.recommendationsFromSettingUp) {
       this.recommendations = this.recommendationsFromSettingUp;
@@ -61,17 +51,18 @@ export default {
     }
     this.recommendations.sort((a, b) => a.distance - b.distance);
     for (let i = 0; i < this.recommendations.length; i += 1) {
+      this.recommendations[i].distance = Math.floor(this.recommendations[i].distance);
       if (this.recommendationsAnalysis.age.min === null || this.recommendations[i].age < this.recommendationsAnalysis.age.min) {
         this.recommendationsAnalysis.age.min = this.recommendations[i].age;
       }
       if (this.recommendationsAnalysis.age.max === null || this.recommendations[i].age > this.recommendationsAnalysis.age.max) {
         this.recommendationsAnalysis.age.max = this.recommendations[i].age;
       }
-      if (this.recommendationsAnalysis.distance.min === null || Math.floor(this.recommendations[i].distance) < this.recommendationsAnalysis.distance.min) {
-        this.recommendationsAnalysis.distance.min = Math.floor(this.recommendations[i].distance);
+      if (this.recommendationsAnalysis.distance.min === null || this.recommendations[i].distance < this.recommendationsAnalysis.distance.min) {
+        this.recommendationsAnalysis.distance.min = this.recommendations[i].distance;
       }
-      if (this.recommendationsAnalysis.distance.max === null || Math.floor(this.recommendations[i].distance) > this.recommendationsAnalysis.distance.max) {
-        this.recommendationsAnalysis.distance.max = Math.floor(this.recommendations[i].distance);
+      if (this.recommendationsAnalysis.distance.max === null || this.recommendations[i].distance > this.recommendationsAnalysis.distance.max) {
+        this.recommendationsAnalysis.distance.max = this.recommendations[i].distance;
       }
       if (this.recommendationsAnalysis.popularity.min === null || this.recommendations[i].heat_score < this.recommendationsAnalysis.popularity.min) {
         this.recommendationsAnalysis.popularity.min = this.recommendations[i].heat_score;
@@ -80,14 +71,11 @@ export default {
         this.recommendationsAnalysis.popularity.max = this.recommendations[i].heat_score;
       }
       const interests = this.recommendations[i].tags;
-      const interestsIdsOfLoggedInUser = this.interestsIdsOfUser(this.$store.getters.getLoggedInUser);
-      this.recommendations[i].common_interests = 0;
+      this.recommendations[i].interests = [];
       for (let j = 0; j < interests.length; j += 1) {
+        this.recommendations[i].interests.push(interests[j].name);
         if (this.recommendationsAnalysis.uniqueInterests.indexOf(interests[j].name) === -1) {
           this.recommendationsAnalysis.uniqueInterests.push(interests[j].name);
-        }
-        if (interestsIdsOfLoggedInUser.indexOf(interests[j].id) !== -1) {
-          this.recommendations[i].common_interests += 1;
         }
       }
     }
