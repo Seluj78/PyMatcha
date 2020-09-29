@@ -23,21 +23,21 @@
         <h1 class="text-4xl font-bold leading-none">{{this.recommendation.first_name}}</h1>
         <h1 class="text-2xl ml-2 leading-none mb-1">{{this.recommendation.age}}</h1>
       </div>
-      <h1 class="text-lg">{{getDistance()}}km away</h1>
+      <h1 class="text-lg">{{this.recommendation.distance}}km away</h1>
     </div>
   </div>
 </template>
 
 <script>
 /* eslint-disable no-else-return */
+/* eslint-disable max-len */
 
 export default {
-  props: ['recommendation', 'index'],
+  props: ['recommendation'],
   methods: {
     getPrimaryImage() {
       const userImages = this.recommendation.images;
       let imageForShowcase;
-      // console.log(this.recommendation);
       for (let i = 0; i < userImages.length; i += 1) {
         if (userImages[i].is_primary) {
           imageForShowcase = userImages[i].link;
@@ -62,9 +62,6 @@ export default {
         return '../../../assets/recommendations/avatars/woman2.png';
       }
       return '../../../assets/recommendations/avatars/other.png';
-    },
-    getDistance() {
-      return Math.floor(this.recommendation.distance);
     },
   },
 };
