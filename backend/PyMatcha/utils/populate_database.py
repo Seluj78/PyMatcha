@@ -7,6 +7,7 @@ from urllib.error import HTTPError
 
 import Geohash
 import lorem
+import requests
 from PyMatcha.models.image import Image
 from PyMatcha.models.tag import Tag
 from PyMatcha.models.user import get_user
@@ -31,7 +32,7 @@ def populate_users(amount=150, drop_user_table=False):
         users = RandomUser.generate_users(amount=amount)
     except HTTPError:
         sleep(10)
-        users = RandomUser.generate_users(amount=amount)
+        users = RandomUser.generate_users(amount=amount, get_params={"nat": "fr"})
     for user in users:
         gender = random.choice(["male", "female", "other"])
         if gender != "other":
@@ -44,7 +45,11 @@ def populate_users(amount=150, drop_user_table=False):
         bio = lorem.paragraph()
 
         coords = user.get_coordinates()
-        geohash = Geohash.encode(float(coords["latitude"]), float(coords["longitude"]))
+        geohash = str(Geohash.encode(float(coords["latitude"]), float(coords["longitude"])))
+        # u0, gb, ez, sp corresponds to the start of geohash inside of France
+        if not geohash.startswith(("u0", "gb", "ez", "sp")):
+            old = geohash[0:2]
+            geohash = geohash.replace(old, "u0", 1)
 
         date_joined = gen_datetime(min_year=2017, max_year=datetime.datetime.now().year)
 
@@ -80,7 +85,8 @@ def populate_users(amount=150, drop_user_table=False):
 
             for tag in tags:
                 Tag.create(name=tag, user_id=u.id)
-            Image.create(user_id=u.id, link=user.get_picture(), is_primary=True)
+            image_url = requests.get(f"https://picsum.photos/seed/{username}/1000/1000").url
+            Image.create(user_id=u.id, link=image_url, is_primary=True)
         except ConflictError:
             pass  # Pass on the conflict error, this user wont be created because the username is taken. Who cares ?
 
