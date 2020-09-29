@@ -179,7 +179,7 @@ def debug_send_message():
 @debug_bp.route("/debug/recommendations/start", methods=["POST"])
 @debug_token_required
 def debug_recommendations_start_process():
-    """This function will create 100 random users and calculate recommendations"""
-    populate_users(amount=30, drop_user_table=False)
+    """This function will create 15 random users and calculate recommendations"""
+    populate_users(amount=15, drop_user_table=False)
     update_user_recommendations()
     return Success("Done")
