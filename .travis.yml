@@ -57,6 +57,7 @@ jobs:
         - newman --version
         - mysql --version
         - mysql -e 'CREATE DATABASE pymatcha;'
+        - mysql -u root pymatcha < mysql_dump/users.sql
         # pull image
         - docker pull docker.pkg.github.com/seluj78/pymatcha/pymatcha-backend:$TRAVIS_COMMIT
       script:
