@@ -107,8 +107,9 @@ def update_offline_users():
 @celery.task
 def update_user_recommendations():
     count = 0
-    for user_to_update in User.select_all():
+    for user_to_update in User.get_multis(skip_recommendations=False):
         create_user_recommendations(user_to_update)
+        count += 1
     return f"Successfully updated recommendations for {count} users."
 
 

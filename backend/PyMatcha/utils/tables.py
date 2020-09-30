@@ -48,7 +48,8 @@ def _create_user_table(db):
         is_online            BOOLEAN DEFAULT (FALSE),
         is_profile_completed BOOLEAN DEFAULT (FALSE),
         is_confirmed         BOOLEAN DEFAULT (FALSE),
-        confirmed_on         DATETIME DEFAULT NULL
+        confirmed_on         DATETIME DEFAULT NULL,
+        skip_recommendations BOOLEAN DEFAULT (FALSE)
         ) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci ;
         """
         )
