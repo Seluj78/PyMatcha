@@ -7,4 +7,4 @@ ENV PYTHONDONTWRITEBYTECODE 1
 EXPOSE 5000
 ADD .env .
 RUN export $(cat .env | xargs)
-CMD celery worker --workdir . -A PyMatcha.celery -B --loglevel=info
+CMD celery worker --workdir . -A PyMatcha.celery -B --loglevel=info --concurrency=1
