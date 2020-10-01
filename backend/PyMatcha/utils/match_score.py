@@ -18,8 +18,7 @@ def _get_distance(geohash_1: str, geohash_2: str) -> Optional[float]:
 
 
 def _get_common_tags(tag_list_1: list, tag_list_2: list) -> List[str]:
-    """Will return the list of common tags
-    """
+    """Will return the list of common tags"""
     common_tags = []
     for tag_1 in tag_list_1:
         for tag_2 in tag_list_2:
