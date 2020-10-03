@@ -19,12 +19,12 @@
 import datetime
 
 import Geohash
+import requests
 from flask import Blueprint
 from flask import render_template
 from flask import request
 from flask_jwt_extended import current_user
 from flask_jwt_extended import jwt_required
-from ip2geotools.databases.noncommercial import DbIpCity
 from PyMatcha.models.user import get_user
 from PyMatcha.utils import hash_password
 from PyMatcha.utils.confirm_token import generate_confirmation_token
@@ -156,9 +156,11 @@ def edit_geolocation():
     if lat and lng:
         current_user.geohash = Geohash.encode(lat, lng)
     else:
-        response = DbIpCity.get(ip, api_key="free")
-        lat = response.latitude
-        lng = response.longitude
+        response = requests.get(
+            f"http://api.ipstack.com/{ip}?access_key=b5f9be2253823006b478da121d1c855b&format=1"
+        ).json()
+        lat = response["latitude"]
+        lng = response["longitude"]
         current_user.geohash = Geohash.encode(lat, lng)
     current_user.save()
     return Success("New location sucessfully saved.")
