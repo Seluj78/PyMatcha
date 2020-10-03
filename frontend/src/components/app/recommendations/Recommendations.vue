@@ -11,23 +11,23 @@
         v-bind:options="['Closest', 'Furthest', 'Youngest',
         'Oldest', 'Most popular', 'Least popular', 'Most common interests', 'Least common interests']"
         v-on:saveSort="saveSort"></Sort>
-      <FilterSlider
+      <FilterSliderDropdown
         v-bind:min="recommendationsAnalysis.age.min"
         v-bind:max="recommendationsAnalysis.age.max"
         v-bind:name="'age'"
-        v-on:saveFilter="saveFilter"></FilterSlider>
-      <FilterSlider
+        v-on:saveFilter="saveFilter"></FilterSliderDropdown>
+      <FilterSliderDropdown
         v-bind:min="recommendationsAnalysis.distance.min"
         v-bind:max="recommendationsAnalysis.distance.max"
         v-bind:unit="'km'"
         v-bind:name="'distance'"
-        v-on:saveFilter="saveFilter"></FilterSlider>
-      <FilterSlider
+        v-on:saveFilter="saveFilter"></FilterSliderDropdown>
+      <FilterSliderDropdown
         v-bind:min="recommendationsAnalysis.popularity.min"
         v-bind:max="recommendationsAnalysis.popularity.max"
         v-bind:unit="'pts'"
         v-bind:name="'popularity'"
-        v-on:saveFilter="saveFilter"></FilterSlider>
+        v-on:saveFilter="saveFilter"></FilterSliderDropdown>
       <MultipleFiltersDropdown
         v-bind:position="'right'"
         v-bind:options="recommendationsAnalysis.uniqueInterests"
@@ -45,7 +45,7 @@
 <script>
 /* eslint-disable */
 import Sort from '@/components/shared/Sort.vue';
-import FilterSlider from '@/components/shared/FilterSlider.vue';
+import FilterSliderDropdown from '@/components/shared/FilterSliderDropdown.vue';
 import RecommendationCard from '@/components/app/recommendations/RecommendationCard.vue';
 import MultipleFiltersDropdown from '@/components/shared/MultipleFiltersDropdown.vue';
 
@@ -54,7 +54,7 @@ export default {
   components: {
     Sort,
     RecommendationCard,
-    FilterSlider,
+    FilterSliderDropdown,
     MultipleFiltersDropdown,
   },
   data: () => ({
