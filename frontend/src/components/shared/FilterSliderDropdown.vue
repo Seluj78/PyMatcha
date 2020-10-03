@@ -1,17 +1,19 @@
 <template>
   <!-- eslint-disable max-len -->
-    <div class="mb-8" ref="sliderDropdown">
-      <div class="mx-auto flex w-full items-center mb-4 max-w-md">
-        <div class="w-full flex justify-between">
-          <h1 class="text-xl text-purple-matcha capitalize">{{ name }}</h1>
-          <h1 class="text-xl text-purple-matcha">
-            <span class="">{{this.slider.startMin}} {{this.unit}}</span>
-            to
-            <span class="">{{this.slider.startMax}} {{this.unit}}</span></h1>
-        </div>
-      </div>
-      <div ref="slider" class="mx-auto w-full mb-4 px-4 max-w-md"></div>
+  <div class="focus:outline-none ml-2 flex-1 sm:flex-none" @focusout="close" tabindex="1">
+    <div v-bind:class="{'filter-button': true, 'border-gray-matcha': !closed}" @click="toggle">
+      <h1 v-bind:class="{ 'opacity-50': closed, 'noSelect': true, 'capitalize': true }">{{name}}</h1>
     </div>
+    <div ref="sliderDropdown" v-bind:class="{'slider-dropdown': true, 'hidden': closed}">
+      <div class="flex mb-4 mt-2">
+        <h1>
+          <span class="font-bold">{{this.slider.startMin}} {{this.unit}}</span>
+          to
+          <span class="font-bold">{{this.slider.startMax}} {{this.unit}}</span></h1>
+      </div>
+      <div ref="slider" class="w-64 mb-4"></div>
+    </div>
+  </div>
 </template>
 
 <script>
@@ -21,6 +23,7 @@ import 'nouislider/distribute/nouislider.css';
 export default {
   props: ['options', 'name', 'unit', 'min', 'max'],
   data: () => ({
+    closed: true,
     slider: {
       startMin: null,
       startMax: null,
@@ -30,6 +33,21 @@ export default {
       step: 1,
     },
   }),
+  methods: {
+    toggle() {
+      this.closed = !this.closed;
+      if (!this.closed) {
+        this.$nextTick(function () {
+          this.$refs.sliderDropdown.focus();
+        });
+      }
+    },
+    close(event) {
+      if (!event.currentTarget.contains(event.relatedTarget)) {
+        this.closed = true;
+      }
+    },
+  },
   mounted() {
     this.slider.startMin = this.min;
     this.slider.startMax = this.max;
