@@ -38,7 +38,7 @@ export default {
         min: null,
         max: null,
       },
-      uniqueInterests: [],
+      interests: [],
     },
     recommendationsAnalysisDone: false,
   }),
@@ -52,6 +52,9 @@ export default {
     this.recommendations.sort((a, b) => a.distance - b.distance);
     for (let i = 0; i < this.recommendations.length; i += 1) {
       this.recommendations[i].distance = Math.floor(this.recommendations[i].distance);
+      if (this.recommendations[i].age < 18) {
+        this.recommendations[i].age = 18;
+      }
       if (this.recommendationsAnalysis.age.min === null || this.recommendations[i].age < this.recommendationsAnalysis.age.min) {
         this.recommendationsAnalysis.age.min = this.recommendations[i].age;
       }
@@ -74,8 +77,8 @@ export default {
       this.recommendations[i].interests = [];
       for (let j = 0; j < interests.length; j += 1) {
         this.recommendations[i].interests.push(interests[j].name);
-        if (this.recommendationsAnalysis.uniqueInterests.indexOf(interests[j].name) === -1) {
-          this.recommendationsAnalysis.uniqueInterests.push(interests[j].name);
+        if (this.recommendationsAnalysis.interests.indexOf(interests[j].name) === -1) {
+          this.recommendationsAnalysis.interests.push(interests[j].name);
         }
       }
     }
