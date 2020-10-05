@@ -12,22 +12,22 @@
         v-bind:recommendationsAnalysis="filters"></Recommendations>
     </section>
     <section v-if="!recommendationsAnalysisDone" class="flex flex-col my-8 md:my-12">
-        <div>
+        <div v-if="sliderValuesFetched">
           <FilterSlider
-            v-bind:min="18"
-            v-bind:max="100"
+            v-bind:min="sliders.age.min"
+            v-bind:max="sliders.age.max"
             v-bind:name="'age'"
             v-on:saveFilter="saveFilter"></FilterSlider>
           <FilterSlider
             v-bind:min="0"
-            v-bind:max="1000"
+            v-bind:max="2000"
             v-bind:unit="'km'"
             v-bind:oneHandle="true"
             v-bind:name="'distance'"
             v-on:saveFilter="saveFilter"></FilterSlider>
           <FilterSlider
-            v-bind:min="18"
-            v-bind:max="100"
+            v-bind:min="sliders.popularity.min"
+            v-bind:max="sliders.popularity.max"
             v-bind:unit="'pts'"
             v-bind:name="'popularity'"
             v-on:saveFilter="saveFilter"></FilterSlider>
@@ -72,6 +72,17 @@ export default {
   },
   data: () => ({
     recommendations: [],
+    sliders: {
+      age: {
+        min: null,
+        max: null,
+      },
+      popularity: {
+        min: null,
+        max: null,
+      },
+    },
+    sliderValuesFetched: false,
     filters: {
       age: {
         min: null,
@@ -143,6 +154,18 @@ export default {
     searchAgain() {
       this.recommendationsAnalysisDone = false;
     },
+  },
+  async mounted() {
+    const sliderRangesRequest = await this.$http.get('/search/values');
+    const values = sliderRangesRequest.data.search_minmax;
+    this.sliders.age.min = values.min_age;
+    if (this.sliders.age.min < 18) {
+      this.sliders.age.min = 18;
+    }
+    this.sliders.age.max = values.max_age;
+    this.sliders.popularity.min = values.min_score;
+    this.sliders.popularity.max = values.max_score;
+    this.sliderValuesFetched = true;
   },
 };
 
