@@ -124,6 +124,8 @@ def calc_search_min_max():
     min_age = 100
     max_age = 0
     for user in User.select_all():
+        if not user.birthdate:
+            continue
         if user.heat_score > max_score:
             max_score = user.heat_score
         if user.heat_score < min_score:
