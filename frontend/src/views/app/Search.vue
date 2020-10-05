@@ -115,6 +115,14 @@ export default {
       this.filters[name] = filters;
     },
     async search() {
+      const searchRequest = await this.$http.post('/search', {
+        min_age: this.filters.age.min,
+        max_age: this.filters.age.max,
+        min_score: this.filters.popularity.min,
+        max_score: this.filters.popularity.max,
+        max_distance: this.filters.distance.max,
+        tags: this.filters.interests,
+      });
       if (this.filters.interests.length === 0) {
         this.filters.interests = [
           'swimming', 'wine', 'reading', 'foodie', 'netflix', 'music', 'yoga', 'golf',
@@ -128,14 +136,6 @@ export default {
           'astrology', 'board games', 'craft beer', 'coffee', 'writer',
         ];
       }
-      const searchRequest = await this.$http.post('/search', {
-        min_age: this.filters.age.min,
-        max_age: this.filters.age.max,
-        min_score: this.filters.popularity.min,
-        max_score: this.filters.popularity.max,
-        max_distance: this.filters.distance.max,
-        tags: this.filters.interests,
-      });
       this.recommendations = searchRequest.data.search_results;
       this.recommendations.sort((a, b) => a.distance - b.distance);
       for (let i = 0; i < this.recommendations.length; i += 1) {
