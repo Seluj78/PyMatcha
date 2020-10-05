@@ -1,15 +1,18 @@
 import datetime
+import json
 
 from flask import Blueprint
 from flask import request
 from flask_jwt_extended import current_user
 from flask_jwt_extended import jwt_required
+from PyMatcha import redis
 from PyMatcha.utils.decorators import validate_params
 from PyMatcha.utils.errors import BadRequestError
 from PyMatcha.utils.match_score import _get_common_tags
 from PyMatcha.utils.match_score import _get_distance
 from PyMatcha.utils.match_score import _get_gender_query
 from PyMatcha.utils.success import SuccessOutput
+from PyMatcha.utils.tasks import calc_search_min_max
 
 search_bp = Blueprint("search", __name__)
 
@@ -71,16 +74,29 @@ def search():
                 if max_distance != -1:
                     continue
         else:
+            distance = -1
             if max_distance != -1:
                 raise BadRequestError("user needs to sets his location first")
 
         user_tags = [t.name for t in user.get_tags()]
         common_tags = _get_common_tags(tags, user_tags)
         if not common_tags:
+            common_tags = []
             if tags:
                 continue
 
         user_dict = user.to_dict()
-        user_dict.update({"distance": distance, "common_tags": common_tags})
+        user_dict["distance"] = distance
+        user_dict["common_tags"] = common_tags
         returned_list.append(user_dict)
     return SuccessOutput("search_results", returned_list)
+
+
+@search_bp.route("/search/values", methods=["GET"])
+def get_min_maxes_values():
+    try:
+        minmax = json.loads(redis.get("search_minmax"))
+    except TypeError:
+        calc_search_min_max()
+        minmax = json.loads(redis.get("search_minmax"))
+    return SuccessOutput("search_minmax", minmax)
