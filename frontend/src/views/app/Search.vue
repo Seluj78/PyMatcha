@@ -11,8 +11,8 @@
         v-bind:recommendationsReceived="recommendations"
         v-bind:recommendationsAnalysis="filters"></Recommendations>
     </section>
-    <section v-if="!recommendationsAnalysisDone" class="flex flex-col my-8 md:my-12">
-        <div v-if="sliderValuesFetched">
+    <section v-if="!recommendationsAnalysisDone && sliderValuesFetched" class="flex flex-col my-8 md:my-12">
+        <div>
           <FilterSlider
             v-bind:min="sliders.age.min"
             v-bind:max="sliders.age.max"
