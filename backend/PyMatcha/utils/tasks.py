@@ -1,4 +1,5 @@
 import datetime
+import json
 import logging
 from math import ceil
 
@@ -22,6 +23,9 @@ def setup_periodic_tasks(sender, **kwargs):
     sender.add_periodic_task(60, update_offline_users.s(), name="Update online users every minute")
     sender.add_periodic_task(3600, update_heat_scores.s(), name="Update heat scores every hour")
     sender.add_periodic_task(60, update_user_recommendations.s(), name="Update user recommendations every minute")
+    sender.add_periodic_task(
+        600, calc_search_min_max.s(), name="Update Minimum and Maximum scores and ages for search every 10 minutes"
+    )
 
 
 @celery.task
@@ -111,3 +115,28 @@ def update_user_recommendations():
 @celery.task
 def set_user_superlikes(user_id, amount=5):
     redis.set(f"superlikes:{user_id}", amount)
+
+
+@celery.task
+def calc_search_min_max():
+    min_score = 9999
+    max_score = 0
+    min_age = 100
+    max_age = 0
+    for user in User.select_all():
+        if user.heat_score > max_score:
+            max_score = user.heat_score
+        if user.heat_score < min_score:
+            min_score = user.heat_score
+
+        today = datetime.datetime.utcnow()
+
+        age = today.year - user.birthdate.year - ((today.month, today.day) < (user.birthdate.month, user.birthdate.day))
+
+        if age > max_age:
+            max_age = age
+        if age < min_age:
+            min_age = age
+    minmax = {"min_score": min_score, "max_score": max_score, "min_age": min_age, "max_age": max_age}
+    redis.set("search_minmax", json.dumps(minmax))
+    return "Successfully updated min and max ages and scores"
