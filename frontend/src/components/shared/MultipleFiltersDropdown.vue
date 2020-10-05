@@ -5,7 +5,7 @@
       <h1 v-bind:class="{ 'opacity-50': closed, 'noSelect': true, 'capitalize': true }">
         {{name}}</h1>
     </div>
-    <div v-bind:class="{'sort-dropdown': true, 'hidden': closed, 'right-0': position === 'right', 'md:right-auto': position === 'right'}">
+    <div v-bind:class="{'sort-dropdown': true, 'h-auto': options.length < 5 , 'hidden': closed, 'right-0': position === 'right', 'md:right-auto': position === 'right'}">
       <h1 v-for="(option, index) in options" :key="option + index + option"
           v-bind:class="{'sort-dropdown-option': true, 'border-b': index !== options.length - 1, 'capitalize': true,
           'font-extrabold': selectedFilters.indexOf(option) !== -1, 'text-gray-matcha': selectedFilters.indexOf(option) !== -1}"
