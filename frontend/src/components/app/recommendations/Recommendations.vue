@@ -1,6 +1,6 @@
 <template>
   <!-- eslint-disable max-len -->
-  <section>
+  <section class="mb-4 sm:mb-16 lg:mb-32">
     <h1
       class="text-5xl my-4 text-center md:text-left leading-none onboarding-sub-container-content-heading">
       {{recommendations.length}} {{title}}</h1>
@@ -30,7 +30,7 @@
         v-on:saveFilter="saveFilter"></FilterSliderDropdown>
       <MultipleFiltersDropdown
         v-bind:position="'right'"
-        v-bind:options="recommendationsAnalysis.uniqueInterests"
+        v-bind:options="recommendationsAnalysis.interests"
         v-bind:name="'interests'"
         v-on:saveFilterMultiple="saveFilterMultiple"></MultipleFiltersDropdown>
     </div>
