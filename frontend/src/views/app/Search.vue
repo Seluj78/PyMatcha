@@ -22,7 +22,7 @@
             v-bind:name="'age'"
             v-on:saveFilter="saveFilter"></FilterSlider>
           <FilterSlider
-            v-bind:min="0"
+            v-bind:min="1"
             v-bind:max="2000"
             v-bind:unit="'km'"
             v-bind:oneHandle="true"
