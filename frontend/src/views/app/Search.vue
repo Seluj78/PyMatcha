@@ -11,7 +11,10 @@
         v-bind:recommendationsReceived="recommendations"
         v-bind:recommendationsAnalysis="filters"></Recommendations>
     </section>
-    <section v-if="!recommendationsAnalysisDone && sliderValuesFetched" class="flex flex-col my-8 md:my-12">
+    <section v-on:click="setError(null)"
+             v-if="!recommendationsAnalysisDone && sliderValuesFetched"
+             class="flex flex-col my-8 md:my-12">
+        <div><img src="../../assets/search.png" class="w-20 mb-4 mx-auto"></div>
         <div>
           <FilterSlider
             v-bind:min="sliders.age.min"
@@ -46,8 +49,10 @@
             'astrology', 'board games', 'craft beer', 'coffee', 'writer',
           ]"
             v-bind:name="'interests'"
+            v-bind:info="'If no selected, all are accounted.'"
             v-on:saveFilterMultiple="saveFilterMultiple"></MultipleFilters>
         </div>
+      <div class="auth-sub-container-error mx-auto max-w-md" v-if="error"><h1 class="auth-sub-container-error-message">{{ error }}</h1></div>
       <div class="mx-auto w-full max-w-md">
         <h1 v-on:click="search()" class="onboarding-sub-container-content-button-outline w-48 text-lg font-normal max-w-full bg-purple-matcha w-full text-white-matcha mx-auto">
           Search</h1>
@@ -99,6 +104,7 @@ export default {
       interests: [],
     },
     recommendationsAnalysisDone: false,
+    error: null,
   }),
   methods: {
     saveFilter(...range) {
@@ -137,6 +143,10 @@ export default {
         ];
       }
       this.recommendations = searchRequest.data.search_results;
+      if (this.recommendations.length === 0) {
+        this.setError('0 profiles found. Please, try expanding your search criteria.');
+        return;
+      }
       this.recommendations.sort((a, b) => a.distance - b.distance);
       for (let i = 0; i < this.recommendations.length; i += 1) {
         if (this.recommendations[i].age < 18) {
@@ -150,9 +160,22 @@ export default {
         }
       }
       this.recommendationsAnalysisDone = true;
+      this.scrollToTop();
     },
     searchAgain() {
+      this.filters.age.min = null;
+      this.filters.age.max = null;
+      this.filters.popularity.min = null;
+      this.filters.popularity.max = null;
+      this.filters.distance.max = null;
+      this.filters.interests = [];
       this.recommendationsAnalysisDone = false;
+    },
+    setError(message) {
+      this.error = message;
+    },
+    scrollToTop() {
+      window.scrollTo(0, 0);
     },
   },
   async mounted() {
