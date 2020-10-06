@@ -10,6 +10,7 @@ import ResetPassword from '../views/auth/ResetPassword.vue';
 import ResetPasswordError from '../views/auth/ResetPasswordError.vue';
 import Onboarding from '../views/app/Onboarding.vue';
 import Browse from '../views/app/Browse.vue';
+import Search from '../views/app/Search.vue';
 import store from '../store/index';
 
 Vue.use(VueRouter);
@@ -99,6 +100,12 @@ const routes = [
     path: '/browse',
     name: Browse,
     component: Browse,
+    beforeEnter: notLoggedInRedirectLogin,
+    props: true,
+  },
+  {
+    path: '/search',
+    component: Search,
     beforeEnter: notLoggedInRedirectLogin,
   },
 ];

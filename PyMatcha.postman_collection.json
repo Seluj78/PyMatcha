@@ -2616,7 +2616,7 @@
 											"    pm.response.to.have.status(200);",
 											"});",
 											"",
-											"tests[\"Is geohash correct\"] = response.geohash == \"spb8kg12wgw3\""
+											"tests[\"Is geohash correct\"] = response.geohash == \"gbqc2cm8zj0h\""
 										],
 										"type": "text/javascript"
 									}
@@ -5817,6 +5817,44 @@
 						}
 					},
 					"response": []
+				},
+				{
+					"name": "{{host}}/search/values",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "800e378b-5cbb-46c3-94b3-1a25db03a846",
+								"exec": [
+									"var response = JSON.parse(responseBody);",
+									"",
+									"",
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"tests[\"Success is true\"] = response.success == true",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{host}}/search/values",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"search",
+								"values"
+							]
+						}
+					},
+					"response": []
 				}
 			],
 			"protocolProfileBehavior": {}
@@ -6012,107 +6050,107 @@
 	],
 	"variable": [
 		{
-			"id": "1c6f53dc-e42f-4454-9bc3-ed7efc324c5e",
+			"id": "1422b800-5b00-4e83-b384-b0a2335ce1f6",
 			"key": "host",
 			"value": "http://127.0.0.1:5000"
 		},
 		{
-			"id": "795d11f0-db2d-4e43-bcce-51e4dd7d403e",
+			"id": "45b4ac16-259f-4039-9f45-9e687dde7c56",
 			"key": "user_id",
 			"value": ""
 		},
 		{
-			"id": "c10e1323-93da-441c-a4aa-ab8a56d127fa",
+			"id": "9bcded74-14bb-43ec-96a6-ddbace075f06",
 			"key": "user_email",
 			"value": "foo@example.org"
 		},
 		{
-			"id": "4e4339d4-037b-4a47-a940-af44ceba7702",
+			"id": "caaaaaa8-3409-4c18-bb84-8f7413b74119",
 			"key": "user_username",
 			"value": "foo"
 		},
 		{
-			"id": "200e3227-ae76-482b-8806-afdf11e4a946",
+			"id": "0c2a62b7-cae4-4b2e-861a-d18d8852cd3a",
 			"key": "user_password",
 			"value": "admin"
 		},
 		{
-			"id": "6c1cbef8-de33-45b3-8e95-0b2c42bfba72",
+			"id": "87dc2468-5256-468f-82d5-2ac67426c9c2",
 			"key": "user_firstname",
 			"value": "Foo"
 		},
 		{
-			"id": "220b0df3-d386-4dae-9439-77361ed5397f",
+			"id": "a991a290-b276-4ec3-b728-5545bdb0f865",
 			"key": "user_lastname",
 			"value": "Bar"
 		},
 		{
-			"id": "2740c551-4c1a-4fd4-b14c-437c2e5b176d",
+			"id": "50fcf6ff-9a13-4ac4-bd55-f62f208213fd",
 			"key": "debug_token",
 			"value": "xX69jules69Xx"
 		},
 		{
-			"id": "558a8390-adec-4afb-9414-5c305ce932e2",
+			"id": "cbcf5b56-8099-433e-9f44-729df553e8f4",
 			"key": "user_access_token",
 			"value": ""
 		},
 		{
-			"id": "19668937-3689-4bb3-97e4-ad0262b20779",
+			"id": "19085103-b960-4e72-9ddb-c6f496f731af",
 			"key": "user_refresh_token",
 			"value": ""
 		},
 		{
-			"id": "922cef0c-ac18-4509-9f08-7240f04a9634",
+			"id": "56764f2f-ab0d-46fc-8690-2dacb95006e2",
 			"key": "expired_token",
 			"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE1OTAyNDIyNjQsIm5iZiI6MTU5MDI0MjI2NCwianRpIjoiNTM0ZGI5NzQtOWE4Ni00MGViLWE1NDEtMDg3N2ZmNzQ3NDVhIiwiZXhwIjoxNTkwMjQyMzI0LCJpZGVudGl0eSI6eyJpZCI6NTEyLCJlbWFpbCI6ImZvb0BleGFtcGxlLm9yZyIsInVzZXJuYW1lIjoiYmFyIiwiaXNfb25saW5lIjp0cnVlLCJkYXRlX2xhc3RzZWVuIjoiU2F0LCAyMyBNYXkgMjAyMCAxMzo1Nzo0NCBHTVQifSwiZnJlc2giOnRydWUsInR5cGUiOiJhY2Nlc3MifQ.NTp2P0WNkXDwzuzrcNIQdeAfizQ57HQgkzBLSvY1yHU"
 		},
 		{
-			"id": "425325f9-1bd7-4f0c-9863-f3f44a0546e1",
+			"id": "4f2dc328-0d84-455e-b539-3eedb52ad509",
 			"key": "user_orientation",
 			"value": "heterosexual"
 		},
 		{
-			"id": "cb3e3a95-1cef-4b63-a0c1-41bea9ac7abe",
+			"id": "c1c3b0d9-d693-4c3e-bfe1-790246f36975",
 			"key": "user_bio",
 			"value": "Lorem Ipsum is the single greatest threat. We are not - we are not keeping up with other websites. Lorem Ipsum best not make any more threats to your website. It will be met with fire and fury like the world has never seen. Does everybody know that pig named Lorem Ipsum? An ‘extremely credible source’ has called my office and told me that Barack Obama’s placeholder text is a fraud."
 		},
 		{
-			"id": "5595875e-6866-4d62-94a5-e24ea59e40d7",
+			"id": "22247a60-3b04-4cf3-b71e-020be5e5af2b",
 			"key": "user_gender",
 			"value": "male"
 		},
 		{
-			"id": "4f00c819-d5a2-4ffa-9841-927a584a73ad",
+			"id": "73131f55-444b-435c-a1a2-3d8dac1757e9",
 			"key": "user_birthdate",
 			"value": "06/04/1998"
 		},
 		{
-			"id": "ae73bd61-998f-4741-98d2-3a9c832e5d3b",
+			"id": "d5f365e6-94c6-4e8c-b26b-71e29927db28",
 			"key": "user_lat",
 			"value": "44.8404"
 		},
 		{
-			"id": "05660d8f-92d8-492d-bda0-a1e5f0d76dee",
+			"id": "1e75fc16-8889-4c28-8749-f2d8fd4f5012",
 			"key": "user_lng",
 			"value": "-0.5805"
 		},
 		{
-			"id": "62c639b4-dd0c-435f-b00c-139ef0e6d334",
+			"id": "32238ac7-ecee-43bb-822d-e58cee7f4d75",
 			"key": "user_ip",
 			"value": "77.205.46.181"
 		},
 		{
-			"id": "d7d84d53-5ce3-48a5-9171-5177c9f4bd29",
+			"id": "2918a794-4b28-4b66-9ff1-277bfe8173a7",
 			"key": "user_username2",
 			"value": "FooBar"
 		},
 		{
-			"id": "b5b77a26-ee98-445b-9fc9-efd9a5421d4e",
+			"id": "7ebb04be-74e9-4823-9b4e-8b658e59194d",
 			"key": "user_email2",
 			"value": "bar@example.org"
 		},
 		{
-			"id": "0112646c-3f47-431b-a92c-179babdf271f",
+			"id": "24f73465-8c81-47f1-ba70-7bead50632dc",
 			"key": "user_password2",
 			"value": "dolphin2"
 		}

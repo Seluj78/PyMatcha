@@ -63,6 +63,7 @@ class User(Model):
     is_confirmed = Field(bool)
     confirmed_on = Field(datetime.datetime, fmt="%Y-%m-%d %H:%M:%S")
     previous_reset_token = Field(str)
+    skip_recommendations = Field(bool)
 
     @staticmethod
     def create(
@@ -83,6 +84,7 @@ class User(Model):
         is_profile_completed: bool = False,
         is_confirmed: bool = False,
         confirmed_on: datetime.datetime = None,
+        skip_recommendations: bool = False,
     ) -> User:
         # Check email availability
         if User.get(email=email):
@@ -136,6 +138,7 @@ class User(Model):
             is_confirmed=is_confirmed,
             confirmed_on=confirmed_on,
             previous_reset_token=None,
+            skip_recommendations=skip_recommendations,
         )
         new_user.save()
         logging.debug("New user {} created".format(new_user.email))
@@ -175,6 +178,7 @@ class User(Model):
             is_confirmed=False,
             confirmed_on=None,
             previous_reset_token=None,
+            skip_recommendations=False,
         )
         new_user.save()
         logging.debug("New user {} created".format(new_user.email))

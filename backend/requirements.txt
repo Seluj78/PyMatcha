@@ -26,8 +26,7 @@ pre-commit==2.7.1
 
 lorem==0.1.1
 future==0.18.2
-ip2geotools==0.1.5
-
+requests==2.24.0
 argon2-cffi==20.1.0
 
 geopy==2.0.0

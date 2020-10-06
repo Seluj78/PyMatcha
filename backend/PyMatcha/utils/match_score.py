@@ -22,7 +22,7 @@ def _get_common_tags(tag_list_1: list, tag_list_2: list) -> List[str]:
     common_tags = []
     for tag_1 in tag_list_1:
         for tag_2 in tag_list_2:
-            if fuzz.partial_ratio(tag_1, tag_2) >= 70:
+            if fuzz.partial_ratio(tag_1, tag_2) >= 90:
                 common_tags.append(tag_1 if len(tag_1) > len(tag_2) else tag_2)
     return list(set(common_tags))
 

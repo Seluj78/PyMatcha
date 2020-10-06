@@ -14,9 +14,13 @@ from PyMatcha.models.user import get_user
 from PyMatcha.models.user import User
 from PyMatcha.utils.errors import ConflictError
 from randomuser import RandomUser
+from tqdm import tqdm
 
 FRANCE_GEOHASH_START = ("u0", "gb", "ez", "sp")
 NATIONALITIES_PARAMS = {"nat": "fr"}
+
+# LATVIA_GEOHASH_START = ("d0", "d1", "d4", "d4")
+# NATIONALITIES_PARAMS = {"nat": "lv"}
 
 
 def gen_datetime(min_year: int = 1900, max_year: int = datetime.datetime.now().year) -> datetime.datetime:
@@ -25,6 +29,19 @@ def gen_datetime(min_year: int = 1900, max_year: int = datetime.datetime.now().y
     years = max_year - min_year + 1
     end = start + datetime.timedelta(days=365 * years)
     return start + (end - start) * random.random()
+
+
+def get_unsplash_image(gender):
+    link = None
+    while True:
+        r = requests.get(f"https://source.unsplash.com/featured/?{gender}")
+        if r.status_code == 403:
+            sleep(1)
+            continue
+        link = r.url
+        if not Image.get(link=link):
+            break
+    return link
 
 
 def populate_users(amount=150, drop_user_table=False):
@@ -36,7 +53,7 @@ def populate_users(amount=150, drop_user_table=False):
     except HTTPError:
         sleep(10)
         users = RandomUser.generate_users(amount=amount, get_params=NATIONALITIES_PARAMS)
-    for user in users:
+    for user in tqdm(users):
         gender = random.choice(["male", "female", "other"])
         if gender != "other":
             if gender == user.get_gender():
@@ -87,7 +104,14 @@ def populate_users(amount=150, drop_user_table=False):
 
             for tag in tags:
                 Tag.create(name=tag, user_id=u.id)
-            image_url = requests.get(f"https://picsum.photos/seed/{username}/1000/1000").url
+
+            if gender == "other":
+                # Change the gender because the profile picture needs to be of a person
+                gender = random.choice(["male", "female"])
+            image_url = get_unsplash_image("man" if gender == "male" else "woman")
+            if not image_url:
+                raise ValueError("ERROR ON GETTING IMAGE FROM UNSPLASH")
+
             Image.create(user_id=u.id, link=image_url, is_primary=True)
         except ConflictError:
             pass  # Pass on the conflict error, this user wont be created because the username is taken. Who cares ?
