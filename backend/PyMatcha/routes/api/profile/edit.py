@@ -40,17 +40,6 @@ from PyMatcha.utils.success import Success
 
 profile_edit_bp = Blueprint("profile_edit", __name__)
 
-REQUIRED_PARAMS_EDIT_PROFILE = {
-    "first_name": str,
-    "last_name": str,
-    "username": str,
-    "bio": str,
-    "gender": str,
-    "orientation": str,
-    "birthdate": str,
-    "tags": list,
-}
-
 
 @profile_edit_bp.route("/profile/edit/first_name", methods=["PATCH"])
 @validate_params({"first_name": str})
@@ -97,10 +86,40 @@ def edit_profile_username():
     return Success("Username successfully modified!")
 
 
-#     bio = data["bio"]
+@profile_edit_bp.route("/profile/edit/bio", methods=["PATCH"])
+@validate_params({"bio": str})
+@jwt_required
+def edit_profile_bio():
+    if not current_user.is_profile_completed:
+        raise BadRequestError("The user has not completed his profile.", "Complete your profile and try again.")
+    data = request.get_json()
+    bio = data["bio"]
+    if len(bio) <= 50:
+        raise BadRequestError("Bio is too short.")
+    current_user.bio = bio
+    current_user.save()
+    return Success("Bio successfully modified!")
+
+
+@profile_edit_bp.route("/profile/edit/gender", methods=["PATCH"])
+@validate_params({"gender": str})
+@jwt_required
+def edit_profile_gender():
+    if not current_user.is_profile_completed:
+        raise BadRequestError("The user has not completed his profile.", "Complete your profile and try again.")
+    data = request.get_json()
+    gender = data["gender"]
+    if gender not in ["male", "female", "other"]:
+        raise BadRequestError("Gender must be male, female or other.")
+    current_user.gender = gender
+    current_user.save()
+    return Success("Gender successfully modified!")
+
+
 #     gender = data["gender"]
 #     orientation = data["orientation"]
 #     birthdate = data["birthdate"]
+#     TAGS
 #
 #     try:
 #         birthdate = datetime.datetime.strptime(birthdate, "%d/%m/%Y").date()
@@ -118,10 +137,8 @@ def edit_profile_username():
 #     if orientation not in ["heterosexual", "homosexual", "bisexual", "other"]:
 #         raise BadRequestError("Orientation must be heterosexual, homosexual, bisexual or other.")
 #
-#     if gender not in ["male", "female", "other"]:
-#         raise BadRequestError("Gender must be male, female or other.")
+
 #
-#     current_user.bio = bio
 #     current_user.gender = gender
 #     current_user.orientation = orientation
 #     current_user.birthdate = birthdate
