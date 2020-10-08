@@ -13,7 +13,7 @@
     "@sentry/tracing": "^5.24.2",
     "axios": "^0.20.0",
     "core-js": "^3.6.5",
-    "jwt-decode": "^3.0.0-beta.2",
+    "jwt-decode": "^3.0.0",
     "nouislider": "^14.6.2",
     "secure-ls": "^1.2.6",
     "tailwindcss": "^1.8.10",
