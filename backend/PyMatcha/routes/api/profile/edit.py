@@ -25,19 +25,18 @@ from flask import render_template
 from flask import request
 from flask_jwt_extended import current_user
 from flask_jwt_extended import jwt_required
+from PyMatcha.models.user import get_user
 from PyMatcha.utils import hash_password
 from PyMatcha.utils.confirm_token import generate_confirmation_token
 from PyMatcha.utils.decorators import validate_params
 from PyMatcha.utils.errors import BadRequestError
+from PyMatcha.utils.errors import NotFoundError
 from PyMatcha.utils.errors import UnauthorizedError
 from PyMatcha.utils.mail import send_mail_html
 from PyMatcha.utils.mail import send_mail_text
 from PyMatcha.utils.password import check_password
 from PyMatcha.utils.static import FRONTEND_EMAIL_CONFIRMATION_URL
 from PyMatcha.utils.success import Success
-
-# from PyMatcha.models.user import get_user
-# from PyMatcha.utils.errors import NotFoundError
 
 profile_edit_bp = Blueprint("profile_edit", __name__)
 
@@ -66,29 +65,38 @@ def edit_profile_first_name():
     return Success("First name successfully modified!")
 
 
-@profile_edit_bp.route("/profile/edit/first_name", methods=["PATCH"])
-@validate_params({"first_name": str})
+@profile_edit_bp.route("/profile/edit/last_name", methods=["PATCH"])
+@validate_params({"last_name": str})
 @jwt_required
 def edit_profile_last_name():
     if not current_user.is_profile_completed:
         raise BadRequestError("The user has not completed his profile.", "Complete your profile and try again.")
     data = request.get_json()
-    first_name = data["first_name"]
-    current_user.first_name = first_name
+    last_name = data["last_name"]
+    current_user.last_name = last_name
     current_user.save()
-    return Success("First name successfully modified!")
+    return Success("Last name successfully modified!")
 
 
-# @profile_edit_bp.route("/profile/edit", methods=["PUT"])
-# @validate_params(REQUIRED_PARAMS_EDIT_PROFILE)
-# @jwt_required
-# def edit_profile():
-#     if not current_user.is_profile_completed:
-#         raise BadRequestError("The user has not completed his profile.", "Complete your profile and try again.")
-#     data = request.get_json()
-#     first_name = data["first_name"]
-#     last_name = data["last_name"]
-#     username = data["username"]
+@profile_edit_bp.route("/profile/edit/username", methods=["PATCH"])
+@validate_params({"username": str})
+@jwt_required
+def edit_profile_username():
+    if not current_user.is_profile_completed:
+        raise BadRequestError("The user has not completed his profile.", "Complete your profile and try again.")
+    data = request.get_json()
+    username = data["username"]
+    try:
+        get_user(username)
+    except NotFoundError:
+        pass
+    else:
+        raise BadRequestError("Username taken.")
+    current_user.username = username
+    current_user.save()
+    return Success("Username successfully modified!")
+
+
 #     bio = data["bio"]
 #     gender = data["gender"]
 #     orientation = data["orientation"]
@@ -105,12 +113,7 @@ def edit_profile_last_name():
 #     if age < 18:
 #         raise BadRequestError("You must be 18 years old or older.")
 #
-#     try:
-#         get_user(username)
-#     except NotFoundError:
-#         pass
-#     else:
-#         raise BadRequestError("Username taken.")
+
 #
 #     if orientation not in ["heterosexual", "homosexual", "bisexual", "other"]:
 #         raise BadRequestError("Orientation must be heterosexual, homosexual, bisexual or other.")
@@ -118,15 +121,11 @@ def edit_profile_last_name():
 #     if gender not in ["male", "female", "other"]:
 #         raise BadRequestError("Gender must be male, female or other.")
 #
-#     current_user.first_name = first_name
-#     current_user.last_name = last_name
-#     current_user.username = username
 #     current_user.bio = bio
 #     current_user.gender = gender
 #     current_user.orientation = orientation
 #     current_user.birthdate = birthdate
 #     current_user.save()
-#     return Success("User successfully modified !")
 
 
 @profile_edit_bp.route("/profile/edit/email", methods=["PUT"])
