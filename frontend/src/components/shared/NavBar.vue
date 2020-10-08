@@ -28,7 +28,7 @@
       <router-link v-if="loggedIn && currentRoute !== 'Browse'" to="/browse" class="navigation-button-logged-in">Browse</router-link>
       <router-link v-if="loggedIn && currentRoute !== 'Search'" to="/search" class="navigation-button-logged-in">Search</router-link>
       <router-link v-if="loggedIn" to="/" class="navigation-button-logged-in">Matches</router-link>
-      <router-link v-if="loggedIn" to="/" class="navigation-button-logged-in">Profile</router-link>
+      <router-link v-if="loggedIn && currentRoute !== 'Settings'" to="/settings" class="navigation-button-logged-in">Settings</router-link>
       <router-link v-if="loggedIn" v-on:click.native="logout()" to="/" class="navigation-button-logged-in">Exit</router-link>
     </div>
   </nav>
