@@ -22,12 +22,7 @@
         </div>
       </section>
       <section v-if="getShow === 'account'" class="flex flex-col items-start z-10 absolute bg-white-matcha px-8 pb-4 w-full top-0 left-0 h-screen md:h-auto md:ml-4 md:relative md:shadow-md md:rounded-md">
-        <div class="flex justify-between items-center w-full my-4 lg:mb-0">
-          <h1 class="text-3xl md:hidden text-gray-matcha">Account</h1>
-          <div class="md:hidden sort-button rounded-md text-lg w-12" v-on:click="closeSetting()">
-            <h1 class="noSelect">←</h1>
-          </div>
-        </div>
+        <SectionHeader v-bind:name="'account'" v-on:click.native="closeSetting()"></SectionHeader>
         <AccountInput
           v-bind:name="'First Name'"
           v-bind:type="'firstName'"
@@ -56,6 +51,7 @@
 <script>
 import NavBar from '@/components/shared/NavBar.vue';
 import MenuButton from '@/components/app/settings/MenuButton.vue';
+import SectionHeader from '@/components/app/settings/SectionHeader.vue';
 import AccountInput from '@/components/app/settings/AccountInput.vue';
 import imageMan from '../../assets/recommendations/avatars/man1.png';
 import imageWoman from '../../assets/recommendations/avatars/woman1.png';
@@ -66,6 +62,7 @@ export default {
     NavBar,
     MenuButton,
     AccountInput,
+    SectionHeader,
   },
   data: () => ({
     userInfo: {},
