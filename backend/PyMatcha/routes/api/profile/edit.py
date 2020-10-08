@@ -25,6 +25,7 @@ from flask import render_template
 from flask import request
 from flask_jwt_extended import current_user
 from flask_jwt_extended import jwt_required
+from PyMatcha.models.tag import Tag
 from PyMatcha.models.user import get_user
 from PyMatcha.utils import hash_password
 from PyMatcha.utils.confirm_token import generate_confirmation_token
@@ -116,33 +117,58 @@ def edit_profile_gender():
     return Success("Gender successfully modified!")
 
 
-#     gender = data["gender"]
-#     orientation = data["orientation"]
-#     birthdate = data["birthdate"]
-#     TAGS
-#
-#     try:
-#         birthdate = datetime.datetime.strptime(birthdate, "%d/%m/%Y").date()
-#     except ValueError:
-#         raise BadRequestError("Birthdate format must be %d/%m/%Y (day/month/year).")
-#
-#     today = datetime.datetime.utcnow()
-#
-#     age = today.year - birthdate.year - ((today.month, today.day) < (birthdate.month, birthdate.day))
-#     if age < 18:
-#         raise BadRequestError("You must be 18 years old or older.")
-#
+@profile_edit_bp.route("/profile/edit/orientation", methods=["PATCH"])
+@validate_params({"orientation": str})
+@jwt_required
+def edit_profile_orientation():
+    if not current_user.is_profile_completed:
+        raise BadRequestError("The user has not completed his profile.", "Complete your profile and try again.")
+    data = request.get_json()
+    orientation = data["orientation"]
+    if orientation not in ["heterosexual", "homosexual", "bisexual", "other"]:
+        raise BadRequestError("Orientation must be heterosexual, homosexual, bisexual or other.")
+    current_user.orientation = orientation
+    current_user.save()
+    return Success("Orientation successfully modified!")
 
-#
-#     if orientation not in ["heterosexual", "homosexual", "bisexual", "other"]:
-#         raise BadRequestError("Orientation must be heterosexual, homosexual, bisexual or other.")
-#
 
-#
-#     current_user.gender = gender
-#     current_user.orientation = orientation
-#     current_user.birthdate = birthdate
-#     current_user.save()
+@profile_edit_bp.route("/profile/edit/birthdate", methods=["PATCH"])
+@validate_params({"birthdate": str})
+@jwt_required
+def edit_profile_birthdate():
+    if not current_user.is_profile_completed:
+        raise BadRequestError("The user has not completed his profile.", "Complete your profile and try again.")
+    data = request.get_json()
+    birthdate = data["birthdate"]
+    try:
+        birthdate = datetime.datetime.strptime(birthdate, "%d/%m/%Y").date()
+    except ValueError:
+        raise BadRequestError("Birthdate format must be %d/%m/%Y (day/month/year).")
+
+    today = datetime.datetime.utcnow()
+
+    age = today.year - birthdate.year - ((today.month, today.day) < (birthdate.month, birthdate.day))
+    if age < 18:
+        raise BadRequestError("You must be 18 years old or older.")
+    current_user.birthdate = birthdate
+    current_user.save()
+    return Success("Birthdate successfully modified!")
+
+
+@profile_edit_bp.route("/profile/edit/tags", methods=["PATCH"])
+@validate_params({"tags": list})
+@jwt_required
+def edit_profile_tags():
+    if not current_user.is_profile_completed:
+        raise BadRequestError("The user has not completed his profile.", "Complete your profile and try again.")
+    data = request.get_json()
+    tags = data["tags"]
+    current_tags = Tag.get_multis(user_id=current_user.id)
+    for t in current_tags:
+        t.delete()
+    for tag in tags:
+        Tag.create(name=tag, user_id=current_user.id)
+    return Success("Tags successfully modified!")
 
 
 @profile_edit_bp.route("/profile/edit/email", methods=["PUT"])
