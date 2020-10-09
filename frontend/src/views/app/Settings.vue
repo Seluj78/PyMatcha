@@ -44,15 +44,66 @@
           v-bind:type="'password'"
           v-bind:currentValuePassed="''"></AccountInput>
       </section>
+      <section v-if="getShow === 'profile'" class="profile-section flex flex-col items-start z-10 absolute bg-white-matcha px-8 pb-4 w-full top-0 left-0 h-screen md:ml-4 md:relative md:shadow-md md:rounded-md">
+        <SectionHeader v-bind:name="'profile'" v-on:click.native="closeSetting()"></SectionHeader>
+        <div>
+          <h1 class="inline-block mr-4">I am</h1>
+          <DropdownDisplayChoice
+            class="inline-block"
+            v-on:saveSingleChoice="saveSingleChoice"
+            v-bind:name="'gender'"
+            v-bind:starting-option="this.$store.getters.getLoggedInUser.gender"
+            v-bind:options="['male', 'female', 'other']"></DropdownDisplayChoice>
+        </div>
+        <div class="mt-4">
+          <h1 class="inline-block mr-4">Sexuality</h1>
+          <DropdownDisplayChoice
+            class="inline-block"
+            v-on:saveSingleChoice="saveSingleChoice"
+            v-bind:name="'gender'"
+            v-bind:starting-option="this.$store.getters.getLoggedInUser.orientation"
+            v-bind:options="['heterosexual', 'homosexual', 'bisexual', 'other']"></DropdownDisplayChoice>
+        </div>
+        <div class="mt-4">
+          <h1 class="inline-block mr-3">Interests</h1>
+          <DropdownDisplayChoices
+            class="inline-block"
+            v-bind:options="[
+          'swimming', 'wine', 'reading', 'foodie', 'netflix', 'music', 'yoga', 'golf',
+          'photography', 'baking', 'shopping', 'outdoors', 'art', 'travel', 'hiking',
+          'running', 'volunteering', 'cycling', 'climbing', 'tea', 'fishing', 'soccer',
+          'museum', 'dancing', 'surfing', 'karaoke', 'parties', 'diy',
+          'walking', 'cat lover', 'movies', 'gardening', 'trivia', 'working out',
+          'cooking', 'gamer', 'brunch', 'blogging', 'picknicking', 'athlete',
+          'dog lover', 'politics', 'environmentalism', 'instagram', 'spirituality',
+          'language exchange', 'sports', 'comedy', 'fashion', 'disney', 'vlogging',
+          'astrology', 'board games', 'craft beer', 'coffee', 'writer',
+          ]"
+            v-bind:startingOptions="userInterests"
+            v-bind:min="3"
+            v-bind:max="10"
+            v-bind:name="'interests'"
+            v-on:saveMultipleChoice="saveMultipleChoice"></DropdownDisplayChoices>
+        </div>
+        <div class="mt-4">
+          <AccountInput
+            v-bind:name="'Bio'"
+            v-bind:type="'bio'"
+            v-bind:currentValuePassed="this.$store.getters.getLoggedInUser.bio"></AccountInput>
+        </div>
+      </section>
     </div>
   </div>
 </template>
 
 <script>
+/* eslint-disable prefer-destructuring */
 import NavBar from '@/components/shared/NavBar.vue';
 import MenuButton from '@/components/app/settings/MenuButton.vue';
 import SectionHeader from '@/components/app/settings/SectionHeader.vue';
 import AccountInput from '@/components/app/settings/AccountInput.vue';
+import DropdownDisplayChoice from '@/components/shared/DropdownDisplayChoice.vue';
+import DropdownDisplayChoices from '@/components/shared/DropdownDisplayChoices.vue';
 import imageMan from '../../assets/recommendations/avatars/man1.png';
 import imageWoman from '../../assets/recommendations/avatars/woman1.png';
 import imageOther from '../../assets/recommendations/avatars/other.png';
@@ -63,9 +114,11 @@ export default {
     MenuButton,
     AccountInput,
     SectionHeader,
+    DropdownDisplayChoice,
+    DropdownDisplayChoices,
   },
   data: () => ({
-    userInfo: {},
+    userInterests: [],
     show: '',
   }),
   computed: {
@@ -74,6 +127,18 @@ export default {
     },
   },
   methods: {
+    saveSingleChoice(...args) {
+      const [key, value] = args;
+      if (key === 'gender') {
+        console.log(value);
+      }
+    },
+    saveMultipleChoice(...args) {
+      const [key, value] = args;
+      if (key === 'interests') {
+        console.log(value);
+      }
+    },
     showSetting(setting) {
       this.show = setting;
     },
@@ -94,8 +159,10 @@ export default {
     },
   },
   beforeMount() {
-    console.log(this.$store.getters.getLoggedInUser);
-    // const userInfoRequest = this.$http.get();
+    const tags = this.$store.getters.getLoggedInUser.tags;
+    for (let i = 0; i < tags.length; i += 1) {
+      this.userInterests.push(tags[i].name);
+    }
   },
 };
 </script>

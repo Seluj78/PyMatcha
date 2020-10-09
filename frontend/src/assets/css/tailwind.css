@@ -482,6 +482,18 @@
     .slider-dropdown:focus {
         outline:none;
     }
+
+    .settings-button-choice {
+        @apply border-gray-300;
+        @apply rounded-lg;
+        @apply border;
+        @apply px-4;
+        @apply py-2;
+        @apply w-auto;
+        @apply cursor-pointer;
+        @apply text-sm;
+        @apply text-center;
+    }
 }
 
 @tailwind utilities;
