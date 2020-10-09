@@ -5,7 +5,7 @@
     <div class="w-full md:w-auto md:mx-16 lg:mx-32 relative md:flex items-start h-auto md:mb-16 lg:mb-32">
       <section class="w-full md:max-w-xs md:shadow-md md:rounded-md">
         <div class="w-full md:hidden h-1 bg-white-matcha"></div>
-        <div class="text-wrap bg-white-matcha recommendation-card w-full sm:rounded-md"
+        <div class="text-wrap bg-white-matcha recommendation-card w-full sm:rounded-t-md"
              v-bind:style="{
             'background-repeat': 'no-repeat',
             'background-position': 'center center',
@@ -14,7 +14,7 @@
 <!--          <h1 class="absolute bottom-0 w-full text-center pb-8 text-4xl text-white-matcha capitalize">-->
 <!--            {{this.$store.getters.getLoggedInUser.first_name}} {{this.$store.getters.getLoggedInUser.last_name}}</h1>-->
         </div>
-        <div class="px-8 pb-2 md:pt-2 md:pt-4 md:py-0 md:px-0 w-full">
+        <div class="px-8 pb-2 md:pt-2 md:py-4 md:py-0 md:px-0 w-full">
           <h1 class="text-4xl md:text-2xl md:font-bold text-gray-matcha text-center md:text-left md:px-8 font-bold md:font-normal mt-4 md:mb-1 md:mt-0">Settings</h1>
           <MenuButton v-on:click.native="showSetting('account')" v-bind:class="{'md:px-8':true, 'md:bg-gray-200': getShow === 'account'}" v-bind:text="'Account'"></MenuButton>
           <hr class="bg-gray-300 w-full md:hidden">
@@ -44,52 +44,77 @@
           v-bind:type="'password'"
           v-bind:currentValuePassed="''"></AccountInput>
       </section>
-      <section v-if="getShow === 'profile'" class="profile-section flex flex-col items-start z-10 absolute bg-white-matcha px-8 pb-4 w-full top-0 left-0 h-screen md:ml-4 md:relative md:shadow-md md:rounded-md">
+      <section v-if="getShow === 'profile'" class="overflow-scroll profile-section flex flex-col items-start z-10 absolute bg-white-matcha w-full top-0 left-0 md:ml-4 md:relative md:shadow-md md:rounded-md">
         <SectionHeader v-bind:name="'profile'" v-on:click.native="closeSetting()"></SectionHeader>
-        <div>
-          <h1 class="inline-block mr-4">I am</h1>
-          <DropdownDisplayChoice
-            class="inline-block"
-            v-on:saveSingleChoice="saveSingleChoice"
-            v-bind:name="'gender'"
-            v-bind:starting-option="this.$store.getters.getLoggedInUser.gender"
-            v-bind:options="['male', 'female', 'other']"></DropdownDisplayChoice>
+        <div class="pb-4">
+          <div class="px-8">
+            <h1 class="inline-block mr-4 font-bold text-gray-matcha">I am</h1>
+            <DropdownDisplayChoice
+              class="inline-block"
+              v-on:saveSingleChoice="saveSingleChoice"
+              v-bind:name="'gender'"
+              v-bind:starting-option="this.$store.getters.getLoggedInUser.gender"
+              v-bind:options="['male', 'female', 'other']"></DropdownDisplayChoice>
+          </div>
+          <div class="px-8 mt-4">
+            <h1 class="inline-block mr-4 font-bold text-gray-matcha">Sexuality</h1>
+            <DropdownDisplayChoice
+              class="inline-block"
+              v-on:saveSingleChoice="saveSingleChoice"
+              v-bind:name="'gender'"
+              v-bind:starting-option="this.$store.getters.getLoggedInUser.orientation"
+              v-bind:options="['heterosexual', 'homosexual', 'bisexual', 'other']"></DropdownDisplayChoice>
+          </div>
+          <div class="px-8 mt-4">
+            <h1 class="inline-block mr-3 font-bold text-gray-matcha">Interests</h1>
+            <DropdownDisplayChoices
+              class="inline-block"
+              v-bind:options="[
+            'swimming', 'wine', 'reading', 'foodie', 'netflix', 'music', 'yoga', 'golf',
+            'photography', 'baking', 'shopping', 'outdoors', 'art', 'travel', 'hiking',
+            'running', 'volunteering', 'cycling', 'climbing', 'tea', 'fishing', 'soccer',
+            'museum', 'dancing', 'surfing', 'karaoke', 'parties', 'diy',
+            'walking', 'cat lover', 'movies', 'gardening', 'trivia', 'working out',
+            'cooking', 'gamer', 'brunch', 'blogging', 'picknicking', 'athlete',
+            'dog lover', 'politics', 'environmentalism', 'instagram', 'spirituality',
+            'language exchange', 'sports', 'comedy', 'fashion', 'disney', 'vlogging',
+            'astrology', 'board games', 'craft beer', 'coffee', 'writer',
+            ]"
+              v-bind:startingOptions="userInterests"
+              v-bind:min="3"
+              v-bind:max="10"
+              v-bind:name="'interests'"
+              v-on:saveMultipleChoice="saveMultipleChoice"></DropdownDisplayChoices>
+          </div>
         </div>
-        <div class="mt-4">
-          <h1 class="inline-block mr-4">Sexuality</h1>
-          <DropdownDisplayChoice
-            class="inline-block"
-            v-on:saveSingleChoice="saveSingleChoice"
-            v-bind:name="'gender'"
-            v-bind:starting-option="this.$store.getters.getLoggedInUser.orientation"
-            v-bind:options="['heterosexual', 'homosexual', 'bisexual', 'other']"></DropdownDisplayChoice>
-        </div>
-        <div class="mt-4">
-          <h1 class="inline-block mr-3">Interests</h1>
-          <DropdownDisplayChoices
-            class="inline-block"
-            v-bind:options="[
-          'swimming', 'wine', 'reading', 'foodie', 'netflix', 'music', 'yoga', 'golf',
-          'photography', 'baking', 'shopping', 'outdoors', 'art', 'travel', 'hiking',
-          'running', 'volunteering', 'cycling', 'climbing', 'tea', 'fishing', 'soccer',
-          'museum', 'dancing', 'surfing', 'karaoke', 'parties', 'diy',
-          'walking', 'cat lover', 'movies', 'gardening', 'trivia', 'working out',
-          'cooking', 'gamer', 'brunch', 'blogging', 'picknicking', 'athlete',
-          'dog lover', 'politics', 'environmentalism', 'instagram', 'spirituality',
-          'language exchange', 'sports', 'comedy', 'fashion', 'disney', 'vlogging',
-          'astrology', 'board games', 'craft beer', 'coffee', 'writer',
-          ]"
-            v-bind:startingOptions="userInterests"
-            v-bind:min="3"
-            v-bind:max="10"
-            v-bind:name="'interests'"
-            v-on:saveMultipleChoice="saveMultipleChoice"></DropdownDisplayChoices>
-        </div>
-        <div class="mt-4">
+        <div class="py-4 px-8 border-t border-gray-300 w-full">
           <AccountInput
             v-bind:name="'Bio'"
             v-bind:type="'bio'"
             v-bind:currentValuePassed="this.$store.getters.getLoggedInUser.bio"></AccountInput>
+        </div>
+        <div class="py-4 px-8 border-t border-gray-300 w-full">
+          <h1 class="inline-block mr-3 font-bold text-gray-matcha">Location</h1>
+          <h1 class="onboarding-sub-container-content-button-outline mt-2 px-2 cursor-pointer" v-on:click="updateLocation()">Update current location</h1>
+        </div>
+        <div class="py-4 w-full px-8 border-t border-gray-300">
+          <h1 class="font-bold text-gray-matcha">Images<span class="text-md font-normal ml-2 opacity-50 text-gray-matcha">{{this.$store.getters.getLoggedInUser.images.length}} / 5</span></h1>
+          <div class="auth-sub-container-error mt-8" v-if="image.error">
+            <h1 class="auth-sub-container-error-message">{{image.error}}</h1>
+          </div>
+          <button v-if="this.$store.getters.getLoggedInUser.images.length < 6" class="cursor-pointer relative onboarding-sub-container-upload-button w-32 my-2">
+            <input class="cursor-pointer opacity-0 absolute top-0 left-0 w-full h-full rounded-md" type="file" v-on:change="selectFile()" ref="file">
+            <img src="../../assets/onboarding/cloud.png" class="w-8 mx-auto">
+          </button>
+          <div v-for="image in this.$store.getters.getLoggedInUser.images" :key="image.id">
+            <div class="relative overflow-hidden bg-transparent rounded-md w-full" style="padding-bottom: 70%">
+              <img v-bind:src="image.link" class="absolute object-cover w-full h-full rounded-md">
+            </div>
+            <div class="flex justify-between mb-4">
+              <h1 class="text-red-500 cursor-pointer" v-on:click="deleteImage(image.id)">Delete</h1>
+              <h1 class="text-purple-matcha cursor-pointer" v-if="!image.is_primary" v-on:click="makePrimaryImage(image.id)">Make primary</h1>
+            </div>
+          </div>
         </div>
       </section>
     </div>
@@ -120,6 +145,9 @@ export default {
   data: () => ({
     userInterests: [],
     show: '',
+    image: {
+      error: null,
+    },
   }),
   computed: {
     getShow() {
@@ -127,6 +155,59 @@ export default {
     },
   },
   methods: {
+    async updateLocation() {
+      navigator.geolocation.getCurrentPosition(
+        this.locationAllowed,
+        this.locationDenied,
+        { enableHighAccuracy: true },
+      );
+    },
+    async locationAllowed(position) {
+      const { latitude } = position.coords;
+      const { longitude } = position.coords;
+      const locationData = { lat: latitude, lng: longitude, ip: '0.0.0.0' };
+      await this.$http.put('/profile/edit/geolocation', locationData);
+    },
+    async locationDenied() {
+      let ipRequest = await fetch('https://api.ipify.org?format=json');
+      ipRequest = await ipRequest.json();
+      const { ip } = ipRequest;
+      const locationData = { ip };
+      await this.$http.put('/profile/edit/geolocation', locationData);
+    },
+    async selectFile() {
+      this.image.error = '';
+      const allowedTypes = ['image/jpeg', 'image/png', 'image/gif'];
+      const file = this.$refs.file.files[0];
+
+      if (!allowedTypes.includes(file.type)) {
+        this.image.error = 'Only images allowed';
+        return;
+      }
+      if (file.size > 2000000) {
+        this.image.error = 'File too large';
+        return;
+      }
+      const formData = new FormData();
+      formData.append('file[]', file);
+      if (this.$store.getters.getLoggedInUser.images.length) {
+        await this.$http.post('/profile/images?is_primary=false', formData);
+      } else {
+        await this.$http.post('/profile/images?is_primary=true', formData);
+      }
+      const user = await this.$http.get(`/users/${this.$store.getters.getLoggedInUser.id}`);
+      await this.$store.dispatch('login', user.data);
+    },
+    async deleteImage(imageId) {
+      await this.$http.delete(`/profile/images/${imageId}`);
+      const user = await this.$http.get(`/users/${this.$store.getters.getLoggedInUser.id}`);
+      await this.$store.dispatch('login', user.data);
+    },
+    async makePrimaryImage(imageId) {
+      console.log(await this.$http.put(`/profile/images/${imageId}`));
+      const user = await this.$http.get(`/users/${this.$store.getters.getLoggedInUser.id}`);
+      await this.$store.dispatch('login', user.data);
+    },
     saveSingleChoice(...args) {
       const [key, value] = args;
       if (key === 'gender') {
@@ -155,10 +236,16 @@ export default {
         }
         return imageOther;
       }
+      for (let i = 0; i < this.$store.getters.getLoggedInUser.images.length; i += 1) {
+        if (this.$store.getters.getLoggedInUser.images[i].is_primary) {
+          return this.$store.getters.getLoggedInUser.images[i].link;
+        }
+      }
       return this.$store.getters.getLoggedInUser.images[0].link;
     },
   },
   beforeMount() {
+    console.log(this.$store.getters.getLoggedInUser);
     const tags = this.$store.getters.getLoggedInUser.tags;
     for (let i = 0; i < tags.length; i += 1) {
       this.userInterests.push(tags[i].name);
@@ -172,5 +259,8 @@ export default {
   /*width: 24rem;*/
   height: 20rem;
   /*box-shadow: inset 0 -8rem 1rem rgba(0, 0, 0, 0.3);*/
+}
+.profile-section {
+  height: 34rem;
 }
 </style>
