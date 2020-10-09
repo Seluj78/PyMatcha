@@ -18,7 +18,7 @@
 
 <script>
 export default {
-  props: ['options', 'name', 'position'],
+  props: ['options', 'name', 'position', 'startingOptions'],
   data: () => ({
     closed: true,
     selectedFilters: [],
@@ -40,6 +40,11 @@ export default {
     close() {
       this.closed = true;
     },
+  },
+  beforeMount() {
+    if (this.startingOptions) {
+      this.selectedFilters = this.startingOptions;
+    }
   },
 };
 </script>
