@@ -5,7 +5,7 @@
     <div class="w-full md:w-auto md:mx-16 lg:mx-32 relative md:flex items-start h-auto md:mb-16 lg:mb-32">
       <section class="w-full md:max-w-xs md:shadow-md md:rounded-md">
         <div class="w-full md:hidden h-1 bg-white-matcha"></div>
-        <div class="text-wrap bg-white-matcha recommendation-card w-full sm:rounded-t-md"
+        <div class="text-wrap bg-white-matcha recommendation-card w-full md:rounded-t-md"
              v-bind:style="{
             'background-repeat': 'no-repeat',
             'background-position': 'center center',
@@ -14,8 +14,8 @@
 <!--          <h1 class="absolute bottom-0 w-full text-center pb-8 text-4xl text-white-matcha capitalize">-->
 <!--            {{this.$store.getters.getLoggedInUser.first_name}} {{this.$store.getters.getLoggedInUser.last_name}}</h1>-->
         </div>
-        <div class="px-8 pb-2 md:pt-2 md:py-4 md:py-0 md:px-0 w-full">
-          <h1 class="text-4xl md:text-2xl md:font-bold text-gray-matcha text-center md:text-left md:px-8 font-bold md:font-normal mt-4 md:mb-1 md:mt-0">Settings</h1>
+        <div class="px-8 py-2 md:py-4 md:px-0 w-full">
+          <h1 class="md:leading-none text-4xl md:text-2xl md:font-bold text-gray-matcha text-center md:text-left md:px-8 font-bold md:font-normal mb-2">Settings</h1>
           <MenuButton v-on:click.native="showSetting('account')" v-bind:class="{'md:px-8':true, 'md:bg-gray-200': getShow === 'account'}" v-bind:text="'Account'"></MenuButton>
           <hr class="bg-gray-300 w-full md:hidden">
           <MenuButton v-on:click.native="showSetting('profile')" v-bind:class="{'md:px-8':true, 'md:bg-gray-200': getShow === 'profile'}" v-bind:text="'Profile'"></MenuButton>
@@ -48,7 +48,7 @@
         <SectionHeader v-bind:name="'profile'" v-on:click.native="closeSetting()"></SectionHeader>
         <div class="pb-4">
           <div class="px-8">
-            <h1 class="inline-block mr-4 font-bold text-gray-matcha">I am</h1>
+            <h1 class="inline-block mr-4 text-gray-matcha">I am</h1>
             <DropdownDisplayChoice
               class="inline-block"
               v-on:saveSingleChoice="saveSingleChoice"
@@ -57,7 +57,7 @@
               v-bind:options="['male', 'female', 'other']"></DropdownDisplayChoice>
           </div>
           <div class="px-8 mt-4">
-            <h1 class="inline-block mr-4 font-bold text-gray-matcha">Sexuality</h1>
+            <h1 class="inline-block mr-4 text-gray-matcha">Sexuality</h1>
             <DropdownDisplayChoice
               class="inline-block"
               v-on:saveSingleChoice="saveSingleChoice"
@@ -66,7 +66,7 @@
               v-bind:options="['heterosexual', 'homosexual', 'bisexual', 'other']"></DropdownDisplayChoice>
           </div>
           <div class="px-8 mt-4">
-            <h1 class="inline-block mr-3 font-bold text-gray-matcha">Interests</h1>
+            <h1 class="inline-block mr-3 text-gray-matcha">Interests</h1>
             <DropdownDisplayChoices
               class="inline-block"
               v-bind:options="[
@@ -87,7 +87,7 @@
               v-on:saveMultipleChoice="saveMultipleChoice"></DropdownDisplayChoices>
           </div>
         </div>
-        <div class="py-4 px-8 border-t border-gray-300 w-full">
+        <div class="px-8 border-t border-gray-300 w-full">
           <AccountInput
             v-bind:name="'Bio'"
             v-bind:type="'bio'"
@@ -95,26 +95,23 @@
         </div>
         <div class="py-4 px-8 border-t border-gray-300 w-full">
           <h1 class="inline-block mr-3 font-bold text-gray-matcha">Location</h1>
-          <h1 class="onboarding-sub-container-content-button-outline mt-2 px-2 cursor-pointer" v-on:click="updateLocation()">Update current location</h1>
+          <h1 class="onboarding-sub-container-content-button-outline border font-normal mt-2 px-2 cursor-pointer" v-on:click="updateLocation()">Update current location</h1>
         </div>
         <div class="py-4 w-full px-8 border-t border-gray-300">
           <h1 class="font-bold text-gray-matcha">Images<span class="text-md font-normal ml-2 opacity-50 text-gray-matcha">{{this.$store.getters.getLoggedInUser.images.length}} / 5</span></h1>
           <div class="auth-sub-container-error mt-8" v-if="image.error">
             <h1 class="auth-sub-container-error-message">{{image.error}}</h1>
           </div>
-          <button v-if="this.$store.getters.getLoggedInUser.images.length < 6" class="cursor-pointer relative onboarding-sub-container-upload-button w-32 my-2">
+          <button v-if="this.$store.getters.getLoggedInUser.images.length < 6" class="cursor-pointer relative onboarding-sub-container-content-button-outline border w-full max-w-xs mt-2">
             <input class="cursor-pointer opacity-0 absolute top-0 left-0 w-full h-full rounded-md" type="file" v-on:change="selectFile()" ref="file">
-            <img src="../../assets/onboarding/cloud.png" class="w-8 mx-auto">
+            <img src="../../assets/onboarding/cloudPurple.png" class="w-8 mx-auto">
           </button>
-          <div v-for="image in this.$store.getters.getLoggedInUser.images" :key="image.id">
-            <div class="relative overflow-hidden bg-transparent rounded-md w-full" style="padding-bottom: 70%">
-              <img v-bind:src="image.link" class="absolute object-cover w-full h-full rounded-md">
-            </div>
-            <div class="flex justify-between mb-4">
-              <h1 class="text-red-500 cursor-pointer" v-on:click="deleteImage(image.id)">Delete</h1>
-              <h1 class="text-purple-matcha cursor-pointer" v-if="!image.is_primary" v-on:click="makePrimaryImage(image.id)">Make primary</h1>
-            </div>
-          </div>
+          <ProfileImage
+            v-for="image in this.$store.getters.getLoggedInUser.images"
+            :key="image.id"
+            v-bind:image="image"
+            v-on:makePrimaryImage="makePrimaryImage"
+            v-on:deleteImage="deleteImage"></ProfileImage>
         </div>
       </section>
     </div>
@@ -129,6 +126,7 @@ import SectionHeader from '@/components/app/settings/SectionHeader.vue';
 import AccountInput from '@/components/app/settings/AccountInput.vue';
 import DropdownDisplayChoice from '@/components/shared/DropdownDisplayChoice.vue';
 import DropdownDisplayChoices from '@/components/shared/DropdownDisplayChoices.vue';
+import ProfileImage from '@/components/app/settings/ProfileImage.vue';
 import imageMan from '../../assets/recommendations/avatars/man1.png';
 import imageWoman from '../../assets/recommendations/avatars/woman1.png';
 import imageOther from '../../assets/recommendations/avatars/other.png';
@@ -141,6 +139,7 @@ export default {
     SectionHeader,
     DropdownDisplayChoice,
     DropdownDisplayChoices,
+    ProfileImage,
   },
   data: () => ({
     userInterests: [],
@@ -198,12 +197,14 @@ export default {
       const user = await this.$http.get(`/users/${this.$store.getters.getLoggedInUser.id}`);
       await this.$store.dispatch('login', user.data);
     },
-    async deleteImage(imageId) {
+    async deleteImage(...args) {
+      const [imageId] = args;
       await this.$http.delete(`/profile/images/${imageId}`);
       const user = await this.$http.get(`/users/${this.$store.getters.getLoggedInUser.id}`);
       await this.$store.dispatch('login', user.data);
     },
-    async makePrimaryImage(imageId) {
+    async makePrimaryImage(...args) {
+      const [imageId] = args;
       console.log(await this.$http.put(`/profile/images/${imageId}`));
       const user = await this.$http.get(`/users/${this.$store.getters.getLoggedInUser.id}`);
       await this.$store.dispatch('login', user.data);
