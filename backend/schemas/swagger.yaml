@@ -351,27 +351,31 @@ paths:
                   message:
                     type: string
                     example: Profile completed !
-  /profile/edit:
-    put:
+  /profile/edit/first_name:
+    patch:
       tags:
         - Profile
-      summary: Edit user profile
+      summary: Edit first name of user
       description: ""
-      operationId: editProfile
+      operationId: editProfileFirstName
       security:
         - bearerAuth: []
       requestBody:
-        description: Parameters to edit profile
+        description: Parameters to edit first name
         required: true
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/EditProfile'
+              type: object
+              properties:
+                first_name:
+                  type: string
+                  example: Foo
       responses:
         "409":
           $ref: "#/components/responses/BadRequest"
         "200":
-          description: Profile edited successfully
+          description: First name edited successfully
           content:
             application/json:
               schema:
@@ -387,7 +391,294 @@ paths:
                     example: 200
                   message:
                     type: string
-                    example: User successfully modified !
+                    example: First name successfully modified !
+  /profile/edit/last_name:
+    patch:
+      tags:
+        - Profile
+      summary: Edit last name of user
+      description: ""
+      operationId: editProfileLastName
+      security:
+        - bearerAuth: []
+      requestBody:
+        description: Parameters to edit last name
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                last_name:
+                  type: string
+                  example: Bar
+      responses:
+        "409":
+          $ref: "#/components/responses/BadRequest"
+        "200":
+          description: Last name edited successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    description: If the request is a success
+                    example: true
+                  code:
+                    type: integer
+                    description: The status code
+                    example: 200
+                  message:
+                    type: string
+                    example: Last name successfully modified !
+  /profile/edit/username:
+    patch:
+      tags:
+        - Profile
+      summary: Edit username of user
+      description: ""
+      operationId: editProfileUsername
+      security:
+        - bearerAuth: []
+      requestBody:
+        description: Parameters to edit username
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                username:
+                  type: string
+                  example: FooBar
+      responses:
+        "409":
+          $ref: "#/components/responses/BadRequest"
+        "200":
+          description: Username edited successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    description: If the request is a success
+                    example: true
+                  code:
+                    type: integer
+                    description: The status code
+                    example: 200
+                  message:
+                    type: string
+                    example: Username successfully modified !
+  /profile/edit/bio:
+    patch:
+      tags:
+        - Profile
+      summary: Edit bio of user
+      description: ""
+      operationId: editProfileBio
+      security:
+        - bearerAuth: []
+      requestBody:
+        description: Parameters to edit bio
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                bio:
+                  type: string
+                  example: Lorem ipsum...
+      responses:
+        "409":
+          $ref: "#/components/responses/BadRequest"
+        "200":
+          description: Bio edited successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    description: If the request is a success
+                    example: true
+                  code:
+                    type: integer
+                    description: The status code
+                    example: 200
+                  message:
+                    type: string
+                    example: Bio successfully modified !
+  /profile/edit/gender:
+    patch:
+      tags:
+        - Profile
+      summary: Edit gender of user
+      description: ""
+      operationId: editProfileGender
+      security:
+        - bearerAuth: []
+      requestBody:
+        description: Parameters to edit gender
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                gender:
+                  type: string
+                  example: male
+                  description: One of male, female or other
+      responses:
+        "409":
+          $ref: "#/components/responses/BadRequest"
+        "200":
+          description: Gender edited successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    description: If the request is a success
+                    example: true
+                  code:
+                    type: integer
+                    description: The status code
+                    example: 200
+                  message:
+                    type: string
+                    example: Gender successfully modified !
+  /profile/edit/orientation:
+    patch:
+      tags:
+        - Profile
+      summary: Edit orientation of user
+      description: ""
+      operationId: editProfileOrientation
+      security:
+        - bearerAuth: []
+      requestBody:
+        description: Parameters to edit orientation
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                orientation:
+                  type: string
+                  example: heterosexual
+                  description: One of heterosexual, homosexual, bisexual or other.
+      responses:
+        "409":
+          $ref: "#/components/responses/BadRequest"
+        "200":
+          description: Orientation edited successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    description: If the request is a success
+                    example: true
+                  code:
+                    type: integer
+                    description: The status code
+                    example: 200
+                  message:
+                    type: string
+                    example: Orientation successfully modified !
+  /profile/edit/birthdate:
+    patch:
+      tags:
+        - Profile
+      summary: Edit birthdate of user
+      description: ""
+      operationId: editProfileBirthdate
+      security:
+        - bearerAuth: []
+      requestBody:
+        description: Parameters to edit birthdate
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                birthdate:
+                  type: string
+                  example: 06/04/1998
+                  description: Must be formatted as 'day/month/year'
+      responses:
+        "409":
+          $ref: "#/components/responses/BadRequest"
+        "200":
+          description: Birthdate edited successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    description: If the request is a success
+                    example: true
+                  code:
+                    type: integer
+                    description: The status code
+                    example: 200
+                  message:
+                    type: string
+                    example: Birthdate successfully modified !
+  /profile/edit/tags:
+    patch:
+      tags:
+        - Profile
+      summary: Edit tags of user
+      description: ""
+      operationId: editProfileTags
+      security:
+        - bearerAuth: []
+      requestBody:
+        description: Parameters to edit tags
+        required: true
+        content:
+          application/json:
+            schema:
+              type: array
+              example: ["food", "netflix"]
+      responses:
+        "409":
+          $ref: "#/components/responses/BadRequest"
+        "200":
+          description: Tags edited successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    description: If the request is a success
+                    example: true
+                  code:
+                    type: integer
+                    description: The status code
+                    example: 200
+                  message:
+                    type: string
+                    example: Tags successfully modified !
   /profile/report/{uid}:
     post:
       summary: Report a profile
@@ -1419,36 +1710,6 @@ components:
           type: string
           enum: ["heterosexual", "homosexual", "bisexual", "other"]
           example: heterosexual
-        bio:
-          type: string
-          example: I like running around on horses
-        tags:
-          type: array
-          example: ["food", "sex", "drugs"]
-    EditProfile:
-      type: object
-      properties:
-        first_name:
-          type: string
-          example: Foo
-        last_name:
-          type: string
-          example: Bar
-        username:
-          type: string
-          example: FooBar
-        gender:
-          type: string
-          enum: ["male", "female", "other"]
-          example: male
-        birthdate:
-          type: date
-          example: 06/04/1998
-          description: Formatted as DAY/MONTH/YEAR
-        orientation:
-          type: string
-          enum: ["heterosexual", "homosexual", "bisexual", "other"]
-          example: other
         bio:
           type: string
           example: I like running around on horses
