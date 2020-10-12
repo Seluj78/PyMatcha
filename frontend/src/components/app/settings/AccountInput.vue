@@ -5,9 +5,12 @@
       <form @submit.prevent="handleSubmit(onSubmit)" class="w-full">
         <div class="flex justify-between items-center w-full">
           <h1 class="text-md font-bold capitalize text-gray-matcha">{{ name }}</h1>
-          <input v-if="edit" type="submit" :disabled="invalid" value="Save"
-                 v-bind:class="{'text-sm': true,'text-purple-matcha': true, 'bg-transparent': true, 'focus:outline-none': true, 'active:outline-none': true, 'opacity-50': invalid, 'cursor-pointer': !invalid}">
-          <h1 v-if="!edit" v-on:click="startEditing()" class="cursor-pointer text-sm text-purple-matcha">{{ buttonText }}</h1>
+          <div class="flex">
+            <h1 v-if="type === 'password' && edit" v-on:click="cancelEditing()" class="mr-4 text-sm text-purple-matcha cursor-pointer">Cancel</h1>
+            <input v-if="edit" type="submit" :disabled="invalid" value="Save"
+                   v-bind:class="{'text-sm': true,'text-purple-matcha': true, 'bg-transparent': true, 'focus:outline-none': true, 'active:outline-none': true, 'opacity-50': invalid, 'cursor-pointer': !invalid}">
+            <h1 v-if="!edit" v-on:click="startEditing()" class="cursor-pointer text-sm text-purple-matcha">{{ buttonText }}</h1>
+          </div>
         </div>
         <div class="break-words" v-if="!edit && type !== 'password'"><h1 class="text-md opacity-50 md:max-w-sm">{{ currentValue }}</h1></div>
         <div v-if="edit">
@@ -56,6 +59,13 @@ export default {
   methods: {
     startEditing() {
       this.edit = true;
+    },
+    cancelEditing() {
+      if (this.type === 'password') {
+        this.currentValue = '';
+        this.passwordRepeat = '';
+      }
+      this.edit = false;
     },
     onSubmit() {
       if (this.type === 'password') {
