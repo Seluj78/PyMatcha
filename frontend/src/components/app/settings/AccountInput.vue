@@ -6,7 +6,7 @@
         <div class="flex justify-between items-center w-full">
           <h1 class="text-md font-bold capitalize text-gray-matcha">{{ name }}</h1>
           <div class="flex">
-            <h1 v-if="type === 'password' && edit" v-on:click="cancelEditing()" class="mr-4 text-sm text-purple-matcha cursor-pointer">Cancel</h1>
+            <h1 v-if="edit" v-on:click="cancelEditing()" class="mr-4 text-sm text-purple-matcha cursor-pointer">Cancel</h1>
             <input v-if="edit" type="submit" :disabled="invalid" value="Save"
                    v-bind:class="{'text-sm': true,'text-purple-matcha': true, 'bg-transparent': true, 'focus:outline-none': true, 'active:outline-none': true, 'opacity-50': invalid, 'cursor-pointer': !invalid}">
             <h1 v-if="!edit" v-on:click="startEditing()" class="cursor-pointer text-sm text-purple-matcha">{{ buttonText }}</h1>
@@ -53,11 +53,13 @@ export default {
   props: ['name', 'type', 'currentValuePassed'],
   data: () => ({
     edit: false,
+    currentValueBackup: '',
     currentValue: '',
     passwordRepeat: '',
   }),
   methods: {
     startEditing() {
+      this.currentValueBackup = this.currentValue;
       this.edit = true;
     },
     cancelEditing() {
@@ -65,6 +67,7 @@ export default {
         this.currentValue = '';
         this.passwordRepeat = '';
       }
+      this.currentValue = this.currentValueBackup;
       this.edit = false;
     },
     onSubmit() {
@@ -73,6 +76,7 @@ export default {
         this.passwordRepeat = '';
       }
       this.edit = false;
+      this.currentValueBackup = this.currentValue;
     },
     passwordErrorHandler(error) {
       if (!error || error === 'The Password field is required' || error === 'The Repeat Password field is required') {
