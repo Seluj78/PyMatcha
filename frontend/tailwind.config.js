@@ -18,6 +18,9 @@ module.exports = {
         '7xl': '5rem',
         '8xl': '6rem',
       },
+      maxWidth: {
+        'xss': '15rem',
+      },
     },
   },
   variants: {

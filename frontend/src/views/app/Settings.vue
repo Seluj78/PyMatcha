@@ -3,7 +3,7 @@
   <div>
     <NavBar class="px-4 sm:px-16 lg:px-32" v-bind:currentRoute="'Settings'"></NavBar>
     <div class="w-full md:w-auto md:mx-16 lg:mx-32 relative md:flex items-start h-auto md:mb-16 lg:mb-32">
-      <section class="w-full md:max-w-xs md:shadow-md md:rounded-md">
+      <section class="w-full md:max-w-xss md:shadow-md md:rounded-md">
         <div class="w-full md:hidden h-1 bg-white-matcha"></div>
         <div class="text-wrap bg-white-matcha recommendation-card w-full md:rounded-t-md"
              v-bind:style="{
@@ -262,6 +262,13 @@ export default {
   height: 20rem;
   /*box-shadow: inset 0 -8rem 1rem rgba(0, 0, 0, 0.3);*/
 }
+
+@screen md {
+  .recommendation-card {
+    height: 10rem;
+  }
+}
+
 .profile-section {
   height: 34rem;
 }
