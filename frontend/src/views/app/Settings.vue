@@ -2,7 +2,7 @@
   <!-- eslint-disable max-len -->
   <div>
     <NavBar class="px-4 sm:px-16 lg:px-32" v-bind:currentRoute="'Settings'"></NavBar>
-    <div class="w-full md:w-auto md:mx-16 lg:mx-32 relative md:flex items-start h-auto md:mb-16 lg:mb-32">
+    <div class="w-full md:w-auto md:mx-16 lg:mx-32 relative md:flex items-start h-auto md:mb-16">
       <section class="w-full md:max-w-xss md:shadow-md md:rounded-md">
         <div class="w-full md:hidden h-1 bg-white-matcha"></div>
         <div class="text-wrap bg-white-matcha recommendation-card w-full md:rounded-t-md"
@@ -44,9 +44,11 @@
           v-bind:type="'password'"
           v-bind:currentValuePassed="''"></AccountInput>
       </section>
-      <section v-if="getShow === 'profile'" class="overflow-scroll profile-section flex flex-col items-start z-10 absolute bg-white-matcha w-full top-0 left-0 md:ml-4 md:relative md:shadow-md md:rounded-md">
-        <SectionHeader class="mx-auto" v-bind:name="'profile'" v-on:click.native="closeSetting()"></SectionHeader>
-        <div class="py-8 px-8 w-full">
+      <section v-if="getShow === 'profile'" class="flex flex-col items-start z-10 absolute bg-white-matcha w-full top-0 left-0 md:ml-4 md:relative md:shadow-md md:rounded-md">
+        <div class="px-8 w-full">
+          <SectionHeader class="mx-auto" v-bind:name="'profile'" v-on:click.native="closeSetting()"></SectionHeader>
+        </div>
+        <div class="pb-8 pt-4 px-8 w-full">
           <div class="mx-auto max-w-sm">
             <h1 class="inline-block mr-4 text-gray-matcha">I am</h1>
             <DropdownDisplayChoice
@@ -245,8 +247,17 @@ export default {
       }
       return this.$store.getters.getLoggedInUser.images[0].link;
     },
+    openSectionOnMd(e) {
+      if (e.target.innerWidth >= 768 && this.show === '') {
+        this.show = 'profile';
+      }
+    },
   },
   beforeMount() {
+    window.addEventListener('resize', this.openSectionOnMd);
+    if (window.innerWidth >= 768) {
+      this.show = 'profile';
+    }
     console.log(this.$store.getters.getLoggedInUser);
     const tags = this.$store.getters.getLoggedInUser.tags;
     for (let i = 0; i < tags.length; i += 1) {
@@ -267,9 +278,5 @@ export default {
   .recommendation-card {
     height: 10rem;
   }
-}
-
-.profile-section {
-  height: 34rem;
 }
 </style>
