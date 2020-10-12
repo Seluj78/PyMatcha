@@ -3,19 +3,24 @@
   <div>
     <NavBar class="px-4 sm:px-16 lg:px-32" v-bind:currentRoute="'Settings'"></NavBar>
     <div class="w-full md:w-auto md:mx-16 lg:mx-32 relative md:flex items-start h-auto md:mb-16">
-      <section class="w-full md:max-w-xss md:shadow-md md:rounded-md">
+      <section class="w-auto md:max-w-xss md:shadow-md md:rounded-md">
         <div class="w-full md:hidden h-1 bg-white-matcha"></div>
-        <div class="text-wrap bg-white-matcha recommendation-card w-full md:rounded-t-md"
-             v-bind:style="{
-            'background-repeat': 'no-repeat',
-            'background-position': 'center center',
-            'background-size' :'cover',
-            'background-image': 'url(' + getImage() + ')'}">
-<!--          <h1 class="absolute bottom-0 w-full text-center pb-8 text-4xl text-white-matcha capitalize">-->
-<!--            {{this.$store.getters.getLoggedInUser.first_name}} {{this.$store.getters.getLoggedInUser.last_name}}</h1>-->
+        <div class="md:border-b profile-card text-wrap p-16 md:py-8 flex flex-col w-full md:rounded-t-md">
+          <img class="mx-auto rounded-full w-48 md:w-32" v-bind:src="getImage()">
+          <h1 class="w-full text-center text-3xl md:text-base mt-4 text-white-matcha md:text-gray-matcha capitalize">
+            {{this.$store.getters.getLoggedInUser.first_name}} {{this.$store.getters.getLoggedInUser.last_name}}</h1>
+          <div class="text-white-matcha md:text-gray-matcha w-full flex justify-center text-center mt-4 max-w-xs mx-auto">
+            <div class="mr-4">
+              <h1 class="font-bold">{{this.$store.getters.getLoggedInUser.likes.received.length}}</h1>
+              <h1 class="text-xs">Views</h1>
+            </div>
+            <div class="ml-4">
+              <h1 class="font-bold">{{this.$store.getters.getLoggedInUser.likes.received.length}}</h1>
+              <h1 class="text-xs">Likes</h1>
+            </div>
+          </div>
         </div>
         <div class="px-8 py-2 md:py-4 md:px-0 w-full">
-          <h1 class="md:leading-none text-4xl md:text-2xl md:font-bold text-gray-matcha text-center md:text-left md:px-8 font-bold md:font-normal mb-2">Settings</h1>
           <MenuButton v-on:click.native="showSetting('account')" v-bind:class="{'md:px-8':true, 'md:bg-gray-200': getShow === 'account'}" v-bind:text="'Account'"></MenuButton>
           <hr class="bg-gray-300 w-full md:hidden">
           <MenuButton v-on:click.native="showSetting('profile')" v-bind:class="{'md:px-8':true, 'md:bg-gray-200': getShow === 'profile'}" v-bind:text="'Profile'"></MenuButton>
@@ -277,6 +282,16 @@ export default {
 @screen md {
   .recommendation-card {
     height: 10rem;
+  }
+}
+
+.profile-card {
+  background-image: linear-gradient(315deg, #6e72fc 0%, #6e72fc 74%);
+}
+
+@screen md {
+  .profile-card {
+    background-image: linear-gradient(315deg, #FFFFFE 0%, #FFFFFE 74%);
   }
 }
 </style>
