@@ -21,7 +21,7 @@
           <MenuButton v-on:click.native="showSetting('profile')" v-bind:class="{'md:px-8':true, 'md:bg-gray-200': getShow === 'profile'}" v-bind:text="'Profile'"></MenuButton>
         </div>
       </section>
-      <section v-if="getShow === 'account'" class="flex flex-col items-start z-10 absolute bg-white-matcha px-8 pb-4 w-full top-0 left-0 h-screen md:h-auto md:ml-4 md:relative md:shadow-md md:rounded-md">
+      <section v-if="getShow === 'account'" class="flex flex-col items-center z-10 absolute bg-white-matcha px-8 pb-4 w-full top-0 left-0 h-screen md:h-auto md:ml-4 md:relative md:shadow-md md:rounded-md">
         <SectionHeader v-bind:name="'account'" v-on:click.native="closeSetting()"></SectionHeader>
         <AccountInput
           v-bind:name="'First Name'"
@@ -45,9 +45,9 @@
           v-bind:currentValuePassed="''"></AccountInput>
       </section>
       <section v-if="getShow === 'profile'" class="overflow-scroll profile-section flex flex-col items-start z-10 absolute bg-white-matcha w-full top-0 left-0 md:ml-4 md:relative md:shadow-md md:rounded-md">
-        <SectionHeader v-bind:name="'profile'" v-on:click.native="closeSetting()"></SectionHeader>
-        <div class="pb-4">
-          <div class="px-8">
+        <SectionHeader class="mx-auto" v-bind:name="'profile'" v-on:click.native="closeSetting()"></SectionHeader>
+        <div class="py-8 px-8 w-full">
+          <div class="mx-auto max-w-sm">
             <h1 class="inline-block mr-4 text-gray-matcha">I am</h1>
             <DropdownDisplayChoice
               class="inline-block"
@@ -56,7 +56,7 @@
               v-bind:starting-option="this.$store.getters.getLoggedInUser.gender"
               v-bind:options="['male', 'female', 'other']"></DropdownDisplayChoice>
           </div>
-          <div class="px-8 mt-4">
+          <div class="mt-4 mx-auto max-w-sm">
             <h1 class="inline-block mr-4 text-gray-matcha">Sexuality</h1>
             <DropdownDisplayChoice
               class="inline-block"
@@ -65,7 +65,7 @@
               v-bind:starting-option="this.$store.getters.getLoggedInUser.orientation"
               v-bind:options="['heterosexual', 'homosexual', 'bisexual', 'other']"></DropdownDisplayChoice>
           </div>
-          <div class="px-8 mt-4">
+          <div class="mt-4 mx-auto max-w-sm">
             <h1 class="inline-block mr-3 text-gray-matcha">Interests</h1>
             <DropdownDisplayChoices
               class="inline-block"
@@ -87,22 +87,23 @@
               v-on:saveMultipleChoice="saveMultipleChoice"></DropdownDisplayChoices>
           </div>
         </div>
-        <div class="px-8 border-t border-gray-300 w-full">
+        <div class="py-4 px-8 border-t border-gray-300 w-full">
           <AccountInput
+            class="mx-auto"
             v-bind:name="'Bio'"
             v-bind:type="'bio'"
             v-bind:currentValuePassed="this.$store.getters.getLoggedInUser.bio"></AccountInput>
         </div>
-        <div class="py-4 px-8 border-t border-gray-300 w-full">
-          <h1 class="inline-block mr-3 font-bold text-gray-matcha">Location</h1>
-          <h1 class="onboarding-sub-container-content-button-outline border font-normal mt-2 px-2 cursor-pointer" v-on:click="updateLocation()">Update current location</h1>
+        <div class="text-center px-8 py-8 border-t border-gray-300 w-full">
+          <h1 class="inline-block mr-3 font-bold text-gray-matcha leading-none">Location</h1>
+          <h1 class="mx-auto onboarding-sub-container-content-button-outline max-w-sm border font-normal mt-2 px-2 cursor-pointer" v-on:click="updateLocation()">Update current location</h1>
         </div>
-        <div class="py-4 w-full px-8 border-t border-gray-300">
+        <div class="text-center py-8 w-full px-8 border-t border-gray-300">
           <h1 class="font-bold text-gray-matcha">Images<span class="text-md font-normal ml-2 opacity-50 text-gray-matcha">{{this.$store.getters.getLoggedInUser.images.length}} / 5</span></h1>
           <div class="auth-sub-container-error mt-8" v-if="image.error">
             <h1 class="auth-sub-container-error-message">{{image.error}}</h1>
           </div>
-          <button v-if="this.$store.getters.getLoggedInUser.images.length < 6" class="cursor-pointer relative onboarding-sub-container-content-button-outline border w-full max-w-xs mt-2">
+          <button v-if="this.$store.getters.getLoggedInUser.images.length < 6" class="cursor-pointer relative onboarding-sub-container-content-button-outline border w-full max-w-sm my-4">
             <input class="cursor-pointer opacity-0 absolute top-0 left-0 w-full h-full rounded-md" type="file" v-on:change="selectFile()" ref="file">
             <img src="../../assets/onboarding/cloudPurple.png" class="w-8 mx-auto">
           </button>

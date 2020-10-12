@@ -1,6 +1,6 @@
 <template>
 <!--  eslint-disable max-len-->
-  <div class="my-4">
+  <div class="mt-4">
     <div class="relative overflow-hidden bg-transparent rounded-md w-full" style="padding-bottom: 70%">
       <img v-bind:src="image.link" class="absolute object-cover w-full h-full rounded-md">
       <div class="absolute top-0 left-0 z-20 m-5">

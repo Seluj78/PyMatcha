@@ -1,6 +1,6 @@
 <template>
   <!-- eslint-disable max-len -->
-  <div class="w-full my-4 md:max-w-sm">
+  <div class="w-full my-4 max-w-sm">
     <ValidationObserver v-slot="{ handleSubmit, invalid }" class="w-full">
       <form @submit.prevent="handleSubmit(onSubmit)" class="w-full">
         <div class="flex justify-between items-center w-full">
