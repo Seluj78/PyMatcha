@@ -1,6 +1,6 @@
 <template>
   <!-- eslint-disable max-len -->
-  <div class="w-full my-4">
+  <div class="w-full my-4 md:max-w-sm">
     <ValidationObserver v-slot="{ handleSubmit, invalid }" class="w-full">
       <form @submit.prevent="handleSubmit(onSubmit)" class="w-full">
         <div class="flex justify-between items-center w-full">
@@ -9,30 +9,30 @@
                  v-bind:class="{'text-sm': true,'text-purple-matcha': true, 'bg-transparent': true, 'focus:outline-none': true, 'active:outline-none': true, 'opacity-50': invalid, 'cursor-pointer': !invalid}">
           <h1 v-if="!edit" v-on:click="startEditing()" class="cursor-pointer text-sm text-purple-matcha">{{ buttonText }}</h1>
         </div>
-        <div class="break-words" v-if="!edit && type !== 'password'"><h1 class="text-md opacity-50 max-w-xs">{{ currentValue }}</h1></div>
+        <div class="break-words" v-if="!edit && type !== 'password'"><h1 class="text-md opacity-50 md:max-w-sm">{{ currentValue }}</h1></div>
         <div v-if="edit">
           <ValidationProvider v-if="type === 'firstName'" name="First Name" rules="required|alpha|max:20" v-slot="{errors}">
-            <input type="text" placeholder="First Name" v-model="currentValue" class="matcha-input max-w-xs">
+            <input type="text" placeholder="First Name" v-model="currentValue" class="matcha-input md:max-w-sm">
             <span class="matcha-input-error">{{ errors[0] }}</span>
           </ValidationProvider>
           <ValidationProvider v-if="type === 'lastName'" name="Last Name" rules="required|alpha|max:20" v-slot="{errors}">
-            <input type="text" placeholder="Last Name" v-model="currentValue" class="matcha-input max-w-xs">
+            <input type="text" placeholder="Last Name" v-model="currentValue" class="matcha-input md:max-w-sm">
             <span class="matcha-input-error">{{ errors[0] }}</span>
           </ValidationProvider>
           <ValidationProvider v-if="type === 'email'" name="Email" rules="required|email|max:50" v-slot="{errors}">
-            <input type="email" placeholder="Email" v-model="currentValue" class="matcha-input max-w-xs">
+            <input type="email" placeholder="Email" v-model="currentValue" class="matcha-input md:max-w-sm">
             <span class="matcha-input-error">{{ errors[0] }}</span>
           </ValidationProvider>
           <ValidationProvider v-if="type === 'username'" name="Username" rules="required|alpha_dash|max:20" v-slot="{errors}">
-            <input type="text" placeholder="Username" v-model="currentValue" class="matcha-input max-w-xs">
+            <input type="text" placeholder="Username" v-model="currentValue" class="matcha-input md:max-w-sm">
             <span class="matcha-input-error">{{ errors[0] }}</span>
           </ValidationProvider>
           <ValidationProvider v-if="type === 'bio'" name="Biography" rules="required|min:50|max:200" v-slot="{errors}">
-            <textarea style="resize: none;" rows="4" type="text" placeholder="Biography" v-model="currentValue" class="matcha-input max-w-xs block"></textarea>
+            <textarea style="resize: none;" rows="4" type="text" placeholder="Biography" v-model="currentValue" class="matcha-input md:max-w-sm block"></textarea>
             <span class="matcha-input-error">{{ errors[0] }}</span>
           </ValidationProvider>
           <ValidationProvider v-if="type === 'password'" name="Password" rules="required|min:6|validPassword" v-slot="{errors}">
-            <input type="password" placeholder="New Password" v-model="currentValue" class="matcha-input max-w-xs">
+            <input type="password" placeholder="New Password" v-model="currentValue" class="matcha-input md:max-w-sm">
             <span class="matcha-input-error">{{ passwordErrorHandler(errors[0]) }}</span>
           </ValidationProvider>
           <ValidationProvider v-if="type === 'password'" name="Repeat Password" rules="required|confirmed:Password" v-slot="{errors}">
