@@ -11,7 +11,7 @@
             {{this.$store.getters.getLoggedInUser.first_name}} {{this.$store.getters.getLoggedInUser.last_name}}</h1>
           <div class="text-white-matcha md:text-gray-matcha w-full flex justify-center text-center mt-4 max-w-xs mx-auto">
             <div class="mr-4">
-              <h1 class="font-bold">{{this.$store.getters.getLoggedInUser.likes.received.length}}</h1>
+              <h1 class="font-bold">{{userViewsReceived}}</h1>
               <h1 class="text-xs">Views</h1>
             </div>
             <div class="ml-4">
@@ -151,6 +151,7 @@ export default {
   },
   data: () => ({
     userInterests: [],
+    userViewsReceived: 0,
     show: '',
     image: {
       error: null,
@@ -258,7 +259,7 @@ export default {
       }
     },
   },
-  beforeMount() {
+  async beforeMount() {
     window.addEventListener('resize', this.openSectionOnMd);
     if (window.innerWidth >= 768) {
       this.show = 'profile';
@@ -268,6 +269,8 @@ export default {
     for (let i = 0; i < tags.length; i += 1) {
       this.userInterests.push(tags[i].name);
     }
+    const userViewsReceivedRequest = await this.$http.get('/profile/views');
+    this.userViewsReceived = userViewsReceivedRequest.data.views.length;
   },
 };
 </script>
