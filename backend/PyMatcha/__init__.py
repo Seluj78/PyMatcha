@@ -107,8 +107,8 @@ application.config["JWT_SECRET_KEY"] = FLASK_SECRET_KEY
 
 logging.debug("Configuring Celery Redis URLs")
 # Celery configuration
-application.config["CELERY_BROKER_URL"] = CELERY_BROKER_URL
-application.config["CELERY_RESULT_BACKEND"] = CELERY_RESULT_BACKEND
+application.config["CELERY_broker_url"] = CELERY_BROKER_URL
+application.config["result_backend"] = CELERY_RESULT_BACKEND
 
 logging.debug("Initializing Celery")
 # Initialize Celery
