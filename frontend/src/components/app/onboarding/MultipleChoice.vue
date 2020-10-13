@@ -26,6 +26,7 @@
 </template>
 
 <script>
+/* eslint-disable  vue/custom-event-name-casing */
 import Vue from 'vue';
 import SelectionButton from '@/components/app/onboarding/SelectionButton.vue';
 

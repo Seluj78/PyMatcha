@@ -95,6 +95,7 @@
 
 <script>
 /* eslint-disable  prefer-const */
+/* eslint-disable  vue/custom-event-name-casing */
 import Introduction from '@/components/app/onboarding/Introduction.vue';
 import SingleChoice from '@/components/app/onboarding/SingleChoice.vue';
 import MultipleChoice from '@/components/app/onboarding/MultipleChoice.vue';

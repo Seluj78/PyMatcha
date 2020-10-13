@@ -12,6 +12,7 @@
 </template>
 
 <script>
+/* eslint-disable  vue/custom-event-name-casing */
 import SingleChoice from '@/components/app/onboarding/SingleChoice.vue';
 
 export default {

@@ -15,6 +15,7 @@
 </template>
 
 <script>
+/* eslint-disable  vue/custom-event-name-casing */
 import noUiSlider from 'nouislider';
 import 'nouislider/distribute/nouislider.css';
 
