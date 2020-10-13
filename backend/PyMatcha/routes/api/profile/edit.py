@@ -25,6 +25,7 @@ from flask import render_template
 from flask import request
 from flask_jwt_extended import current_user
 from flask_jwt_extended import jwt_required
+from PyMatcha.models.tag import Tag
 from PyMatcha.models.user import get_user
 from PyMatcha.utils import hash_password
 from PyMatcha.utils.confirm_token import generate_confirmation_token
@@ -40,33 +41,105 @@ from PyMatcha.utils.success import Success
 
 profile_edit_bp = Blueprint("profile_edit", __name__)
 
-REQUIRED_PARAMS_EDIT_PROFILE = {
-    "first_name": str,
-    "last_name": str,
-    "username": str,
-    "bio": str,
-    "gender": str,
-    "orientation": str,
-    "birthdate": str,
-    "tags": list,
-}
 
-
-@profile_edit_bp.route("/profile/edit", methods=["PUT"])
-@validate_params(REQUIRED_PARAMS_EDIT_PROFILE)
+@profile_edit_bp.route("/profile/edit/first_name", methods=["PATCH"])
+@validate_params({"first_name": str})
 @jwt_required
-def edit_profile():
+def edit_profile_first_name():
     if not current_user.is_profile_completed:
         raise BadRequestError("The user has not completed his profile.", "Complete your profile and try again.")
     data = request.get_json()
     first_name = data["first_name"]
-    last_name = data["last_name"]
-    username = data["username"]
-    bio = data["bio"]
-    gender = data["gender"]
-    orientation = data["orientation"]
-    birthdate = data["birthdate"]
+    current_user.first_name = first_name
+    current_user.save()
+    return Success("First name successfully modified!")
 
+
+@profile_edit_bp.route("/profile/edit/last_name", methods=["PATCH"])
+@validate_params({"last_name": str})
+@jwt_required
+def edit_profile_last_name():
+    if not current_user.is_profile_completed:
+        raise BadRequestError("The user has not completed his profile.", "Complete your profile and try again.")
+    data = request.get_json()
+    last_name = data["last_name"]
+    current_user.last_name = last_name
+    current_user.save()
+    return Success("Last name successfully modified!")
+
+
+@profile_edit_bp.route("/profile/edit/username", methods=["PATCH"])
+@validate_params({"username": str})
+@jwt_required
+def edit_profile_username():
+    if not current_user.is_profile_completed:
+        raise BadRequestError("The user has not completed his profile.", "Complete your profile and try again.")
+    data = request.get_json()
+    username = data["username"]
+    try:
+        get_user(username)
+    except NotFoundError:
+        pass
+    else:
+        raise BadRequestError("Username taken.")
+    current_user.username = username
+    current_user.save()
+    return Success("Username successfully modified!")
+
+
+@profile_edit_bp.route("/profile/edit/bio", methods=["PATCH"])
+@validate_params({"bio": str})
+@jwt_required
+def edit_profile_bio():
+    if not current_user.is_profile_completed:
+        raise BadRequestError("The user has not completed his profile.", "Complete your profile and try again.")
+    data = request.get_json()
+    bio = data["bio"]
+    if len(bio) <= 50:
+        raise BadRequestError("Bio is too short.")
+    current_user.bio = bio
+    current_user.save()
+    return Success("Bio successfully modified!")
+
+
+@profile_edit_bp.route("/profile/edit/gender", methods=["PATCH"])
+@validate_params({"gender": str})
+@jwt_required
+def edit_profile_gender():
+    if not current_user.is_profile_completed:
+        raise BadRequestError("The user has not completed his profile.", "Complete your profile and try again.")
+    data = request.get_json()
+    gender = data["gender"]
+    if gender not in ["male", "female", "other"]:
+        raise BadRequestError("Gender must be male, female or other.")
+    current_user.gender = gender
+    current_user.save()
+    return Success("Gender successfully modified!")
+
+
+@profile_edit_bp.route("/profile/edit/orientation", methods=["PATCH"])
+@validate_params({"orientation": str})
+@jwt_required
+def edit_profile_orientation():
+    if not current_user.is_profile_completed:
+        raise BadRequestError("The user has not completed his profile.", "Complete your profile and try again.")
+    data = request.get_json()
+    orientation = data["orientation"]
+    if orientation not in ["heterosexual", "homosexual", "bisexual", "other"]:
+        raise BadRequestError("Orientation must be heterosexual, homosexual, bisexual or other.")
+    current_user.orientation = orientation
+    current_user.save()
+    return Success("Orientation successfully modified!")
+
+
+@profile_edit_bp.route("/profile/edit/birthdate", methods=["PATCH"])
+@validate_params({"birthdate": str})
+@jwt_required
+def edit_profile_birthdate():
+    if not current_user.is_profile_completed:
+        raise BadRequestError("The user has not completed his profile.", "Complete your profile and try again.")
+    data = request.get_json()
+    birthdate = data["birthdate"]
     try:
         birthdate = datetime.datetime.strptime(birthdate, "%d/%m/%Y").date()
     except ValueError:
@@ -77,29 +150,25 @@ def edit_profile():
     age = today.year - birthdate.year - ((today.month, today.day) < (birthdate.month, birthdate.day))
     if age < 18:
         raise BadRequestError("You must be 18 years old or older.")
-
-    try:
-        get_user(username)
-    except NotFoundError:
-        pass
-    else:
-        raise BadRequestError("Username taken.")
-
-    if orientation not in ["heterosexual", "homosexual", "bisexual", "other"]:
-        raise BadRequestError("Orientation must be heterosexual, homosexual, bisexual or other.")
-
-    if gender not in ["male", "female", "other"]:
-        raise BadRequestError("Gender must be male, female or other.")
-
-    current_user.first_name = first_name
-    current_user.last_name = last_name
-    current_user.username = username
-    current_user.bio = bio
-    current_user.gender = gender
-    current_user.orientation = orientation
     current_user.birthdate = birthdate
     current_user.save()
-    return Success("User successfully modified !")
+    return Success("Birthdate successfully modified!")
+
+
+@profile_edit_bp.route("/profile/edit/tags", methods=["PATCH"])
+@validate_params({"tags": list})
+@jwt_required
+def edit_profile_tags():
+    if not current_user.is_profile_completed:
+        raise BadRequestError("The user has not completed his profile.", "Complete your profile and try again.")
+    data = request.get_json()
+    tags = data["tags"]
+    current_tags = Tag.get_multis(user_id=current_user.id)
+    for t in current_tags:
+        t.delete()
+    for tag in tags:
+        Tag.create(name=tag, user_id=current_user.id)
+    return Success("Tags successfully modified!")
 
 
 @profile_edit_bp.route("/profile/edit/email", methods=["PUT"])
