@@ -49,6 +49,7 @@
 </template>
 
 <script>
+/* eslint-disable vue/custom-event-name-casing */
 export default {
   props: ['name', 'type', 'currentValuePassed'],
   data: () => ({
@@ -71,12 +72,13 @@ export default {
       this.edit = false;
     },
     onSubmit() {
+      this.edit = false;
+      this.currentValueBackup = this.currentValue;
+      this.$emit('saveSingleChoice', this.type, this.currentValue);
       if (this.type === 'password') {
         this.currentValue = '';
         this.passwordRepeat = '';
       }
-      this.edit = false;
-      this.currentValueBackup = this.currentValue;
     },
     passwordErrorHandler(error) {
       if (!error || error === 'The Password field is required' || error === 'The Repeat Password field is required') {

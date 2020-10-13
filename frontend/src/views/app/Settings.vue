@@ -31,22 +31,27 @@
         <AccountInput
           v-bind:name="'First Name'"
           v-bind:type="'firstName'"
+          v-on:saveSingleChoice="saveSingleChoice"
           v-bind:currentValuePassed="this.$store.getters.getLoggedInUser.first_name"></AccountInput>
         <AccountInput
           v-bind:name="'Last Name'"
           v-bind:type="'lastName'"
+          v-on:saveSingleChoice="saveSingleChoice"
           v-bind:currentValuePassed="this.$store.getters.getLoggedInUser.last_name"></AccountInput>
         <AccountInput
           v-bind:name="'Email'"
           v-bind:type="'email'"
+          v-on:saveSingleChoice="saveSingleChoice"
           v-bind:currentValuePassed="this.$store.getters.getLoggedInUser.email"></AccountInput>
         <AccountInput
           v-bind:name="'Username'"
           v-bind:type="'username'"
+          v-on:saveSingleChoice="saveSingleChoice"
           v-bind:currentValuePassed="this.$store.getters.getLoggedInUser.username"></AccountInput>
         <AccountInput
           v-bind:name="'Password'"
           v-bind:type="'password'"
+          v-on:saveSingleChoice="saveSingleChoice"
           v-bind:currentValuePassed="''"></AccountInput>
       </section>
       <section v-if="getShow === 'profile'" class="flex flex-col items-start z-10 absolute bg-white-matcha w-full top-0 left-0 md:ml-4 md:relative md:shadow-md md:rounded-md">
@@ -68,7 +73,7 @@
             <DropdownDisplayChoice
               class="inline-block"
               v-on:saveSingleChoice="saveSingleChoice"
-              v-bind:name="'gender'"
+              v-bind:name="'sexuality'"
               v-bind:starting-option="this.$store.getters.getLoggedInUser.orientation"
               v-bind:options="['heterosexual', 'homosexual', 'bisexual', 'other']"></DropdownDisplayChoice>
           </div>
@@ -99,6 +104,7 @@
             class="mx-auto"
             v-bind:name="'Bio'"
             v-bind:type="'bio'"
+            v-on:saveSingleChoice="saveSingleChoice"
             v-bind:currentValuePassed="this.$store.getters.getLoggedInUser.bio"></AccountInput>
         </div>
         <div class="text-center px-8 py-8 border-t border-gray-300 w-full">
@@ -129,6 +135,7 @@
 
 <script>
 /* eslint-disable prefer-destructuring */
+/* eslint-disable prefer-const */
 import NavBar from '@/components/shared/NavBar.vue';
 import MenuButton from '@/components/app/settings/MenuButton.vue';
 import SectionHeader from '@/components/app/settings/SectionHeader.vue';
@@ -219,17 +226,35 @@ export default {
       const user = await this.$http.get(`/users/${this.$store.getters.getLoggedInUser.id}`);
       await this.$store.dispatch('login', user.data);
     },
-    saveSingleChoice(...args) {
+    async saveSingleChoice(...args) {
       const [key, value] = args;
-      if (key === 'gender') {
-        console.log(value);
+      if (key === 'firstName') {
+        await this.$http.patch('/profile/edit/first_name', { first_name: value });
+      } else if (key === 'lastName') {
+        await this.$http.patch('/profile/edit/last_name', { last_name: value });
+      } else if (key === 'email') {
+        await this.$http.patch('/profile/edit/email', { email: value });
+      } else if (key === 'username') {
+        await this.$http.patch('/profile/edit/username', { username: value });
+      } else if (key === 'password') {
+        await this.$http.patch('/profile/edit/password', { password: value });
+      } else if (key === 'bio') {
+        await this.$http.patch('/profile/edit/bio', { bio: value });
+      } else if (key === 'gender') {
+        await this.$http.patch('/profile/edit/gender', { gender: value });
+      } else if (key === 'sexuality') {
+        await this.$http.patch('/profile/edit/orientation', { orientation: value });
       }
+      const user = await this.$http.get(`/users/${this.$store.getters.getLoggedInUser.id}`);
+      await this.$store.dispatch('login', user.data);
     },
-    saveMultipleChoice(...args) {
+    async saveMultipleChoice(...args) {
       const [key, value] = args;
       if (key === 'interests') {
-        console.log(value);
+        await this.$http.patch('/profile/edit/tags', { tags: value });
       }
+      const user = await this.$http.get(`/users/${this.$store.getters.getLoggedInUser.id}`);
+      await this.$store.dispatch('login', user.data);
     },
     showSetting(setting) {
       this.show = setting;
