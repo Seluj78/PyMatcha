@@ -30,7 +30,7 @@
             <input type="text" placeholder="Username" v-model="currentValue" class="matcha-input md:max-w-sm">
             <span class="matcha-input-error">{{ errors[0] }}</span>
           </ValidationProvider>
-          <ValidationProvider v-if="type === 'bio'" name="Biography" rules="required|min:50|max:200" v-slot="{errors}">
+          <ValidationProvider v-if="type === 'bio'" name="Biography" rules="required|min:51|max:200" v-slot="{errors}">
             <textarea style="resize: none;" rows="4" type="text" placeholder="Biography" v-model="currentValue" class="matcha-input md:max-w-sm block"></textarea>
             <span class="matcha-input-error">{{ errors[0] }}</span>
           </ValidationProvider>
