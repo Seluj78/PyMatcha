@@ -27,6 +27,9 @@ def validate_params(required: dict, optional: Optional[dict] = None, allow_empty
             if not data:
                 raise BadRequestError("Missing json body.")
 
+            if not isinstance(data, dict):
+                raise BadRequestError("JSON body must be a dict")
+
             missing = []
             for item in required.keys():
                 # If a key is missing in the sent data
