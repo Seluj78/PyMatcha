@@ -117,8 +117,8 @@
           <div class="auth-sub-container-error mt-8" v-if="image.error">
             <h1 class="auth-sub-container-error-message">{{image.error}}</h1>
           </div>
-          <button v-if="this.$store.getters.getLoggedInUser.images.length < 6" class="cursor-pointer relative onboarding-sub-container-content-button-outline border w-full max-w-sm my-4">
-            <input class="cursor-pointer opacity-0 absolute top-0 left-0 w-full h-full rounded-md" type="file" v-on:change="selectFile()" ref="file">
+          <button v-if="this.$store.getters.getLoggedInUser.images.length < 6" class="relative onboarding-sub-container-content-button-outline border w-full max-w-sm my-4">
+            <input class="opacity-0 absolute top-0 left-0 w-full h-full rounded-md" type="file" v-on:change="selectFile()" ref="file">
             <img src="../../assets/onboarding/cloudPurple.png" class="w-8 mx-auto">
           </button>
           <ProfileImage
@@ -228,32 +228,13 @@ export default {
     },
     async saveSingleChoice(...args) {
       const [key, value] = args;
-      if (key === 'firstName') {
-        await this.$http.patch('/profile/edit/first_name', { first_name: value });
-      } else if (key === 'lastName') {
-        await this.$http.patch('/profile/edit/last_name', { last_name: value });
-      } else if (key === 'email') {
-        await this.$http.put('/profile/edit/email', { email: value });
-      } else if (key === 'username') {
-        await this.$http.patch('/profile/edit/username', { username: value });
-      } else if (key === 'bio') {
-        await this.$http.patch('/profile/edit/bio', { bio: value });
-      } else if (key === 'gender') {
+      if (key === 'gender') {
         await this.$http.patch('/profile/edit/gender', { gender: value });
       } else if (key === 'sexuality') {
         await this.$http.patch('/profile/edit/orientation', { orientation: value });
       }
       const user = await this.$http.get(`/users/${this.$store.getters.getLoggedInUser.id}`);
       await this.$store.dispatch('login', user.data);
-    },
-    async saveSingleChoiceOldGiven(...args) {
-      const [key, value, old] = args;
-      if (key === 'password') {
-        await this.$http.put('/profile/edit/password', {
-          old_password: old,
-          new_password: value,
-        });
-      }
     },
     async saveMultipleChoice(...args) {
       const [key, value] = args;

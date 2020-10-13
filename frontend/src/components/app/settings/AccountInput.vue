@@ -3,6 +3,7 @@
   <div class="w-full my-4 max-w-sm">
     <ValidationObserver v-slot="{ handleSubmit, invalid }" class="w-full">
       <form @submit.prevent="handleSubmit(onSubmit)" class="w-full">
+        <h1 v-if="error" class="focus:outline-none text-md font-bold capitalize text-red-500">{{ error }}</h1>
         <div class="flex justify-between items-center w-full">
           <h1 class="text-md font-bold capitalize text-gray-matcha">{{ name }}</h1>
           <div class="flex">
@@ -62,9 +63,11 @@ export default {
     currentValue: '',
     passwordRepeat: '',
     passwordOld: '',
+    error: '',
   }),
   methods: {
     startEditing() {
+      this.error = '';
       this.currentValueBackup = this.currentValue;
       this.edit = true;
     },
@@ -77,16 +80,39 @@ export default {
       this.currentValue = this.currentValueBackup;
       this.edit = false;
     },
-    onSubmit() {
+    async onSubmit() {
+      this.error = false;
       this.edit = false;
       this.currentValueBackup = this.currentValue;
-      if (this.type !== 'password') {
-        this.$emit('saveSingleChoice', this.type, this.currentValue);
-      } else {
-        this.$emit('saveSingleChoiceOldGiven', this.type, this.currentValue, this.passwordOld);
-        this.currentValue = '';
-        this.passwordRepeat = '';
-        this.passwordOld = '';
+      try {
+        if (this.type === 'firstName') {
+          await this.$http.patch('/profile/edit/first_name', { first_name: this.currentValue });
+        } else if (this.type === 'lastName') {
+          await this.$http.patch('/profile/edit/last_name', { last_name: this.currentValue });
+        } else if (this.type === 'email') {
+          await this.$http.put('/profile/edit/email', { email: this.currentValue });
+        } else if (this.type === 'username') {
+          await this.$http.patch('/profile/edit/username', { username: this.currentValue });
+        } else if (this.type === 'bio') {
+          await this.$http.patch('/profile/edit/bio', { bio: this.currentValue });
+        } else if (this.type === 'password') {
+          await this.$http.put('/profile/edit/password', {
+            old_password: this.passwordOld,
+            new_password: this.currentValue,
+          });
+          this.currentValue = '';
+          this.passwordRepeat = '';
+          this.passwordOld = '';
+        }
+        const user = await this.$http.get(`/users/${this.$store.getters.getLoggedInUser.id}`);
+        await this.$store.dispatch('login', user.data);
+      } catch (error) {
+        this.error = error.response.data.error.message;
+        if (this.type === 'password') {
+          this.currentValue = '';
+          this.passwordRepeat = '';
+          this.passwordOld = '';
+        }
       }
     },
     passwordErrorHandler(error) {
