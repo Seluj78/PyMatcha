@@ -7,8 +7,8 @@
           <h1 class="text-md font-bold capitalize text-gray-matcha">{{ name }}</h1>
           <div class="flex">
             <h1 v-if="edit" v-on:click="cancelEditing()" class="mr-4 text-sm text-purple-matcha cursor-pointer">Cancel</h1>
-            <input v-if="edit" type="submit" :disabled="invalid" value="Save"
-                   v-bind:class="{'text-sm': true,'text-purple-matcha': true, 'bg-transparent': true, 'focus:outline-none': true, 'active:outline-none': true, 'opacity-50': invalid, 'cursor-pointer': !invalid}">
+            <input v-if="edit" type="submit" :disabled="invalid || currentValue === currentValueBackup" value="Save"
+                   v-bind:class="{'text-sm': true,'text-purple-matcha': true, 'bg-transparent': true, 'focus:outline-none': true, 'active:outline-none': true, 'opacity-50': invalid || currentValue === currentValueBackup, 'cursor-pointer': !invalid && currentValue !== currentValueBackup}">
             <h1 v-if="!edit" v-on:click="startEditing()" class="cursor-pointer text-sm text-purple-matcha">{{ buttonText }}</h1>
           </div>
         </div>
