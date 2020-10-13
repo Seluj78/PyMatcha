@@ -34,12 +34,16 @@
             <textarea style="resize: none;" rows="4" type="text" placeholder="Biography" v-model="currentValue" class="matcha-input md:max-w-sm block"></textarea>
             <span class="matcha-input-error">{{ errors[0] }}</span>
           </ValidationProvider>
+          <ValidationProvider v-if="type === 'password'" name="Current Password" rules="required" v-slot="{errors}">
+            <input type="password" placeholder="Current Password" v-model="passwordOld" class="matcha-input md:max-w-sm">
+            <span class="matcha-input-error">{{ errors[0] }}</span>
+          </ValidationProvider>
           <ValidationProvider v-if="type === 'password'" name="Password" rules="required|min:6|validPassword" v-slot="{errors}">
-            <input type="password" placeholder="New Password" v-model="currentValue" class="matcha-input md:max-w-sm">
+            <input type="password" placeholder="New Password" v-model="currentValue" class="matcha-input md:max-w-sm mt-4">
             <span class="matcha-input-error">{{ passwordErrorHandler(errors[0]) }}</span>
           </ValidationProvider>
           <ValidationProvider v-if="type === 'password'" name="Repeat Password" rules="required|confirmed:Password" v-slot="{errors}">
-            <input type="password" placeholder="Repeat Password" v-model="passwordRepeat" class="matcha-input mt-4">
+            <input type="password" placeholder="Repeat New Password" v-model="passwordRepeat" class="matcha-input">
             <span class="matcha-input-error">{{ passwordErrorHandler(errors[0]) }}</span>
           </ValidationProvider>
         </div>
@@ -57,6 +61,7 @@ export default {
     currentValueBackup: '',
     currentValue: '',
     passwordRepeat: '',
+    passwordOld: '',
   }),
   methods: {
     startEditing() {
@@ -67,6 +72,7 @@ export default {
       if (this.type === 'password') {
         this.currentValue = '';
         this.passwordRepeat = '';
+        this.passwordOld = '';
       }
       this.currentValue = this.currentValueBackup;
       this.edit = false;
@@ -74,10 +80,13 @@ export default {
     onSubmit() {
       this.edit = false;
       this.currentValueBackup = this.currentValue;
-      this.$emit('saveSingleChoice', this.type, this.currentValue);
-      if (this.type === 'password') {
+      if (this.type !== 'password') {
+        this.$emit('saveSingleChoice', this.type, this.currentValue);
+      } else {
+        this.$emit('saveSingleChoiceOldGiven', this.type, this.currentValue, this.passwordOld);
         this.currentValue = '';
         this.passwordRepeat = '';
+        this.passwordOld = '';
       }
     },
     passwordErrorHandler(error) {

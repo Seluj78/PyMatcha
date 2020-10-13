@@ -51,7 +51,7 @@
         <AccountInput
           v-bind:name="'Password'"
           v-bind:type="'password'"
-          v-on:saveSingleChoice="saveSingleChoice"
+          v-on:saveSingleChoiceOldGiven="saveSingleChoiceOldGiven"
           v-bind:currentValuePassed="''"></AccountInput>
       </section>
       <section v-if="getShow === 'profile'" class="flex flex-col items-start z-10 absolute bg-white-matcha w-full top-0 left-0 md:ml-4 md:relative md:shadow-md md:rounded-md">
@@ -233,11 +233,9 @@ export default {
       } else if (key === 'lastName') {
         await this.$http.patch('/profile/edit/last_name', { last_name: value });
       } else if (key === 'email') {
-        await this.$http.patch('/profile/edit/email', { email: value });
+        await this.$http.put('/profile/edit/email', { email: value });
       } else if (key === 'username') {
         await this.$http.patch('/profile/edit/username', { username: value });
-      } else if (key === 'password') {
-        await this.$http.patch('/profile/edit/password', { password: value });
       } else if (key === 'bio') {
         await this.$http.patch('/profile/edit/bio', { bio: value });
       } else if (key === 'gender') {
@@ -247,6 +245,15 @@ export default {
       }
       const user = await this.$http.get(`/users/${this.$store.getters.getLoggedInUser.id}`);
       await this.$store.dispatch('login', user.data);
+    },
+    async saveSingleChoiceOldGiven(...args) {
+      const [key, value, old] = args;
+      if (key === 'password') {
+        await this.$http.put('/profile/edit/password', {
+          old_password: old,
+          new_password: value,
+        });
+      }
     },
     async saveMultipleChoice(...args) {
       const [key, value] = args;
