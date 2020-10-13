@@ -103,6 +103,7 @@
         </div>
         <div class="text-center px-8 py-8 border-t border-gray-300 w-full">
           <h1 class="inline-block mr-3 font-bold text-gray-matcha leading-none">Location</h1>
+          <h1 class="text-md font-normal opacity-50 text-gray-matcha mx-auto pb-2 max-w-sm">If you refused sharing location, it will be approximated from your computer address </h1>
           <h1 class="mx-auto onboarding-sub-container-content-button-outline max-w-sm border font-normal mt-2 px-2 cursor-pointer" v-on:click="updateLocation()">Update current location</h1>
         </div>
         <div class="text-center py-8 w-full px-8 border-t border-gray-300">
@@ -214,7 +215,7 @@ export default {
     },
     async makePrimaryImage(...args) {
       const [imageId] = args;
-      console.log(await this.$http.put(`/profile/images/${imageId}`));
+      await this.$http.put(`/profile/images/${imageId}`);
       const user = await this.$http.get(`/users/${this.$store.getters.getLoggedInUser.id}`);
       await this.$store.dispatch('login', user.data);
     },
