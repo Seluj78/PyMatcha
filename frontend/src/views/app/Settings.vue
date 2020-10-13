@@ -6,7 +6,9 @@
       <section class="w-auto md:max-w-xss md:shadow-md md:rounded-md">
         <div class="w-full md:hidden h-1 bg-white-matcha"></div>
         <div class="md:border-b profile-card text-wrap p-16 md:py-8 flex flex-col w-full md:rounded-t-md">
-          <img class="mx-auto rounded-full w-48 md:w-32" v-bind:src="getImage()">
+          <div class="mx-auto overflow-hidden w-48 h-48 md:w-24 md:h-24 rounded-full">
+            <img class="w-full" v-bind:src="getImage()">
+          </div>
           <h1 class="w-full text-center text-3xl md:text-base mt-4 text-white-matcha md:text-gray-matcha capitalize">
             {{this.$store.getters.getLoggedInUser.first_name}} {{this.$store.getters.getLoggedInUser.last_name}}</h1>
           <div class="text-white-matcha md:text-gray-matcha w-full flex justify-center text-center mt-4 max-w-xs mx-auto">
