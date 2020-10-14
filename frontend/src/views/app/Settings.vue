@@ -248,6 +248,7 @@ export default {
     },
     showSetting(setting) {
       this.show = setting;
+      window.scrollTo(0, 0);
     },
     closeSetting() {
       this.show = '';
