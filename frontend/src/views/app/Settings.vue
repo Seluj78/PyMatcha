@@ -28,7 +28,7 @@
           <MenuButton v-on:click.native="showSetting('profile')" v-bind:class="{'md:px-8':true, 'md:bg-purple-200': getShow === 'profile'}" v-bind:text="'Profile'"></MenuButton>
         </div>
       </section>
-      <section v-if="getShow === 'account'" class="flex flex-col items-center z-10 absolute bg-white-matcha px-8 md:pb-8 w-full top-0 left-0 h-screen md:h-auto md:ml-4 md:relative md:shadow-md md:rounded-md">
+      <section v-if="getShow === 'account'" class="flex flex-col items-center z-10 absolute bg-white-matcha px-8 md:pb-8 w-full top-0 left-0 h-full md:h-auto md:ml-4 md:relative md:shadow-md md:rounded-md">
         <SectionHeader v-bind:name="'account'" v-on:click.native="closeSetting()"></SectionHeader>
         <AccountInput
           v-bind:name="'First Name'"
