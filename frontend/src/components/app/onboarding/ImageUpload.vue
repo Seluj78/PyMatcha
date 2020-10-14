@@ -7,8 +7,8 @@
     <div class="auth-sub-container-error mt-8" v-if="image.error">
       <h1 class="auth-sub-container-error-message">{{image.error}}</h1>
     </div>
-    <button v-if="!image.uploaded" class="relative onboarding-sub-container-upload-button w-full my-8">
-      <input class="cursor-pointer opacity-0 absolute top-0 left-0 w-full h-full rounded-md" type="file" v-on:change="selectFile()" ref="file">
+    <button v-if="!image.uploaded" class="overflow-hidden relative onboarding-sub-container-upload-button w-full my-8">
+      <input style="padding-left: 100%;" class="cursor-pointer opacity-0 absolute top-0 left-0 w-full h-full rounded-md" type="file" v-on:change="selectFile()" ref="file">
       <img src="../../../assets/onboarding/cloud.png" class="w-8 mx-auto">
     </button>
     <div v-if="image.uploaded" class="relative overflow-hidden bg-transparent rounded-md w-full my-10" style="padding-bottom: 70%">

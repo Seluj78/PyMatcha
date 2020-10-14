@@ -113,8 +113,8 @@
           <div class="auth-sub-container-error mt-8" v-if="image.error">
             <h1 class="auth-sub-container-error-message">{{image.error}}</h1>
           </div>
-          <button v-if="this.$store.getters.getLoggedInUser.images.length < 6" class="relative onboarding-sub-container-content-button-outline border w-full max-w-sm my-4">
-            <input class="opacity-0 absolute top-0 left-0 w-full h-full rounded-md" type="file" v-on:change="selectFile()" ref="file">
+          <button v-if="this.$store.getters.getLoggedInUser.images.length < 6" class="overflow-hidden relative onboarding-sub-container-content-button-outline border w-full max-w-sm my-4">
+            <input style="padding-left: 100%;" class="cursor-pointer opacity-0 absolute top-0 left-0 w-full h-full rounded-md" type="file" v-on:change="selectFile()" ref="file">
             <img src="../../assets/onboarding/cloudPurple.png" class="w-8 mx-auto">
           </button>
           <ProfileImage
