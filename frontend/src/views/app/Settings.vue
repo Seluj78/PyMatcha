@@ -33,27 +33,22 @@
         <AccountInput
           v-bind:name="'First Name'"
           v-bind:type="'firstName'"
-          v-on:saveSingleChoice="saveSingleChoice"
           v-bind:currentValuePassed="this.$store.getters.getLoggedInUser.first_name"></AccountInput>
         <AccountInput
           v-bind:name="'Last Name'"
           v-bind:type="'lastName'"
-          v-on:saveSingleChoice="saveSingleChoice"
           v-bind:currentValuePassed="this.$store.getters.getLoggedInUser.last_name"></AccountInput>
         <AccountInput
           v-bind:name="'Email'"
           v-bind:type="'email'"
-          v-on:saveSingleChoice="saveSingleChoice"
           v-bind:currentValuePassed="this.$store.getters.getLoggedInUser.email"></AccountInput>
         <AccountInput
           v-bind:name="'Username'"
           v-bind:type="'username'"
-          v-on:saveSingleChoice="saveSingleChoice"
           v-bind:currentValuePassed="this.$store.getters.getLoggedInUser.username"></AccountInput>
         <AccountInput
           v-bind:name="'Password'"
           v-bind:type="'password'"
-          v-on:saveSingleChoiceOldGiven="saveSingleChoiceOldGiven"
           v-bind:currentValuePassed="''"></AccountInput>
       </section>
       <section v-if="getShow === 'profile'" class="flex flex-col items-start z-10 absolute bg-white-matcha w-full top-0 left-0 md:ml-4 md:relative md:shadow-md md:rounded-md">
@@ -106,7 +101,6 @@
             class="mx-auto"
             v-bind:name="'Bio'"
             v-bind:type="'bio'"
-            v-on:saveSingleChoice="saveSingleChoice"
             v-bind:currentValuePassed="this.$store.getters.getLoggedInUser.bio"></AccountInput>
         </div>
         <div class="text-center px-8 py-8 border-t border-gray-300 w-full">
