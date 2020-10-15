@@ -1,13 +1,8 @@
 <template>
   <!-- eslint-disable max-len -->
   <div
-      v-bind:class="{
-      'flex': true,
-      'flex-col': true,
-      'justify-end': true,
-      'shadow-inner': true,
-      'recommendation-card': true,
-      'rounded-md': true}"
+      v-on:click="viewUser(recommendation.id)"
+      class="flex flex-col justify-end shadow-inner recommendation-card rounded-md cursor-pointer"
        v-bind:style="{
       'background-repeat': 'no-repeat',
       'background-position': 'center center',
@@ -36,6 +31,9 @@
 export default {
   props: ['recommendation'],
   methods: {
+    async viewUser(id) {
+      await this.$router.push(`/users/${id}`);
+    },
     getPrimaryImage() {
       const userImages = this.recommendation.images;
       let imageForShowcase;
