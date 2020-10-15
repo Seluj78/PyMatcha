@@ -17,7 +17,6 @@
 </template>
 
 <script>
-/* eslint-disable  vue/custom-event-name-casing */
 export default {
   props: ['options', 'name', 'position', 'startingOptions'],
   data: () => ({

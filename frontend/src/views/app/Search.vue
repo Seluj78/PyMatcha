@@ -20,20 +20,20 @@
             v-bind:min="sliders.age.min"
             v-bind:max="sliders.age.max"
             v-bind:name="'age'"
-            v-on:saveFilter="saveFilter"></FilterSlider>
+            v-on:save-filter="saveFilter"></FilterSlider>
           <FilterSlider
             v-bind:min="1"
             v-bind:max="2000"
             v-bind:unit="'km'"
             v-bind:oneHandle="true"
             v-bind:name="'distance'"
-            v-on:saveFilter="saveFilter"></FilterSlider>
+            v-on:save-filter="saveFilter"></FilterSlider>
           <FilterSlider
             v-bind:min="sliders.popularity.min"
             v-bind:max="sliders.popularity.max"
             v-bind:unit="'pts'"
             v-bind:name="'popularity'"
-            v-on:saveFilter="saveFilter"></FilterSlider>
+            v-on:save-filter="saveFilter"></FilterSlider>
         </div>
         <div>
           <MultipleFilters

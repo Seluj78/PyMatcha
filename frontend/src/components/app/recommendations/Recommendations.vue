@@ -15,19 +15,19 @@
         v-bind:min="recommendationsAnalysis.age.min"
         v-bind:max="recommendationsAnalysis.age.max"
         v-bind:name="'age'"
-        v-on:saveFilter="saveFilter"></FilterSliderDropdown>
+        v-on:save-filter="saveFilter"></FilterSliderDropdown>
       <FilterSliderDropdown
         v-bind:min="recommendationsAnalysis.distance.min"
         v-bind:max="recommendationsAnalysis.distance.max"
         v-bind:unit="'km'"
         v-bind:name="'distance'"
-        v-on:saveFilter="saveFilter"></FilterSliderDropdown>
+        v-on:save-filter="saveFilter"></FilterSliderDropdown>
       <FilterSliderDropdown
         v-bind:min="recommendationsAnalysis.popularity.min"
         v-bind:max="recommendationsAnalysis.popularity.max"
         v-bind:unit="'pts'"
         v-bind:name="'popularity'"
-        v-on:saveFilter="saveFilter"></FilterSliderDropdown>
+        v-on:save-filter="saveFilter"></FilterSliderDropdown>
       <MultipleFiltersDropdown
         v-bind:position="'right'"
         v-bind:options="recommendationsAnalysis.interests"

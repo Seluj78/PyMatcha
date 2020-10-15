@@ -17,7 +17,6 @@
 </template>
 
 <script>
-/* eslint-disable  vue/custom-event-name-casing */
 import noUiSlider from 'nouislider';
 import 'nouislider/distribute/nouislider.css';
 
@@ -66,7 +65,7 @@ export default {
     this.$refs.slider.noUiSlider.on('update', (values) => {
       this.slider.startMin = parseInt(values[0], 10);
       this.slider.startMax = parseInt(values[1], 10);
-      this.$emit('saveFilter', this.name, this.slider.startMin, this.slider.startMax);
+      this.$emit('save-filter', this.name, this.slider.startMin, this.slider.startMax);
     });
   },
 };
