@@ -60,7 +60,7 @@
             <h1 class="inline-block mr-4 text-gray-matcha">I am</h1>
             <DropdownDisplayChoice
               class="inline-block"
-              v-on:saveSingleChoice="saveSingleChoice"
+              v-on:save-single-choice="saveSingleChoice"
               v-bind:name="'gender'"
               v-bind:starting-option="this.$store.getters.getLoggedInUser.gender"
               v-bind:options="['male', 'female', 'other']"></DropdownDisplayChoice>
@@ -69,7 +69,7 @@
             <h1 class="inline-block mr-4 text-gray-matcha">Sexuality</h1>
             <DropdownDisplayChoice
               class="inline-block"
-              v-on:saveSingleChoice="saveSingleChoice"
+              v-on:save-single-choice="saveSingleChoice"
               v-bind:name="'sexuality'"
               v-bind:starting-option="this.$store.getters.getLoggedInUser.orientation"
               v-bind:options="['heterosexual', 'homosexual', 'bisexual', 'other']"></DropdownDisplayChoice>
@@ -93,7 +93,7 @@
               v-bind:min="3"
               v-bind:max="10"
               v-bind:name="'interests'"
-              v-on:saveMultipleChoice="saveMultipleChoice"></DropdownDisplayChoices>
+              v-on:save-multiple-choice="saveMultipleChoice"></DropdownDisplayChoices>
           </div>
         </div>
         <div class="py-4 px-8 border-t border-gray-300 w-full">
@@ -122,8 +122,8 @@
             v-for="image in this.$store.getters.getLoggedInUser.images"
             :key="image.id"
             v-bind:image="image"
-            v-on:makePrimaryImage="makePrimaryImage"
-            v-on:deleteImage="deleteImage"></ProfileImage>
+            v-on:make-primary-image="makePrimaryImage"
+            v-on:delete-image="deleteImage"></ProfileImage>
         </div>
       </section>
     </div>

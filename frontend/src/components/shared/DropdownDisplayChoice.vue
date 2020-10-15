@@ -15,7 +15,6 @@
 </template>
 
 <script>
-/* eslint-disable  vue/custom-event-name-casing */
 export default {
   props: ['options', 'name', 'position', 'startingOption'],
   data: () => ({
@@ -26,7 +25,7 @@ export default {
     select(option) {
       this.close();
       this.currentOption = option;
-      this.$emit('saveSingleChoice', this.name, option);
+      this.$emit('save-single-choice', this.name, option);
     },
     toggle() {
       this.closed = !this.closed;

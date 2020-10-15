@@ -15,7 +15,6 @@
 </template>
 
 <script>
-/* eslint-disable  vue/custom-event-name-casing */
 export default {
   props: ['image'],
   data: () => ({
@@ -24,11 +23,11 @@ export default {
   methods: {
     async deleteImage(imageId) {
       this.showImageSettings = false;
-      this.$emit('deleteImage', imageId);
+      this.$emit('delete-image', imageId);
     },
     async makePrimaryImage(imageId) {
       this.showImageSettings = false;
-      this.$emit('makePrimaryImage', imageId);
+      this.$emit('make-primary-image', imageId);
     },
   },
 };

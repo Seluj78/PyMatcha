@@ -17,7 +17,6 @@
 </template>
 
 <script>
-/* eslint-disable  vue/custom-event-name-casing */
 export default {
   props: ['options', 'name', 'position', 'startingOptions', 'min', 'max'],
   data: () => ({
@@ -30,11 +29,11 @@ export default {
       if (optionIndex !== -1) {
         if (this.selectedFilters.length > this.min) {
           this.selectedFilters.splice(optionIndex, 1);
-          this.$emit('saveMultipleChoice', this.name, this.selectedFilters);
+          this.$emit('save-multiple-choice', this.name, this.selectedFilters);
         }
       } else if (this.selectedFilters.length < this.max) {
         this.selectedFilters.push(option);
-        this.$emit('saveMultipleChoice', this.name, this.selectedFilters);
+        this.$emit('save-multiple-choice', this.name, this.selectedFilters);
       }
     },
     toggle() {
