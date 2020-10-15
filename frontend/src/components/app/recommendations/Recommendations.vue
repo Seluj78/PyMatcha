@@ -10,7 +10,7 @@
         v-bind:startingOption="'Closest'"
         v-bind:options="['Closest', 'Furthest', 'Youngest',
         'Oldest', 'Most popular', 'Least popular', 'Most common interests', 'Least common interests']"
-        v-on:saveSort="saveSort"></Sort>
+        v-on:save-sort="saveSort"></Sort>
       <FilterSliderDropdown
         v-bind:min="recommendationsAnalysis.age.min"
         v-bind:max="recommendationsAnalysis.age.max"
