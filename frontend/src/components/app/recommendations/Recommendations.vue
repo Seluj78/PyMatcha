@@ -10,29 +10,29 @@
         v-bind:startingOption="'Closest'"
         v-bind:options="['Closest', 'Furthest', 'Youngest',
         'Oldest', 'Most popular', 'Least popular', 'Most common interests', 'Least common interests']"
-        v-on:saveSort="saveSort"></Sort>
+        v-on:save-sort="saveSort"></Sort>
       <FilterSliderDropdown
         v-bind:min="recommendationsAnalysis.age.min"
         v-bind:max="recommendationsAnalysis.age.max"
         v-bind:name="'age'"
-        v-on:saveFilter="saveFilter"></FilterSliderDropdown>
+        v-on:save-filter="saveFilter"></FilterSliderDropdown>
       <FilterSliderDropdown
         v-bind:min="recommendationsAnalysis.distance.min"
         v-bind:max="recommendationsAnalysis.distance.max"
         v-bind:unit="'km'"
         v-bind:name="'distance'"
-        v-on:saveFilter="saveFilter"></FilterSliderDropdown>
+        v-on:save-filter="saveFilter"></FilterSliderDropdown>
       <FilterSliderDropdown
         v-bind:min="recommendationsAnalysis.popularity.min"
         v-bind:max="recommendationsAnalysis.popularity.max"
         v-bind:unit="'pts'"
         v-bind:name="'popularity'"
-        v-on:saveFilter="saveFilter"></FilterSliderDropdown>
+        v-on:save-filter="saveFilter"></FilterSliderDropdown>
       <MultipleFiltersDropdown
         v-bind:position="'right'"
         v-bind:options="recommendationsAnalysis.interests"
         v-bind:name="'interests'"
-        v-on:saveFilterMultiple="saveFilterMultiple"></MultipleFiltersDropdown>
+        v-on:save-filter-multiple="saveFilterMultiple"></MultipleFiltersDropdown>
     </div>
     <div ref="recommendationCards" class="grid grid-cols-1 md:grid-cols-2 gap-2">
     <RecommendationCard

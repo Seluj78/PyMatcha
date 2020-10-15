@@ -40,7 +40,7 @@ export default {
   }),
   methods: {
     saveInput() {
-      this.$emit('saveInput', this.slide.key, this.optionSelected);
+      this.$emit('save-input', this.slide.key, this.optionSelected);
       this.optionSelected = [];
     },
     select(...args) {

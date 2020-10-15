@@ -25,7 +25,7 @@ export default {
     select(option) {
       this.close();
       this.currentOption = option;
-      this.$emit('saveSort', option);
+      this.$emit('save-sort', option);
     },
     toggle() {
       this.closed = !this.closed;

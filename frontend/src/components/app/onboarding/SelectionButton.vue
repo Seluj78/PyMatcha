@@ -45,7 +45,7 @@ export default {
     },
   },
   mounted() {
-    this.bus.$on('deselectIfNot', this.deselectIfNot);
+    this.bus.$on('deselect-if-not', this.deselectIfNot);
   },
 };
 </script>

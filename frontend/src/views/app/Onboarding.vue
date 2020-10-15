@@ -3,7 +3,7 @@
   <div class="onboarding-container">
     <Introduction
       v-bind:slide="{buttonText}"
-      v-on:nextSlide="nextSlide"
+      v-on:next-slide="nextSlide"
       v-if="slideCurrent === 0"></Introduction>
     <SingleChoice
       v-bind:slide="{
@@ -13,7 +13,7 @@
       header: 'My age',
       options: generateAllowedAge(),
       buttonText}"
-      v-on:saveInput="saveInput"
+      v-on:save-input="saveInput"
       v-if="slideCurrent === 1"></SingleChoice>
     <SingleChoice
       v-bind:slide="{
@@ -23,7 +23,7 @@
       header: 'I am',
       options: ['male', 'female', 'other'],
       buttonText}"
-      v-on:saveInput="saveInput"
+      v-on:save-input="saveInput"
       v-if="slideCurrent === 2"></SingleChoice>
     <SingleChoice
       v-bind:slide="{
@@ -33,7 +33,7 @@
       header: 'Sexuality',
       options: ['heterosexual', 'homosexual', 'bisexual', 'other'],
       buttonText}"
-      v-on:saveInput="saveInput"
+      v-on:save-input="saveInput"
       v-if="slideCurrent === 3"></SingleChoice>
     <MultipleChoice
       v-bind:slide="{
@@ -55,7 +55,7 @@
       minOptionsForSelection: 3,
       maxOptionsForSelection: 10,
       buttonText}"
-      v-on:saveInput="saveInput"
+      v-on:save-input="saveInput"
       v-if="slideCurrent === 4"></MultipleChoice>
     <MainAndSecondaryImagesUpload
       v-bind:slide="{
@@ -67,7 +67,7 @@
       secondaryImageExplanation: 'Extra image',
       maxImagesAllowed: 5,
       buttonText}"
-      v-on:nextSlide="nextSlide"
+      v-on:next-slide="nextSlide"
       v-if="slideCurrent === 5"></MainAndSecondaryImagesUpload>
     <Textblock
       v-bind:slide="{
@@ -78,7 +78,7 @@
       maxTextareaLength: 200,
       placeholder: 'I am best described as ...',
       buttonText}"
-      v-on:saveInput="saveInput"
+      v-on:save-input="saveInput"
       v-if="slideCurrent === 6"></Textblock>
     <Location
       v-bind:slide="{
@@ -87,7 +87,7 @@
       count: slideCount,
       buttonText}"
       v-bind:bus="bus"
-      v-on:nextSlide="nextSlide"
+      v-on:next-slide="nextSlide"
       v-if="slideCurrent === 7"></Location>
     <SettingUp v-if="slideCurrent === 8"></SettingUp>
   </div>
@@ -134,7 +134,7 @@ export default {
     async nextSlide() {
       if (this.slideCurrent === this.slideCount) {
         this.slideCurrent += 1;
-        await this.bus.$emit('sendUserLocationToBackend');
+        await this.bus.$emit('send-user-location-to-backend');
         await this.$http.post('/profile/complete', this.userData);
         const recommendationsRequest = await this.$http.get('/recommendations');
         const recommendationsFromSettingUp = recommendationsRequest.data.recommendations;

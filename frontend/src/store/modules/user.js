@@ -12,6 +12,13 @@ const getters = {
 
 const mutations = {
   login(state, user) {
+    for (let i = 0; i < user.images.length; i += 1) {
+      if (user.images[i].is_primary) {
+        const primaryCopy = user.images[i];
+        user.images.splice(i, 1);
+        user.images.unshift(primaryCopy);
+      }
+    }
     state.user = user;
   },
   logout(state) {

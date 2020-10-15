@@ -20,20 +20,20 @@
             v-bind:min="sliders.age.min"
             v-bind:max="sliders.age.max"
             v-bind:name="'age'"
-            v-on:saveFilter="saveFilter"></FilterSlider>
+            v-on:save-filter="saveFilter"></FilterSlider>
           <FilterSlider
             v-bind:min="1"
             v-bind:max="2000"
             v-bind:unit="'km'"
             v-bind:oneHandle="true"
             v-bind:name="'distance'"
-            v-on:saveFilter="saveFilter"></FilterSlider>
+            v-on:save-filter="saveFilter"></FilterSlider>
           <FilterSlider
             v-bind:min="sliders.popularity.min"
             v-bind:max="sliders.popularity.max"
             v-bind:unit="'pts'"
             v-bind:name="'popularity'"
-            v-on:saveFilter="saveFilter"></FilterSlider>
+            v-on:save-filter="saveFilter"></FilterSlider>
         </div>
         <div>
           <MultipleFilters
@@ -50,7 +50,7 @@
           ]"
             v-bind:name="'interests'"
             v-bind:info="'If no selected, all are accounted.'"
-            v-on:saveFilterMultiple="saveFilterMultiple"></MultipleFilters>
+            v-on:save-filter-multiple="saveFilterMultiple"></MultipleFilters>
         </div>
       <div class="auth-sub-container-error mx-auto max-w-md" v-if="error"><h1 class="auth-sub-container-error-message">{{ error }}</h1></div>
       <div class="mx-auto w-full max-w-md">

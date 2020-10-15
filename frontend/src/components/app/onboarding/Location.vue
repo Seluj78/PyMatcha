@@ -8,7 +8,7 @@
       subheader: 'Would you like to share your location to get potential matches closer to you?',
       options: ['yes', 'no'],
       buttonText: slide.buttonText}"
-      v-on:saveInput="saveLocation"></SingleChoice>
+      v-on:save-input="saveLocation"></SingleChoice>
 </template>
 
 <script>
@@ -41,21 +41,21 @@ export default {
       const { latitude } = position.coords;
       const { longitude } = position.coords;
       this.locationData = { lat: latitude, lng: longitude, ip: '0.0.0.0' };
-      this.$emit('nextSlide');
+      this.$emit('next-slide');
     },
     async locationDenied() {
       let ipRequest = await fetch('https://api.ipify.org?format=json');
       ipRequest = await ipRequest.json();
       const { ip } = ipRequest;
       this.locationData = { ip };
-      this.$emit('nextSlide');
+      this.$emit('next-slide');
     },
     async sendLocation() {
       await this.$http.put('/profile/edit/geolocation', this.locationData);
     },
   },
   mounted() {
-    this.bus.$on('sendUserLocationToBackend', this.sendLocation);
+    this.bus.$on('send-user-location-to-backend', this.sendLocation);
   },
 };
 </script>

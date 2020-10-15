@@ -42,7 +42,7 @@ export default {
         this.bus.$emit('clearForNextImage');
         this.imageIndex += 1;
       } else {
-        this.$emit('nextSlide');
+        this.$emit('next-slide');
         this.sendImagesToBackend();
       }
     },
