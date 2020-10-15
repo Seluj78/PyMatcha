@@ -55,7 +55,7 @@ export default {
     },
   },
   mounted() {
-    this.bus.$on('sendUserLocationToBackend', this.sendLocation);
+    this.bus.$on('send-user-location-to-backend', this.sendLocation);
   },
 };
 </script>

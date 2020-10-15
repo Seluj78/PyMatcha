@@ -95,7 +95,6 @@
 
 <script>
 /* eslint-disable  prefer-const */
-/* eslint-disable  vue/custom-event-name-casing */
 import Introduction from '@/components/app/onboarding/Introduction.vue';
 import SingleChoice from '@/components/app/onboarding/SingleChoice.vue';
 import MultipleChoice from '@/components/app/onboarding/MultipleChoice.vue';
@@ -135,7 +134,7 @@ export default {
     async nextSlide() {
       if (this.slideCurrent === this.slideCount) {
         this.slideCurrent += 1;
-        await this.bus.$emit('sendUserLocationToBackend');
+        await this.bus.$emit('send-user-location-to-backend');
         await this.$http.post('/profile/complete', this.userData);
         const recommendationsRequest = await this.$http.get('/recommendations');
         const recommendationsFromSettingUp = recommendationsRequest.data.recommendations;
