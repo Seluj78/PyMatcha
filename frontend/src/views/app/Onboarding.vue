@@ -3,7 +3,7 @@
   <div class="onboarding-container">
     <Introduction
       v-bind:slide="{buttonText}"
-      v-on:nextSlide="nextSlide"
+      v-on:next-slide="nextSlide"
       v-if="slideCurrent === 0"></Introduction>
     <SingleChoice
       v-bind:slide="{
@@ -67,7 +67,7 @@
       secondaryImageExplanation: 'Extra image',
       maxImagesAllowed: 5,
       buttonText}"
-      v-on:nextSlide="nextSlide"
+      v-on:next-slide="nextSlide"
       v-if="slideCurrent === 5"></MainAndSecondaryImagesUpload>
     <Textblock
       v-bind:slide="{
@@ -87,7 +87,7 @@
       count: slideCount,
       buttonText}"
       v-bind:bus="bus"
-      v-on:nextSlide="nextSlide"
+      v-on:next-slide="nextSlide"
       v-if="slideCurrent === 7"></Location>
     <SettingUp v-if="slideCurrent === 8"></SettingUp>
   </div>

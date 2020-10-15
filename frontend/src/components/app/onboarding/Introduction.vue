@@ -11,12 +11,11 @@
 </template>
 
 <script>
-/* eslint-disable  vue/custom-event-name-casing */
 export default {
   props: ['slide'],
   methods: {
     nextSlide() {
-      this.$emit('nextSlide');
+      this.$emit('next-slide');
     },
   },
 };

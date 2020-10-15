@@ -12,7 +12,6 @@
 </template>
 
 <script>
-/* eslint-disable  vue/custom-event-name-casing */
 import SingleChoice from '@/components/app/onboarding/SingleChoice.vue';
 
 export default {
@@ -42,14 +41,14 @@ export default {
       const { latitude } = position.coords;
       const { longitude } = position.coords;
       this.locationData = { lat: latitude, lng: longitude, ip: '0.0.0.0' };
-      this.$emit('nextSlide');
+      this.$emit('next-slide');
     },
     async locationDenied() {
       let ipRequest = await fetch('https://api.ipify.org?format=json');
       ipRequest = await ipRequest.json();
       const { ip } = ipRequest;
       this.locationData = { ip };
-      this.$emit('nextSlide');
+      this.$emit('next-slide');
     },
     async sendLocation() {
       await this.$http.put('/profile/edit/geolocation', this.locationData);
