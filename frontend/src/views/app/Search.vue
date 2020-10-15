@@ -50,7 +50,7 @@
           ]"
             v-bind:name="'interests'"
             v-bind:info="'If no selected, all are accounted.'"
-            v-on:saveFilterMultiple="saveFilterMultiple"></MultipleFilters>
+            v-on:save-filter-multiple="saveFilterMultiple"></MultipleFilters>
         </div>
       <div class="auth-sub-container-error mx-auto max-w-md" v-if="error"><h1 class="auth-sub-container-error-message">{{ error }}</h1></div>
       <div class="mx-auto w-full max-w-md">

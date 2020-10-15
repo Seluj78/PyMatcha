@@ -15,7 +15,6 @@
 </template>
 
 <script>
-/* eslint-disable  vue/custom-event-name-casing */
 export default {
   props: ['options', 'name', 'info', 'position'],
   data: () => ({
@@ -27,10 +26,10 @@ export default {
       const optionIndex = this.selectedFilters.indexOf(option);
       if (optionIndex !== -1) {
         this.selectedFilters.splice(optionIndex, 1);
-        this.$emit('saveFilterMultiple', this.name, this.selectedFilters);
+        this.$emit('save-filter-multiple', this.name, this.selectedFilters);
       } else {
         this.selectedFilters.push(option);
-        this.$emit('saveFilterMultiple', this.name, this.selectedFilters);
+        this.$emit('save-filter-multiple', this.name, this.selectedFilters);
       }
     },
     toggle() {

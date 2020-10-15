@@ -32,7 +32,7 @@
         v-bind:position="'right'"
         v-bind:options="recommendationsAnalysis.interests"
         v-bind:name="'interests'"
-        v-on:saveFilterMultiple="saveFilterMultiple"></MultipleFiltersDropdown>
+        v-on:save-filter-multiple="saveFilterMultiple"></MultipleFiltersDropdown>
     </div>
     <div ref="recommendationCards" class="grid grid-cols-1 md:grid-cols-2 gap-2">
     <RecommendationCard
