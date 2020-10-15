@@ -8,7 +8,7 @@
       subheader: 'Would you like to share your location to get potential matches closer to you?',
       options: ['yes', 'no'],
       buttonText: slide.buttonText}"
-      v-on:saveInput="saveLocation"></SingleChoice>
+      v-on:save-input="saveLocation"></SingleChoice>
 </template>
 
 <script>

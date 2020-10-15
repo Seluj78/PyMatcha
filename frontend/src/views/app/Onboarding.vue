@@ -13,7 +13,7 @@
       header: 'My age',
       options: generateAllowedAge(),
       buttonText}"
-      v-on:saveInput="saveInput"
+      v-on:save-input="saveInput"
       v-if="slideCurrent === 1"></SingleChoice>
     <SingleChoice
       v-bind:slide="{
@@ -23,7 +23,7 @@
       header: 'I am',
       options: ['male', 'female', 'other'],
       buttonText}"
-      v-on:saveInput="saveInput"
+      v-on:save-input="saveInput"
       v-if="slideCurrent === 2"></SingleChoice>
     <SingleChoice
       v-bind:slide="{
@@ -33,7 +33,7 @@
       header: 'Sexuality',
       options: ['heterosexual', 'homosexual', 'bisexual', 'other'],
       buttonText}"
-      v-on:saveInput="saveInput"
+      v-on:save-input="saveInput"
       v-if="slideCurrent === 3"></SingleChoice>
     <MultipleChoice
       v-bind:slide="{
@@ -55,7 +55,7 @@
       minOptionsForSelection: 3,
       maxOptionsForSelection: 10,
       buttonText}"
-      v-on:saveInput="saveInput"
+      v-on:save-input="saveInput"
       v-if="slideCurrent === 4"></MultipleChoice>
     <MainAndSecondaryImagesUpload
       v-bind:slide="{
@@ -78,7 +78,7 @@
       maxTextareaLength: 200,
       placeholder: 'I am best described as ...',
       buttonText}"
-      v-on:saveInput="saveInput"
+      v-on:save-input="saveInput"
       v-if="slideCurrent === 6"></Textblock>
     <Location
       v-bind:slide="{

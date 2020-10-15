@@ -27,7 +27,6 @@
 </template>
 
 <script>
-/* eslint-disable  vue/custom-event-name-casing */
 export default {
   props: ['slide'],
   data: () => ({
@@ -35,7 +34,7 @@ export default {
   }),
   methods: {
     saveInput() {
-      this.$emit('saveInput', this.slide.key, this.textareaValue);
+      this.$emit('save-input', this.slide.key, this.textareaValue);
     },
   },
   computed: {

@@ -26,7 +26,6 @@
 </template>
 
 <script>
-/* eslint-disable  vue/custom-event-name-casing */
 import Vue from 'vue';
 import SelectionButton from '@/components/app/onboarding/SelectionButton.vue';
 
@@ -41,13 +40,13 @@ export default {
   }),
   methods: {
     saveInput() {
-      this.$emit('saveInput', this.slide.key, this.optionSelected);
+      this.$emit('save-input', this.slide.key, this.optionSelected);
       this.optionSelected = null;
     },
     select(...args) {
       const [val] = args;
       this.optionSelected = val;
-      this.bus.$emit('deselectIfNot', val);
+      this.bus.$emit('deselect-if-not', val);
     },
     deselect() {
       this.optionSelected = '';
