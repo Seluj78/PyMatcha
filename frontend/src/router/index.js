@@ -11,7 +11,6 @@ import ResetPasswordError from '../views/auth/ResetPasswordError.vue';
 import Onboarding from '../views/app/Onboarding.vue';
 import Browse from '../views/app/Browse.vue';
 import Search from '../views/app/Search.vue';
-import Settings from '../views/app/Settings.vue';
 import User from '../components/app/users/User.vue';
 import store from '../store/index';
 
@@ -108,11 +107,6 @@ const routes = [
   {
     path: '/search',
     component: Search,
-    beforeEnter: notLoggedInRedirectLogin,
-  },
-  {
-    path: '/settings',
-    component: Settings,
     beforeEnter: notLoggedInRedirectLogin,
   },
   {
