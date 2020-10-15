@@ -13,7 +13,7 @@
             <h1 v-if="!edit" v-on:click="startEditing()" class="cursor-pointer text-sm text-purple-matcha">{{ buttonText }}</h1>
           </div>
         </div>
-        <div class="break-words" v-if="!edit && type !== 'password'"><h1 class="text-md opacity-50 md:max-w-sm">{{ currentValue }}</h1></div>
+        <div v-on:click="startEditing()" class="break-words" v-if="!edit && type !== 'password'"><h1 class="text-md opacity-50 md:max-w-sm">{{ currentValue }}</h1></div>
         <div v-if="edit">
           <ValidationProvider v-if="type === 'firstName'" name="First Name" rules="required|alpha|max:20" v-slot="{errors}">
             <input type="text" placeholder="First Name" v-model="currentValue" class="matcha-input md:max-w-sm">
