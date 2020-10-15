@@ -185,7 +185,7 @@ def edit_email():
     token = generate_confirmation_token(email=new_email, token_type="confirm")
     link = FRONTEND_EMAIL_CONFIRMATION_URL + token
     rendered_html = render_template("confirm_email.html", link=link)
-    send_mail_html.delay(dest=data["email"], subject="Confirm your email on PyMatcha", html=rendered_html)
+    send_mail_html.delay(dest=new_email, subject="Confirm your email on PyMatcha", html=rendered_html)
     return Success("Email sent for new email")
 
 
