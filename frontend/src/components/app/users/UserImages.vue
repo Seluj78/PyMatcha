@@ -68,8 +68,8 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
 .image-height {
-  height: 25rem;
+  height: 75vh;
 }
 </style>

@@ -1,38 +1,35 @@
 <template>
   <!-- eslint-disable -->
-  <div class="profileContainer md:overflow-scroll">
-    <div class="text-center text-wrap p-8 md:pt-0 border-b">
+  <div class="profileContainer">
+    <div class="text-center text-wrap p-8 border-b">
       <h1 class="text-gray-matcha text-3xl font-semibold mb-6">{{user.first_name}}, {{user.age}}</h1>
       <div v-if="!user.is_online" class="flex items-center mt-2 text-left">
         <img class="w-3 h-3 mr-2" src="../../../assets/recommendations/offline.png">
-        <h1 class="text-gray-matcha">Last seen {{formattedLastSeenDate}}</h1>
+        <h1 class="text-gray-600">Last seen {{formattedLastSeenDate}}</h1>
       </div>
       <div v-else class="flex items-center mt-2 text-left">
         <img class="w-3 h-3 mr-2" src="../../../assets/recommendations/online.png">
-        <h1 class="text-gray-matcha">online</h1>
+        <h1 class="text-gray-600">online</h1>
       </div>
       <div class="flex items-center mt-2 text-left">
         <img src="../../../assets/location.png" class="w-4 h-4 mr-2">
-        <h1 class="text-gray-matcha">{{Math.floor(user.distance)}} km away</h1>
+        <h1 class="text-gray-600">{{Math.floor(user.distance)}} km away</h1>
       </div>
       <div class="flex items-center mt-2 text-left">
         <img src="../../../assets/gender.png" class="w-4 h-4 mr-2">
-        <h1 class="text-gray-matcha"><span class="capitalize">{{user.gender}}</span> looking for {{preferences()}}</h1>
+        <h1 class="text-gray-600"><span class="capitalize">{{user.gender}}</span> looking for {{preferences()}}</h1>
       </div>
     </div>
     <div class="text-center text-wrap p-8 border-b">
       <h1>{{user.bio}}</h1>
       <div class="flex flex-wrap justify-center mx-auto mt-6">
         <h1 v-for="(interest, index) in userInterests" :key="index"
-        class="px-4 py-1 border rounded-xl mr-2 mt-2 text-gray-600">{{interest}}</h1>
+        class="px-4 py-1 border rounded-xl mr-2 mt-2 text-gray-600 text-sm">{{interest}}</h1>
       </div>
     </div>
     <div class="text-center flex mx-auto p-8 border-b">
-      <div class="w-8/12 border border-purple-matcha py-2 rounded-lg cursor-pointer">
+      <div class="w-full border border-purple-matcha py-2 rounded-lg cursor-pointer">
         <img src="../../../assets/heart.png" class="mx-auto w-8 h-8">
-      </div>
-      <div class="w-4/12 border border-purple-matcha py-2 rounded-lg ml-4">
-        <h1 class="mx-auto text-xl">{{user.heat_score}}</h1>
       </div>
     </div>
     <div class="text-center p-8 border-b cursor-pointer">
@@ -95,7 +92,7 @@ export default {
 <style scoped>
 @screen md {
   .profileContainer {
-    height: 30rem;
+    height: 75vh;
   }
 }
 </style>
