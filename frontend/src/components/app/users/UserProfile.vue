@@ -25,7 +25,7 @@
         <h1 class="text-gray-600"><span class="capitalize">{{user.gender}}</span> looking for {{preferences()}}</h1>
       </div>
     </div>
-    <div class="text-center text-wrap p-8 pt-16 border-b">
+    <div class="text-center text-wrap p-8 border-b">
       <h1>{{user.bio}}</h1>
       <div class="flex flex-wrap justify-center mx-auto mt-6">
         <h1 v-for="(interest, index) in userInterests" :key="index"
