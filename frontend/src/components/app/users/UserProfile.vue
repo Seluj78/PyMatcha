@@ -27,7 +27,7 @@
         class="px-4 py-1 border rounded-xl mr-2 mt-2 text-gray-600 text-sm">{{interest}}</h1>
       </div>
     </div>
-    <div class="text-center px-8 pt-8 pb-2">
+    <div class="text-left px-8 pt-8 pb-1">
       <h1 id="sliderScoreHeader">Heat score</h1>
     </div>
     <div id="sliderScoreContainer" class="text-center w-full heatScore relative h-6">
