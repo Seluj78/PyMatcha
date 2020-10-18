@@ -22,6 +22,7 @@ from flask_jwt_extended import jwt_required
 from PyMatcha.models.user import get_user
 from PyMatcha.models.view import View
 from PyMatcha.utils.errors import NotFoundError
+from PyMatcha.utils.match_score import _get_distance
 from PyMatcha.utils.success import SuccessOutput
 
 profile_view_bp = Blueprint("profile_view", __name__)
@@ -46,4 +47,8 @@ def view_profile(uid):
     if current_user.id != u.id:
         View.create(profile_id=u.id, viewer_id=current_user.id)
 
-    return SuccessOutput("profile", u.to_dict())
+    user_dict = u.to_dict()
+    # TODO: Update swagger with this
+    user_dict["distance"] = _get_distance(current_user.geohash, u.geohash)
+
+    return SuccessOutput("profile", user_dict)
