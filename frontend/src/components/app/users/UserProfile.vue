@@ -1,8 +1,13 @@
 <template>
   <!-- eslint-disable -->
   <div class="profileContainer">
-    <div class="text-center text-wrap p-8 border-b">
-      <h1 class="text-gray-matcha text-3xl font-semibold mb-6">{{user.first_name}}, {{user.age}}</h1>
+    <div id="sliderScoreContainer" class="text-center w-full rounded-lt-md heatScore relative h-6">
+      <div id="sliderScore" class="bg-purple-matcha absolute top-0 flex flex-col items-center justify-center h-12 w-auto rounded-b-md">
+        <h1 class="text-white-matcha px-2"><span class="font-bold">{{user.heat_score}}</span> likes</h1>
+      </div>
+    </div>
+    <div class="text-center text-wrap p-8 mt-4 border-b">
+      <h1 class="text-gray-matcha text-4xl font-bold mb-6">{{user.first_name}}, {{user.age}}</h1>
       <div v-if="!user.is_online" class="flex items-center mt-2 text-left">
         <img class="w-3 h-3 mr-2" src="../../../assets/recommendations/offline.png">
         <h1 class="text-gray-600">Last seen {{user.last_seen}}</h1>
@@ -20,25 +25,23 @@
         <h1 class="text-gray-600"><span class="capitalize">{{user.gender}}</span> looking for {{preferences()}}</h1>
       </div>
     </div>
-    <div class="text-center text-wrap p-8 border-b">
+    <div class="text-center text-wrap p-8 pt-16 border-b">
       <h1>{{user.bio}}</h1>
       <div class="flex flex-wrap justify-center mx-auto mt-6">
         <h1 v-for="(interest, index) in userInterests" :key="index"
         class="px-4 py-1 border rounded-xl mr-2 mt-2 text-gray-600 text-sm">{{interest}}</h1>
       </div>
     </div>
-    <div class="text-left px-4 pt-8 pb-1">
-      <h1 class="text-purple-matcha text-sm">Popularity</h1>
-    </div>
-    <div id="sliderScoreContainer" class="text-center w-full heatScore relative h-6">
-      <div id="sliderScore" class="absolute top-0 flex items-center justify-center h-12 w-auto rounded-b-lg">
-        <h1 class="text-white-matcha px-2">{{user.heat_score}}</h1>
+    <div class="text-center flex flex-col mx-auto p-8 border-b">
+      <div class="w-full flex justify-center items-center border border-purple-matcha py-2 rounded-lg cursor-pointer">
+        <img src="../../../assets/heart.png" class="h-8">
+        <h1 class="text-purple-matcha text-2xl ml-2 font-semibold">Like</h1>
       </div>
-    </div>
-    <div class="text-center flex mx-auto p-8 mt-4 border-b">
-      <div class="w-full border border-purple-matcha py-2 rounded-lg cursor-pointer">
-        <img src="../../../assets/heart.png" class="mx-auto w-8 h-8">
+      <div class="w-full flex justify-center items-center border border-purple-matcha mt-8 py-2 rounded-lg cursor-pointer">
+        <img src="../../../assets/superLike.png" class="h-8">
+        <h1 class="text-purple-matcha text-2xl ml-2 font-semibold">Super Like</h1>
       </div>
+      <h1 class="text-purple-matcha text-sm mt-2">Worth 10 likes, and {{user.first_name}} sees your extra interest</h1>
     </div>
     <div class="text-center p-8 border-b cursor-pointer">
       <h1 class="uppercase mx-auto">Block user</h1>
@@ -108,10 +111,6 @@ export default {
 
 .heatScore {
   background-image: linear-gradient(to right, #efedfd, #6246EA);
-}
-
-#sliderScore {
-  background: #3b2a8c;
 }
 
 </style>
