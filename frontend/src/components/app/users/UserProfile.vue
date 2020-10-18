@@ -2,7 +2,7 @@
   <!-- eslint-disable -->
   <div class="profileContainer md:overflow-scroll">
     <div class="text-center text-wrap p-8 md:pt-0 border-b">
-      <h1 class="text-gray-matcha text-3xl font-semibold">{{user.first_name}} {{user.last_name}}, {{user.age}}</h1>
+      <h1 class="text-gray-matcha text-3xl font-semibold">{{user.first_name}}, {{user.age}}</h1>
       <div class="flex items-center text-left33">
         <img src="../../../assets/gender.png" class="w-4 h-4 mr-2">
         <h1 class="text-gray-matcha mt-4"><span class="capitalize">{{user.gender}}</span> looking for {{preferences()}}</h1>
