@@ -5,7 +5,7 @@
     class="relative image-height"
     v-bind:style="{
       'background-repeat': 'no-repeat',
-      'background-position': 'center top',
+      'background-position': 'center center',
       'background-size' :'cover',
       'background-image': 'url(' + getImage() + ')'}">
     <div v-if="imagesCount > 1" class="absolute flex w-full top-0 left-0 w-full z-10 px-8 pt-1">
