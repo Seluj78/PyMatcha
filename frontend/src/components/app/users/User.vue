@@ -33,9 +33,8 @@ export default {
     },
   },
   async beforeMount() {
-    const userRequest = await this.$http.get(`/users/${this.$route.params.id}`);
-    this.user = userRequest.data;
-    console.log(this.user);
+    const userRequest = await this.$http.get(`/profile/view/${this.$route.params.id}`);
+    this.user = userRequest.data.profile;
   },
 };
 </script>
