@@ -84,7 +84,11 @@ export default {
     const sliderScore = document.getElementById('sliderScore');
     const sliderScoreWidth = `${sliderScore.getBoundingClientRect().width}px`;
     const marginLeft = `${(this.user.heat_score / maxScore) * 100}%`;
-    sliderScore.style.marginLeft = `calc(${marginLeft} - ${sliderScoreWidth})`;
+    if (this.user.heat_score / maxScore < 0.2) {
+      sliderScore.style.marginLeft = `${marginLeft}`;
+    } else {
+      sliderScore.style.marginLeft = `calc(${marginLeft} - ${sliderScoreWidth})`;
+    }
     const interests = this.user.tags;
     if (interests) {
       for (let j = 0; j < interests.length; j += 1) {
