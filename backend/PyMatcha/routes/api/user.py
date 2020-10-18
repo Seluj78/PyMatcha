@@ -20,7 +20,6 @@ from flask import Blueprint
 from flask import current_app
 from flask import jsonify
 from flask_jwt_extended import jwt_required
-from PyMatcha import redis
 from PyMatcha.models.user import get_user
 from PyMatcha.models.user import User
 from PyMatcha.utils.errors import NotFoundError
@@ -56,11 +55,7 @@ def get_one_user(uid):
 @user_bp.route("/users/online", methods=["GET"])
 @jwt_required
 def get_all_online_users():
-    user_id = None  # noqa
-    date_lastseen = None  # noqa
     online_user_list = []
-    for key in redis.scan_iter("online_user:*"):
-        user_id = str(key).split(":")[1]
-        date_lastseen = float(redis.get(key))
-        online_user_list.append({"id": user_id, "date_lastseen": date_lastseen})
+    for user in User.get_multis(is_online=True):
+        online_user_list.append(user.to_dict())
     return jsonify(online_user_list)

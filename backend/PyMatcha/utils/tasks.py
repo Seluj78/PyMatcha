@@ -1,6 +1,5 @@
 import datetime
 import json
-import logging
 from math import ceil
 
 from PyMatcha import celery
@@ -20,9 +19,10 @@ MESSAGES_DIVIDER = 5
 
 @celery.on_after_configure.connect
 def setup_periodic_tasks(sender, **kwargs):
-    sender.add_periodic_task(60, update_offline_users.s(), name="Update online users every minute")
+    sender.add_periodic_task(60, take_users_offline.s(), name="Update online users every minute")
     sender.add_periodic_task(3600, update_heat_scores.s(), name="Update heat scores every hour")
     sender.add_periodic_task(60, update_user_recommendations.s(), name="Update user recommendations every minute")
+    sender.add_periodic_task(30, take_random_users_online.s(), name="Set 100 random users online every 30 seconds")
     sender.add_periodic_task(
         600, calc_search_min_max.s(), name="Update Minimum and Maximum scores and ages for search every 10 minutes"
     )
@@ -60,47 +60,19 @@ def update_heat_scores():
 
 
 @celery.task
-def update_offline_users():
-    logging.debug("Updating offline users")
-    # Get the last login deadline
-    login_deadline_timestamp = float(datetime.datetime.utcnow().timestamp()) - 120
-    count = 0
-    online_count = 0
-    offline_count = 0
-    # For all user keys
-    for key in redis.scan_iter("online_user:*"):
-        # Get the user id
-        user_id = str(key).split(":")[1]
-        date_lastseen = float(redis.get(key))
-        # If the user has passed the deadline
-        if date_lastseen < login_deadline_timestamp:
-            u = User.get(id=user_id)
-            if u:
-                u.date_lastseen = datetime.datetime.fromtimestamp(date_lastseen)
-                u.is_online = False
-                u.save()
-                offline_count += 1
-            # delete the key in redis, setting the user as offline in redis
-            redis.delete(key)
-            count += 1
+def take_users_offline():
+    went_offline_count = 0
+    stayed_online_count = 0
+    for user in User.get_multis(is_online=True):
+        if user.date_lastseen + datetime.timedelta(minutes=2) < datetime.datetime.utcnow():
+            user.is_online = False
+            user.save()
+            went_offline_count += 1
         else:
-            u = User.get(id=user_id)
-            if not u:
-                # Edge case where the user has been deleted from DB while he was still online
-                redis.delete(key)
-            else:
-                u.date_lastseen = datetime.datetime.fromtimestamp(date_lastseen)
-                u.is_online = True
-                u.save()
-                online_count += 1
-            count += 1
-    logging.debug(
-        "Updated online status for {} users. {} passed offline and {} passed or stayed online.".format(
-            count, offline_count, online_count
-        )
-    )
-    return "Updated online status for {} users. {} passed offline and {} passed or stayed online.".format(
-        count, offline_count, online_count
+            stayed_online_count += 1
+    return (
+        f"{stayed_online_count} stayed online and "
+        f"{went_offline_count} went offline for {went_offline_count + stayed_online_count} users"
     )
 
 
@@ -143,3 +115,15 @@ def calc_search_min_max():
     minmax = {"min_score": min_score, "max_score": max_score, "min_age": min_age, "max_age": max_age}
     redis.set("search_minmax", json.dumps(minmax))
     return "Successfully updated min and max ages and scores"
+
+
+@celery.task
+def take_random_users_online():
+    for user in User.select_random(100):
+        if not user.skip_recommendations:
+            # User isn't a bot, so skip him
+            continue
+        user.is_online = True
+        user.date_lastseen = datetime.datetime.utcnow()
+        user.save()
+    return "Successfully set 100 users online"

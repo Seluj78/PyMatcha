@@ -195,15 +195,17 @@ from PyMatcha.utils.errors import NotFoundError
 @jwt.user_loader_callback_loader
 def jwt_user_callback(identity):
     try:
-        u = get_user(identity["id"])
+        user = get_user(identity["id"])
     except NotFoundError:
         # The user who the server issues the token for was deleted in the db.
         return None
 
     with configure_scope() as scope:
-        scope.user = {"email": u.email, "id": u.id, "username": u.username}
-    redis.set("online_user:" + str(identity["id"]), datetime.datetime.utcnow().timestamp())
-    return u
+        scope.user = {"email": user.email, "id": user.id, "username": user.username}
+    user.is_online = True
+    user.date_lastseen = datetime.datetime.utcnow()
+    user.save()
+    return user
 
 
 @jwt.token_in_blacklist_loader

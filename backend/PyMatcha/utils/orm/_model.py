@@ -373,6 +373,25 @@ class Model(object):
             yield cls(item)
 
     @classmethod
+    def select_random(cls, count):
+        logging.debug(f"Getting {count} random entries from {cls.table_name}")
+        temp = cls()
+        with temp.db.cursor() as c:
+            c.execute(
+                """
+                SELECT * FROM {}
+                ORDER BY RAND()
+                LIMIT {}
+                """.format(
+                    temp.table_name, count
+                )
+            )
+            data = c.fetchall()
+            c.close()
+        for item in data:
+            yield cls(item)
+
+    @classmethod
     def drop_table(cls):
         logging.warning("Dropping table {}".format(cls.table_name))
         with cls.db.cursor() as c:

@@ -39,6 +39,7 @@ from PyMatcha.utils.errors import ConflictError
 from PyMatcha.utils.errors import NotFoundError
 from PyMatcha.utils.orm import Field
 from PyMatcha.utils.orm import Model
+from timeago import format as timeago_format
 
 
 class User(Model):
@@ -194,6 +195,7 @@ class User(Model):
         returned_dict["likes"] = {"sent": [], "received": []}
         returned_dict["likes"]["sent"] = [like.to_dict() for like in self.get_likes_sent()]
         returned_dict["likes"]["received"] = [like.to_dict() for like in self.get_likes_received()]
+        returned_dict["last_seen"] = timeago_format(self.date_lastseen, datetime.datetime.utcnow())
         returned_dict.pop("password")
         returned_dict.pop("previous_reset_token")
 
