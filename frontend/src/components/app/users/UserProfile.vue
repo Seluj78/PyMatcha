@@ -33,13 +33,13 @@
       </div>
     </div>
     <div class="text-center flex flex-col mx-auto p-8 border-b">
-      <div class="w-full flex justify-center items-center border border-purple-matcha py-2 rounded-lg cursor-pointer">
+      <div class="w-full flex justify-center items-center bg-purple-matcha py-4 rounded-lg cursor-pointer">
         <img src="../../../assets/heart.png" class="h-8">
-        <h1 class="text-purple-matcha text-2xl ml-2 font-semibold">Like</h1>
+        <h1 class="text-white-matcha text-2xl ml-2 font-bold">Like</h1>
       </div>
-      <div class="w-full flex justify-center items-center border border-purple-matcha mt-8 py-2 rounded-lg cursor-pointer">
+      <div class="w-full flex justify-center items-center bg-purple-matcha mt-8 py-4 rounded-lg cursor-pointer">
         <img src="../../../assets/superLike.png" class="h-8">
-        <h1 class="text-purple-matcha text-2xl ml-2 font-semibold">Super Like</h1>
+        <h1 class="text-white-matcha text-2xl ml-2 font-bold">Super Like</h1>
       </div>
       <h1 class="text-purple-matcha text-sm mt-2">Worth 10 likes, and {{user.first_name}} sees your extra interest</h1>
     </div>
