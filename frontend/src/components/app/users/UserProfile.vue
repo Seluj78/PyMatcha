@@ -28,7 +28,7 @@
       </div>
     </div>
     <div class="text-left px-4 pt-8 pb-1">
-      <h1 id="sliderScoreHeader">Heat score</h1>
+      <h1 class="text-purple-matcha text-sm">Popularity</h1>
     </div>
     <div id="sliderScoreContainer" class="text-center w-full heatScore relative h-6">
       <div id="sliderScore" class="absolute top-0 flex items-center justify-center h-12 w-auto rounded-b-lg">
@@ -107,15 +107,11 @@ export default {
 }
 
 .heatScore {
-  background-image: linear-gradient(to right, #fae6ff, #cc00ff);
+  background-image: linear-gradient(to right, #efedfd, #6246EA);
 }
 
 #sliderScore {
-  background: #660066;
-}
-
-#sliderScoreHeader {
-  color: #cc00ff;
+  background: #3b2a8c;
 }
 
 </style>
