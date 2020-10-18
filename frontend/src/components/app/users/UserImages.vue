@@ -38,13 +38,9 @@
 </template>
 
 <script>
-import imageMan from '@/assets/recommendations/avatars/man1.png';
-import imageWoman from '@/assets/recommendations/avatars/woman1.png';
-
 export default {
-  // props: ['images'],
+  props: ['images'],
   data: () => ({
-    images: [{ url: imageMan, id: 0 }, { url: imageWoman, id: 1 }],
     currentImage: 0,
     imagesCount: 0,
   }),
@@ -63,7 +59,7 @@ export default {
       this.currentImage = index;
     },
     getImage() {
-      return this.images[this.currentImage].url;
+      return this.images[this.currentImage].link;
     },
   },
   beforeMount() {

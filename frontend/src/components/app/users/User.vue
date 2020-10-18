@@ -3,12 +3,11 @@
   <div class="sm:mx-16 lg:mx-32">
     <NavBar v-bind:currentRoute="'Browse'"></NavBar>
     <section class="mx-auto">
-<!--      <UserImages v-bind:images="user.images"></UserImages>-->
       <div v-on:click="goBack()" class="sort-button ml-auto rounded-md text-lg w-12 mr-4 mb-4">
         <h1 class="noSelect">←</h1>
       </div>
       <div v-if="user" class="md:flex md:items-start">
-        <UserImages class="md:w-1/2 md:order-2 md:rounded-md"></UserImages>
+        <UserImages v-bind:images="user.images" class="md:w-1/2 md:order-2 md:rounded-md"></UserImages>
         <UserProfile class="md:w-1/2 md:order-1" v-bind:user="user"></UserProfile>
       </div>
     </section>
