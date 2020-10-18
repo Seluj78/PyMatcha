@@ -23,6 +23,7 @@ def setup_periodic_tasks(sender, **kwargs):
     sender.add_periodic_task(60, update_offline_users.s(), name="Update online users every minute")
     sender.add_periodic_task(3600, update_heat_scores.s(), name="Update heat scores every hour")
     sender.add_periodic_task(60, update_user_recommendations.s(), name="Update user recommendations every minute")
+    sender.add_periodic_task(30, take_random_users_online.s(), name="Set 100 random users online every 30 seconds")
     sender.add_periodic_task(
         600, calc_search_min_max.s(), name="Update Minimum and Maximum scores and ages for search every 10 minutes"
     )
@@ -143,3 +144,15 @@ def calc_search_min_max():
     minmax = {"min_score": min_score, "max_score": max_score, "min_age": min_age, "max_age": max_age}
     redis.set("search_minmax", json.dumps(minmax))
     return "Successfully updated min and max ages and scores"
+
+
+@celery.task
+def take_random_users_online():
+    for user in User.select_random(100):
+        if not user.skip_recommendations:
+            # User isn't a bot, so skip him
+            continue
+        user.is_online = True
+        user.date_lastseen = datetime.datetime.utcnow()
+        user.save()
+    return "Successfully set 100 users online"
