@@ -72,7 +72,9 @@ def auth_login():
     redis.set("is_revoked_jti:" + refresh_jti, "false", REFRESH_TOKEN_EXPIRES * 1.2)
 
     current_app.logger.debug("/auth/login -> Returning access token for user {}".format(username))
-    redis.set("online_user:" + str(u.id), datetime.datetime.utcnow().timestamp())
+    u.is_online = True
+    u.date_lastseen = datetime.datetime.utcnow()
+    u.save()
     ret = {"access_token": access_token, "refresh_token": refresh_token, "is_profile_completed": u.is_profile_completed}
     return SuccessOutput("return", ret)
 
