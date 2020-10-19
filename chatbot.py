@@ -10,11 +10,7 @@ if __name__ == "__main__":
     )
 
     trainer = ChatterBotCorpusTrainer(chatbot)
-
     trainer.train("chatterbot.corpus.english")
-
-    # ubuntu_trainer = UbuntuCorpusTrainer(chatbot)
-    # ubuntu_trainer.train()
 
     while True:
         user_input = input("> ")

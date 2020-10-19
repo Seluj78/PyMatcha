@@ -141,3 +141,10 @@ def take_random_users_online():
         user.date_lastseen = datetime.datetime.utcnow()
         user.save()
     return "Successfully set 250 users online"
+
+
+@celery.task
+def random_bot_action():
+    for user in User.get_multis(skip_recommendations=True):
+        # TODO: Check notifications
+        pass
