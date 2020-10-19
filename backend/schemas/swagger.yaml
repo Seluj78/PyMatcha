@@ -160,52 +160,13 @@ paths:
                     type: string
                     description: The new and fresh access token
                     example: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE2MDAzMjYzMjksIm5iZiI6MTYwMDMyNjMyOSwianRpIjoiZTA0ZWQ3NmMtMTcxMC00ZjQ4LWFkNzMtZDBmOTMxZTkxNzM0IiwiZXhwIjoxNjAwMzI3MjI5LCJpZGVudGl0eSI6eyJpZCI6MSwiZW1haWwiOiJmb29AZXhhbXBsZS5vcmciLCJ1c2VybmFtZSI6ImZvbyIsImlzX29ubGluZSI6MCwiZGF0ZV9sYXN0c2VlbiI6IldlZCwgMTYgU2VwIDIwMjAgMTU6Mzk6MDQgR01UIn0sImZyZXNoIjpmYWxzZSwidHlwZSI6ImFjY2VzcyJ9.dFJMy-04thKA9Q268bgQhiqLDrkqnCOCaiwHJ1XXook
-  /auth/access_revoke:
+  /auth/logout:
     post:
       tags:
         - Authentication
-      summary: Revokes the access token
+      summary: Logout user
       description: ""
-      operationId: revokeAccessToken
-      security:
-        - accessToken: [ ]
-      responses:
-        "409":
-          description: Unauthorized error, token already revoked.
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  msg:
-                    type: string
-                    example: Token has been revoked
-                    default: Token has been revoked
-        "200":
-          description: Token successfully revoked
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  success:
-                    type: boolean
-                    description: If the request is a success
-                    example: true
-                  code:
-                    type: integer
-                    description: The status code
-                    example: 200
-                  message:
-                    type: string
-                    example: Access token revoked
-  /auth/refresh_revoke:
-    post:
-      tags:
-        - Authentication
-      summary: Revokes the refresh token
-      description: ""
-      operationId: revokeRefreshToken
+      operationId: logoutUser
       security:
         - refreshToken: [ ]
       responses:
@@ -221,7 +182,7 @@ paths:
                     example: Token has been revoked
                     default: Token has been revoked
         "200":
-          description: Token successfully revoked
+          description: Logout successful.
           content:
             application/json:
               schema:
@@ -237,7 +198,7 @@ paths:
                     example: 200
                   message:
                     type: string
-                    example: Refresh token revoked
+                    example: Logout successful.
   /auth/confirm/{token}:
     post:
       summary: Confirm a user with a token
