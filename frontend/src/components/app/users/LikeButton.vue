@@ -1,0 +1,42 @@
+<template>
+  <!-- eslint-disable max-len -->
+  <div class="w-full">
+    <div @mouseover="hover = true"
+         @mouseleave="hover = false"
+         @click="clicked = !clicked"
+         class="w-full flex justify-center items-center bg-purple-matcha py-4 rounded-lg cursor-pointer">
+      <img v-bind:src="getImage" class="h-8">
+      <h1 class="text-white-matcha text-2xl ml-2 font-bold">{{getText}}</h1>
+    </div>
+    <h1 v-if="description" class="text-purple-matcha text-sm mt-2">{{description}}</h1>
+  </div>
+</template>
+
+<script>
+/* eslint-disable max-len */
+
+export default {
+  props: ['startImage', 'hoverImage', 'clickedImage', 'text', 'textRevert', 'description'],
+  data: () => ({
+    hover: false,
+    clicked: false,
+  }),
+  computed: {
+    getImage() {
+      if (this.clicked) {
+        return this.clickedImage;
+      }
+      if (this.hover) {
+        return this.hoverImage;
+      }
+      return this.startImage;
+    },
+    getText() {
+      if (this.clicked) {
+        return this.textRevert;
+      }
+      return this.text;
+    },
+  },
+};
+</script>

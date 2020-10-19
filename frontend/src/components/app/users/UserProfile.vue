@@ -1,5 +1,5 @@
 <template>
-  <!-- eslint-disable -->
+  <!-- eslint-disable max-len -->
   <div class="profileContainer">
     <div id="sliderScoreContainer" class="text-center w-full rounded-lt-md heatScore relative h-6">
       <div id="sliderScore" class="bg-purple-matcha absolute top-0 flex flex-col items-center justify-center h-12 w-auto rounded-b-md">
@@ -33,17 +33,22 @@
       </div>
     </div>
     <div class="text-center flex flex-col mx-auto p-8 border-b">
-      <div class="w-full flex justify-center items-center bg-purple-matcha py-4 rounded-lg cursor-pointer">
-        <img src="../../../assets/heart.png" class="h-8">
-        <h1 class="text-white-matcha text-2xl ml-2 font-bold">Like</h1>
-      </div>
-      <div class="w-full flex justify-center items-center bg-purple-matcha mt-8 py-4 rounded-lg cursor-pointer">
-        <img src="../../../assets/superLike.png" class="h-8">
-        <h1 class="text-white-matcha text-2xl ml-2 font-bold">Super Like</h1>
-      </div>
-      <h1 class="text-purple-matcha text-sm mt-2">Worth 10 likes, and {{user.first_name}} sees your extra interest</h1>
+      <LikeButton
+        v-bind:startImage="likeImage"
+        v-bind:hoverImage="likeImageHover"
+        v-bind:clickedImage="likeImageClicked"
+        v-bind:text="'Like'"
+        v-bind:textRevert="'Unlike'"></LikeButton>
+      <LikeButton
+        class="mt-8"
+        v-bind:startImage="superLikeImage"
+        v-bind:hoverImage="superLikeImageHover"
+        v-bind:clickedImage="superLikeImageClicked"
+        v-bind:text="'Super Like'"
+        v-bind:textRevert="'Unlike'"
+        v-bind:description="`Worth 10 likes, and ${user.first_name} sees your extra interest`"></LikeButton>
     </div>
-    <div class="text-center p-8 border-b cursor-pointer relative">
+    <div class="text-center p-8 border-b relative">
       <DropdownDisplayChoice
         v-on:save-single-choice="saveSingleChoice"
         class="max-w-xs mx-auto"
@@ -52,7 +57,7 @@
         v-bind:options="['harassment', 'bot', 'spam', 'inappropriate content']"></DropdownDisplayChoice>
       <h1 class="onboarding-sub-container-content-button-outline mx-auto">Report</h1>
     </div>
-    <div class="text-center p-8 cursor-pointer">
+    <div class="text-center p-8">
       <h1 class="onboarding-sub-container-content-button-outline text-red-500 mt-0 border-red-500 mx-auto">Block</h1>
       <h1 class="mx-auto mt-2 text-sm text-gray-600">Don't suggest this user and stop notifications</h1>
     </div>
@@ -61,14 +66,28 @@
 
 <script>
 import DropdownDisplayChoice from '@/components/shared/DropdownDisplayChoice.vue';
+import LikeButton from '@/components/app/users/LikeButton.vue';
+import likeImage from '../../../assets/like.png';
+import likeImageHover from '../../../assets/likeHover.png';
+import likeImageClicked from '../../../assets/likeClicked.png';
+import superLikeImage from '../../../assets/superLike.png';
+import superLikeImageHover from '../../../assets/superLikeImageHover.png';
+import superLikeImageClicked from '../../../assets/superLikeImageClicked.png';
 
 export default {
   props: ['user'],
   components: {
+    LikeButton,
     DropdownDisplayChoice,
   },
   data: () => ({
     userInterests: [],
+    likeImage,
+    likeImageHover,
+    likeImageClicked,
+    superLikeImage,
+    superLikeImageHover,
+    superLikeImageClicked,
   }),
   methods: {
     preferences() {
