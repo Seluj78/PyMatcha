@@ -35,12 +35,16 @@ def create_user_recommendations(user_to_update):
 
     matches_id = [match.id for match in user_to_update.get_matches()]
     likes_sent_user_ids = [like.liked_id for like in user_to_update.get_likes_sent()]
+    blocked_ids = [u.blocked_id for u in user_to_update.get_blocks()]
 
     for user in query:
         if user.id == user_to_update.id:
             continue
         if user.id in matches_id or user.id in likes_sent_user_ids:
             continue
+        if user.id in blocked_ids:
+            continue
+
         score = 0
 
         distance = _get_distance(user_to_update.geohash, user.geohash)

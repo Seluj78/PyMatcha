@@ -200,6 +200,25 @@ def _create_images_table(db):
         c.close()
 
 
+def _create_blocks_table(db):
+    with db.cursor() as c:
+        logging.info("Creating table blocks.")
+        c.execute(DISABLE_SQL_NOTES)
+        c.execute(
+            """
+        CREATE TABLE IF NOT EXISTS blocks
+        (
+        id            INT auto_increment PRIMARY KEY,
+        blocker_id    INT NOT NULL,
+        blocked_id    INT NOT NULL,
+        dt_blocked    DATETIME DEFAULT NOW()
+        ) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci ;
+        """
+        )
+        c.execute(ENABLE_SQL_NOTES)
+        c.close()
+
+
 def create_tables(db):
     _create_user_table(db)
     _create_tags_table(db)
@@ -209,3 +228,4 @@ def create_tables(db):
     _create_matches_table(db)
     _create_messages_table(db)
     _create_images_table(db)
+    _create_blocks_table(db)
