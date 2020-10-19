@@ -21,7 +21,7 @@
       </div>
       <div class="flex items-center mt-2 text-left">
         <img src="../../../assets/location.png" class="w-4 h-4 mr-2">
-        <h1 class="text-gray-600">{{Math.floor(user.distance)}} km away</h1>
+        <h1 class="text-gray-600">{{Math.floor(user.distance)}}km away</h1>
       </div>
       <div class="flex items-center mt-2 text-left">
         <img src="../../../assets/gender.png" class="w-4 h-4 mr-2">
