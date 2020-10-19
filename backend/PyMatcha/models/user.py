@@ -65,6 +65,8 @@ class User(Model):
     confirmed_on = Field(datetime.datetime, fmt="%Y-%m-%d %H:%M:%S")
     previous_reset_token = Field(str)
     skip_recommendations = Field(bool)
+    superlikes_counter = Field(int)
+    superlikes_reset_dt = Field(datetime.datetime, fmt="%Y-%m-%d %H:%M:%S")
 
     @staticmethod
     def create(
@@ -86,6 +88,8 @@ class User(Model):
         is_confirmed: bool = False,
         confirmed_on: datetime.datetime = None,
         skip_recommendations: bool = False,
+        superlikes_counter: int = 5,
+        superlikes_reset_dt: Optional[datetime.datetime] = None,
     ) -> User:
         # Check email availability
         if User.get(email=email):
@@ -140,6 +144,8 @@ class User(Model):
             confirmed_on=confirmed_on,
             previous_reset_token=None,
             skip_recommendations=skip_recommendations,
+            superlikes_counter=superlikes_counter,
+            superlikes_reset_dt=superlikes_reset_dt,
         )
         new_user.save()
         logging.debug("New user {} created".format(new_user.email))
@@ -180,6 +186,8 @@ class User(Model):
             confirmed_on=None,
             previous_reset_token=None,
             skip_recommendations=False,
+            superlikes_counter=5,
+            superlikes_reset_dt=None,
         )
         new_user.save()
         logging.debug("New user {} created".format(new_user.email))
