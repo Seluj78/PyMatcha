@@ -1,10 +1,13 @@
 <template>
   <!-- eslint-disable max-len -->
-  <div class="profileContainer">
+  <div class="profileContainer relative">
     <div id="sliderScoreContainer" class="text-center w-full rounded-lt-md heatScore relative h-6">
-      <div id="sliderScore" class="bg-purple-matcha absolute top-0 flex flex-col items-center justify-center h-12 w-auto rounded-b-md">
-        <h1 class="text-white-matcha px-2">score <span class="font-bold">{{user.heat_score}}</span></h1>
+      <div @mouseover="showScoreExplanation = true" @click="showScoreExplanation = true" id="sliderScore" class="cursor-default bg-purple-matcha absolute top-0 flex flex-col items-center justify-center h-12 w-auto rounded-b-md">
+        <h1 class="text-white-matcha px-2">{{user.heat_score}}</h1>
       </div>
+    </div>
+    <div v-if="showScoreExplanation" @mouseleave="showScoreExplanation = false" @click="showScoreExplanation = false" class="absolute w-full top-0 h-16 flex text-center items-center justify-center sm:rounded-b-md md:rounded-b-none bg-purple-matcha z-20">
+      <h1 class="text-white-matcha cursor-default p-2">Score based on likes, matches, messages count</h1>
     </div>
     <div class="text-center text-wrap p-8 mt-4 border-b">
       <h1 class="text-gray-matcha text-4xl font-bold mb-6">{{user.first_name}}, {{user.age}}</h1>
@@ -92,6 +95,7 @@ export default {
   },
   data: () => ({
     userInterests: [],
+    showScoreExplanation: false,
     likeImage,
     likeImageHover,
     likeImageClicked,
