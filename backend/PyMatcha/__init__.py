@@ -257,6 +257,25 @@ if application.debug:
     application.register_blueprint(debug_bp)
 
 
+@jwt.revoked_token_loader
+def jwt_revoked_token_callback():
+    return (
+        jsonify(
+            {
+                "code": 401,
+                "error": {
+                    "message": "Token has been revoked.",
+                    "name": "Unauthorized Error",
+                    "solution": "Please login again",
+                    "type": "UnauthorizedError",
+                },
+                "success": False,
+            }
+        ),
+        401,
+    )
+
+
 @jwt.unauthorized_loader
 def no_jwt_callback(error_message):
     return (
@@ -273,6 +292,25 @@ def no_jwt_callback(error_message):
             }
         ),
         401,
+    )
+
+
+@jwt.invalid_token_loader
+def jwt_invalid_token_callback(error_message):
+    return (
+        jsonify(
+            {
+                "code": 400,
+                "error": {
+                    "message": error_message,
+                    "name": "Bad Request Error",
+                    "solution": "Try again (The token is invalid)",
+                    "type": "BadRequestError",
+                },
+                "success": False,
+            }
+        ),
+        400,
     )
 
 
