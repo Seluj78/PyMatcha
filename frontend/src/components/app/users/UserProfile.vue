@@ -43,18 +43,29 @@
       </div>
       <h1 class="text-purple-matcha text-sm mt-2">Worth 10 likes, and {{user.first_name}} sees your extra interest</h1>
     </div>
-    <div class="text-center p-8 border-b cursor-pointer">
-      <h1 class="uppercase mx-auto">Block user</h1>
+    <div class="text-center p-8 border-b cursor-pointer relative">
+      <DropdownDisplayChoice
+        v-on:save-single-choice="saveSingleChoice"
+        class="max-w-xs mx-auto"
+        v-bind:name="'report'"
+        v-bind:starting-option="'harassment'"
+        v-bind:options="['harassment', 'bot', 'spam', 'inappropriate content']"></DropdownDisplayChoice>
+      <h1 class="onboarding-sub-container-content-button-outline mx-auto">Report</h1>
     </div>
     <div class="text-center p-8 cursor-pointer">
-      <h1 class="uppercase mx-auto">Report as fake</h1>
+      <h1 class="uppercase mx-auto">Block user</h1>
     </div>
   </div>
 </template>
 
 <script>
+import DropdownDisplayChoice from '@/components/shared/DropdownDisplayChoice.vue';
+
 export default {
   props: ['user'],
+  components: {
+    DropdownDisplayChoice,
+  },
   data: () => ({
     userInterests: [],
   }),
@@ -79,6 +90,11 @@ export default {
         return 'genders other than men & women';
       }
       return 'any gender';
+    },
+    saveSingleChoice(...args) {
+      const [key, value] = args;
+      console.log(key);
+      console.log(value);
     },
   },
   async beforeMount() {
