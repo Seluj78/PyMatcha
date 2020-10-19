@@ -3,7 +3,7 @@
   <div class="profileContainer">
     <div id="sliderScoreContainer" class="text-center w-full rounded-lt-md heatScore relative h-6">
       <div id="sliderScore" class="bg-purple-matcha absolute top-0 flex flex-col items-center justify-center h-12 w-auto rounded-b-md">
-        <h1 class="text-white-matcha px-2"><span class="font-bold">{{user.heat_score}}</span> likes</h1>
+        <h1 class="text-white-matcha px-2"><span class="font-bold">{{getHeatScore}}</span> likes</h1>
       </div>
     </div>
     <div class="text-center text-wrap p-8 mt-4 border-b">
@@ -35,15 +35,17 @@
     <div class="text-center flex flex-col mx-auto p-8 border-b">
       <LikeButton
         v-if="!likeButtons.superLikeClicked"
+        v-bind:name="'like'"
         v-bind:startImage="likeImage"
         v-bind:hoverImage="likeImageHover"
         v-bind:clickedImage="likeImageClicked"
         v-bind:text="'Like'"
         v-bind:textRevert="'Unlike'"
-        v-on:clicked="likeButtons.likeClicked = true"
-        v-on:revert="likeButtons.likeClicked = false"></LikeButton>
+        v-on:clicked="buttonClicked"
+        v-on:revert="buttonRevert"></LikeButton>
       <LikeButton
         v-if="!likeButtons.likeClicked && superLikesLeft()"
+        v-bind:name="'superLike'"
         v-bind:class="{'mt-8': !likeButtons.superLikeClicked}"
         v-bind:startImage="superLikeImage"
         v-bind:hoverImage="superLikeImageHover"
@@ -51,8 +53,8 @@
         v-bind:text="'Super Like'"
         v-bind:textRevert="'Unlike'"
         v-bind:description="`Worth 10 likes, and ${user.first_name} sees your extra interest`"
-        v-on:clicked="likeButtons.superLikeClicked = true"
-        v-on:revert="likeButtons.superLikeClicked = false"></LikeButton>
+        v-on:clicked="buttonClicked"
+        v-on:revert="buttonRevert"></LikeButton>
     </div>
     <div class="text-center p-8 border-b relative">
       <DropdownDisplayChoice
@@ -124,10 +126,41 @@ export default {
     superLikesLeft() {
       return true;
     },
+    async buttonClicked(...args) {
+      const [name] = args;
+      if (name === 'like') {
+        await this.$http.post(`/like/${this.user.id}`, { is_superlike: false });
+        this.likeButtons.likeClicked = true;
+      } else if (name === 'superLike') {
+        await this.$http.post(`/like/${this.user.id}`, { is_superlike: true });
+        this.likeButtons.superLikeClicked = true;
+      }
+    },
+    async buttonRevert(...args) {
+      const [name] = args;
+      if (name === 'like') {
+        await this.$http.post(`/unlike/${this.user.id}`, { is_superlike: false });
+        this.likeButtons.likeClicked = false;
+      } else if (name === 'superLike') {
+        await this.$http.post(`/unlike/${this.user.id}`, { is_superlike: true });
+        this.likeButtons.superLikeClicked = false;
+      }
+    },
     saveSingleChoice(...args) {
       const [key, value] = args;
       console.log(key);
       console.log(value);
+    },
+  },
+  computed: {
+    getHeatScore() {
+      if (this.likeButtons.likeClicked) {
+        return this.user.heat_score + 1;
+      }
+      if (this.likeButtons.superLikeClicked) {
+        return this.user.heat_score + 10;
+      }
+      return this.user.heat_score;
     },
   },
   async beforeMount() {

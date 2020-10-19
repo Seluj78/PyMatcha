@@ -16,7 +16,7 @@
 /* eslint-disable max-len */
 
 export default {
-  props: ['startImage', 'hoverImage', 'clickedImage', 'text', 'textRevert', 'description'],
+  props: ['name', 'startImage', 'hoverImage', 'clickedImage', 'text', 'textRevert', 'description'],
   data: () => ({
     hover: false,
     clicked: false,
@@ -25,9 +25,9 @@ export default {
     toggle() {
       this.clicked = !this.clicked;
       if (this.clicked) {
-        this.$emit('clicked');
+        this.$emit('clicked', this.name);
       } else {
-        this.$emit('revert');
+        this.$emit('revert', this.name);
       }
     },
   },
