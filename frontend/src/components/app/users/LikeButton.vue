@@ -3,7 +3,7 @@
   <div class="w-full">
     <div @mouseover="hover = true"
          @mouseleave="hover = false"
-         @click="clicked = !clicked"
+         @click="toggle()"
          class="w-full flex justify-center items-center bg-purple-matcha py-4 rounded-lg cursor-pointer">
       <img v-bind:src="getImage" class="h-8">
       <h1 class="text-white-matcha text-2xl ml-2 font-bold">{{getText}}</h1>
@@ -21,6 +21,16 @@ export default {
     hover: false,
     clicked: false,
   }),
+  methods: {
+    toggle() {
+      this.clicked = !this.clicked;
+      if (this.clicked) {
+        this.$emit('clicked');
+      } else {
+        this.$emit('revert');
+      }
+    },
+  },
   computed: {
     getImage() {
       if (this.clicked) {

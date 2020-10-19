@@ -34,19 +34,25 @@
     </div>
     <div class="text-center flex flex-col mx-auto p-8 border-b">
       <LikeButton
+        v-if="!likeButtons.superLikeClicked"
         v-bind:startImage="likeImage"
         v-bind:hoverImage="likeImageHover"
         v-bind:clickedImage="likeImageClicked"
         v-bind:text="'Like'"
-        v-bind:textRevert="'Unlike'"></LikeButton>
+        v-bind:textRevert="'Unlike'"
+        v-on:clicked="likeButtons.likeClicked = true"
+        v-on:revert="likeButtons.likeClicked = false"></LikeButton>
       <LikeButton
-        class="mt-8"
+        v-if="!likeButtons.likeClicked && superLikesLeft()"
+        v-bind:class="{'mt-8': !likeButtons.superLikeClicked}"
         v-bind:startImage="superLikeImage"
         v-bind:hoverImage="superLikeImageHover"
         v-bind:clickedImage="superLikeImageClicked"
         v-bind:text="'Super Like'"
         v-bind:textRevert="'Unlike'"
-        v-bind:description="`Worth 10 likes, and ${user.first_name} sees your extra interest`"></LikeButton>
+        v-bind:description="`Worth 10 likes, and ${user.first_name} sees your extra interest`"
+        v-on:clicked="likeButtons.superLikeClicked = true"
+        v-on:revert="likeButtons.superLikeClicked = false"></LikeButton>
     </div>
     <div class="text-center p-8 border-b relative">
       <DropdownDisplayChoice
@@ -88,6 +94,10 @@ export default {
     superLikeImage,
     superLikeImageHover,
     superLikeImageClicked,
+    likeButtons: {
+      likeClicked: false,
+      superLikeClicked: false,
+    },
   }),
   methods: {
     preferences() {
@@ -110,6 +120,9 @@ export default {
         return 'genders other than men & women';
       }
       return 'any gender';
+    },
+    superLikesLeft() {
+      return true;
     },
     saveSingleChoice(...args) {
       const [key, value] = args;
