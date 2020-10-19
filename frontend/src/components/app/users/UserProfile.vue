@@ -63,10 +63,12 @@
         v-bind:name="'report'"
         v-bind:starting-option="'harassment'"
         v-bind:options="['harassment', 'bot', 'spam', 'inappropriate content']"></DropdownDisplayChoice>
-      <h1 class="onboarding-sub-container-content-button-outline mx-auto">Report</h1>
+      <h1 v-on:click="makeReport()" class="onboarding-sub-container-content-button-outline mx-auto">Report</h1>
     </div>
     <div class="text-center p-8">
-      <h1 class="onboarding-sub-container-content-button-outline text-red-500 mt-0 border-red-500 mx-auto">Block</h1>
+      <h1
+        v-on:click="block()"
+        class="onboarding-sub-container-content-button-outline text-red-500 mt-0 border-red-500 mx-auto">Block</h1>
       <h1 class="mx-auto mt-2 text-sm text-gray-600">Don't suggest this user and stop notifications</h1>
     </div>
   </div>
@@ -100,6 +102,7 @@ export default {
       likeClicked: false,
       superLikeClicked: false,
     },
+    reportReason: '',
   }),
   methods: {
     preferences() {
@@ -148,8 +151,15 @@ export default {
     },
     saveSingleChoice(...args) {
       const [key, value] = args;
-      console.log(key);
-      console.log(value);
+      if (key === 'report') {
+        this[key] = value;
+      }
+    },
+    async makeReport() {
+      await this.$http.post(`/profile/report/${this.user.id}`, { reason: this.report, details: '' });
+    },
+    async block() {
+      return true;
     },
   },
   computed: {
