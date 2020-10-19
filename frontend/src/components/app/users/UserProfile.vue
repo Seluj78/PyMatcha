@@ -3,7 +3,7 @@
   <div class="profileContainer">
     <div id="sliderScoreContainer" class="text-center w-full rounded-lt-md heatScore relative h-6">
       <div id="sliderScore" class="bg-purple-matcha absolute top-0 flex flex-col items-center justify-center h-12 w-auto rounded-b-md">
-        <h1 class="text-white-matcha px-2"><span class="font-bold">{{getHeatScore}}</span> likes</h1>
+        <h1 class="text-white-matcha px-2">score <span class="font-bold">{{user.heat_score}}</span></h1>
       </div>
     </div>
     <div class="text-center text-wrap p-8 mt-4 border-b">
@@ -156,21 +156,10 @@ export default {
       }
     },
     async makeReport() {
-      await this.$http.post(`/profile/report/${this.user.id}`, { reason: this.report, details: '' });
+      await this.$http.post(`/profile/report/${this.user.id}`, { reason: this.report });
     },
     async block() {
       return true;
-    },
-  },
-  computed: {
-    getHeatScore() {
-      if (this.likeButtons.likeClicked) {
-        return this.user.heat_score + 1;
-      }
-      if (this.likeButtons.superLikeClicked) {
-        return this.user.heat_score + 10;
-      }
-      return this.user.heat_score;
     },
   },
   async beforeMount() {
