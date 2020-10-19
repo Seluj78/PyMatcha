@@ -25,9 +25,7 @@ from flask_jwt_extended import create_access_token
 from flask_jwt_extended import create_refresh_token
 from flask_jwt_extended import get_jti
 from flask_jwt_extended import get_jwt_identity
-from flask_jwt_extended import get_raw_jwt
 from flask_jwt_extended import jwt_refresh_token_required
-from flask_jwt_extended import jwt_required
 from PyMatcha import ACCESS_TOKEN_EXPIRES
 from PyMatcha import redis
 from PyMatcha import REFRESH_TOKEN_EXPIRES
@@ -89,17 +87,15 @@ def refresh():
     return SuccessOutput("access_token", access_token)
 
 
-@auth_login_bp.route("/auth/access_revoke", methods=["DELETE"])
-@jwt_required
+@auth_login_bp.route("/auth/logout", methods=["POST"])
+@validate_params({"access_token": str, "refresh_token": str})
 def logout():
-    jti = get_raw_jwt()["jti"]
-    redis.set("is_revoked_jti:" + jti, "true", ACCESS_TOKEN_EXPIRES * 1.2)
-    return Success("Access token revoked")
-
-
-@auth_login_bp.route("/auth/refresh_revoke", methods=["DELETE"])
-@jwt_refresh_token_required
-def logout2():
-    jti = get_raw_jwt()["jti"]
-    redis.set("is_revoked_jti:" + jti, "true", REFRESH_TOKEN_EXPIRES * 1.2)
-    return Success("Refresh token revoked")
+    data = request.get_json()
+    access_token = data["access_token"]
+    refresh_token = data["refresh_token"]
+    print(access_token, refresh_token)
+    access_jti = get_jti(access_token)
+    refresh_jti = get_jti(refresh_token)
+    redis.set("is_revoked_jti:" + access_jti, "true", ACCESS_TOKEN_EXPIRES * 1.2)
+    redis.set("is_revoked_jti:" + refresh_jti, "true", REFRESH_TOKEN_EXPIRES * 1.2)
+    return Success("Logout successful.")
