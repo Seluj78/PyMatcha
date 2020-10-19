@@ -102,7 +102,7 @@ export default {
       likeClicked: false,
       superLikeClicked: false,
     },
-    reportReason: '',
+    report: 'harassment',
   }),
   methods: {
     preferences() {
