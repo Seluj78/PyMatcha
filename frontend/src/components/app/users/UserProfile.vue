@@ -64,6 +64,7 @@
         v-on:save-single-choice="saveSingleChoice"
         class="max-w-xs mx-auto"
         v-bind:name="'report'"
+        v-bind:position="'center'"
         v-bind:starting-option="'harassment'"
         v-bind:options="['harassment', 'bot', 'spam', 'inappropriate content']"></DropdownDisplayChoice>
       <h1 v-on:click="makeReport()" class="onboarding-sub-container-content-button-outline mx-auto">Report</h1>
