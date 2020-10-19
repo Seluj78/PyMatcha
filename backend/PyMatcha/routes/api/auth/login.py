@@ -93,7 +93,6 @@ def logout():
     data = request.get_json()
     access_token = data["access_token"]
     refresh_token = data["refresh_token"]
-    print(access_token, refresh_token)
     access_jti = get_jti(access_token)
     refresh_jti = get_jti(refresh_token)
     redis.set("is_revoked_jti:" + access_jti, "true", ACCESS_TOKEN_EXPIRES * 1.2)
