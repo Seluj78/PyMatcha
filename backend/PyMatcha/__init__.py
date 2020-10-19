@@ -162,8 +162,6 @@ mail = Mail(application)
 
 redis = StrictRedis(host=REDIS_HOST, port=REDIS_PORT, decode_responses=True, db=2)
 
-redis.flushdb()
-
 
 from PyMatcha.routes.api.user import user_bp
 from PyMatcha.routes.api.auth.email import auth_email_bp
