@@ -1,8 +1,10 @@
+from datetime import datetime
+from datetime import timedelta
+
 from flask import Blueprint
 from flask import request
 from flask_jwt_extended import current_user
 from flask_jwt_extended import jwt_required
-from PyMatcha import redis
 from PyMatcha.models.like import Like
 from PyMatcha.models.match import Match
 from PyMatcha.models.user import get_user
@@ -11,7 +13,6 @@ from PyMatcha.utils.errors import BadRequestError
 from PyMatcha.utils.errors import NotFoundError
 from PyMatcha.utils.success import Success
 from PyMatcha.utils.success import SuccessOutput
-from PyMatcha.utils.tasks import set_user_superlikes
 
 like_bp = Blueprint("like", __name__)
 
@@ -33,12 +34,21 @@ def like_profile(uid):
         raise BadRequestError("You already liked this person.")
 
     if is_superlike:
-        superlike_counter = int(redis.get(f"superlikes:{current_user.id}"))
-        if superlike_counter <= 0:
-            set_user_superlikes.apply_async(current_user.id, amount=5, eta=86400)
-            raise BadRequestError("No more superlikes today !", "Try later")
+        if current_user.superlikes_counter <= 0:
+            if current_user.superlikes_reset_dt < datetime.utcnow():
+                raise BadRequestError("Your superlikes are being restored, try again in a second")
+            else:
+                next_reset_delta = current_user.superlikes_reset_dt - datetime.utcnow()
+                seconds = next_reset_delta.total_seconds()
+                hours = int(seconds // 3600)
+                minutes = int((seconds % 3600) // 60)
+                seconds = int(seconds % 60)
+                raise BadRequestError(f"No more superlikes today, come back in {hours}h:{minutes}m:{seconds}s")
         else:
-            redis.decr(f"superlikes:{current_user.id}")
+            current_user.superlikes_counter -= 1
+            if current_user.superlikes_counter <= 0:
+                current_user.superlikes_reset_dt = datetime.utcnow() + timedelta(hours=12)
+            current_user.save()
 
     Like.create(liker_id=current_user.id, liked_id=u.id, is_superlike=is_superlike)
 

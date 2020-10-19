@@ -22,6 +22,7 @@ def setup_periodic_tasks(sender, **kwargs):
     sender.add_periodic_task(60, take_users_offline.s(), name="Update online users every minute")
     sender.add_periodic_task(3600, update_heat_scores.s(), name="Update heat scores every hour")
     sender.add_periodic_task(60, update_user_recommendations.s(), name="Update user recommendations every minute")
+    sender.add_periodic_task(60, reset_superlikes.s(), name="Update user recommendations every minute")
     sender.add_periodic_task(30, take_random_users_online.s(), name="Set 100 random users online every 30 seconds")
     sender.add_periodic_task(
         600, calc_search_min_max.s(), name="Update Minimum and Maximum scores and ages for search every 10 minutes"
@@ -86,8 +87,15 @@ def update_user_recommendations():
 
 
 @celery.task
-def set_user_superlikes(user_id, amount=5):
-    redis.set(f"superlikes:{user_id}", amount)
+def reset_superlikes():
+    count = 0
+    for user in User.select_all():
+        if user.superlikes_counter <= 0 and user.superlikes_reset_dt <= datetime.datetime.utcnow():
+            user.superlikes_counter = 5
+            user.superlikes_reset_dt = None
+            user.save()
+            count += 1
+    return f"Reset superlikes for {count} users"
 
 
 @celery.task
