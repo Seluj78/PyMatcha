@@ -37,13 +37,11 @@ def block_profile(uid):
         raise NotFoundError(f"User {uid} not found.")
     if current_user.id == u.id:
         raise BadRequestError("Cannot block yourself.")
-    try:
-        Block.get_multi(blocker_id=current_user.id, blocked_id=u.id)
-    except NotFoundError:
+    if not Block.get_multi(blocker_id=current_user.id, blocked_id=u.id):
         Block.create(blocker_id=current_user.id, blocked_id=u.id)
         return Success(f"Successfully blocked {u.email}.")
     else:
-        return BadRequestError("You already blocked this user.")
+        raise BadRequestError("You already blocked this user.")
 
 
 @profile_block_bp.route("/profile/unblock/<uid>", methods=["POST"])
@@ -53,9 +51,8 @@ def unblock_profile(uid):
         u = get_user(uid)
     except NotFoundError:
         raise NotFoundError(f"User {uid} not found.")
-    try:
-        block = Block.get_multi(blocker_id=current_user.id, blocked_id=u.id)
-    except NotFoundError:
+    block = Block.get_multi(blocker_id=current_user.id, blocked_id=u.id)
+    if not block:
         raise BadRequestError("You didn't block this user.")
     else:
         block.delete()
