@@ -8,7 +8,7 @@
       <img v-bind:src="getImage" class="h-8">
       <h1 class="text-white-matcha text-2xl ml-2 font-bold">{{getText}}</h1>
     </div>
-    <h1 v-if="description" class="text-purple-matcha text-sm mt-2">{{description}}</h1>
+    <h1 v-if="description && !hasBeenClicked" class="text-purple-matcha text-sm mt-2"><span v-if="counter" class="font-bold">{{counter}}. </span>{{description}}</h1>
   </div>
 </template>
 
@@ -16,7 +16,17 @@
 /* eslint-disable max-len */
 
 export default {
-  props: ['name', 'startImage', 'hoverImage', 'clickedImage', 'text', 'textRevert', 'description'],
+  props: [
+    'name',
+    'startImage',
+    'hoverImage',
+    'clickedImage',
+    'text',
+    'textRevert',
+    'counter',
+    'description',
+    'hasBeenClicked',
+  ],
   data: () => ({
     hover: false,
     clicked: false,
@@ -47,6 +57,11 @@ export default {
       }
       return this.text;
     },
+  },
+  beforeMount() {
+    if (this.hasBeenClicked) {
+      this.clicked = true;
+    }
   },
 };
 </script>

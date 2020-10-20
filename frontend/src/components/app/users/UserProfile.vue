@@ -38,6 +38,7 @@
     <div class="text-center flex flex-col mx-auto p-8 border-b">
       <LikeButton
         v-if="!likeButtons.superLikeClicked"
+        v-bind:hasBeenClicked="likeButtons.likeClicked"
         v-bind:name="'like'"
         v-bind:startImage="likeImage"
         v-bind:hoverImage="likeImageHover"
@@ -47,7 +48,8 @@
         v-on:clicked="buttonClicked"
         v-on:revert="buttonRevert"></LikeButton>
       <LikeButton
-        v-if="!likeButtons.likeClicked && superLikesLeft()"
+        v-if="(!likeButtons.likeClicked && superLikesLeft()) || this.likeButtons.superLikeClicked"
+        v-bind:hasBeenClicked="likeButtons.superLikeClicked"
         v-bind:name="'superLike'"
         v-bind:class="{'mt-8': !likeButtons.superLikeClicked}"
         v-bind:startImage="superLikeImage"
@@ -55,7 +57,8 @@
         v-bind:clickedImage="superLikeImageClicked"
         v-bind:text="'Super Like'"
         v-bind:textRevert="'Unlike'"
-        v-bind:description="`Worth 10 likes, and ${user.first_name} sees your extra interest`"
+        v-bind:counter="`${this.$store.getters.getLoggedInUser.superlikes_counter} left today`"
+        v-bind:description="`${user.first_name} will notice you better.`"
         v-on:clicked="buttonClicked"
         v-on:revert="buttonRevert"></LikeButton>
     </div>
@@ -67,13 +70,18 @@
         v-bind:position="'center'"
         v-bind:starting-option="'harassment'"
         v-bind:options="['harassment', 'bot', 'spam', 'inappropriate content']"></DropdownDisplayChoice>
-      <h1 v-on:click="makeReport()" class="onboarding-sub-container-content-button-outline mx-auto">Report</h1>
+      <h1 v-if="!reported" v-on:click="makeReport()" class="onboarding-sub-container-content-button-outline mx-auto">Report</h1>
+      <h1 v-else class="onboarding-sub-container-content-button-outline cursor-default text-green-500 border-green-500 mx-auto">Thank you</h1>
     </div>
-    <div class="text-center p-8">
-      <h1
-        v-on:click="block()"
+    <div v-if="user.blocks.length === 0 && blocked === false" class="text-center p-8">
+      <h1 v-on:click="block()"
         class="onboarding-sub-container-content-button-outline text-red-500 mt-0 border-red-500 mx-auto">Block</h1>
       <h1 class="mx-auto mt-2 text-sm text-gray-600">Don't suggest this user and stop notifications</h1>
+    </div>
+    <div v-else class="text-center p-8">
+      <h1 v-on:click="unblock()"
+        class="onboarding-sub-container-content-button-outline text-green-500 mt-0 border-green-500 mx-auto">Unblock</h1>
+      <h1 class="mx-auto mt-2 text-sm text-gray-600">Suggest this user and enable notifications</h1>
     </div>
   </div>
 </template>
@@ -108,6 +116,8 @@ export default {
       superLikeClicked: false,
     },
     report: 'harassment',
+    reported: false,
+    blocked: false,
   }),
   methods: {
     preferences() {
@@ -132,7 +142,7 @@ export default {
       return 'any gender';
     },
     superLikesLeft() {
-      return true;
+      return this.$store.getters.getLoggedInUser.superlikes_counter > 0;
     },
     async buttonClicked(...args) {
       const [name] = args;
@@ -143,6 +153,8 @@ export default {
         await this.$http.post(`/like/${this.user.id}`, { is_superlike: true });
         this.likeButtons.superLikeClicked = true;
       }
+      const user = await this.$http.get(`/users/${this.$store.getters.getLoggedInUser.id}`);
+      await this.$store.dispatch('login', user.data);
     },
     async buttonRevert(...args) {
       const [name] = args;
@@ -153,6 +165,8 @@ export default {
         await this.$http.post(`/unlike/${this.user.id}`, { is_superlike: true });
         this.likeButtons.superLikeClicked = false;
       }
+      const user = await this.$http.get(`/users/${this.$store.getters.getLoggedInUser.id}`);
+      await this.$store.dispatch('login', user.data);
     },
     saveSingleChoice(...args) {
       const [key, value] = args;
@@ -162,12 +176,35 @@ export default {
     },
     async makeReport() {
       await this.$http.post(`/profile/report/${this.user.id}`, { reason: this.report });
+      this.reported = true;
+      setTimeout(() => {
+        this.reported = false;
+      }, 3000);
     },
     async block() {
-      return true;
+      await this.$http.post(`/profile/block/${this.user.id}`);
+      this.blocked = true;
+    },
+    async unblock() {
+      await this.$http.post(`/profile/unblock/${this.user.id}`);
+      this.blocked = false;
+    },
+    checkIfUserIsLiked() {
+      const likes = this.$store.getters.getLoggedInUser.likes.sent;
+      const viewedUserId = this.user.id;
+      for (let i = 0; i < likes.length; i += 1) {
+        if (likes[i].liked_id === viewedUserId) {
+          if (likes[i].is_superlike) {
+            this.likeButtons.superLikeClicked = true;
+          } else {
+            this.likeButtons.likeClicked = true;
+          }
+        }
+      }
     },
   },
   async beforeMount() {
+    this.checkIfUserIsLiked();
     const sliderRangesRequest = await this.$http.get('/search/values');
     const maxScore = sliderRangesRequest.data.search_minmax.max_score;
     const sliderScore = document.getElementById('sliderScore');
