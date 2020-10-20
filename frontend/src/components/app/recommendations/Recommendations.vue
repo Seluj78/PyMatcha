@@ -147,6 +147,20 @@ export default {
       }
       return true;
     },
+    filterOutBlockedUsers(recommendations) {
+      let i = recommendations.length;
+      const { blocks } = this.$store.getters.getLoggedInUser;
+      let blockedIds = [];
+      for (let j = 0; j < blocks.length; j += 1) {
+        blockedIds.push(blocks[j].blocked_id);
+      }
+      while (i--) {
+        if (blockedIds.indexOf(recommendations[i].id) !== -1) {
+          recommendations.splice(i, 1);
+        }
+      }
+      return recommendations;
+    },
   },
   watch: {
     sorting: {
@@ -165,8 +179,8 @@ export default {
     }
   },
   beforeMount() {
-    this.recommendations = this.recommendationsReceived;
-    this.recommendationsBackup = this.recommendationsReceived;
+    this.recommendations = this.filterOutBlockedUsers(this.recommendationsReceived);
+    this.recommendationsBackup = this.recommendations;
     this.filters.age.min = this.recommendationsAnalysis.age.min;
     this.filters.age.max = this.recommendationsAnalysis.age.max;
     this.filters.distance.min = this.recommendationsAnalysis.distance.min;
