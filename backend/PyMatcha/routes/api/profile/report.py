@@ -31,7 +31,7 @@ profile_report_bp = Blueprint("profile_report", __name__)
 
 
 @profile_report_bp.route("/profile/report/<uid>", methods=["POST"])
-@validate_params({"reason": str}, {"details": str})
+@validate_params({"reason": str})
 @jwt_required
 def report_profile(uid):
     data = request.get_json()
@@ -40,10 +40,7 @@ def report_profile(uid):
     if reason not in ["harassment", "bot", "spam", "inappropriate content"]:
         raise BadRequestError("Reason must be 'harassment', 'bot', 'spam' or 'inappropriate content'")
 
-    try:
-        details = data["details"]
-    except KeyError:
-        details = None
+    details = None
     try:
         u = get_user(uid)
     except NotFoundError:

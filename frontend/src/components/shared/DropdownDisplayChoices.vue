@@ -3,7 +3,7 @@
   <div class="focus:outline-none ml-2 sm:flex-none" @focusout="close" tabindex="0">
     <div v-bind:class="{'settings-button-choice': true, 'rounded-lg': true , 'border-gray-matcha': !closed}" @click="toggle">
       <h1 v-bind:class="{ 'opacity-50': closed, 'noSelect': true, 'capitalize': true }">
-        {{ getName }}</h1>
+        {{ getName }}<span class="ml-2">▼</span></h1>
     </div>
     <div v-bind:class="{'sort-dropdown': true, 'z-10': true, 'h-auto': options.length < 5 , 'hidden': closed, 'right-0': position === 'right', 'md:right-auto': position === 'right'}">
       <h1 v-for="(option, index) in options" :key="option + index + option"
