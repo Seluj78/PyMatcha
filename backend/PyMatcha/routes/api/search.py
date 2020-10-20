@@ -43,11 +43,14 @@ def search():
     query = _get_gender_query(current_user.orientation, current_user.gender)
     matches_id = [match.id for match in current_user.get_matches()]
     likes_sent_user_ids = [like.liked_id for like in current_user.get_likes_sent()]
+    blocked_ids = [u.blocked_id for u in current_user.get_blocks()]
     returned_list = []
     for user in query:
         if user.id == current_user.id:
             continue
         if user.id in matches_id or user.id in likes_sent_user_ids:
+            continue
+        if user.id in blocked_ids:
             continue
 
         user_age = (
@@ -84,7 +87,6 @@ def search():
             common_tags = _get_common_tags(tags, user_tags)
             if not common_tags:
                 # No tags has been found
-                common_tags = []
                 continue
 
         user_dict = user.to_dict()

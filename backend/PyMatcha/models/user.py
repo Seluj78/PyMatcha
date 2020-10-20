@@ -26,6 +26,7 @@ from typing import List
 from typing import Optional
 
 import Geohash
+from PyMatcha.models.block import Block
 from PyMatcha.models.image import Image
 from PyMatcha.models.like import Like
 from PyMatcha.models.match import Match
@@ -204,6 +205,7 @@ class User(Model):
         returned_dict["likes"]["sent"] = [like.to_dict() for like in self.get_likes_sent()]
         returned_dict["likes"]["received"] = [like.to_dict() for like in self.get_likes_received()]
         returned_dict["last_seen"] = timeago_format(self.date_lastseen, datetime.datetime.utcnow())
+        returned_dict["blocks"] = [block.to_dict() for block in self.get_blocks()]
         returned_dict.pop("password")
         returned_dict.pop("previous_reset_token")
 
@@ -233,59 +235,34 @@ class User(Model):
 
     def get_images(self):
         logging.debug("Getting all images for user {}".format(self.id))
-        image_list = Image.get_multis(user_id=self.id)
-        if not image_list:
-            return []
-        else:
-            return image_list
+        return Image.get_multis(user_id=self.id)
 
     def get_tags(self):
         logging.debug("Getting all tags for user {}".format(self.id))
-        tag_list = Tag.get_multis(user_id=self.id)
-        if not tag_list:
-            return []
-        else:
-            return tag_list
+        return Tag.get_multis(user_id=self.id)
 
     def get_views(self):
         logging.debug("Getting all views for user profile {}".format(self.id))
-        view_list = View.get_multis(profile_id=self.id)
-        if not view_list:
-            return []
-        else:
-            return view_list
+        return View.get_multis(profile_id=self.id)
 
     def get_reports_received(self):
         logging.debug("Getting all reports received for user {}".format(self.id))
-        reports_received_list = Report.get_multis(reported_id=self.id)
-        if not reports_received_list:
-            return []
-        else:
-            return reports_received_list
+        return Report.get_multis(reported_id=self.id)
 
     def get_reports_sent(self):
         logging.debug("Getting all reports sent for user {}".format(self.id))
-        reports_sent_list = Report.get_multis(reporter_id=self.id)
-        if not reports_sent_list:
-            return []
-        else:
-            return reports_sent_list
+        return Report.get_multis(reporter_id=self.id)
 
     def get_likes_received(self):
         logging.debug("Getting all likes received for user {}".format(self.id))
-        likes_received_list = Like.get_multis(liked_id=self.id)
-        if not likes_received_list:
-            return []
-        else:
-            return likes_received_list
+        return Like.get_multis(liked_id=self.id)
 
     def get_likes_sent(self):
         logging.debug("Getting all likes sent for user {}".format(self.id))
-        likes_sent_list = Like.get_multis(liker_id=self.id)
-        if not likes_sent_list:
-            return []
-        else:
-            return likes_sent_list
+        return Like.get_multis(liker_id=self.id)
+
+    def get_blocks(self):
+        return Block.get_multis(blocker_id=self.id)
 
     def already_likes(self, liked_id: int) -> bool:
         with self.db.cursor() as c:
