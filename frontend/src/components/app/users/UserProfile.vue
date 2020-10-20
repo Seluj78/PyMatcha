@@ -73,7 +73,7 @@
       <h1 v-if="!reported" v-on:click="makeReport()" class="onboarding-sub-container-content-button-outline mx-auto">Report</h1>
       <h1 v-else class="onboarding-sub-container-content-button-outline cursor-default text-green-500 border-green-500 mx-auto">Thank you</h1>
     </div>
-    <div v-if="user.blocks.length === 0 && blocked === false" class="text-center p-8">
+    <div v-if="blocked === false" class="text-center p-8">
       <h1 v-on:click="block()"
         class="onboarding-sub-container-content-button-outline text-red-500 mt-0 border-red-500 mx-auto">Block</h1>
       <h1 class="mx-auto mt-2 text-sm text-gray-600">Don't suggest this user and stop notifications</h1>
@@ -184,10 +184,14 @@ export default {
     async block() {
       await this.$http.post(`/profile/block/${this.user.id}`);
       this.blocked = true;
+      const user = await this.$http.get(`/users/${this.$store.getters.getLoggedInUser.id}`);
+      await this.$store.dispatch('login', user.data);
     },
     async unblock() {
       await this.$http.post(`/profile/unblock/${this.user.id}`);
       this.blocked = false;
+      const user = await this.$http.get(`/users/${this.$store.getters.getLoggedInUser.id}`);
+      await this.$store.dispatch('login', user.data);
     },
     checkIfUserIsLiked() {
       const likes = this.$store.getters.getLoggedInUser.likes.sent;
@@ -202,9 +206,19 @@ export default {
         }
       }
     },
+    checkIfUserIsBlocked() {
+      const { blocks } = this.$store.getters.getLoggedInUser;
+      for (let i = 0; i < blocks.length; i += 1) {
+        if (blocks[i].blocked_id === this.user.id) {
+          this.blocked = true;
+          return;
+        }
+      }
+    },
   },
   async beforeMount() {
     this.checkIfUserIsLiked();
+    this.checkIfUserIsBlocked();
     const sliderRangesRequest = await this.$http.get('/search/values');
     const maxScore = sliderRangesRequest.data.search_minmax.max_score;
     const sliderScore = document.getElementById('sliderScore');
