@@ -30,13 +30,33 @@ profile_block_bp = Blueprint("profile_block", __name__)
 
 @profile_block_bp.route("/profile/block/<uid>", methods=["POST"])
 @jwt_required
-def report_profile(uid):
+def block_profile(uid):
     try:
         u = get_user(uid)
     except NotFoundError:
         raise NotFoundError(f"User {uid} not found.")
     if current_user.id == u.id:
         raise BadRequestError("Cannot block yourself.")
-    Block.create(blocker_id=current_user.id, blocked_id=u.id)
+    try:
+        Block.get_multi(blocker_id=current_user.id, blocked_id=u.id)
+    except NotFoundError:
+        Block.create(blocker_id=current_user.id, blocked_id=u.id)
+        return Success(f"Successfully blocked {u.email}.")
+    else:
+        return BadRequestError("You already blocked this user.")
 
-    return Success(f"Successfully blocked {u.email}.")
+
+@profile_block_bp.route("/profile/unblock/<uid>", methods=["POST"])
+@jwt_required
+def unblock_profile(uid):
+    try:
+        u = get_user(uid)
+    except NotFoundError:
+        raise NotFoundError(f"User {uid} not found.")
+    try:
+        block = Block.get_multi(blocker_id=current_user.id, blocked_id=u.id)
+    except NotFoundError:
+        raise BadRequestError("You didn't block this user.")
+    else:
+        block.delete()
+        return Success("Unblock successful.")
