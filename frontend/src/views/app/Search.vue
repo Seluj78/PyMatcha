@@ -69,6 +69,7 @@ import MultipleFilters from '@/components/shared/MultipleFilters.vue';
 import Recommendations from '@/components/app/recommendations/Recommendations.vue';
 
 export default {
+  name: 'Search',
   components: {
     MultipleFilters,
     NavBar,
@@ -119,6 +120,18 @@ export default {
     saveFilterMultiple(...multiple) {
       const [name, filters] = multiple;
       this.filters[name] = filters;
+    },
+    async fetchUsersOverfiew() {
+      const sliderRangesRequest = await this.$http.get('/search/values');
+      const values = sliderRangesRequest.data.search_minmax;
+      this.sliders.age.min = values.min_age;
+      if (this.sliders.age.min < 18) {
+        this.sliders.age.min = 18;
+      }
+      this.sliders.age.max = values.max_age;
+      this.sliders.popularity.min = values.min_score;
+      this.sliders.popularity.max = values.max_score;
+      this.sliderValuesFetched = true;
     },
     async search() {
       const searchRequest = await this.$http.post('/search', {
@@ -179,16 +192,14 @@ export default {
     },
   },
   async mounted() {
-    const sliderRangesRequest = await this.$http.get('/search/values');
-    const values = sliderRangesRequest.data.search_minmax;
-    this.sliders.age.min = values.min_age;
-    if (this.sliders.age.min < 18) {
-      this.sliders.age.min = 18;
+    await this.fetchUsersOverfiew();
+  },
+  deactivated() {
+    if (!this.$route.path.startsWith('/users')) {
+      this.searchAgain();
+      this.fetchUsersOverfiew();
+      this.$el.scrollTop = 0;
     }
-    this.sliders.age.max = values.max_age;
-    this.sliders.popularity.min = values.min_score;
-    this.sliders.popularity.max = values.max_score;
-    this.sliderValuesFetched = true;
   },
 };
 
