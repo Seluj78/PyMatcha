@@ -12,7 +12,6 @@ from PyMatcha.utils.decorators import validate_params
 from PyMatcha.utils.errors import BadRequestError
 from PyMatcha.utils.errors import NotFoundError
 from PyMatcha.utils.success import Success
-from PyMatcha.utils.success import SuccessOutput
 
 like_bp = Blueprint("like", __name__)
 
@@ -75,12 +74,3 @@ def unlike_profile(uid):
         raise BadRequestError("You never liked this person in the first place.")
     Like.get_multi(liked_id=u.id, liker_id=current_user.id).delete()
     return Success(f"Unliked user {u.id}.")
-
-
-@like_bp.route("/likes", methods=["GET"])
-@jwt_required
-def see_my_likes():
-    received = current_user.get_likes_received()
-    sent = current_user.get_likes_sent()
-    returned_dict = {"received": [r.to_dict() for r in received], "sent": [s.to_dict() for s in sent]}
-    return SuccessOutput("likes", returned_dict)
