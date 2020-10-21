@@ -2,7 +2,7 @@
   <!-- eslint-disable max-len -->
   <div class="focus:outline-none sm:flex-none" @focusout="close" tabindex="0">
     <div v-bind:class="{'settings-button-choice': true, 'border-gray-matcha': !closed}" @click="toggle">
-      <h1 v-bind:class="{ 'opacity-50': closed, 'noSelect': true, 'capitalize': true }">{{ currentOption }}<span class="ml-2">▼</span></h1>
+      <h1 v-bind:class="{ 'opacity-50': closed, 'noSelect': true, 'capitalize': true }">{{ currentOption }}<span v-if="closed" class="ml-2">▼</span><span v-if="!closed" class="ml-2">▲</span></h1>
     </div>
     <div v-bind:class="{'sort-dropdown': true, 'max-w-xs': true, 'mx-auto': true, 'left-0': position === 'left' || position === 'center', 'right-0': position === 'right' || position === 'center', 'z-10': true, 'hidden': closed, 'h-auto': options.length < 5}">
       <h1 v-for="(option, index) in options" :key="option + index + option"
