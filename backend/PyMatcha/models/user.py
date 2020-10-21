@@ -245,6 +245,9 @@ class User(Model):
         logging.debug("Getting all views for user profile {}".format(self.id))
         return View.get_multis(profile_id=self.id)
 
+    def get_view_history(self):
+        return View.get_multis(viewer_id=self.id)
+
     def get_reports_received(self):
         logging.debug("Getting all reports received for user {}".format(self.id))
         return Report.get_multis(reported_id=self.id)

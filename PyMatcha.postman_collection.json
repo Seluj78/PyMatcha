@@ -1010,6 +1010,164 @@
 								}
 							},
 							"response": []
+						},
+						{
+							"name": "Logout user",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "875b1f26-bceb-405e-8de5-52739e052fcb",
+										"exec": [
+											"var response = JSON.parse(responseBody);",
+											"",
+											"",
+											"pm.test(\"Status code is 200\", function () {",
+											"    pm.response.to.have.status(200);",
+											"});",
+											"",
+											"tests[\"JSON return code is 200\"] = response.code == 200",
+											"",
+											"tests[\"success is true\"] = response.success == true",
+											"",
+											"tests[\"Message is correct\"] = response.message == \"Logout successful.\"",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"access_token\": \"{{user_access_token}}\",\n    \"refresh_token\": \"{{user_refresh_token}}\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{host}}/auth/logout",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"auth",
+										"logout"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Refresh user token after logout",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "1d09ef82-7825-4e95-baa2-b22ee1612f08",
+										"exec": [
+											"var response = JSON.parse(responseBody);",
+											"",
+											"",
+											"pm.test(\"Status code is 401\", function () {",
+											"    pm.response.to.have.status(401);",
+											"});",
+											"",
+											"tests[\"JSON return code is 401\"] = response.code == 401",
+											"",
+											"tests[\"success is true\"] = response.success == false",
+											"tests[\"Message is correct\"] = response.error.message == \"Token has been revoked.\"",
+											"tests[\"Error type is Bad Request\"] = response.error.type == \"UnauthorizedError\""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{user_refresh_token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"url": {
+									"raw": "{{host}}/auth/refresh",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"auth",
+										"refresh"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Login user after logout",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "30410e98-bedb-4605-81d7-72d766afe234",
+										"exec": [
+											"var response = JSON.parse(responseBody);",
+											"",
+											"",
+											"pm.test(\"Status code is 200\", function () {",
+											"    pm.response.to.have.status(200);",
+											"});",
+											"",
+											"tests[\"JSON return code is 200\"] = response.code == 200",
+											"",
+											"tests[\"success is true\"] = response.success == true",
+											"",
+											"tests[\"Is profile completed is 0\"] = response.return.is_profile_completed == 0",
+											"",
+											"pm.collectionVariables.set(\"user_access_token\", response.return.access_token);",
+											"pm.collectionVariables.set(\"user_refresh_token\", response.return.refresh_token);"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n\t\"password\": \"{{user_password}}\",\n\t\"username\": \"{{user_email}}\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{host}}/auth/login",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"auth",
+										"login"
+									]
+								}
+							},
+							"response": []
 						}
 					],
 					"protocolProfileBehavior": {},
@@ -3326,7 +3484,7 @@
 											"",
 											"tests[\"success is true\"] = response.success == true",
 											"",
-											"tests[\"View count\"] = response.views.length == 0"
+											"tests[\"View count\"] = response.viewed_me.length == 0"
 										],
 										"type": "text/javascript"
 									}
@@ -3336,13 +3494,14 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "{{host}}/profile/views",
+									"raw": "{{host}}/history/viewed/me",
 									"host": [
 										"{{host}}"
 									],
 									"path": [
-										"profile",
-										"views"
+										"history",
+										"viewed",
+										"me"
 									]
 								}
 							},
@@ -3423,7 +3582,7 @@
 											"",
 											"tests[\"success is true\"] = response.success == true",
 											"",
-											"tests[\"View count\"] = response.views.length == 78"
+											"tests[\"View count\"] = response.viewed_me.length == 78"
 										],
 										"type": "text/javascript"
 									}
@@ -3433,13 +3592,14 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "{{host}}/profile/views",
+									"raw": "{{host}}/history/viewed/me",
 									"host": [
 										"{{host}}"
 									],
 									"path": [
-										"profile",
-										"views"
+										"history",
+										"viewed",
+										"me"
 									]
 								}
 							},
@@ -4201,6 +4361,12 @@
 							"response": []
 						}
 					],
+					"protocolProfileBehavior": {},
+					"_postman_isSubFolder": true
+				},
+				{
+					"name": "Block profile",
+					"item": [],
 					"protocolProfileBehavior": {},
 					"_postman_isSubFolder": true
 				}
@@ -6626,137 +6792,137 @@
 	],
 	"variable": [
 		{
-			"id": "04c3429c-be6a-43bd-af43-56b9904be507",
+			"id": "84e910f9-4c08-4246-902f-0de6e1ea294e",
 			"key": "host",
 			"value": "http://127.0.0.1:5000"
 		},
 		{
-			"id": "7c74ffd3-ef6e-4573-9b01-6c62f469b8b4",
+			"id": "862f3d2c-4062-4687-b54b-beba8997fa14",
 			"key": "user_id",
 			"value": ""
 		},
 		{
-			"id": "caa7e78f-21af-4f53-b60c-eda32007e11b",
+			"id": "817cc4dd-f982-48bd-a2be-d1a654ea54fd",
 			"key": "user_email",
 			"value": "foo@example.org"
 		},
 		{
-			"id": "e7371e16-1516-48e5-bca6-52c03bc0518f",
+			"id": "b20f7a10-fb29-42aa-89e8-2f85b260407a",
 			"key": "user_username",
 			"value": "foo"
 		},
 		{
-			"id": "01307673-9a0e-465c-a167-18c50832826b",
+			"id": "6c4f48fc-c6f6-4bce-a285-4ac93be46bd5",
 			"key": "user_password",
 			"value": "admin"
 		},
 		{
-			"id": "a4e93672-a2e3-4864-be2e-f1c2f1376c29",
+			"id": "2e641600-3581-4b3d-b812-de9e8d91ef40",
 			"key": "user_firstname",
 			"value": "Foo"
 		},
 		{
-			"id": "c5fad5ca-d65e-4bc8-9d98-f4d4e27e0c4c",
+			"id": "7c71bf8a-5d8e-49eb-921a-49ce8eb2e025",
 			"key": "user_lastname",
 			"value": "Bar"
 		},
 		{
-			"id": "69de50e6-28db-4e2f-a5f6-c1ea32d28fd8",
+			"id": "d3eb6bf8-6e58-4848-aa15-7e3d970a3d17",
 			"key": "debug_token",
 			"value": "xX69jules69Xx"
 		},
 		{
-			"id": "4392232a-5bf9-4cba-9d14-ab2020b888a4",
+			"id": "750efa6b-eb7f-49b3-b273-532bbd3c5a21",
 			"key": "user_access_token",
 			"value": ""
 		},
 		{
-			"id": "03bb7b1f-fd32-4acc-953b-837f7b1184d7",
+			"id": "eafd1b95-9189-42e2-ba9a-4253ad877a9b",
 			"key": "user_refresh_token",
 			"value": ""
 		},
 		{
-			"id": "33dd4903-f642-48ec-9756-2f69eb1e6668",
+			"id": "b6bb8998-fc1d-404c-bc38-bc607231ac08",
 			"key": "expired_token",
 			"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE1OTAyNDIyNjQsIm5iZiI6MTU5MDI0MjI2NCwianRpIjoiNTM0ZGI5NzQtOWE4Ni00MGViLWE1NDEtMDg3N2ZmNzQ3NDVhIiwiZXhwIjoxNTkwMjQyMzI0LCJpZGVudGl0eSI6eyJpZCI6NTEyLCJlbWFpbCI6ImZvb0BleGFtcGxlLm9yZyIsInVzZXJuYW1lIjoiYmFyIiwiaXNfb25saW5lIjp0cnVlLCJkYXRlX2xhc3RzZWVuIjoiU2F0LCAyMyBNYXkgMjAyMCAxMzo1Nzo0NCBHTVQifSwiZnJlc2giOnRydWUsInR5cGUiOiJhY2Nlc3MifQ.NTp2P0WNkXDwzuzrcNIQdeAfizQ57HQgkzBLSvY1yHU"
 		},
 		{
-			"id": "b65aaa6b-b588-4404-94e7-6a6ecf672a59",
+			"id": "2292884f-f26e-4dca-bf5a-2dbd6931b7d6",
 			"key": "user_orientation",
 			"value": "heterosexual"
 		},
 		{
-			"id": "dcac50af-0f67-489b-9128-d0ca09ddcd7c",
+			"id": "0a58f34f-09e7-4a30-8788-8eae5ddbbfdd",
 			"key": "user_bio",
 			"value": "Lorem Ipsum is the single greatest threat. We are not - we are not keeping up with other websites. Lorem Ipsum best not make any more threats to your website. It will be met with fire and fury like the world has never seen. Does everybody know that pig named Lorem Ipsum? An ‘extremely credible source’ has called my office and told me that Barack Obama’s placeholder text is a fraud."
 		},
 		{
-			"id": "74c22702-c70f-4906-9707-0973f1fcd282",
+			"id": "26fe27b4-a059-41fa-be5d-6805e234c9a9",
 			"key": "user_gender",
 			"value": "male"
 		},
 		{
-			"id": "0abc390c-e122-4dc0-a6d4-91cf30a4797e",
+			"id": "6fd49a77-f3e7-43bd-8134-289d7c79c748",
 			"key": "user_birthdate",
 			"value": "06/04/1998"
 		},
 		{
-			"id": "a9d6f559-2f61-4ede-baf3-dcdba898ac4f",
+			"id": "2146206a-faf6-4ddc-8fa1-37f987aceeb2",
 			"key": "user_lat",
 			"value": "44.8404"
 		},
 		{
-			"id": "04fd66c4-9a44-4842-8f09-1507b7f1d30f",
+			"id": "4ab98f8d-f0e9-4387-83b6-ab9bd3616485",
 			"key": "user_lng",
 			"value": "-0.5805"
 		},
 		{
-			"id": "bbecb62f-6ad6-44a2-b688-b13f7c3fbe04",
+			"id": "737bac0f-640a-48ff-901a-0f014647f9a1",
 			"key": "user_ip",
 			"value": "77.205.46.181"
 		},
 		{
-			"id": "dcaba3cf-dbfd-474e-a234-5d6596acd4fc",
+			"id": "2c109873-7286-49ef-87d3-ce335ddca6fa",
 			"key": "user_username2",
 			"value": "FooBar"
 		},
 		{
-			"id": "79ca4f2f-3334-4391-a4be-8b47742f8a21",
+			"id": "9f95a3c7-9746-4f35-a0ba-24680ae8329b",
 			"key": "user_email2",
 			"value": "bar@example.org"
 		},
 		{
-			"id": "d903766e-ffe4-449f-9c3f-e1036db5d84b",
+			"id": "89c9863c-bb61-4920-86a2-5c926191db43",
 			"key": "user_password2",
 			"value": "dolphin2"
 		},
 		{
-			"id": "0eaeb54c-4534-4678-af01-5656ca56688d",
+			"id": "ff2e7ef9-4614-49ed-9d45-0fcc9a319899",
 			"key": "user_first_name2",
 			"value": "Foo2"
 		},
 		{
-			"id": "7c62f83a-ced2-4e8e-9234-a415e8b3e4dd",
+			"id": "67bed50e-fd6d-4bc5-a352-9083bc7f62ee",
 			"key": "user_last_name2",
 			"value": "Bar2"
 		},
 		{
-			"id": "df3164a9-b3b3-4ee0-9593-7dce27ea5478",
+			"id": "1284f930-b60b-4956-885a-557b2202fbb1",
 			"key": "user_bio2",
 			"value": "Could you rotate the picture to show the other side of the room? thanks for taking the time to make the website, but i already made it in wix or I know somebody who can do this for a reasonable cost. Labrador submit your meaningless business jargon to be used on the site! nor start on it today and we will talk about what i want next time and it's great, can you add a beard though . Needs to be sleeker make it original i know you've made thirty iterations but can we go back to the first one that was the best version. Are you busy this weekend? I have a new project with a tight deadline im not sure, try something else we are your relatives, and I know somebody who can do this for a reasonable cost, yet that's going to be a chunk of change can you rework to make the pizza look more delicious. Labrador I like it, but can the snow look a little warmer, concept is bang on, but can we look at a better execution, and the website doesn't have the theme i was going for other agencies charge much lesser. Can you make the blue bluer? can you punch up the fun level on these icons but is there a way we can make the page feel more introductory without being cheesy. There is too much white space is this the best we can do try a more powerful colour thanks for taking the time to make the website, but i already made it in wix, the flier should feel like a warm handshake can you please change the color theme of the website to pink and purple? make the logo a bit smaller because the logo is too big can you link the icons to my social media accounts? oh and please put pictures of cats everywhere. There are more projects lined up charge extra the next time the website doesn't have the theme i was going for, I need a website. How much will it cost, or you can get my logo from facebook the website doesn't have the theme i was going for this is just a 5 minutes job. Can you help me out? you will get a lot of free exposure doing this this red is too red. Something summery; colourful. Can you punch up the fun level on these icons we are a big name to have in your portfolio we don't need a contract, do we or could you rotate the picture to show the other side of the room? for can you make it look more designed , the flier should feel like a warm handshake can it handle a million in one go. Needs to be sleeker. Do less with more can it be more retro. You might wanna give it another shot i love it, but can you invert all colors? was i smoking crack when i sent this? hahaha!. I need a website. How much will it cost. Thanks for taking the time to make the website, but i already made it in wix are you busy this weekend? I have a new project with a tight deadline, and try making it a bit less blah just do what you think. I trust you. Anyway, you are the designer, you know what to do make it original I like it, but can the snow look a little warmer theres all this spanish text on my site can it handle a million in one go but there are more projects lined up charge extra the next time, so i was wondering if my cat could be placed over the logo in the flyer. "
 		},
 		{
-			"id": "90ad2096-6c20-4da9-a2c2-cc1413e1b0b7",
+			"id": "93e7ae24-d669-4367-9627-0cccb06cf720",
 			"key": "user_gender2",
 			"value": "other"
 		},
 		{
-			"id": "3aa2458f-79cd-482f-a834-80911047e144",
+			"id": "8cd1ec37-26e0-44fc-8cf9-197e14f6f082",
 			"key": "user_orientation2",
 			"value": "bisexual"
 		},
 		{
-			"id": "f28836bd-81d5-4788-84e4-0a9905940398",
+			"id": "0dd4afab-bfc5-4cfe-93bf-e61c575ea3bb",
 			"key": "user_birthdate2",
 			"value": "01/01/1996"
 		}

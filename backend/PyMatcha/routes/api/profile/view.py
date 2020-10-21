@@ -28,14 +28,6 @@ from PyMatcha.utils.success import SuccessOutput
 profile_view_bp = Blueprint("profile_view", __name__)
 
 
-@profile_view_bp.route("/profile/views", methods=["GET"])
-@jwt_required
-def get_profile_views():
-    profile_views = current_user.get_views()
-    profile_views = [v.to_dict() for v in profile_views]
-    return SuccessOutput("views", profile_views)
-
-
 @profile_view_bp.route("/profile/view/<uid>", methods=["GET"])
 @jwt_required
 def view_profile(uid):
