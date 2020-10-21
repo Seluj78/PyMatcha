@@ -171,8 +171,11 @@ export default {
       }
       return recommendations;
     },
-    saveSingleChoice() {
-      console.log('bingo');
+    saveSingleChoice(...args) {
+      const [key, value] = args;
+      if (key === 'history') {
+        this.$emit('update-history', value);
+      }
     },
   },
   watch: {

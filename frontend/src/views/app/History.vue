@@ -5,6 +5,7 @@
     <section class="mx-auto">
       <HistoryRecommendations
         v-if="recommendationsAnalysisDone"
+        v-on:update-history="updateHistory"
         v-bind:title="'Potential matches'"
         v-bind:recommendationsReceived="recommendations"
         v-bind:recommendationsAnalysis="recommendationsAnalysis"></HistoryRecommendations>
@@ -19,7 +20,7 @@ import NavBar from '@/components/shared/NavBar.vue';
 import HistoryRecommendations from '@/components/app/recommendations/HistoryRecommendations.vue';
 
 export default {
-  name: 'Browse',
+  name: 'History',
   props: ['recommendationsFromSettingUp'],
   components: {
     NavBar,
@@ -97,6 +98,20 @@ export default {
       this.recommendationsAnalysis.popularity.max = null;
       this.recommendationsAnalysis.interests = [];
       this.recommendationsAnalysisDone = false;
+    },
+    updateHistory(...args) {
+      const [request] = args;
+      if (request === 'People I view') {
+        console.log(1);
+      } else if (request === 'People I like') {
+        console.log(2);
+      } else if (request === 'Who views me') {
+        console.log(3);
+      } else if (request === 'Who likes me') {
+        console.log(4);
+      } else if (request === 'Whom I block') {
+        console.log(5);
+      }
     },
   },
   async created() {
