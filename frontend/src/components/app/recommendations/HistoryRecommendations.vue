@@ -9,7 +9,7 @@
         v-on:save-single-choice="saveSingleChoice"
         class="inline-block ml-4"
         v-bind:name="'history'"
-        v-bind:starting-option="'People I viewed'"
+        v-bind:starting-option="'People I view'"
         v-bind:options="['People I view', 'People I like', 'Who views me', 'Who likes me', 'Whom I block']"></DropdownDisplayChoiceHistory>
     </div>
     <div class="flex w-full items-stretch sm:items-center justify-center md:justify-start mb-12 relative">
@@ -42,7 +42,7 @@
         v-bind:name="'interests'"
         v-on:save-filter-multiple="saveFilterMultiple"></MultipleFiltersDropdown>
     </div>
-    <div ref="recommendationCards" class="grid grid-cols-1 md:grid-cols-2 gap-2">
+    <div v-if="ready" ref="recommendationCards" class="grid grid-cols-1 md:grid-cols-2 gap-2">
     <RecommendationCard
       v-for="(recommendation, index) in recommendations" :key="index"
       v-bind:recommendation="recommendation"></RecommendationCard>
@@ -59,7 +59,7 @@ import MultipleFiltersDropdown from '@/components/shared/MultipleFiltersDropdown
 import DropdownDisplayChoiceHistory from '@/components/shared/DropdownDisplayChoiceHistory.vue';
 
 export default {
-  props: ['title', 'recommendationsReceived', 'recommendationsAnalysis'],
+  props: ['title', 'recommendationsReceived', 'recommendationsAnalysis', 'ready'],
   components: {
     Sort,
     RecommendationCard,

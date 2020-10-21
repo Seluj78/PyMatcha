@@ -4,7 +4,7 @@
     <NavBar v-bind:currentRoute="'History'"></NavBar>
     <section class="mx-auto">
       <HistoryRecommendations
-        v-if="recommendationsAnalysisDone"
+        v-bind:ready="recommendationsAnalysisDone"
         v-on:update-history="updateHistory"
         v-bind:title="'Potential matches'"
         v-bind:recommendationsReceived="recommendations"
@@ -112,6 +112,8 @@ export default {
       } else if (request === 'Whom I block') {
         console.log(5);
       }
+      this.browseAgain();
+      this.fetchUsers();
     },
   },
   async created() {
