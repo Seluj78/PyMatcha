@@ -9,8 +9,8 @@
         v-on:save-single-choice="saveSingleChoice"
         class="inline-block ml-4"
         v-bind:name="'history'"
-        v-bind:starting-option="'People I view'"
-        v-bind:options="['People I view', 'People I like', 'Who views me', 'Who likes me', 'Whom I block']"></DropdownDisplayChoiceHistory>
+        v-bind:starting-option="'People I viewed'"
+        v-bind:options="['People I viewed', 'People I liked', 'Who viewed me', 'Who liked me', 'Whom I blocked']"></DropdownDisplayChoiceHistory>
     </div>
     <div class="flex w-full items-stretch sm:items-center justify-center md:justify-start mb-12 relative">
       <Sort
