@@ -6,8 +6,8 @@
       <div id="logo">
         <router-link to="/">
           <div class="flex justify-center items-center">
-            <img src="../../assets/logo.png" class="h-10">
-            <h1 class="text-purple-matcha text-2xl font-bold ml-2">Matcha</h1>
+            <img src="../../assets/logo.png" class="h-6">
+            <h1 class="invisible lg:visible text-purple-matcha text-xl ml-2">Matcha</h1>
           </div>
         </router-link>
       </div>
@@ -25,10 +25,11 @@
         <router-link to="/accounts/signin" class="navigation-button-logged-in sm:hover:bg-white-matcha sm:hover:text-purple-matcha sm:text-purple-matcha sm:bg-white-matcha sm:py-2 sm:px-8 sm:rounded-md">Sign In</router-link>
         <router-link to="/accounts/signup" class="navigation-button-logged-in sm:hover:bg-purple-matcha sm:hover:text-white-matcha sm:text-white-matcha sm:py-2 sm:px-8">Get Started</router-link>
       </div>
-      <router-link v-if="loggedIn && currentRoute !== 'Browse'" to="/browse" class="navigation-button-logged-in">Browse</router-link>
-      <router-link v-if="loggedIn && currentRoute !== 'Search'" to="/search" class="navigation-button-logged-in">Search</router-link>
-      <router-link v-if="loggedIn" to="/" class="navigation-button-logged-in">Matches</router-link>
-      <router-link v-if="loggedIn && currentRoute !== 'Settings'" to="/settings" class="navigation-button-logged-in">Settings</router-link>
+      <router-link v-if="loggedIn" to="/browse" v-bind:class="{'navigation-button-logged-in': true, 'bg-purple-matcha': currentRoute === 'Browse', 'text-white-matcha': currentRoute === 'Browse'}">Browse</router-link>
+      <router-link v-if="loggedIn" to="/search" v-bind:class="{'navigation-button-logged-in': true, 'bg-purple-matcha': currentRoute === 'Search', 'text-white-matcha': currentRoute === 'Search'}">Search</router-link>
+      <router-link v-if="loggedIn" to="/matches" v-bind:class="{'navigation-button-logged-in': true, 'bg-purple-matcha': currentRoute === 'Matches', 'text-white-matcha': currentRoute === 'Matches'}" class="navigation-button-logged-in">Matches</router-link>
+      <router-link v-if="loggedIn" to="/settings" v-bind:class="{'navigation-button-logged-in': true, 'bg-purple-matcha': currentRoute === 'Settings', 'text-white-matcha': currentRoute === 'Settings'}">Settings</router-link>
+      <router-link v-if="loggedIn" to="/history" v-bind:class="{'navigation-button-logged-in': true, 'bg-purple-matcha': currentRoute === 'History', 'text-white-matcha': currentRoute === 'History'}">History</router-link>
       <router-link v-if="loggedIn" v-on:click.native="logout()" to="/" class="navigation-button-logged-in">Exit</router-link>
     </div>
   </nav>

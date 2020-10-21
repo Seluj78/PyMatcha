@@ -7,7 +7,7 @@
         @apply block;
         @apply px-2;
         @apply py-2;
-        @apply font-semibold;
+        @apply my-1;
         @apply text-purple-matcha;
         @apply rounded-md;
     }
@@ -22,7 +22,16 @@
     }
     @screen sm {
         .navigation-button-logged-in {
+            @apply mx-1;
+            @apply my-0;
+        }
+    }
+
+    @screen md {
+        .navigation-button-logged-in {
             @apply px-5;
+            @apply mx-1;
+            @apply my-0;
         }
     }
 
