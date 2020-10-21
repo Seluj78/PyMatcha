@@ -62,8 +62,9 @@ def delete_user(uid):
 @debug_token_required
 @jwt_required
 def create_views(amount):
-    for i in range(amount):
-        View.create(profile_id=current_user.id, viewer_id=i)
+    users = User.select_random(amount)
+    for user in users:
+        View.create(profile_id=current_user.id, viewer_id=user.id)
     return Success(f"Added {amount} views to user {current_user.id}.")
 
 
@@ -172,4 +173,8 @@ def debug_reset_ci():
         tag.delete()
     for view in user.get_views():
         view.delete()
+    for view in user.get_view_history():
+        view.delete()
+    for block in user.get_blocks():
+        block.delete()
     return Success("Done")
