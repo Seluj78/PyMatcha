@@ -37,5 +37,10 @@ export default {
   beforeMount() {
     this.currentOption = this.startingOption;
   },
+  deactivated() {
+    if (!this.$route.path.startsWith('/users')) {
+      this.currentOption = this.startingOption;
+    }
+  },
 };
 </script>
