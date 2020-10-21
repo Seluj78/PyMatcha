@@ -7,7 +7,7 @@
         <router-link to="/">
           <div class="flex justify-center items-center">
             <img src="../../assets/logo.png" class="h-6">
-            <h1 class="invisible lg:visible text-purple-matcha text-xl ml-2">Matcha</h1>
+            <h1 v-if="!loggedIn" class="text-purple-matcha text-xl ml-2">Matcha</h1>
           </div>
         </router-link>
       </div>
