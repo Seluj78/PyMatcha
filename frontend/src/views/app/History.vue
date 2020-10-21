@@ -4,6 +4,7 @@
     <NavBar v-bind:currentRoute="'History'"></NavBar>
     <section class="mx-auto">
       <HistoryRecommendations
+        v-if="firstTimeAnalysisDone"
         v-bind:ready="recommendationsAnalysisDone"
         v-on:update-history="updateHistory"
         v-bind:title="'Potential matches'"
@@ -44,15 +45,12 @@ export default {
       interests: [],
     },
     recommendationsAnalysisDone: false,
+    firstTimeAnalysisDone: false,
   }),
   methods: {
     async fetchUsers() {
-      if (this.recommendationsFromSettingUp) {
-        this.recommendations = this.recommendationsFromSettingUp;
-      } else {
-        const recommendationsRequest = await this.$http.get('/recommendations');
-        this.recommendations = recommendationsRequest.data.recommendations;
-      }
+      const recommendationsRequest = await this.$http.get('/recommendations');
+      this.recommendations = recommendationsRequest.data.recommendations;
       this.recommendations.sort((a, b) => a.distance - b.distance);
       for (let i = 0; i < this.recommendations.length; i += 1) {
         this.recommendations[i].distance = Math.floor(this.recommendations[i].distance);
@@ -87,6 +85,7 @@ export default {
         }
       }
       this.recommendationsAnalysisDone = true;
+      this.firstTimeAnalysisDone = true;
     },
     browseAgain() {
       this.recommendations = [];
@@ -121,6 +120,7 @@ export default {
   },
   deactivated() {
     if (!this.$route.path.startsWith('/users')) {
+      this.firstTimeAnalysisDone = false;
       this.browseAgain();
       this.fetchUsers();
       this.$el.scrollTop = 0;
