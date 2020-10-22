@@ -15,8 +15,7 @@
           v-bind:options="['People I viewed', 'People I liked', 'Who viewed me', 'Who liked me', 'Whom I blocked']"></DropdownDisplayChoiceHistory>
       </div>
       <HistoryRecommendations
-        v-if="firstTimeAnalysisDone"
-        v-bind:ready="recommendations.length"
+        v-if="recommendationsAnalysisDone"
         v-bind:title="'Potential matches'"
         v-bind:recommendationsReceived="recommendations"
         v-bind:recommendationsAnalysis="recommendationsAnalysis"></HistoryRecommendations>
@@ -57,7 +56,6 @@ export default {
       interests: [],
     },
     recommendationsAnalysisDone: false,
-    firstTimeAnalysisDone: false,
   }),
   methods: {
     async fetchUsers(request) {
@@ -111,7 +109,6 @@ export default {
         }
       }
       this.recommendationsAnalysisDone = true;
-      this.firstTimeAnalysisDone = true;
     },
     browseAgain() {
       this.recommendations = [];
@@ -125,9 +122,11 @@ export default {
       this.recommendationsAnalysisDone = false;
     },
     updateHistory(...args) {
-      const [request] = args;
-      this.browseAgain();
-      this.fetchUsers(request);
+      const [key, value] = args;
+      if (key === 'history') {
+        this.browseAgain();
+        this.fetchUsers(value);
+      }
     },
   },
   async created() {
@@ -135,7 +134,6 @@ export default {
   },
   deactivated() {
     if (!this.$route.path.startsWith('/users')) {
-      this.firstTimeAnalysisDone = false;
       this.browseAgain();
       this.fetchUsers('People I viewed');
       this.$el.scrollTop = 0;

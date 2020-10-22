@@ -25,7 +25,6 @@ export default {
     select(option) {
       this.close();
       this.currentOption = option;
-      console.log(option);
       this.$emit('save-single-choice', this.name, option);
     },
     toggle() {
