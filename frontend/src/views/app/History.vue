@@ -3,10 +3,20 @@
   <div class="mx-4 sm:mx-16 lg:mx-32">
     <NavBar v-bind:currentRoute="'History'"></NavBar>
     <section class="mx-auto">
+      <div class="flex items-center justify-center md:justify-start w-full mb-4">
+        <h1
+          class="text-3xl sm:text-5xl my-4 inline-block text-center leading-none onboarding-sub-container-content-heading">
+          {{recommendations.length}}</h1>
+        <DropdownDisplayChoiceHistory
+          v-on:save-single-choice="updateHistory"
+          class="inline-block ml-4"
+          v-bind:name="'history'"
+          v-bind:starting-option="'People I viewed'"
+          v-bind:options="['People I viewed', 'People I liked', 'Who viewed me', 'Who liked me', 'Whom I blocked']"></DropdownDisplayChoiceHistory>
+      </div>
       <HistoryRecommendations
         v-if="firstTimeAnalysisDone"
-        v-bind:ready="recommendationsAnalysisDone"
-        v-on:update-history="updateHistory"
+        v-bind:ready="recommendations.length"
         v-bind:title="'Potential matches'"
         v-bind:recommendationsReceived="recommendations"
         v-bind:recommendationsAnalysis="recommendationsAnalysis"></HistoryRecommendations>
@@ -19,6 +29,7 @@
 
 import NavBar from '@/components/shared/NavBar.vue';
 import HistoryRecommendations from '@/components/app/recommendations/HistoryRecommendations.vue';
+import DropdownDisplayChoiceHistory from '@/components/shared/DropdownDisplayChoiceHistory.vue';
 
 export default {
   name: 'History',
@@ -26,6 +37,7 @@ export default {
   components: {
     NavBar,
     HistoryRecommendations,
+    DropdownDisplayChoiceHistory,
   },
   data: () => ({
     recommendations: [],
@@ -48,9 +60,23 @@ export default {
     firstTimeAnalysisDone: false,
   }),
   methods: {
-    async fetchUsers() {
-      const recommendationsRequest = await this.$http.get('/recommendations');
-      this.recommendations = recommendationsRequest.data.recommendations;
+    async fetchUsers(request) {
+      if (request === 'People I viewed') {
+        const recommendationsRequest = await this.$http.get('/history/viewed');
+        this.recommendations = recommendationsRequest.data.viewed;
+      } else if (request === 'People I liked') {
+        const recommendationsRequest = await this.$http.get('/history/liked');
+        this.recommendations = recommendationsRequest.data.liked;
+      } else if (request === 'Who viewed me') {
+        const recommendationsRequest = await this.$http.get('/history/viewed/me');
+        this.recommendations = recommendationsRequest.data.viewed_me;
+      } else if (request === 'Who liked me') {
+        const recommendationsRequest = await this.$http.get('/history/liked/me');
+        this.recommendations = recommendationsRequest.data.liked_me;
+      } else if (request === 'Whom I blocked') {
+        const recommendationsRequest = await this.$http.get('/history/blocked');
+        this.recommendations = recommendationsRequest.data.bloked;
+      }
       this.recommendations.sort((a, b) => a.distance - b.distance);
       for (let i = 0; i < this.recommendations.length; i += 1) {
         this.recommendations[i].distance = Math.floor(this.recommendations[i].distance);
@@ -100,29 +126,18 @@ export default {
     },
     updateHistory(...args) {
       const [request] = args;
-      if (request === 'People I view') {
-        console.log(1);
-      } else if (request === 'People I like') {
-        console.log(2);
-      } else if (request === 'Who views me') {
-        console.log(3);
-      } else if (request === 'Who likes me') {
-        console.log(4);
-      } else if (request === 'Whom I block') {
-        console.log(5);
-      }
       this.browseAgain();
-      this.fetchUsers();
+      this.fetchUsers(request);
     },
   },
   async created() {
-    await this.fetchUsers();
+    await this.fetchUsers('People I viewed');
   },
   deactivated() {
     if (!this.$route.path.startsWith('/users')) {
       this.firstTimeAnalysisDone = false;
       this.browseAgain();
-      this.fetchUsers();
+      this.fetchUsers('People I viewed');
       this.$el.scrollTop = 0;
     }
   },

@@ -1,18 +1,7 @@
 <template>
   <!-- eslint-disable max-len -->
   <section class="mb-4 sm:mb-16 lg:mb-32">
-    <div class="flex items-center justify-center md:justify-start w-full mb-4">
-      <h1
-        class="text-3xl sm:text-5xl my-4 inline-block text-center leading-none onboarding-sub-container-content-heading">
-        {{recommendations.length}}</h1>
-      <DropdownDisplayChoiceHistory
-        v-on:save-single-choice="saveSingleChoice"
-        class="inline-block ml-4"
-        v-bind:name="'history'"
-        v-bind:starting-option="'People I viewed'"
-        v-bind:options="['People I viewed', 'People I liked', 'Who viewed me', 'Who liked me', 'Whom I blocked']"></DropdownDisplayChoiceHistory>
-    </div>
-    <div class="flex w-full items-stretch sm:items-center justify-center md:justify-start mb-12 relative">
+    <div v-if="recommendations.length && ready" class="flex w-full items-stretch sm:items-center justify-center md:justify-start mb-12 relative">
       <Sort
         v-bind:position="'left'"
         v-bind:startingOption="'Closest'"
@@ -42,7 +31,7 @@
         v-bind:name="'interests'"
         v-on:save-filter-multiple="saveFilterMultiple"></MultipleFiltersDropdown>
     </div>
-    <div v-if="ready" ref="recommendationCards" class="grid grid-cols-1 md:grid-cols-2 gap-2">
+    <div v-if="recommendations.length && ready" ref="recommendationCards" class="grid grid-cols-1 md:grid-cols-2 gap-2">
     <RecommendationCard
       v-for="(recommendation, index) in recommendations" :key="index"
       v-bind:recommendation="recommendation"></RecommendationCard>
@@ -56,7 +45,6 @@ import Sort from '@/components/shared/Sort.vue';
 import FilterSliderDropdown from '@/components/shared/FilterSliderDropdown.vue';
 import RecommendationCard from '@/components/app/recommendations/RecommendationCard.vue';
 import MultipleFiltersDropdown from '@/components/shared/MultipleFiltersDropdown.vue';
-import DropdownDisplayChoiceHistory from '@/components/shared/DropdownDisplayChoiceHistory.vue';
 
 export default {
   props: ['title', 'recommendationsReceived', 'recommendationsAnalysis', 'ready'],
@@ -65,7 +53,6 @@ export default {
     RecommendationCard,
     FilterSliderDropdown,
     MultipleFiltersDropdown,
-    DropdownDisplayChoiceHistory,
   },
   data: () => ({
     recommendations: [],
@@ -177,6 +164,16 @@ export default {
         this.$emit('update-history', value);
       }
     },
+    setupRecommendations() {
+      this.recommendations = this.filterOutBlockedUsers(this.recommendationsReceived);
+      this.recommendationsBackup = this.recommendations;
+      this.filters.age.min = this.recommendationsAnalysis.age.min;
+      this.filters.age.max = this.recommendationsAnalysis.age.max;
+      this.filters.distance.min = this.recommendationsAnalysis.distance.min;
+      this.filters.distance.max = this.recommendationsAnalysis.distance.max;
+      this.filters.popularity.min = this.recommendationsAnalysis.popularity.min;
+      this.filters.popularity.max = this.recommendationsAnalysis.popularity.max;
+    },
   },
   watch: {
     sorting: {
@@ -192,17 +189,15 @@ export default {
         this.recommendations = base;
       },
       deep: true,
-    }
+    },
+    recommendations: {
+      handler() {
+        this.setupRecommendations();
+      },
+    },
   },
   beforeMount() {
-    this.recommendations = this.filterOutBlockedUsers(this.recommendationsReceived);
-    this.recommendationsBackup = this.recommendations;
-    this.filters.age.min = this.recommendationsAnalysis.age.min;
-    this.filters.age.max = this.recommendationsAnalysis.age.max;
-    this.filters.distance.min = this.recommendationsAnalysis.distance.min;
-    this.filters.distance.max = this.recommendationsAnalysis.distance.max;
-    this.filters.popularity.min = this.recommendationsAnalysis.popularity.min;
-    this.filters.popularity.max = this.recommendationsAnalysis.popularity.max;
-  }
+    this.setupRecommendations();
+  },
 };
 </script>
