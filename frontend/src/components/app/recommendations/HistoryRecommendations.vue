@@ -61,7 +61,7 @@ import RecommendationCard from '@/components/app/recommendations/RecommendationC
 import MultipleFiltersDropdown from '@/components/shared/MultipleFiltersDropdown.vue';
 
 export default {
-  props: ['title', 'recommendationsReceived', 'recommendationsAnalysis', 'ready'],
+  props: ['title', 'recommendationsReceived', 'recommendationsAnalysis'],
   components: {
     Sort,
     RecommendationCard,
