@@ -417,6 +417,7 @@
         @apply absolute;
         @apply rounded-md;
         @apply bg-white;
+        @apply z-10;
     }
 
     .sort-dropdown-option {
@@ -479,6 +480,7 @@
         @apply rounded-md;
         @apply bg-white;
         @apply outline-none;
+        @apply z-10;
     }
 
     @screen md {
