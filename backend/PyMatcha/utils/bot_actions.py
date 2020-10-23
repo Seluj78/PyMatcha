@@ -6,6 +6,7 @@ from chatterbot import ChatBot
 from chatterbot.trainers import ChatterBotCorpusTrainer
 from PyMatcha import redis
 from PyMatcha.models.like import Like
+from PyMatcha.models.match import Match
 from PyMatcha.models.message import Message
 from PyMatcha.models.user import User
 from PyMatcha.models.view import View
@@ -56,7 +57,12 @@ def botaction_like(bot_user: User):
         user_to_like = choice(recommendations)
     except IndexError:
         return
-    Like.create(liker_id=bot_user.id, liked_id=user_to_like["id"])
+    user_to_like = User.get(id=user_to_like["id"])
+    View.create(profile_id=user_to_like.id, viewer_id=bot_user.id)
+    Like.create(liker_id=bot_user.id, liked_id=user_to_like.id)
+
+    if user_to_like.already_likes(bot_user.id):
+        Match.create(user_1=bot_user.id, user_2=user_to_like.id)
 
 
 def botaction_unlike(bot_user: User):
