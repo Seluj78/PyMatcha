@@ -7,7 +7,7 @@
         <h1 class="noSelect">←</h1>
       </div>
       <div v-if="user" class="md:flex md:items-start">
-        <UserImages v-bind:images="user.images" class="md:w-7/12 md:order-2 sm:rounded-t md:rounded-r-md md:rounded-l-none"></UserImages>
+        <UserImages v-bind:images="user.images" v-bind:gender="user.gender" class="md:w-7/12 md:order-2 sm:rounded-t md:rounded-r-md md:rounded-l-none"></UserImages>
         <UserProfile class="md:w-5/12 md:order-1 md:overflow-scroll md:border-b md:border-l md:rounded-l-md" v-bind:user="user"></UserProfile>
       </div>
     </section>
