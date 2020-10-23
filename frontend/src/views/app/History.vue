@@ -2,7 +2,7 @@
   <!-- eslint-disable max-len -->
   <div class="mx-4 sm:mx-16 lg:mx-32">
     <NavBar v-bind:currentRoute="'History'"></NavBar>
-    <section class="mx-auto">
+    <section class="mx-auto mt-4">
       <div class="flex items-center justify-center md:justify-start w-full mb-4">
         <h1
           class="text-3xl sm:text-5xl my-4 inline-block text-center leading-none onboarding-sub-container-content-heading">
