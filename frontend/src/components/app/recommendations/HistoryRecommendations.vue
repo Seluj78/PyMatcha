@@ -1,36 +1,45 @@
 <template>
   <!-- eslint-disable max-len -->
   <section class="mb-4 sm:mb-16 lg:mb-32">
-    <div v-if="recommendations.length" class="flex w-full items-stretch sm:items-center justify-center md:justify-start mb-12 relative">
+    <div v-if="recommendations.length" v-bind:class="{
+      'flex': true,
+      'w-full': true,
+      'items-stretch': true,
+      'sm:items-center': true,
+      'justify-center': true,
+      'md:justify-start': true,
+      'mb-12': recommendationsBackup.length > 1,
+      'mb-6': recommendationsBackup.length === 1,
+      'relative': true}">
       <Sort
-        v-if="recommendations.length > 1"
+        v-if="recommendationsBackup.length > 1"
         v-bind:position="'left'"
         v-bind:startingOption="'Closest'"
         v-bind:options="['Closest', 'Furthest', 'Youngest',
         'Oldest', 'Most popular', 'Least popular', 'Most common interests', 'Least common interests']"
         v-on:save-sort="saveSort"></Sort>
       <FilterSliderDropdown
-        v-if="recommendationsAnalysis.age.min !== recommendationsAnalysis.age.max"
+        v-if="recommendationsBackup.length > 1 && recommendationsAnalysis.age.min !== recommendationsAnalysis.age.max"
         v-bind:min="recommendationsAnalysis.age.min"
         v-bind:max="recommendationsAnalysis.age.max"
         v-bind:name="'age'"
         v-on:save-filter="saveFilter"></FilterSliderDropdown>
       <FilterSliderDropdown
-        v-if="recommendationsAnalysis.distance.min !== recommendationsAnalysis.distance.max"
+        v-if="recommendationsBackup.length > 1 && recommendationsAnalysis.distance.min !== recommendationsAnalysis.distance.max"
         v-bind:min="recommendationsAnalysis.distance.min"
         v-bind:max="recommendationsAnalysis.distance.max"
         v-bind:unit="'km'"
         v-bind:name="'distance'"
         v-on:save-filter="saveFilter"></FilterSliderDropdown>
       <FilterSliderDropdown
-        v-if="recommendationsAnalysis.popularity.min !== recommendationsAnalysis.popularity.max"
+        v-if="recommendationsBackup.length > 1 && recommendationsAnalysis.popularity.min !== recommendationsAnalysis.popularity.max"
         v-bind:min="recommendationsAnalysis.popularity.min"
         v-bind:max="recommendationsAnalysis.popularity.max"
         v-bind:unit="'pts'"
         v-bind:name="'popularity'"
         v-on:save-filter="saveFilter"></FilterSliderDropdown>
       <MultipleFiltersDropdown
-        v-if="recommendations.length > 1"
+        v-if="recommendationsBackup.length > 1"
         v-bind:position="'right'"
         v-bind:options="recommendationsAnalysis.interests"
         v-bind:name="'interests'"
