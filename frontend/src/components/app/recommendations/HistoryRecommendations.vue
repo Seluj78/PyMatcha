@@ -51,7 +51,7 @@
         v-bind:recommendation="recommendation"></RecommendationCard>
     </div>
     <div class="text-center md:text-left px-4 md:px-0" v-if="!recommendations.length">
-      <h1 style="opacity: 0.085; font-size: 10vh;" class="uppercase leading-none">"Good things</h1>
+      <h1 style="opacity: 0.085; font-size: 10vh;" class="uppercase leading-none">"Some things</h1>
       <h1 style="opacity: 0.085; font-size: 10vh;" class="uppercase leading-none">take time"</h1>
     </div>
   </section>
