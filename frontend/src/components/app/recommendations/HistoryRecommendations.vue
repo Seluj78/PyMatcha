@@ -1,16 +1,7 @@
 <template>
   <!-- eslint-disable max-len -->
   <section class="mb-4 sm:mb-16 lg:mb-32">
-    <div v-if="recommendations.length"
-         v-bind:class="{
-      'flex': true,
-      'w-full': true,
-      'items-stretch': true,
-      'sm:items-center': true,
-      'justify-center': true,
-      'md:justify-start': true,
-      'mb-12': recommendations.length > 1,
-      'relative': true}">
+    <div v-if="recommendations.length" class="flex w-full items-stretch sm:items-center justify-center md:justify-start mb-12 relative">
       <Sort
         v-if="recommendations.length > 1"
         v-bind:position="'left'"
@@ -203,11 +194,6 @@ export default {
         this.recommendations = base;
       },
       deep: true,
-    },
-    recommendations: {
-      handler() {
-        this.setupRecommendations();
-      },
     },
   },
   beforeMount() {
