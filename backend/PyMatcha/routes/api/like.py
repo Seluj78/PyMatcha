@@ -7,6 +7,7 @@ from flask_jwt_extended import current_user
 from flask_jwt_extended import jwt_required
 from PyMatcha.models.like import Like
 from PyMatcha.models.match import Match
+from PyMatcha.models.notification import Notification
 from PyMatcha.models.user import get_user
 from PyMatcha.utils.decorators import validate_params
 from PyMatcha.utils.errors import BadRequestError
@@ -53,11 +54,35 @@ def like_profile(uid):
 
     if u.already_likes(current_user.id):
         Match.create(user_1=current_user.id, user_2=u.id)
+        Notification.create(
+            user_id=u.id, content=f"{u.first_name} liked you! Go check them out!", type="like", link_to=f"users/{u.id}"
+        )
+        Notification.create(
+            user_id=u.id,
+            content=f"You and {current_user.first_name} matched!",
+            type="match",
+            link_to=f"conversation/{current_user.id}",
+        )
+        Notification.create(
+            user_id=current_user.id,
+            content=f"You and {u.first_name} matched!",
+            type="match",
+            link_to=f"conversation/{u.id}",
+        )
         return Success("It's a match !")
 
     if is_superlike:
+        Notification.create(
+            user_id=u.id,
+            content=f"{u.first_name} superliked you 😏! Go check them out!",
+            type="superlike",
+            link_to=f"users/{u.id}",
+        )
         return Success("Superliked user.")
     else:
+        Notification.create(
+            user_id=u.id, content=f"{u.first_name} liked you! Go check them out!", type="like", link_to=f"users/{u.id}"
+        )
         return Success("Liked user.")
 
 
@@ -73,4 +98,7 @@ def unlike_profile(uid):
     if not current_user.already_likes(u.id):
         raise BadRequestError("You never liked this person in the first place.")
     Like.get_multi(liked_id=u.id, liker_id=current_user.id).delete()
+
+    Notification.create(user_id=u.id, content=f"{u.first_name} unliked you.", type="unlike", link_to=None)
+
     return Success(f"Unliked user {u.id}.")
