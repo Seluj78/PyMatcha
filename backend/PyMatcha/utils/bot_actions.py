@@ -13,8 +13,6 @@ from PyMatcha.utils.recommendations import create_user_recommendations
 from PyMatcha.utils.static import BACKEND_ROOT
 from PyMatcha.utils.static import BOT_CONV_OPENERS
 
-# TODO: send a new message in already started conversation
-
 
 def _bot_response(bot_name, user_input):
     logging.debug(f"Starting chatbot with name {bot_name}")
@@ -111,3 +109,18 @@ def botaction_respond_to_unread(bot_user: User):
         return
     bot_reply = _bot_response(bot_user.username, message_to_reply.content)
     bot_user.send_message(to_id=message_to_reply.from_id, content=bot_reply)
+
+
+def botaction_send_message_over_old_one(bot_user: User):
+    last_message_list = bot_user.get_conversation_list()
+    try:
+        message_to_reply = choice(last_message_list)
+    except IndexError:
+        return
+    if message_to_reply.to_id == bot_user.id:
+        other_user = message_to_reply.from_id
+    else:
+        other_user = message_to_reply.to_id
+
+    bot_reply = _bot_response(bot_user.username, ".")
+    bot_user.send_message(to_id=other_user, content=bot_reply)
