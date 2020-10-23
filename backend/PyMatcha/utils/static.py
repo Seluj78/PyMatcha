@@ -33,3 +33,11 @@ BACKEND_ROOT = os.path.join(os.path.dirname(__file__), "../")
 
 IMGUR_CLIENT_ID = os.getenv("IMGUR_CLIENT_ID")
 IMGUR_CLIENT_SECRET = os.getenv("IMGUR_CLIENT_SECRET")
+
+BOT_CONV_OPENERS = [
+    "Hey baby, are you a microwave? Cause mmmmmmmmmmmmmmmmm",
+    "How much does a polar bear weigh?",
+    "Hi sexy",
+    "Hello cutie",
+    "Heyoooo",
+]

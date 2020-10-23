@@ -6,15 +6,17 @@ from chatterbot import ChatBot
 from chatterbot.trainers import ChatterBotCorpusTrainer
 from PyMatcha import redis
 from PyMatcha.models.like import Like
+from PyMatcha.models.message import Message
 from PyMatcha.models.user import User
 from PyMatcha.models.view import View
 from PyMatcha.utils.recommendations import create_user_recommendations
 from PyMatcha.utils.static import BACKEND_ROOT
+from PyMatcha.utils.static import BOT_CONV_OPENERS
 
-# TODO: message new conversation, respond to unread message, send a new message in already started conversation
+# TODO: respond to unread message, send a new message in already started conversation
 
 
-def bot_response(bot_name, user_input):
+def _bot_response(bot_name, user_input):
     logging.debug(f"Starting chatbot with name {bot_name}")
     chatbot = ChatBot(
         bot_name,
@@ -43,7 +45,7 @@ def _get_recommendations(bot_user: User):
     return json.loads(recommendations)
 
 
-def bot_like(bot_user: User, is_superlike: bool):
+def botaction_like(bot_user: User, is_superlike: bool):
     recommendations = _get_recommendations(bot_user)
     liked_ids = [like.liked_id for like in bot_user.get_likes_sent()]
     for user in recommendations:
@@ -53,13 +55,31 @@ def bot_like(bot_user: User, is_superlike: bool):
     Like.create(liker_id=bot_user.id, liked_id=user_to_like["id"], is_superlike=is_superlike)
 
 
-def bot_unlike(bot_user: User):
+def botaction_unlike(bot_user: User):
     liked_ids = [like.liked_id for like in bot_user.get_likes_sent()]
     id_to_unlike = choice(liked_ids)
     Like.get_multi(liker_id=bot_user.id, liked_id=id_to_unlike).delete()
 
 
-def bot_view(bot_user: User):
+def botaction_view(bot_user: User):
     recommendations = _get_recommendations(bot_user)
     user_to_view = choice(recommendations)
     View.create(profile_id=user_to_view["id"], viewer_id=bot_user.id)
+
+
+def botaction_message_new_conversation(bot_user: User):
+    matches = bot_user.get_matches()
+    unopened_matches = []
+    for match in matches:
+        msg_1 = Message.get_multi(from_id=match.user_1, to_id=match.user_2)
+        msg_2 = Message.get_multi(from_id=match.user_2, to_id=match.user_1)
+        if not msg_1 and not msg_2:
+            unopened_matches.append(match)
+    match_to_open_conv = choice(unopened_matches)
+
+    if match_to_open_conv.user_1 == bot_user.id:
+        other_user = match_to_open_conv.user_2
+    else:
+        other_user = match_to_open_conv.user_1
+
+    Message.create(from_id=bot_user.id, to_id=other_user, content=choice(BOT_CONV_OPENERS))
