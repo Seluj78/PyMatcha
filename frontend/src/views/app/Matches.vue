@@ -6,8 +6,10 @@
       <div>
         <div class="mt-8">
           <div v-if="matches.length">
-            <h1 class="text-xl text-gray-matcha text-center">New matches</h1>
-            <div></div>
+            <h1 class="text-xl text-gray-matcha text-center font-bold">New matches</h1>
+            <div class="overflow-scroll mt-4">
+              <Match v-for="match in matches" :key="match.id" v-bind:match="match"></Match>
+            </div>
           </div>
           <div v-else class="flex items-center">
             <div>
@@ -21,7 +23,7 @@
         </div>
         <div class="mt-8">
           <div v-if="messages.length">
-            <h1 class="text-xl text-gray-matcha text-center">Messages</h1>
+            <h1 class="text-xl text-gray-matcha text-center font-bold">Messages</h1>
             <div></div>
           </div>
           <div v-else class="flex items-center">
@@ -44,11 +46,13 @@
 /* eslint-disable no-await-in-loop */
 
 import NavBar from '@/components/shared/NavBar.vue';
+import Match from '@/components/app/matches/Match.vue';
 
 export default {
   name: 'Matches',
   components: {
     NavBar,
+    Match,
   },
   data: () => ({
     matches: [],
