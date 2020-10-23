@@ -51,19 +51,28 @@ def botaction_like(bot_user: User, is_superlike: bool):
     for user in recommendations:
         if user["id"] in liked_ids:
             recommendations.remove(user)
-    user_to_like = choice(recommendations)
+    try:
+        user_to_like = choice(recommendations)
+    except IndexError:
+        return
     Like.create(liker_id=bot_user.id, liked_id=user_to_like["id"], is_superlike=is_superlike)
 
 
 def botaction_unlike(bot_user: User):
     liked_ids = [like.liked_id for like in bot_user.get_likes_sent()]
-    id_to_unlike = choice(liked_ids)
+    try:
+        id_to_unlike = choice(liked_ids)
+    except IndexError:
+        return
     Like.get_multi(liker_id=bot_user.id, liked_id=id_to_unlike).delete()
 
 
 def botaction_view(bot_user: User):
     recommendations = _get_recommendations(bot_user)
-    user_to_view = choice(recommendations)
+    try:
+        user_to_view = choice(recommendations)
+    except IndexError:
+        return
     View.create(profile_id=user_to_view["id"], viewer_id=bot_user.id)
 
 
@@ -75,11 +84,30 @@ def botaction_message_new_conversation(bot_user: User):
         msg_2 = Message.get_multi(from_id=match.user_2, to_id=match.user_1)
         if not msg_1 and not msg_2:
             unopened_matches.append(match)
-    match_to_open_conv = choice(unopened_matches)
+
+    try:
+        match_to_open_conv = choice(unopened_matches)
+    except IndexError:
+        return
 
     if match_to_open_conv.user_1 == bot_user.id:
         other_user = match_to_open_conv.user_2
     else:
         other_user = match_to_open_conv.user_1
 
-    Message.create(from_id=bot_user.id, to_id=other_user, content=choice(BOT_CONV_OPENERS))
+    bot_user.send_message(to_id=other_user, content=choice(BOT_CONV_OPENERS))
+
+
+def botaction_respond_to_unread(bot_user: User):
+    last_message_list = bot_user.get_conversation_list()
+
+    unread_last_messages = []
+    for last_message in last_message_list:
+        if not last_message.is_seen and last_message.to_id == bot_user.id:
+            unread_last_messages.append(last_message)
+    try:
+        message_to_reply = choice(unread_last_messages)
+    except IndexError:
+        return
+    bot_reply = _bot_response(bot_user.username, message_to_reply.content)
+    bot_user.send_message(to_id=message_to_reply.from_id, content=bot_reply)
