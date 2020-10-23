@@ -192,7 +192,7 @@ def _create_images_table(db):
         user_id        INT NOT NULL,
         timestamp      TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
         link           VARCHAR(256) NOT NULL,
-        is_primary       BOOLEAN DEFAULT FALSE
+        is_primary     BOOLEAN DEFAULT FALSE
         ) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci ;
         """
         )
@@ -219,6 +219,27 @@ def _create_blocks_table(db):
         c.close()
 
 
+def _create_notifications_table(db):
+    with db.cursor() as c:
+        logging.info("Creating table notifications.")
+        c.execute(DISABLE_SQL_NOTES)
+        c.execute(
+            """
+        CREATE TABLE IF NOT EXISTS notifications
+        (
+        id            INT auto_increment PRIMARY KEY,
+        dt_received   DATETIME DEFAULT NOW(),
+        content       LONGTEXT NOT NULL,
+        type          ENUM('match', 'like', 'superlike', 'unlike', 'view', 'message'),
+        is_seen       BOOLEAN DEFAULT FALSE,
+        link_to       VARCHAR(256)
+        ) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci ;
+        """
+        )
+        c.execute(ENABLE_SQL_NOTES)
+        c.close()
+
+
 def create_tables(db):
     _create_user_table(db)
     _create_tags_table(db)
@@ -229,3 +250,4 @@ def create_tables(db):
     _create_messages_table(db)
     _create_images_table(db)
     _create_blocks_table(db)
+    _create_notifications_table(db)
