@@ -6,7 +6,7 @@
       <div class="flex items-center justify-center md:justify-start w-full mb-4">
         <h1
           class="text-3xl sm:text-5xl my-4 inline-block text-center leading-none onboarding-sub-container-content-heading">
-          {{recommendations.length}}</h1>
+          {{filteredCount}}</h1>
         <DropdownDisplayChoiceHistory
           v-on:save-single-choice="updateHistory"
           class="inline-block ml-4"
@@ -16,6 +16,7 @@
       </div>
       <HistoryRecommendations
         v-if="recommendationsAnalysisDone"
+        v-on:filtered-count="filteredCountSave"
         v-bind:title="'Potential matches'"
         v-bind:recommendationsReceived="recommendations"
         v-bind:recommendationsAnalysis="recommendationsAnalysis"></HistoryRecommendations>
@@ -56,6 +57,7 @@ export default {
       interests: [],
     },
     recommendationsAnalysisDone: false,
+    filteredCount: null,
   }),
   methods: {
     async fetchUsers(request) {
@@ -129,9 +131,14 @@ export default {
         this.fetchUsers(value);
       }
     },
+    filteredCountSave(...args) {
+      const [count] = args;
+      this.filteredCount = count;
+    },
   },
   async created() {
     await this.fetchUsers('People I viewed');
+    this.filteredCount = this.recommendations.length;
   },
   deactivated() {
     if (!this.$route.path.startsWith('/users')) {

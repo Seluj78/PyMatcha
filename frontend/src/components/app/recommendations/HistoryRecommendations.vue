@@ -191,6 +191,7 @@ export default {
         base = this.filter(base);
         this.sort(base, this.sorting);
         this.recommendations = base;
+        this.$emit('filtered-count', this.recommendations.length);
       },
       deep: true,
     },
