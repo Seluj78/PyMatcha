@@ -1,11 +1,18 @@
 import datetime
 import json
+import random
 from math import ceil
 
 from PyMatcha import celery
 from PyMatcha import redis
 from PyMatcha.models.message import Message
 from PyMatcha.models.user import User
+from PyMatcha.utils.bot_actions import botaction_like
+from PyMatcha.utils.bot_actions import botaction_message_new_conversation
+from PyMatcha.utils.bot_actions import botaction_respond_to_unread
+from PyMatcha.utils.bot_actions import botaction_send_message_over_old_one
+from PyMatcha.utils.bot_actions import botaction_unlike
+from PyMatcha.utils.bot_actions import botaction_view
 from PyMatcha.utils.recommendations import create_user_recommendations
 
 BASE_HEAT_SCORE = 30
@@ -28,6 +35,7 @@ def setup_periodic_tasks(sender, **kwargs):
     sender.add_periodic_task(
         600, calc_search_min_max.s(), name="Update Minimum and Maximum scores and ages for search every 10 minutes"
     )
+    sender.add_periodic_task(30, random_bot_action.s(), name="Have the only bots do an action")
 
 
 @celery.task
@@ -145,6 +153,17 @@ def take_random_users_online():
 
 @celery.task
 def random_bot_action():
-    for user in User.get_multis(skip_recommendations=True):
-        # TODO: Check notifications
-        pass
+    for user in User.get_multis(skip_recommendations=True, is_online=True):
+        bot_actions = [
+            None,
+            botaction_view,
+            botaction_like,
+            botaction_respond_to_unread,
+            botaction_message_new_conversation,
+            botaction_send_message_over_old_one,
+            botaction_unlike,
+        ]
+        selected_action = random.choices(bot_actions, cum_weights=(100, 100, 95, 90, 90, 80, 50), k=1)
+        if selected_action[0]:
+            # Has to have the [0] because random.choices return a list
+            selected_action[0](user)
