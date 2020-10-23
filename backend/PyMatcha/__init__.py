@@ -180,6 +180,7 @@ from PyMatcha.routes.api.profile.images import images_bp
 from PyMatcha.routes.api.search import search_bp
 from PyMatcha.routes.api.profile.block import profile_block_bp
 from PyMatcha.routes.api.history import history_bp
+from PyMatcha.routes.api.notifications import notifications_bp
 
 logging.debug("Registering Flask blueprints")
 application.register_blueprint(user_bp)
@@ -199,6 +200,7 @@ application.register_blueprint(images_bp)
 application.register_blueprint(search_bp)
 application.register_blueprint(profile_block_bp)
 application.register_blueprint(history_bp)
+application.register_blueprint(notifications_bp)
 
 if application.debug:
     logging.debug("Registering debug route")
