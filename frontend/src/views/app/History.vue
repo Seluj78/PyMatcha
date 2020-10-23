@@ -77,7 +77,7 @@ export default {
         const recommendationsRequest = await this.$http.get('/history/blocked');
         this.recommendations = recommendationsRequest.data.bloked;
       }
-      this.recommendations = this.recommendations.filter((v, i, a) => a.findIndex((t) => (JSON.stringify(t) === JSON.stringify(v))) === i);
+      this.recommendations = Object.values(this.recommendations.reduce((acc, cur) => Object.assign(acc, { [cur.id]: cur }), {}));
       this.recommendations.sort((a, b) => a.distance - b.distance);
       for (let i = 0; i < this.recommendations.length; i += 1) {
         this.recommendations[i].distance = Math.floor(this.recommendations[i].distance);
