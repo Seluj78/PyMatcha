@@ -13,7 +13,7 @@ from PyMatcha.utils.recommendations import create_user_recommendations
 from PyMatcha.utils.static import BACKEND_ROOT
 from PyMatcha.utils.static import BOT_CONV_OPENERS
 
-# TODO: respond to unread message, send a new message in already started conversation
+# TODO: send a new message in already started conversation
 
 
 def _bot_response(bot_name, user_input):
