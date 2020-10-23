@@ -6,7 +6,7 @@
       <div class="flex items-center justify-center md:justify-start w-full mb-4">
         <h1
           class="text-3xl sm:text-5xl my-4 inline-block text-center leading-none onboarding-sub-container-content-heading">
-          {{filteredCount}}</h1>
+          {{filteredCount || 0}}</h1>
         <DropdownDisplayChoiceHistory
           v-on:save-single-choice="updateHistory"
           class="inline-block ml-4"
@@ -129,6 +129,7 @@ export default {
       if (key === 'history') {
         this.browseAgain();
         this.fetchUsers(value);
+        this.filteredCount = this.recommendations.count;
       }
     },
     filteredCountSave(...args) {
