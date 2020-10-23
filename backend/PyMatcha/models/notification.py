@@ -20,6 +20,7 @@ from __future__ import annotations
 
 import logging
 from datetime import datetime
+from typing import Optional
 
 from PyMatcha.utils import create_notifications_table
 from PyMatcha.utils.orm import Field
@@ -30,6 +31,7 @@ class Notification(Model):
     table_name = "notifications"
 
     id = Field(int, modifiable=False)
+    user_id = Field(int)
     dt_received = Field(datetime, fmt="%Y-%m-%d %H:%M:%S")
     content = Field(str)
     type = Field(str)
@@ -38,9 +40,20 @@ class Notification(Model):
 
     @staticmethod
     def create(
-        content: str, type: str, link_to: str, is_seen: bool = False, dt_received: datetime = datetime.utcnow()
+        user_id: int,
+        content: str,
+        type: str,
+        link_to: Optional[str],
+        is_seen: bool = False,
+        dt_received: datetime = datetime.utcnow(),
     ) -> Notification:
-        new_notif = Notification(content=content, type=type, link_to=link_to, is_seen=is_seen, dt_received=dt_received)
+        if type not in ["match", "like", "superlike", "unlike", "view", "message", "message_like"]:
+            raise ValueError(
+                "type must be one of ['match', 'like', 'superlike', 'unlike', 'view', 'message', 'message_like']"
+            )
+        new_notif = Notification(
+            user_id=user_id, content=content, type=type, link_to=link_to, is_seen=is_seen, dt_received=dt_received
+        )
         new_notif.save()
         logging.debug("Creating new notification")
         return new_notif

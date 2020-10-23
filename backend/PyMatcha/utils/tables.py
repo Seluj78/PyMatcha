@@ -228,9 +228,10 @@ def _create_notifications_table(db):
         CREATE TABLE IF NOT EXISTS notifications
         (
         id            INT auto_increment PRIMARY KEY,
+        user_id       INT NOT NULL,
         dt_received   DATETIME DEFAULT NOW(),
         content       LONGTEXT NOT NULL,
-        type          ENUM('match', 'like', 'superlike', 'unlike', 'view', 'message'),
+        type          ENUM('match', 'like', 'superlike', 'unlike', 'view', 'message', 'message_like'),
         is_seen       BOOLEAN DEFAULT FALSE,
         link_to       VARCHAR(256)
         ) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci ;
