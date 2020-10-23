@@ -1,9 +1,12 @@
+import logging
+
 from chatterbot import ChatBot
 from chatterbot.trainers import ChatterBotCorpusTrainer
 from PyMatcha.utils.static import BACKEND_ROOT
 
 
 def get_chatbot_response(bot_name, user_input):
+    logging.debug(f"Starting chatbot with name {bot_name}")
     chatbot = ChatBot(
         bot_name,
         storage_adapter="chatterbot.storage.SQLStorageAdapter",
