@@ -48,9 +48,9 @@ def view_profile(uid):
 
     Notification.create(
         user_id=u.id,
-        content=f"{u.first_name} just viewed your profile! Go check their profile out!",
+        content=f"{current_user.first_name} just viewed your profile! Go check their profile out!",
         type="view",
-        link_to=f"users/{u.id}",
+        link_to=f"users/{current_user.id}",
     )
 
     return SuccessOutput("profile", user_dict)
