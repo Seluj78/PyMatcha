@@ -292,8 +292,8 @@ export default {
     for (let i = 0; i < tags.length; i += 1) {
       this.userInterests.push(tags[i].name);
     }
-    const userViewsReceivedRequest = await this.$http.get('/profile/views');
-    this.userViewsReceived = userViewsReceivedRequest.data.views.length;
+    const userViewsReceivedRequest = await this.$http.get('/history/viewed/me');
+    this.userViewsReceived = userViewsReceivedRequest.data.viewed_me.length;
   },
 };
 </script>

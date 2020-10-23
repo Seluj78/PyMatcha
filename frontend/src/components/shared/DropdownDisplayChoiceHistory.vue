@@ -1,8 +1,8 @@
 <template>
   <!-- eslint-disable max-len -->
-  <div class="focus:outline-none sm:flex-none" @focusout="close" tabindex="0">
-    <div v-bind:class="{'settings-button-choice': true, 'border-gray-matcha': !closed}" @click="toggle">
-      <h1 v-bind:class="{ 'opacity-50': closed, 'noSelect': true, 'capitalize': true }">{{ currentOption }}<span v-if="closed" class="ml-2">▼</span><span v-if="!closed" class="ml-2">▲</span></h1>
+  <div class="focus:outline-none sm:flex-none cursor-pointer" @focusout="close" tabindex="0">
+    <div v-bind:class="{'onboarding-sub-container-content-heading': true, 'border': true, 'px-4': true, 'py-2': true, 'rounded-md': true, 'text-center': true, 'text-2xl': true, 'sm:text-5xl': true, 'border-gray-matcha': !closed}" @click="toggle">
+      <h1 v-bind:class="{ 'opacity-100': closed, 'noSelect': true, 'capitalize': true }">{{ currentOption }}<span v-if="closed" class="ml-2">▼</span><span v-if="!closed" class="ml-2">▲</span></h1>
     </div>
     <div v-bind:class="{'sort-dropdown': true, 'max-w-xs': true, 'mx-auto': true, 'left-0': position === 'left' || position === 'center', 'right-0': position === 'right' || position === 'center', 'z-10': true, 'hidden': closed, 'h-auto': options.length < 5}">
       <h1 v-for="(option, index) in options" :key="option + index + option"
@@ -36,6 +36,11 @@ export default {
   },
   beforeMount() {
     this.currentOption = this.startingOption;
+  },
+  deactivated() {
+    if (!this.$route.path.startsWith('/users')) {
+      this.currentOption = this.startingOption;
+    }
   },
 };
 </script>

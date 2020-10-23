@@ -13,6 +13,7 @@ import Browse from '../views/app/Browse.vue';
 import Search from '../views/app/Search.vue';
 import Settings from '../views/app/Settings.vue';
 import User from '../components/app/users/User.vue';
+import History from '../views/app/History.vue';
 import store from '../store/index';
 
 Vue.use(VueRouter);
@@ -118,6 +119,11 @@ const routes = [
   {
     path: '/users/:id',
     component: User,
+    beforeEnter: notLoggedInRedirectLogin,
+  },
+  {
+    path: '/history',
+    component: History,
     beforeEnter: notLoggedInRedirectLogin,
   },
 ];
