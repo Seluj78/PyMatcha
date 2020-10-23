@@ -14,6 +14,9 @@ from PyMatcha.utils.static import BACKEND_ROOT
 from PyMatcha.utils.static import BOT_CONV_OPENERS
 
 
+# TODO: DO superlikes
+
+
 def _bot_response(bot_name, user_input):
     logging.debug(f"Starting chatbot with name {bot_name}")
     chatbot = ChatBot(
@@ -43,7 +46,7 @@ def _get_recommendations(bot_user: User):
     return json.loads(recommendations)
 
 
-def botaction_like(bot_user: User, is_superlike: bool):
+def botaction_like(bot_user: User):
     recommendations = _get_recommendations(bot_user)
     liked_ids = [like.liked_id for like in bot_user.get_likes_sent()]
     for user in recommendations:
@@ -53,7 +56,7 @@ def botaction_like(bot_user: User, is_superlike: bool):
         user_to_like = choice(recommendations)
     except IndexError:
         return
-    Like.create(liker_id=bot_user.id, liked_id=user_to_like["id"], is_superlike=is_superlike)
+    Like.create(liker_id=bot_user.id, liked_id=user_to_like["id"])
 
 
 def botaction_unlike(bot_user: User):
