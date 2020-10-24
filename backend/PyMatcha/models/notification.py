@@ -22,6 +22,7 @@ import logging
 from datetime import datetime
 from typing import Optional
 
+from PyMatcha.models.user import User
 from PyMatcha.utils import create_notifications_table
 from PyMatcha.utils.orm import Field
 from PyMatcha.utils.orm import Model
@@ -40,17 +41,21 @@ class Notification(Model):
 
     @staticmethod
     def create(
+        trigger_id: int,
         user_id: int,
         content: str,
         type: str,
         link_to: Optional[str],
         is_seen: bool = False,
         dt_received: datetime = datetime.utcnow(),
-    ) -> Notification:
+    ) -> Optional[Notification]:
         if type not in ["match", "like", "superlike", "unlike", "view", "message", "message_like"]:
             raise ValueError(
                 "type must be one of ['match', 'like', 'superlike', 'unlike', 'view', 'message', 'message_like']"
             )
+        blocked_ids = [block.blocked_id for block in User.get(id=user_id).get_blocks()]
+        if trigger_id in blocked_ids:
+            return None
         new_notif = Notification(
             user_id=user_id, content=content, type=type, link_to=link_to, is_seen=is_seen, dt_received=dt_received
         )

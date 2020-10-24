@@ -47,6 +47,7 @@ def view_profile(uid):
     user_dict["distance"] = _get_distance(current_user.geohash, u.geohash)
 
     Notification.create(
+        trigger_id=current_user.id,
         user_id=u.id,
         content=f"{current_user.first_name} just viewed your profile! Go check their profile out!",
         type="view",

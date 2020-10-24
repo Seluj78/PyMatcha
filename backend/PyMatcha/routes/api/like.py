@@ -55,15 +55,21 @@ def like_profile(uid):
     if u.already_likes(current_user.id):
         Match.create(user_1=current_user.id, user_2=u.id)
         Notification.create(
-            user_id=u.id, content=f"{u.first_name} liked you! Go check them out!", type="like", link_to=f"users/{u.id}"
+            trigger_id=current_user.id,
+            user_id=u.id,
+            content=f"{current_user.first_name} liked you! Go check them out!",
+            type="like",
+            link_to=f"users/{current_user.id}",
         )
         Notification.create(
+            trigger_id=current_user.id,
             user_id=u.id,
             content=f"You and {current_user.first_name} matched!",
             type="match",
             link_to=f"conversation/{current_user.id}",
         )
         Notification.create(
+            trigger_id=u.id,
             user_id=current_user.id,
             content=f"You and {u.first_name} matched!",
             type="match",
@@ -73,15 +79,20 @@ def like_profile(uid):
 
     if is_superlike:
         Notification.create(
+            trigger_id=current_user.id,
             user_id=u.id,
-            content=f"{u.first_name} superliked you 😏! Go check them out!",
+            content=f"{current_user.first_name} superliked you 😏! Go check them out!",
             type="superlike",
-            link_to=f"users/{u.id}",
+            link_to=f"users/{current_user.id}",
         )
         return Success("Superliked user.")
     else:
         Notification.create(
-            user_id=u.id, content=f"{u.first_name} liked you! Go check them out!", type="like", link_to=f"users/{u.id}"
+            trigger_id=current_user.id,
+            user_id=u.id,
+            content=f"{current_user.first_name} liked you! Go check them out!",
+            type="like",
+            link_to=f"users/{current_user.id}",
         )
         return Success("Liked user.")
 
@@ -99,6 +110,12 @@ def unlike_profile(uid):
         raise BadRequestError("You never liked this person in the first place.")
     Like.get_multi(liked_id=u.id, liker_id=current_user.id).delete()
 
-    Notification.create(user_id=u.id, content=f"{u.first_name} unliked you.", type="unlike", link_to=None)
+    Notification.create(
+        trigger_id=current_user.id,
+        user_id=u.id,
+        content=f"{current_user.first_name} unliked you.",
+        type="unlike",
+        link_to=None,
+    )
 
     return Success(f"Unliked user {u.id}.")

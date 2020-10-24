@@ -73,6 +73,7 @@ def send_message():
     current_user.send_message(to_id=to_user.id, content=content)
     current_app.logger.debug("/messages -> Message successfully sent to {}.".format(to_uid))
     Notification.create(
+        trigger_id=current_user.id,
         user_id=to_user.id,
         content=f"{current_user.first_name} said: {content}",
         type="message",
@@ -127,6 +128,7 @@ def like_message(message_id):
     message.is_liked = True
     message.save()
     Notification.create(
+        trigger_id=current_user.id,
         user_id=message.from_id,
         content=f"{current_user.first_name} liked you message!",
         type="message_like",
