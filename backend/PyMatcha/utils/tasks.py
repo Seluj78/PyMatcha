@@ -15,6 +15,7 @@ MATCHES_MULTIPLIER = 4
 REPORTS_MULTIPLIER = 10
 VIEW_MULTIPLIER = 1
 MESSAGES_DIVIDER = 5
+INACTIVITY_DIVIDER = 10
 
 
 @celery.on_after_configure.connect
@@ -53,11 +54,20 @@ def update_heat_scores():
         score -= reports_received * REPORTS_MULTIPLIER
         score += views * VIEW_MULTIPLIER
         score += ceil(messages / MESSAGES_DIVIDER)
+
+        now = datetime.datetime.utcnow()
+        monday1 = now - datetime.timedelta(days=now.weekday())
+        monday2 = user.date_lastseen - datetime.timedelta(days=user.date_lastseen.weekday())
+        weeks_passed_since_last_activity = int((monday1 - monday2).days / 7)
+
+        score -= weeks_passed_since_last_activity * INACTIVITY_DIVIDER
+
         if score < 0:
             score = 0
         user.heat_score = score
         user.save()
-        return f"Updated heat score for user {user.id}: {user.heat_score}."
+        print(f"Updated heat score for user {user.id}: {user.heat_score}.")
+    return "Successfully updated heat scores."
 
 
 @celery.task
