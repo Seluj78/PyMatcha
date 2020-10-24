@@ -22,7 +22,6 @@ import logging
 from datetime import datetime
 from typing import Optional
 
-from PyMatcha.models.user import User
 from PyMatcha.utils import create_notifications_table
 from PyMatcha.utils.orm import Field
 from PyMatcha.utils.orm import Model
@@ -53,7 +52,9 @@ class Notification(Model):
             raise ValueError(
                 "type must be one of ['match', 'like', 'superlike', 'unlike', 'view', 'message', 'message_like']"
             )
-        blocked_ids = [block.blocked_id for block in User.get(id=user_id).get_blocks()]
+        from PyMatcha.models.user import get_user  # noqa
+
+        blocked_ids = [block.blocked_id for block in get_user(user_id).get_blocks()]
         if trigger_id in blocked_ids:
             return None
         new_notif = Notification(
