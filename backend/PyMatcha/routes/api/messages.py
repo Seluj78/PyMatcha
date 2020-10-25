@@ -87,6 +87,7 @@ def get_conversation_messsages(with_uid):
 
     message_list = current_user.get_messages_with_user(with_user.id)
     message_list = [m.to_dict() for m in message_list]
+    message_list = sorted(message_list, key=lambda item: item["timestamp"])
     return SuccessOutput("messages", message_list)
 
 
