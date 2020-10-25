@@ -23,8 +23,10 @@
         </div>
         <div class="mt-8">
           <div v-if="messages.length">
-            <h1 class="text-xl md:text-base text-gray-matcha text-center font-bold">Messages</h1>
-            <div></div>
+            <h1 class="text-xl md:text-base text-gray-matcha text-left font-bold">Messages</h1>
+            <div class="overflow-scroll mt-4">
+              <Message v-on:chat="chat" v-for="message in messages" :key="message.with_user.id" v-bind:message="message"></Message>
+            </div>
           </div>
           <div v-else class="flex items-center">
             <div>
@@ -42,7 +44,7 @@
             v-if="chatWithUserId"
             v-bind:chatWithUserId="chatWithUserId"
             v-on:close-chat="closeChat()"></Chat>
-      <div v-if="!chatWithUserId" class="pl-8 w-full text-left max-w-2xl invisible md:visible md:relative md:ml-4">
+      <div v-if="!chatWithUserId" class="text-center pl-8 py-8 w-full max-w-2xl invisible md:visible md:relative md:ml-4">
         <div v-if="!matches.length && !messages.length">
           <h1 class="text-4xl text-gray-400 font-bold">Use Browse, Search</h1>
           <h1 class="text-4xl text-gray-400 font-bold">to like people</h1>
@@ -65,6 +67,7 @@
 import NavBar from '@/components/shared/NavBar.vue';
 import Match from '@/components/app/matches/Match.vue';
 import Chat from '@/components/app/matches/Chat.vue';
+import Message from '@/components/app/matches/Message.vue';
 
 export default {
   name: 'Matches',
@@ -72,6 +75,7 @@ export default {
     Chat,
     NavBar,
     Match,
+    Message,
   },
   data: () => ({
     matches: [],
@@ -84,18 +88,17 @@ export default {
       const matchesRequest = await this.$http.get('/matches');
       const { matches } = matchesRequest.data;
       for (let i = 0; i < matches.length; i += 1) {
-        const userRequest = await this.$http.get(`/users/${matches[i].user_1}`);
-        this.matches.push(userRequest.data);
+        for (let j = 0; j < this.messages.length; j += 1) {
+          if (this.messages[j].length && this.messages[j][0].to_id !== matches[i].user_1) {
+            const userRequest = await this.$http.get(`/users/${matches[i].user_1}`);
+            this.matches.push(userRequest.data);
+          }
+        }
       }
     },
     async fetchMessages() {
       const messagesRequest = await this.$http.get('/conversations');
-      const messages = messagesRequest.data;
-      for (let i = 0; i <= messages.length; i += 1) {
-        const userChattingWith = await this.$http.get(`/users/${messages[i].with_user}`);
-        messages[i].user = userChattingWith.data;
-      }
-      this.messages = messages;
+      this.messages = messagesRequest.data.conversations;
     },
     async chat(...args) {
       const [id] = args;
@@ -106,11 +109,35 @@ export default {
     closeChat() {
       this.chatWithUserId = null;
     },
+    openMessageOnMd(e) {
+      if (e.target.innerWidth >= 768 && !this.chatWithUserId) {
+        if (this.messages.length && e.target.innerWidth >= 768) {
+          this.chatWithUserId = this.messages[0].with_user.id;
+        }
+      }
+    },
+    async fetchData() {
+      window.addEventListener('resize', this.openMessageOnMd);
+      await this.fetchMessages();
+      await this.fetchMatches();
+      if (window.innerWidth >= 768 && this.messages.length) {
+        this.chatWithUserId = this.messages[0].with_user.id;
+      }
+      this.fetchingDone = true;
+    },
   },
   async beforeMount() {
-    await this.fetchMatches();
-    await this.fetchMessages();
-    this.fetchingDone = true;
+    await this.fetchData();
+  },
+  deactivated() {
+    if (!this.$route.path.startsWith('/users')) {
+      this.matches = [];
+      this.messages = [];
+      this.chatWithUserId = null;
+      this.fetchingDone = false;
+      this.fetchData();
+      this.$el.scrollTop = 0;
+    }
   },
 };
 </script>

@@ -11,13 +11,27 @@
         <h1 class="noSelect capitalize opacity-50">←</h1>
       </div>
     </div>
-    <div class="messages rounded-md overflow-scroll my-2">
+    <div class="messages rounded-md overflow-scroll pt-4 pb-2 w-full">
+      <div
+        v-bind:class="{
+        'flex': true,
+        'mt-1': true,
+        'justify-start': message.to_id === loggedInUserId,
+        'justify-end': message.to_id !== loggedInUserId}"
+        v-for="message in messages" :key="message.id">
+      <h1 v-if="message.to_id === loggedInUserId"
+          class="py-2 px-4 rounded-t-md rounded-br-md bg-purple-matcha text-white-matcha">{{message.content}}</h1>
+      <h1 v-else
+          class="py-2 px-4 rounded-t-md rounded-bl-md bg-green-500 text-white-matcha">{{message.content}}</h1>
+      </div>
     </div>
     <div class="send w-full flex items-stretch">
       <div class="w-10/12 h-full">
-        <input type="text" placeholder="Message..." class="h-full w-full border rounded-md px-3 py-1 focus:outline-none active:outline-none text-gray-matcha">
+        <input type="text" v-model="message" placeholder="Message..." class="h-full w-full border border-gray-500 rounded-md px-3 py-1 focus:outline-none active:outline-none text-gray-matcha">
       </div>
-      <div class="w-2/12 rounded-md flex justify-center items-center bg-purple-matcha cursor-pointer ml-2">
+      <div
+        class="w-2/12 rounded-md flex justify-center items-center bg-purple-matcha cursor-pointer ml-2"
+        v-on:click="sendMessage()">
         <img src="../../../assets/sendWhite.png" class="w-5 py-2">
       </div>
     </div>
@@ -35,10 +49,18 @@ export default {
   data: () => ({
     messages: [],
     user: null,
+    message: '',
+    loggedInUserId: null,
   }),
   methods: {
     closeChat() {
       this.$emit('close-chat');
+    },
+    async sendMessage() {
+      await this.$http.post('/messages/send', {
+        to_uid: this.user.id.toString(),
+        content: this.message,
+      });
     },
   },
   async beforeMount() {
@@ -46,6 +68,7 @@ export default {
     this.messages = messagesRequest.data.messages;
     const userRequest = await this.$http.get(`/users/${this.chatWithUserId}`);
     this.user = userRequest.data;
+    this.loggedInUserId = this.$store.getters.getLoggedInUser.id;
   },
 };
 </script>
@@ -53,7 +76,7 @@ export default {
 <style scoped>
 
 .chat {
-  height: 70vh;
+  height: 75vh;
 }
 
 @screen md {
