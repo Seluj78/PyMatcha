@@ -4,15 +4,15 @@
       'background-position': 'center center',
       'background-size' :'cover',
       'background-image': 'url(' + getImage() + ')'}"
-      class="w-12 h-12 rounded-full relative cursor-pointer"
-      v-on:click="chat()">
+       class="w-10 h-10 rounded-full relative cursor-pointer"
+       v-on:click="viewUser()">
     <div
       v-bind:class="{
       'bg-green-500': this.match.is_online,
       'bg-red-500': !this.match.is_online,
       'rounded-full': true,
-      'w-4': true,
-      'h-4': true}">
+      'w-3': true,
+      'h-3': true}">
     </div>
   </div>
 </template>
@@ -42,8 +42,8 @@ export default {
       }
       return imageOther;
     },
-    async chat() {
-      this.$emit('chat', this.match.id);
+    async viewUser() {
+      await this.$router.push(`/users/${this.match.id}`);
     },
   },
 };
