@@ -24,6 +24,7 @@ from flask import request
 from flask_jwt_extended import current_user
 from flask_jwt_extended import jwt_required
 from PyMatcha.models.message import Message
+from PyMatcha.models.notification import Notification
 from PyMatcha.models.user import get_user
 from PyMatcha.utils.decorators import validate_params
 from PyMatcha.utils.errors import BadRequestError
@@ -71,6 +72,13 @@ def send_message():
 
     current_user.send_message(to_id=to_user.id, content=content)
     current_app.logger.debug("/messages -> Message successfully sent to {}.".format(to_uid))
+    Notification.create(
+        trigger_id=current_user.id,
+        user_id=to_user.id,
+        content=f"{current_user.first_name} said: {content}",
+        type="message",
+        link_to=f"conversation/{current_user.id}",
+    )
     return Success("Message successfully sent to {}.".format(to_uid))
 
 
@@ -119,6 +127,13 @@ def like_message(message_id):
         raise BadRequestError("Message is already liked.")
     message.is_liked = True
     message.save()
+    Notification.create(
+        trigger_id=current_user.id,
+        user_id=message.from_id,
+        content=f"{current_user.first_name} liked you message!",
+        type="message_like",
+        link_to=f"conversation/{current_user.id}",
+    )
     return Success(f"Liked message {message_id}.")
 
 

@@ -7,7 +7,7 @@ from PyMatcha.utils.match_score import _get_distance
 from PyMatcha.utils.success import SuccessOutput
 
 
-history_bp = Blueprint("history_bp", __name__)
+history_bp = Blueprint("history", __name__)
 
 
 @history_bp.route("/history/viewed")

@@ -24,7 +24,7 @@ def setup_periodic_tasks(sender, **kwargs):
     sender.add_periodic_task(3600, update_heat_scores.s(), name="Update heat scores every hour")
     sender.add_periodic_task(60, update_user_recommendations.s(), name="Update user recommendations every minute")
     sender.add_periodic_task(60, reset_superlikes.s(), name="Update user recommendations every minute")
-    sender.add_periodic_task(30, take_random_users_online.s(), name="Set 100 random users online every 30 seconds")
+    sender.add_periodic_task(30, take_random_users_online.s(), name="Set 250 random users online every 30 seconds")
     sender.add_periodic_task(
         600, calc_search_min_max.s(), name="Update Minimum and Maximum scores and ages for search every 10 minutes"
     )
@@ -80,10 +80,7 @@ def take_users_offline():
             went_offline_count += 1
         else:
             stayed_online_count += 1
-    return (
-        f"{stayed_online_count} stayed online and "
-        f"{went_offline_count} went offline for {went_offline_count + stayed_online_count} users"
-    )
+    return f"{stayed_online_count} stayed online and {went_offline_count} went offline."
 
 
 @celery.task
@@ -136,11 +133,11 @@ def calc_search_min_max():
 
 @celery.task
 def take_random_users_online():
-    for user in User.select_random(100):
+    for user in User.select_random(250):
         if not user.skip_recommendations:
             # User isn't a bot, so skip him
             continue
         user.is_online = True
         user.date_lastseen = datetime.datetime.utcnow()
         user.save()
-    return "Successfully set 100 users online"
+    return "Successfully set 250 users online"
