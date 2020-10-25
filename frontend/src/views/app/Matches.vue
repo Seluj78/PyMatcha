@@ -2,7 +2,7 @@
   <!--  eslint-disable max-len -->
   <div class="mx-4 sm:mx-16 lg:mx-32">
     <NavBar v-bind:currentRoute="'Matches'"></NavBar>
-    <section v-if="fetchingDone" class="mx-auto relative md:flex md:items-start">
+    <section v-if="fetchingDone" class="mx-auto relative md:flex md:items-start md:justify-center">
       <div class="md:w-full md:max-w-xs md:shadow-md md:rounded-md md:p-8 md:flex md:flex-col md:justify-start">
         <div class="mt-8 sm:mt-0">
           <div v-if="matches.length">
