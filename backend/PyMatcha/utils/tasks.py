@@ -66,7 +66,6 @@ def update_heat_scores():
             score = 0
         user.heat_score = score
         user.save()
-        print(f"Updated heat score for user {user.id}: {user.heat_score}.")
     return "Successfully updated heat scores."
 
 
