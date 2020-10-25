@@ -62,6 +62,12 @@ def complete_profile():
     if len(tags) != len(set(tags)):
         raise BadRequestError("Duplicate tags.")
 
+    if orientation not in ["heterosexual", "homosexual", "bisexual", "other"]:
+        raise BadRequestError("Orientation must be one of 'heterosexual', 'homosexual', 'bisexual', 'other'")
+
+    if gender not in ["male", "female", "other"]:
+        raise BadRequestError("Gender must be one of 'male', 'female', 'other'")
+
     today = datetime.datetime.utcnow()
 
     age = today.year - birthdate.year - ((today.month, today.day) < (birthdate.month, birthdate.day))
