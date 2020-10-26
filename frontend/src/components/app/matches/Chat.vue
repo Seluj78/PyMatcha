@@ -11,7 +11,7 @@
         <h1 class="noSelect capitalize opacity-50">←</h1>
       </div>
     </div>
-    <div v-if="messages" class="messages break-words rounded-md overflow-scroll pt-4 pb-2 w-full">
+    <div id="messageBox" v-if="messages" class="messages my-2 break-words rounded-md overflow-scroll w-full">
       <h1 v-for="message in messages" :key="message.id"
       v-bind:class="{
         'py-2': true,
@@ -67,6 +67,12 @@ export default {
         to_uid: this.user.id.toString(),
         content: this.message,
       });
+      this.messages.push({ to_id: this.chatWithUserId, content: this.message });
+      this.message = '';
+      this.$nextTick(() => {
+        const messageBox = document.getElementById('messageBox');
+        messageBox.scrollTop = messageBox.scrollHeight;
+      });
     },
   },
   async beforeMount() {
@@ -75,6 +81,10 @@ export default {
     const userRequest = await this.$http.get(`/users/${this.chatWithUserId}`);
     this.user = userRequest.data;
     this.loggedInUserId = this.$store.getters.getLoggedInUser.id;
+    this.$nextTick(() => {
+      const messageBox = document.getElementById('messageBox');
+      messageBox.scrollTop = messageBox.scrollHeight;
+    });
   },
 };
 </script>
