@@ -11,19 +11,25 @@
         <h1 class="noSelect capitalize opacity-50">←</h1>
       </div>
     </div>
-    <div class="messages rounded-md overflow-scroll pt-4 pb-2 w-full">
-      <div
-        v-bind:class="{
-        'flex': true,
-        'mt-1': true,
-        'justify-start': message.to_id === loggedInUserId,
-        'justify-end': message.to_id !== loggedInUserId}"
-        v-for="message in messages" :key="message.id">
-      <h1 v-if="message.to_id === loggedInUserId"
-          class="py-2 px-4 rounded-t-md rounded-br-md bg-purple-matcha text-white-matcha">{{message.content}}</h1>
-      <h1 v-else
-          class="py-2 px-4 rounded-t-md rounded-bl-md bg-green-500 text-white-matcha">{{message.content}}</h1>
-      </div>
+    <div id="messageBox" v-if="messages" class="messages my-2 break-words rounded-md overflow-scroll w-full">
+      <h1 v-for="message in messages" :key="message.id"
+      v-bind:class="{
+        'py-2': true,
+        'px-4': true,
+        'mt-2': true,
+        'sm:w-48': true,
+        'lg:w-64': true,
+        'rounded-t-md': true,
+        'rounded-br-md': message.to_id === loggedInUserId,
+        'rounded-bl-md': message.to_id !== loggedInUserId,
+        'text-left': message.to_id === loggedInUserId,
+        'text-right': message.to_id !== loggedInUserId,
+        'mr-auto': message.to_id === loggedInUserId,
+        'ml-auto': message.to_id !== loggedInUserId,
+        'bg-purple-matcha': message.to_id === loggedInUserId,
+        'bg-green-500': message.to_id !== loggedInUserId,
+        'text-white-matcha': true}"
+      >{{message.content}}</h1>
     </div>
     <div class="send w-full flex items-stretch">
       <div class="w-10/12 h-full">
@@ -47,7 +53,7 @@ export default {
     ChatUser,
   },
   data: () => ({
-    messages: [],
+    messages: null,
     user: null,
     message: '',
     loggedInUserId: null,
@@ -61,6 +67,12 @@ export default {
         to_uid: this.user.id.toString(),
         content: this.message,
       });
+      this.messages.push({ to_id: this.chatWithUserId, content: this.message });
+      this.message = '';
+      this.$nextTick(() => {
+        const messageBox = document.getElementById('messageBox');
+        messageBox.scrollTop = messageBox.scrollHeight;
+      });
     },
   },
   async beforeMount() {
@@ -69,6 +81,10 @@ export default {
     const userRequest = await this.$http.get(`/users/${this.chatWithUserId}`);
     this.user = userRequest.data;
     this.loggedInUserId = this.$store.getters.getLoggedInUser.id;
+    this.$nextTick(() => {
+      const messageBox = document.getElementById('messageBox');
+      messageBox.scrollTop = messageBox.scrollHeight;
+    });
   },
 };
 </script>

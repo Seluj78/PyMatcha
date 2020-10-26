@@ -71,7 +71,6 @@ export default {
   },
   beforeMount() {
     this.match = this.message.with_user;
-    console.log(this.message);
   },
 };
 </script>
