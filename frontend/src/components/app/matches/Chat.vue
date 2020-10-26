@@ -11,7 +11,7 @@
         <h1 class="noSelect capitalize opacity-50">←</h1>
       </div>
     </div>
-    <div id="messageBox" v-if="messages" class="messages my-2 break-words rounded-md overflow-scroll w-full">
+    <div id="messageBox" v-if="messages" class="messages my-2 break-words overflow-scroll w-full">
       <h1 v-for="message in messages" :key="message.id"
       v-bind:class="{
         'py-2': true,
