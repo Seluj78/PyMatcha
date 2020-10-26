@@ -12,24 +12,25 @@
       </div>
     </div>
     <div id="messageBox" v-if="messages" class="messages my-2 break-words overflow-scroll w-full">
-      <h1 v-for="message in messages" :key="message.id"
-      v-bind:class="{
-        'py-2': true,
-        'px-4': true,
-        'mt-2': true,
-        'sm:w-48': true,
-        'lg:w-64': true,
-        'rounded-t-md': true,
-        'rounded-br-md': message.to_id === loggedInUserId,
-        'rounded-bl-md': message.to_id !== loggedInUserId,
+      <div v-bind:class="{
         'text-left': message.to_id === loggedInUserId,
-        'text-right': message.to_id !== loggedInUserId,
-        'mr-auto': message.to_id === loggedInUserId,
-        'ml-auto': message.to_id !== loggedInUserId,
-        'bg-purple-matcha': message.to_id === loggedInUserId,
-        'bg-green-500': message.to_id !== loggedInUserId,
-        'text-white-matcha': true}"
-      >{{message.content}}</h1>
+        'text-right': message.to_id !== loggedInUserId}"
+         v-for="message in messages" :key="message.id">
+        <h1
+        v-bind:class="{
+          'p-2': true,
+          'px-4': true,
+          'mt-2': true,
+          'inline-block': true,
+          'max-w-xs': true,
+          'rounded-t-md': true,
+          'rounded-br-md': message.to_id === loggedInUserId,
+          'rounded-bl-md': message.to_id !== loggedInUserId,
+          'bg-purple-matcha': message.to_id === loggedInUserId,
+          'bg-green-500': message.to_id !== loggedInUserId,
+          'text-white-matcha': true}"
+        >{{message.content}}</h1>
+      </div>
     </div>
     <div class="send w-full flex items-stretch">
       <div class="w-10/12 h-full">
