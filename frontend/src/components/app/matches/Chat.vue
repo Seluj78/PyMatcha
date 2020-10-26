@@ -72,7 +72,9 @@ export default {
       this.message = '';
       this.$nextTick(() => {
         const messageBox = document.getElementById('messageBox');
-        messageBox.scrollTop = messageBox.scrollHeight;
+        if (messageBox) {
+          messageBox.scrollTop = messageBox.scrollHeight;
+        }
       });
     },
   },
@@ -84,7 +86,9 @@ export default {
     this.loggedInUserId = this.$store.getters.getLoggedInUser.id;
     this.$nextTick(() => {
       const messageBox = document.getElementById('messageBox');
-      messageBox.scrollTop = messageBox.scrollHeight;
+      if (messageBox) {
+        messageBox.scrollTop = messageBox.scrollHeight;
+      }
     });
   },
 };
