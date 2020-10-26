@@ -84,27 +84,28 @@ export default {
     fetchingDone: false,
   }),
   methods: {
+    async fetchMatch(user1, user2) {
+      if (this.$store.getters.getLoggedInUser.id === user1) {
+        const userRequest = await this.$http.get(`/users/${user2}`);
+        this.matches.push(userRequest.data);
+      } else {
+        const userRequest = await this.$http.get(`/users/${user1}`);
+        this.matches.push(userRequest.data);
+      }
+    },
     async fetchMatches() {
       const matchesRequest = await this.$http.get('/matches');
       const { matches } = matchesRequest.data;
+      if (!this.messages.length) {
+        for (let i = 0; i < matches.length; i += 1) {
+          await this.fetchMatch(matches[i].user_1, matches[i].user_2);
+        }
+        return;
+      }
       for (let i = 0; i < matches.length; i += 1) {
-        if (!this.messages.length) {
-          if (this.$store.getters.getLoggedInUser.id === matches[i].user_1) {
-            const userRequest = await this.$http.get(`/users/${matches[i].user_2}`);
-            this.matches.push(userRequest.data);
-          } else {
-            const userRequest = await this.$http.get(`/users/${matches[i].user_1}`);
-            this.matches.push(userRequest.data);
-          }
-        } else {
-          for (let j = 0; j < this.messages.length; j += 1) {
-            if (this.$store.getters.getLoggedInUser.id === matches[i].user_1) {
-              const userRequest = await this.$http.get(`/users/${matches[i].user_2}`);
-              this.matches.push(userRequest.data);
-            } else {
-              const userRequest = await this.$http.get(`/users/${matches[i].user_1}`);
-              this.matches.push(userRequest.data);
-            }
+        for (let j = 0; j < this.messages.length; j += 1) {
+          if (this.messages[j].with_user.id !== matches[i].user_1 && this.messages[j].with_user.id !== matches[i].user_2) {
+            await this.fetchMatch(matches[i].user_1, matches[i].user_2);
           }
         }
       }
