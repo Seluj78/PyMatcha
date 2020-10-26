@@ -32,7 +32,7 @@ class View(Model):
     id = Field(int, modifiable=False)
     profile_id = Field(int)
     viewer_id = Field(int)
-    dt_seen = Field(datetime.datetime)
+    dt_seen = Field(datetime.datetime, fmt="%Y-%m-%d %H:%M:%S")
 
     @staticmethod
     def create(profile_id: int, viewer_id: int, dt_seen: datetime.datetime = datetime.datetime.utcnow()) -> View:
