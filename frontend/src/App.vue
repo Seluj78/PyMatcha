@@ -1,6 +1,6 @@
 <template>
   <div id="app" class="antialiased" v-bind:style="{background: getBackground}">
-    <keep-alive include="Browse,Search,History,Matches">
+    <keep-alive include="Browse,Search,History">
       <router-view/>
     </keep-alive>
   </div>

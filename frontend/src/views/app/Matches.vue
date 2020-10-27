@@ -70,7 +70,6 @@ import Chat from '@/components/app/matches/Chat.vue';
 import Message from '@/components/app/matches/Message.vue';
 
 export default {
-  name: 'Matches',
   components: {
     Chat,
     NavBar,
