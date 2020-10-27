@@ -95,14 +95,26 @@ export default {
         this.scrollChatToBottom();
       }
     },
+    async prepareChatForNewUser() {
+      const messagesRequest = await this.$http.get(`/conversations/${this.chatWithUserId}`);
+      this.messages = messagesRequest.data.messages;
+      const userRequest = await this.$http.get(`/users/${this.chatWithUserId}`);
+      this.user = userRequest.data;
+      this.scrollChatToBottom();
+    },
+  },
+  watch: {
+    chatWithUserId: {
+      async handler() {
+        if (this.chatWithUserId) {
+          await this.prepareChatForNewUser();
+        }
+      },
+    },
   },
   async beforeMount() {
-    const messagesRequest = await this.$http.get(`/conversations/${this.chatWithUserId}`);
-    this.messages = messagesRequest.data.messages;
-    const userRequest = await this.$http.get(`/users/${this.chatWithUserId}`);
-    this.user = userRequest.data;
+    await this.prepareChatForNewUser();
     this.loggedInUserId = this.$store.getters.getLoggedInUser.id;
-    this.scrollChatToBottom();
     this.fetchMessagesIntervalId = setInterval(this.fetchNewMessages, 1000);
   },
   beforeDestroy() {
