@@ -82,6 +82,7 @@ export default {
       });
       this.messages.push({ to_id: this.chatWithUserId, content: this.message });
       this.message = '';
+      this.$emit('new-message');
       this.scrollChatToBottom();
     },
     async fetchNewMessages() {
@@ -91,6 +92,7 @@ export default {
         for (let i = this.messages.length; i < newMessages.length; i += 1) {
           this.messages.push(newMessages[i]);
         }
+        this.$emit('new-message');
         this.scrollChatToBottom();
       }
     },

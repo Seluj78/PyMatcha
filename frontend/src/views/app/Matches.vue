@@ -43,6 +43,7 @@
       md:relative md:ml-4"
             v-if="chatWithUserId"
             v-bind:chatWithUserId="chatWithUserId"
+            v-on:new-message="fetchMessages"
             v-on:close-chat="closeChat()"></Chat>
       <div v-if="!chatWithUserId" class="text-center pl-8 py-8 w-full max-w-2xl invisible md:visible md:relative md:ml-4">
         <div v-if="!matches.length && !messages.length">
