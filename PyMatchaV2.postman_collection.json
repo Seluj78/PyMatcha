@@ -1,0 +1,1555 @@
+{
+	"info": {
+		"_postman_id": "bae09fd6-e733-4542-95ce-f4a813b3ee24",
+		"name": "PyMatchaV2",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Auth",
+			"item": [
+				{
+					"name": "Register",
+					"item": [
+						{
+							"name": "No JSON",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "2ffa0b6b-7621-4d00-8cfe-7f84af738a5b",
+										"exec": [
+											"var response = JSON.parse(responseBody);",
+											"",
+											"",
+											"pm.test(\"Status code is 400\", function () {",
+											"    pm.response.to.have.status(400);",
+											"});",
+											"",
+											"tests[\"JSON return code is 400\"] = response.code == 400",
+											"",
+											"tests[\"success is false\"] = response.success == false",
+											"tests[\"Message is correct\"] = response.error.message == \"Missing json body.\"",
+											"tests[\"Error type is Bad Request\"] = response.error.type == \"BadRequestError\""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"url": {
+									"raw": "{{host}}/auth/register",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"auth",
+										"register"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Malformed JSON",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "d3a0e3dd-b12a-4096-95eb-c06fc7cdf6bf",
+										"exec": [
+											"var response = JSON.parse(responseBody);",
+											"",
+											"",
+											"pm.test(\"Status code is 400\", function () {",
+											"    pm.response.to.have.status(400);",
+											"});",
+											"",
+											"tests[\"JSON return code is 400\"] = response.code == 400",
+											"",
+											"tests[\"success is false\"] = response.success == false",
+											"tests[\"Message is correct\"] = response.error.message == \"The Json Body is malformed.\"",
+											"tests[\"Error type is Bad Request\"] = response.error.type == \"BadRequestError\""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n\t\"\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{host}}/auth/register",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"auth",
+										"register"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Missing key",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "5d5f06d0-6473-4b2c-962b-a9b2747cd3b2",
+										"exec": [
+											"var response = JSON.parse(responseBody);",
+											"",
+											"",
+											"pm.test(\"Status code is 400\", function () {",
+											"    pm.response.to.have.status(400);",
+											"});",
+											"",
+											"tests[\"JSON return code is 400\"] = response.code == 400",
+											"",
+											"tests[\"success is true\"] = response.success == false",
+											"tests[\"Message is correct\"] = response.error.message == \"Missing keys ['username', 'first_name', 'last_name'].\"",
+											"tests[\"Error type is Bad Request\"] = response.error.type == \"BadRequestError\""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n\t\"email\": \"{{user_email}}\",\n\t\"password\": \"{{user_password}}\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{host}}/auth/register",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"auth",
+										"register"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Too many keys",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "4debbee6-606f-424d-a5b8-05f28418823e",
+										"exec": [
+											"var response = JSON.parse(responseBody);",
+											"",
+											"",
+											"pm.test(\"Status code is 400\", function () {",
+											"    pm.response.to.have.status(400);",
+											"});",
+											"",
+											"tests[\"JSON return code is 400\"] = response.code == 400",
+											"",
+											"tests[\"success is true\"] = response.success == false",
+											"tests[\"Message is correct\"] = response.error.message == \"You can't specify key 'role'.\"",
+											"tests[\"Error type is Bad Request\"] = response.error.type == \"BadRequestError\""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n\t\"username\": \"{{user_username}}\",\n\t\"email\": \"{{user_email}}\",\n\t\"password\": \"{{user_password}}\",\n\t\"first_name\": \"{{user_firstname}}\",\n\t\"last_name\": \"{{user_lastname}}\",\n\t\"role\": \"admin\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{host}}/auth/register",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"auth",
+										"register"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Register",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "393a28ed-909b-432c-aa08-cf27ebe4c8fd",
+										"exec": [
+											"var response = JSON.parse(responseBody);",
+											"",
+											"",
+											"pm.test(\"Status code is 200\", function () {",
+											"    pm.response.to.have.status(200);",
+											"});",
+											"",
+											"tests[\"JSON return code is 200\"] = response.code == 200",
+											"",
+											"email = pm.collectionVariables.get(\"email\");",
+											"",
+											"tests[\"success is true\"] = response.success == true",
+											"tests[\"Returned email is correct\"] = response.email == email"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n\t\"username\": \"{{username}}\",\n\t\"email\": \"{{email}}\",\n\t\"password\": \"{{password}}\",\n\t\"first_name\": \"{{first_name}}\",\n\t\"last_name\": \"{{last_name}}\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{host}}/auth/register",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"auth",
+										"register"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Email taken",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "bde6e2aa-94cf-406c-9bff-290cc6334ea6",
+										"exec": [
+											"var response = JSON.parse(responseBody);",
+											"",
+											"",
+											"pm.test(\"Status code is 400\", function () {",
+											"    pm.response.to.have.status(409);",
+											"});",
+											"",
+											"tests[\"JSON return code is 400\"] = response.code == 409",
+											"",
+											"tests[\"success is false\"] = response.success == false",
+											"tests[\"Error type is Bad Request\"] = response.error.type == \"ConflictError\"",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n\t\"username\": \"{{username}}\",\n\t\"email\": \"{{email}}\",\n\t\"password\": \"{{password}}\",\n\t\"first_name\": \"{{first_name}}\",\n\t\"last_name\": \"{{last_name}}\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{host}}/auth/register",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"auth",
+										"register"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Username taken",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "f512900e-d5df-48ea-a068-2f2b4dbe4a00",
+										"exec": [
+											"var response = JSON.parse(responseBody);",
+											"",
+											"",
+											"pm.test(\"Status code is 400\", function () {",
+											"    pm.response.to.have.status(409);",
+											"});",
+											"",
+											"tests[\"JSON return code is 400\"] = response.code == 409",
+											"",
+											"tests[\"success is false\"] = response.success == false",
+											"tests[\"Error type is Bad Request\"] = response.error.type == \"ConflictError\"",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n\t\"username\": \"{{username}}\",\n\t\"email\": \"another@email.org\",\n\t\"password\": \"{{password}}\",\n\t\"first_name\": \"{{first_name}}\",\n\t\"last_name\": \"{{last_name}}\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{host}}/auth/register",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"auth",
+										"register"
+									]
+								}
+							},
+							"response": []
+						}
+					],
+					"protocolProfileBehavior": {},
+					"_postman_isSubFolder": true
+				},
+				{
+					"name": "Confirm",
+					"item": [
+						{
+							"name": "Login before confirmed",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "2e69d924-0f6b-435b-87d4-aa8830fb5c09",
+										"exec": [
+											"var response = JSON.parse(responseBody);",
+											"",
+											"",
+											"pm.test(\"Status code is 401\", function () {",
+											"    pm.response.to.have.status(401);",
+											"});",
+											"",
+											"tests[\"JSON return code is 401\"] = response.code == 401",
+											"",
+											"tests[\"success is true\"] = response.success == false",
+											"tests[\"Message is correct\"] = response.error.message == \"User needs to be confirmed first.\"",
+											"tests[\"Error type is Bad Request\"] = response.error.type == \"UnauthorizedError\""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n\t\"username\": \"{{username}}\",\n\t\"password\": \"{{password}}\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{host}}/auth/login",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"auth",
+										"login"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Confirm",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "3a861af4-5ec9-4b9e-8424-0cb17867e0b7",
+										"exec": [
+											"var response = JSON.parse(responseBody);",
+											"",
+											"",
+											"pm.test(\"Status code is 200\", function () {",
+											"    pm.response.to.have.status(200);",
+											"});",
+											"",
+											"tests[\"JSON return code is 200\"] = response.code == 200",
+											"",
+											"tests[\"success is true\"] = response.success == true",
+											"tests[\"Message is correct\"] = response.message == \"User successfully confirmed.\"",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "debug-auth-token",
+										"type": "text",
+										"value": "{{debug_token}}"
+									}
+								],
+								"url": {
+									"raw": "{{host}}/debug/users/confirm/{{email}}",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"debug",
+										"users",
+										"confirm",
+										"{{email}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Confirm twice",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "b7079140-0a13-46f8-a9bf-a1dcdb8d7928",
+										"exec": [
+											"var response = JSON.parse(responseBody);",
+											"",
+											"",
+											"pm.test(\"Status code is 200\", function () {",
+											"    pm.response.to.have.status(200);",
+											"});",
+											"",
+											"tests[\"JSON return code is 200\"] = response.code == 200",
+											"",
+											"tests[\"success is true\"] = response.success == true",
+											"tests[\"Message is correct\"] = response.message == \"User already confirmed.\"",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "debug-auth-token",
+										"type": "text",
+										"value": "{{debug_token}}"
+									}
+								],
+								"url": {
+									"raw": "{{host}}/debug/users/confirm/{{email}}",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"debug",
+										"users",
+										"confirm",
+										"{{email}}"
+									]
+								}
+							},
+							"response": []
+						}
+					],
+					"protocolProfileBehavior": {},
+					"_postman_isSubFolder": true
+				},
+				{
+					"name": "Login",
+					"item": [
+						{
+							"name": "Login w/ username",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "e7f490eb-6443-4f92-b56c-7a52e7c4b196",
+										"exec": [
+											"var response = JSON.parse(responseBody);",
+											"",
+											"",
+											"pm.test(\"Status code is 200\", function () {",
+											"    pm.response.to.have.status(200);",
+											"});",
+											"",
+											"tests[\"JSON return code is 200\"] = response.code == 200",
+											"",
+											"tests[\"success is true\"] = response.success == true",
+											"",
+											"tests[\"Is profile completed is 0\"] = response.return.is_profile_completed == 0",
+											"",
+											"pm.collectionVariables.set(\"access_token\", response.return.access_token);",
+											"pm.collectionVariables.set(\"refresh_token\", response.return.refresh_token);"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n\t\"username\": \"{{username}}\",\n\t\"password\": \"{{password}}\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{host}}/auth/login",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"auth",
+										"login"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Login w/ email",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "2a9088b0-3a8a-4d53-a9c7-3985ac06d0d6",
+										"exec": [
+											"var response = JSON.parse(responseBody);",
+											"",
+											"",
+											"pm.test(\"Status code is 200\", function () {",
+											"    pm.response.to.have.status(200);",
+											"});",
+											"",
+											"tests[\"JSON return code is 200\"] = response.code == 200",
+											"",
+											"tests[\"success is true\"] = response.success == true",
+											"",
+											"tests[\"Is profile completed is 0\"] = response.return.is_profile_completed == 0",
+											"",
+											"pm.collectionVariables.set(\"access_token\", response.return.access_token);",
+											"pm.collectionVariables.set(\"refresh_token\", response.return.refresh_token);"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n\t\"password\": \"{{password}}\",\n\t\"username\": \"{{email}}\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{host}}/auth/login",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"auth",
+										"login"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Refresh token",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "d3392b7c-fe38-4bc7-936a-c17a34b046ce",
+										"exec": [
+											"var response = JSON.parse(responseBody);",
+											"",
+											"",
+											"pm.test(\"Status code is 200\", function () {",
+											"    pm.response.to.have.status(200);",
+											"});",
+											"",
+											"tests[\"JSON return code is 200\"] = response.code == 200",
+											"",
+											"tests[\"success is true\"] = response.success == true",
+											"",
+											"pm.collectionVariables.set(\"user_access_token\", response.access_token);",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{refresh_token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"url": {
+									"raw": "{{host}}/auth/refresh",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"auth",
+										"refresh"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Logout",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "4df1fa93-573e-4fbd-b380-a498d8e50a40",
+										"exec": [
+											"var response = JSON.parse(responseBody);",
+											"",
+											"",
+											"pm.test(\"Status code is 200\", function () {",
+											"    pm.response.to.have.status(200);",
+											"});",
+											"",
+											"tests[\"JSON return code is 200\"] = response.code == 200",
+											"",
+											"tests[\"success is true\"] = response.success == true",
+											"",
+											"tests[\"Message is correct\"] = response.message == \"Logout successful.\"",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"access_token\": \"{{access_token}}\",\n    \"refresh_token\": \"{{refresh_token}}\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{host}}/auth/logout",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"auth",
+										"logout"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Refresh token after logout",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "c381ab79-e9e4-465a-8fe7-2cd9303a7d20",
+										"exec": [
+											"var response = JSON.parse(responseBody);",
+											"",
+											"",
+											"pm.test(\"Status code is 401\", function () {",
+											"    pm.response.to.have.status(401);",
+											"});",
+											"",
+											"tests[\"JSON return code is 401\"] = response.code == 401",
+											"",
+											"tests[\"success is true\"] = response.success == false",
+											"tests[\"Message is correct\"] = response.error.message == \"Token has been revoked.\"",
+											"tests[\"Error type is Bad Request\"] = response.error.type == \"UnauthorizedError\""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{refresh_token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"url": {
+									"raw": "{{host}}/auth/refresh",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"auth",
+										"refresh"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Login again after logout",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "61c4fdb6-ce13-4580-8b32-58383f36aff9",
+										"exec": [
+											"var response = JSON.parse(responseBody);",
+											"",
+											"",
+											"pm.test(\"Status code is 200\", function () {",
+											"    pm.response.to.have.status(200);",
+											"});",
+											"",
+											"tests[\"JSON return code is 200\"] = response.code == 200",
+											"",
+											"tests[\"success is true\"] = response.success == true",
+											"",
+											"tests[\"Is profile completed is 0\"] = response.return.is_profile_completed == 0",
+											"",
+											"pm.collectionVariables.set(\"access_token\", response.return.access_token);",
+											"pm.collectionVariables.set(\"refresh_token\", response.return.refresh_token);"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n\t\"password\": \"{{password}}\",\n\t\"username\": \"{{email}}\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{host}}/auth/login",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"auth",
+										"login"
+									]
+								}
+							},
+							"response": []
+						}
+					],
+					"protocolProfileBehavior": {},
+					"_postman_isSubFolder": true
+				}
+			],
+			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "Profile",
+			"item": [
+				{
+					"name": "Complete",
+					"item": [
+						{
+							"name": "Wrong orientation",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "4a29437f-20bd-47e6-bb3a-f68a051e5972",
+										"exec": [
+											"var response = JSON.parse(responseBody);",
+											"",
+											"",
+											"pm.test(\"Status code is 400\", function () {",
+											"    pm.response.to.have.status(400);",
+											"});",
+											"",
+											"tests[\"JSON return code is 400\"] = response.code == 400",
+											"",
+											"tests[\"success is true\"] = response.success == false",
+											"tests[\"Message is correct\"] = response.error.message == \"Orientation must be one of 'heterosexual', 'homosexual', 'bisexual', 'other'\"",
+											"tests[\"Error type is Bad Request\"] = response.error.type == \"BadRequestError\""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n\t\"orientation\": \"qewrtery\",\n\t\"bio\": \"{{bio}}\",\n\t\"tags\": [\n\t\t\"bot\",\n\t\t\"robot\",\n\t\t\"postman\",\n\t\t\"sex\",\n\t\t\"friends\",\n\t\t\"drink\",\n\t\t\"smoke\"\n\t\t],\n\t\"gender\": \"{{gender}}\",\n\t\"birthdate\": \"06/04/1998\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{host}}/profile/complete",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"profile",
+										"complete"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Bio too short",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "41ded181-a4ff-488e-a025-7b0202ac2f21",
+										"exec": [
+											"var response = JSON.parse(responseBody);",
+											"",
+											"",
+											"pm.test(\"Status code is 400\", function () {",
+											"    pm.response.to.have.status(400);",
+											"});",
+											"",
+											"tests[\"JSON return code is 400\"] = response.code == 400",
+											"",
+											"tests[\"success is true\"] = response.success == false",
+											"tests[\"Message is correct\"] = response.error.message == \"Bio is too short.\"",
+											"tests[\"Error type is Bad Request\"] = response.error.type == \"BadRequestError\""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n\t\"orientation\": \"{{orientation}}\",\n\t\"bio\": \"Bonjour\",\n\t\"tags\": [\n\t\t\"bot\",\n\t\t\"robot\",\n\t\t\"postman\",\n\t\t\"sex\",\n\t\t\"friends\",\n\t\t\"drink\",\n\t\t\"smoke\"\n\t\t],\n\t\"gender\": \"{{gender}}\",\n\t\"birthdate\": \"{{birthdate}}\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{host}}/profile/complete",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"profile",
+										"complete"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Not enough tags",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "69c5d93e-3691-48df-9864-684d019d7d19",
+										"exec": [
+											"var response = JSON.parse(responseBody);",
+											"",
+											"",
+											"pm.test(\"Status code is 400\", function () {",
+											"    pm.response.to.have.status(400);",
+											"});",
+											"",
+											"tests[\"JSON return code is 400\"] = response.code == 400",
+											"",
+											"tests[\"success is true\"] = response.success == false",
+											"tests[\"Message is correct\"] = response.error.message == \"At least 3 tags are required.\"",
+											"tests[\"Error type is Bad Request\"] = response.error.type == \"BadRequestError\""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n\t\"orientation\": \"{{orientation}}\",\n\t\"bio\": \"{{bio}}\",\n\t\"tags\": [\n\t\t\"bot\",\n\t\t\"robot\"\n\t\t],\n\t\"gender\": \"{{gender}}\",\n\t\"birthdate\": \"{{birthdate}}\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{host}}/profile/complete",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"profile",
+										"complete"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Duplicated tags",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "05155bfa-e0ca-47e5-b630-6f115a55b9f7",
+										"exec": [
+											"var response = JSON.parse(responseBody);",
+											"",
+											"",
+											"pm.test(\"Status code is 400\", function () {",
+											"    pm.response.to.have.status(400);",
+											"});",
+											"",
+											"tests[\"JSON return code is 400\"] = response.code == 400",
+											"",
+											"tests[\"success is true\"] = response.success == false",
+											"tests[\"Message is correct\"] = response.error.message == \"Duplicate tags.\"",
+											"tests[\"Error type is Bad Request\"] = response.error.type == \"BadRequestError\""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n\t\"orientation\": \"{{orientation}}\",\n\t\"bio\": \"{{bio}}\",\n\t\"tags\": [\n\t\t\"bot\",\n\t\t\"robot\",\n\t\t\"postman\",\n\t\t\"sex\",\n\t\t\"friends\",\n\t\t\"drink\",\n\t\t\"smoke\",\n\t\t\"smoke\"\n\t\t],\n\t\"gender\": \"{{gender}}\",\n\t\"birthdate\": \"{{birthdate}}\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{host}}/profile/complete",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"profile",
+										"complete"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Wrong gender",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "5667975f-d726-440b-b8d7-e8c8cc9817fb",
+										"exec": [
+											"var response = JSON.parse(responseBody);",
+											"",
+											"",
+											"pm.test(\"Status code is 400\", function () {",
+											"    pm.response.to.have.status(400);",
+											"});",
+											"",
+											"tests[\"JSON return code is 400\"] = response.code == 400",
+											"",
+											"tests[\"success is true\"] = response.success == false",
+											"tests[\"Message is correct\"] = response.error.message == \"Gender must be one of 'male', 'female', 'other'\"",
+											"tests[\"Error type is Bad Request\"] = response.error.type == \"BadRequestError\""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n\t\"orientation\": \"{{orientation}}\",\n\t\"bio\": \"{{bio}}\",\n\t\"tags\": [\n\t\t\"bot\",\n\t\t\"robot\",\n\t\t\"postman\",\n\t\t\"sex\",\n\t\t\"friends\",\n\t\t\"drink\",\n\t\t\"smoke\"\n\t\t],\n\t\"gender\": \"lol\",\n\t\"birthdate\": \"06/04/1998\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{host}}/profile/complete",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"profile",
+										"complete"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Wrong birthdate format",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "738f343b-08bf-49cf-b37b-636b833bf27d",
+										"exec": [
+											"var response = JSON.parse(responseBody);",
+											"",
+											"",
+											"pm.test(\"Status code is 400\", function () {",
+											"    pm.response.to.have.status(400);",
+											"});",
+											"",
+											"tests[\"JSON return code is 400\"] = response.code == 400",
+											"",
+											"tests[\"success is true\"] = response.success == false",
+											"tests[\"Message is correct\"] = response.error.message == \"Birthdate format must be %d/%m/%Y (day/month/year)\"",
+											"tests[\"Error type is Bad Request\"] = response.error.type == \"BadRequestError\""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n\t\"orientation\": \"{{orientation}}\",\n\t\"bio\": \"{{bio}}\",\n\t\"tags\": [\n\t\t\"bot\",\n\t\t\"robot\",\n\t\t\"postman\",\n\t\t\"sex\",\n\t\t\"friends\",\n\t\t\"drink\",\n\t\t\"smoke\"\n\t\t],\n\t\"gender\": \"{{gender}}\",\n\t\"birthdate\": \"06 04 1998\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{host}}/profile/complete",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"profile",
+										"complete"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Too young",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "c978bc0e-ea7a-4a39-8925-cbf301b686bc",
+										"exec": [
+											"var response = JSON.parse(responseBody);",
+											"",
+											"",
+											"pm.test(\"Status code is 400\", function () {",
+											"    pm.response.to.have.status(400);",
+											"});",
+											"",
+											"tests[\"JSON return code is 400\"] = response.code == 400",
+											"",
+											"tests[\"success is true\"] = response.success == false",
+											"tests[\"Message is correct\"] = response.error.message == \"You must be 18 years old or older.\"",
+											"tests[\"Error type is Bad Request\"] = response.error.type == \"BadRequestError\""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n\t\"orientation\": \"{{orientation}}\",\n\t\"bio\": \"{{bio}}\",\n\t\"tags\": [\n\t\t\"bot\",\n\t\t\"robot\",\n\t\t\"postman\",\n\t\t\"sex\",\n\t\t\"friends\",\n\t\t\"drink\",\n\t\t\"smoke\"\n\t\t],\n\t\"gender\": \"{{gender}}\",\n\t\"birthdate\": \"06/04/2020\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{host}}/profile/complete",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"profile",
+										"complete"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Complete",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "7bde78f7-966b-4c0d-aa3f-0def59d183cb",
+										"exec": [
+											"var response = JSON.parse(responseBody);",
+											"",
+											"",
+											"pm.test(\"Status code is 200\", function () {",
+											"    pm.response.to.have.status(200);",
+											"});",
+											"",
+											"",
+											"tests[\"success is true\"] = response.success == true",
+											"tests[\"Message is correct\"] = response.message == \"Profile completed !\"",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n\t\"orientation\": \"{{orientation}}\",\n\t\"bio\": \"{{bio}}\",\n\t\"tags\": [\n        \"netflix\",\n        \"photography\",\n        \"swimming\",\n        \"comedy\"\n\t\t],\n\t\"gender\": \"{{gender}}\",\n\t\"birthdate\": \"{{birthdate}}\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{host}}/profile/complete",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"profile",
+										"complete"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Complete twice",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "7476694c-3366-40a3-bd1f-67dea7ec73a3",
+										"exec": [
+											"var response = JSON.parse(responseBody);",
+											"",
+											"",
+											"pm.test(\"Status code is 400\", function () {",
+											"    pm.response.to.have.status(400);",
+											"});",
+											"",
+											"tests[\"JSON return code is 400\"] = response.code == 400",
+											"",
+											"tests[\"success is true\"] = response.success == false",
+											"tests[\"Message is correct\"] = response.error.message == \"The user has already completed his profile\"",
+											"tests[\"Error type is Bad Request\"] = response.error.type == \"BadRequestError\""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n\t\"orientation\": \"{{orientation}}\",\n\t\"bio\": \"{{bio}}\",\n\t\"tags\": [\n\t\t\"bot\",\n\t\t\"robot\",\n\t\t\"postman\",\n\t\t\"sex\",\n\t\t\"friends\",\n\t\t\"drink\",\n\t\t\"smoke\"\n\t\t],\n\t\"gender\": \"{{gender}}\",\n\t\"birthdate\": \"{{birthdate}}\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{host}}/profile/complete",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"profile",
+										"complete"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Login after complete",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "8e477b16-d89e-48a9-a3ce-6273000ae189",
+										"exec": [
+											"var response = JSON.parse(responseBody);",
+											"",
+											"",
+											"pm.test(\"Status code is 200\", function () {",
+											"    pm.response.to.have.status(200);",
+											"});",
+											"",
+											"tests[\"JSON return code is 200\"] = response.code == 200",
+											"",
+											"tests[\"success is true\"] = response.success == true",
+											"",
+											"tests[\"Is profile completed is 0\"] = response.return.is_profile_completed == 1",
+											"",
+											"pm.collectionVariables.set(\"user_access_token\", response.return.access_token);",
+											"pm.collectionVariables.set(\"user_refresh_token\", response.return.refresh_token);"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n\t\"password\": \"{{password}}\",\n\t\"username\": \"{{email}}\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{host}}/auth/login",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"auth",
+										"login"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get one user after completed profile",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "31069800-1938-4c53-a5ea-efdd39da915d",
+										"exec": [
+											"var response = JSON.parse(responseBody);",
+											"",
+											"",
+											"pm.test(\"Status code is 200\", function () {",
+											"    pm.response.to.have.status(200);",
+											"});",
+											"",
+											"user_email = pm.collectionVariables.get(\"email\");",
+											"user_username = pm.collectionVariables.get(\"username\");",
+											"user_orientation = pm.collectionVariables.get(\"orientation\");",
+											"user_gender = pm.collectionVariables.get(\"gender\");",
+											"user_bio = pm.collectionVariables.get(\"bio\");",
+											"first_name = pm.collectionVariables.get(\"first_name\");",
+											"last_name = pm.collectionVariables.get(\"last_name\");",
+											"",
+											"",
+											"tests[\"Is email correct\"] = response.email == user_email",
+											"tests[\"Is username correct\"] = response.username == user_username",
+											"tests[\"User orientation is correct\"] = response.orientation == user_orientation",
+											"tests[\"User gender is correct\"] = response.gender == user_gender",
+											"tests[\"User bio is correct\"] = response.bio == user_bio",
+											"tests[\"No images in profile\"] = response.images.length == 0",
+											"tests[\"User is confirmed\"] = response.is_confirmed = 1",
+											"tests[\"User is online\"] = response.is_online = 1",
+											"tests[\"User is completed\"] = response.is_profile_completed = 1",
+											"tests[\"First name is correct\"] = response.first_name = first_name",
+											"tests[\"Last name is correct\"] = response.last_name = last_name",
+											"tests[\"Superlikes count is 5\"] = response.superlikes_counter = 5",
+											"tests[\"Tags length is 4\"] = response.tags.length == 4",
+											"",
+											"pm.collectionVariables.set(\"id\", response.id)"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{host}}/users/{{username}}",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"users",
+										"{{username}}"
+									]
+								}
+							},
+							"response": []
+						}
+					],
+					"protocolProfileBehavior": {},
+					"_postman_isSubFolder": true
+				}
+			],
+			"protocolProfileBehavior": {}
+		}
+	],
+	"auth": {
+		"type": "bearer",
+		"bearer": [
+			{
+				"key": "token",
+				"value": "{{access_token}}",
+				"type": "string"
+			}
+		]
+	},
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"id": "8f07f18d-a335-41f7-90e6-5a2ffecb6b2f",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"id": "b3c7aec0-7948-4f20-bbce-883fb16b369c",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"id": "4601bfda-8d9e-4676-8006-362deb22c423",
+			"key": "host",
+			"value": "http://127.0.0.1:5000"
+		},
+		{
+			"id": "632e90a1-7fe6-42c9-a9a4-d54ae77a3510",
+			"key": "access_token",
+			"value": ""
+		},
+		{
+			"id": "222063f5-696f-4ac2-8dfa-c73677efac56",
+			"key": "refresh_token",
+			"value": ""
+		},
+		{
+			"id": "47859eca-0b0a-41d7-9fc0-fbc695c92ebc",
+			"key": "debug_token",
+			"value": "xX69jules69Xx"
+		},
+		{
+			"id": "f0e83a22-709b-40d9-8f0c-35059580dd68",
+			"key": "first_name",
+			"value": "Jules"
+		},
+		{
+			"id": "4cd7d084-fd90-48f0-a5e0-a9da7d34d911",
+			"key": "last_name",
+			"value": "Lasne"
+		},
+		{
+			"id": "f35bb989-5c23-4941-ba7f-cb08ca7b0990",
+			"key": "email",
+			"value": "jules.lasne@example.org"
+		},
+		{
+			"id": "fc2c1e84-96ea-42c6-99ee-e715e3a9ec79",
+			"key": "username",
+			"value": "seluj78"
+		},
+		{
+			"id": "bd0bbbb1-0b6e-4f3d-84de-f360ed81e5cb",
+			"key": "password",
+			"value": "dolphin"
+		},
+		{
+			"id": "ef7652ba-6ff7-4c67-8f93-30aa4eab3908",
+			"key": "orientation",
+			"value": "heterosexual"
+		},
+		{
+			"id": "e129b79e-a7cc-4cd7-96a3-81aa0e0136ba",
+			"key": "gender",
+			"value": "male"
+		},
+		{
+			"id": "3675172a-8a83-4bd9-b0b4-096ec3590dca",
+			"key": "bio",
+			"value": "Phasellus vel tortor vel elit scelerisque accumsan vel nec nunc. Ut condimentum vestibulum sapien non dictum. Vestibulum ac eleifend mi. Curabitur dictum vestibulum ex at placerat. Pellentesque odio mi, condimentum et sollicitudin at, finibus non leo. Aenean sed pulvinar nulla, nec tincidunt felis. Aenean nibh elit, aliquam sit amet lobortis et, pellentesque ut orci. Curabitur placerat sem id ex laoreet imperdiet. Curabitur dictum ac urna feugiat viverra. Vivamus nec pulvinar urna. Suspendisse vel ultrices est. Sed malesuada est vel orci venenatis scelerisque. Phasellus ultrices dignissim sapien, at mattis tellus mattis pulvinar. Sed ut euismod velit, id fermentum leo."
+		},
+		{
+			"id": "93b52fdf-2a4f-4f46-9d1f-8839dc280991",
+			"key": "birthdate",
+			"value": "06/04/1998"
+		},
+		{
+			"id": "9a21e996-caf9-40c4-8e79-595c0c179da1",
+			"value": "",
+			"disabled": true
+		},
+		{
+			"id": "a493569f-9052-4d39-8834-ac4e1f385742",
+			"key": "user_access_token",
+			"value": ""
+		},
+		{
+			"id": "dfd4eb0e-cf0d-4123-ad61-b91e7c6e6141",
+			"key": "user_refresh_token",
+			"value": ""
+		},
+		{
+			"id": "ab4c5b83-2a7a-4b3f-b2de-b42dffc04069",
+			"key": "id",
+			"value": ""
+		}
+	],
+	"protocolProfileBehavior": {}
+}
