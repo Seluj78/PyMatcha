@@ -1,6 +1,6 @@
 <template>
   <!--  eslint-disable max-len -->
-  <div class="flex border-b pb-4 cursor-pointer" v-on:click="chat()">
+  <div class="flex border-b py-4 cursor-pointer" v-on:click="chat()">
     <div>
       <div v-bind:style="{
           'background-repeat': 'no-repeat',
