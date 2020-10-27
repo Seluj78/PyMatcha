@@ -2,9 +2,14 @@
   <!--  eslint-disable max-len -->
   <div class="chat md:w-full md:max-w-2xl md:shadow-md md:rounded-md md:p-4 md:flex md:flex-col md:justify-start">
     <div class="flex items-center justify-center">
-      <div v-if="user" class="text-center flex-row">
-        <ChatUser class="mx-auto" v-bind:match="user" v-bind:newmessage="newMessage"></ChatUser>
-        <h1 class="text-gray-matcha opacity-75 text-sm">{{user.first_name}}</h1>
+      <div v-if="user" class="text-center flex">
+        <div class="flex-row">
+          <ChatUser class="mx-auto" v-bind:match="user"></ChatUser>
+          <h1 class="text-gray-matcha opacity-75 text-sm">{{user.first_name}}</h1>
+        </div>
+        <div v-if="newMessageCount" class="ml-4 flex items-center justify-center">
+          <h1 class="text-purple-matcha text-sm font-bold">{{newMessageCount}}</h1>
+        </div>
       </div>
       <div class="md:hidden absolute right-0 cursor-pointer text-lg lg:text-2xl w-10 h-10 flex items-center justify-center"
            v-on:click="closeChat()">
@@ -58,7 +63,7 @@ export default {
     user: null,
     message: '',
     loggedInUserId: null,
-    newMessage: false,
+    newMessageCount: null,
     fetchMessagesIntervalId: null,
   }),
   methods: {
@@ -92,10 +97,7 @@ export default {
         for (let i = this.messages.length; i < newMessages.length; i += 1) {
           this.messages.push(newMessages[i]);
         }
-        this.newMessage = true;
-        setTimeout(() => {
-          this.newMessage = false;
-        }, 2000);
+        this.scrollChatToBottom();
       }
     },
   },

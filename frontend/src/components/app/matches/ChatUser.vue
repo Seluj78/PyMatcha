@@ -1,5 +1,4 @@
 <template>
-  <!-- eslint-disable max-len -->
   <div v-bind:style="{
       'background-repeat': 'no-repeat',
       'background-position': 'center center',
@@ -15,8 +14,6 @@
       'w-3': true,
       'h-3': true}">
     </div>
-    <div v-if="newmessage" class="bg-purple-matcha absolute right-0 bottom-0 w-4 h-4 rounded-full">
-    </div>
   </div>
 </template>
 
@@ -27,7 +24,7 @@ import imageWoman from '../../../assets/recommendations/avatars/woman1.png';
 import imageOther from '../../../assets/recommendations/avatars/other.png';
 
 export default {
-  props: ['match', 'newmessage'],
+  props: ['match'],
   methods: {
     getImage() {
       const { images } = this.match;
