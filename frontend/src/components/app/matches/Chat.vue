@@ -7,9 +7,6 @@
           <ChatUser class="mx-auto" v-bind:match="user"></ChatUser>
           <h1 class="text-gray-matcha opacity-75 text-sm">{{user.first_name}}</h1>
         </div>
-        <div v-if="newMessageCount" class="ml-4 flex items-center justify-center">
-          <h1 class="text-purple-matcha text-sm font-bold">{{newMessageCount}}</h1>
-        </div>
       </div>
       <div class="md:hidden absolute right-0 cursor-pointer text-lg lg:text-2xl w-10 h-10 flex items-center justify-center"
            v-on:click="closeChat()">
@@ -63,7 +60,6 @@ export default {
     user: null,
     message: '',
     loggedInUserId: null,
-    newMessageCount: null,
     fetchMessagesIntervalId: null,
   }),
   methods: {
