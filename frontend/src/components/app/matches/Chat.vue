@@ -64,24 +64,41 @@ export default {
     message: '',
     loggedInUserId: null,
     newMessageCount: null,
+    fetchMessagesIntervalId: null,
   }),
   methods: {
-    closeChat() {
-      this.$emit('close-chat');
-    },
-    async sendMessage() {
-      await this.$http.post('/messages/send', {
-        to_uid: this.user.id.toString(),
-        content: this.message,
-      });
-      this.messages.push({ to_id: this.chatWithUserId, content: this.message });
-      this.message = '';
+    scrollChatToBottom() {
       this.$nextTick(() => {
         const messageBox = document.getElementById('messageBox');
         if (messageBox) {
           messageBox.scrollTop = messageBox.scrollHeight;
         }
       });
+    },
+    closeChat() {
+      this.$emit('close-chat');
+    },
+    async sendMessage() {
+      if (!this.message.length) {
+        return;
+      }
+      await this.$http.post('/messages/send', {
+        to_uid: this.user.id.toString(),
+        content: this.message,
+      });
+      this.messages.push({ to_id: this.chatWithUserId, content: this.message });
+      this.message = '';
+      this.scrollChatToBottom();
+    },
+    async fetchNewMessages() {
+      const messagesRequest = await this.$http.get(`/conversations/${this.chatWithUserId}`);
+      const newMessages = messagesRequest.data.messages;
+      if (newMessages.length > this.messages.length) {
+        for (let i = this.messages.length; i < newMessages.length; i += 1) {
+          this.messages.push(newMessages[i]);
+        }
+        this.scrollChatToBottom();
+      }
     },
   },
   async beforeMount() {
@@ -90,12 +107,11 @@ export default {
     const userRequest = await this.$http.get(`/users/${this.chatWithUserId}`);
     this.user = userRequest.data;
     this.loggedInUserId = this.$store.getters.getLoggedInUser.id;
-    this.$nextTick(() => {
-      const messageBox = document.getElementById('messageBox');
-      if (messageBox) {
-        messageBox.scrollTop = messageBox.scrollHeight;
-      }
-    });
+    this.scrollChatToBottom();
+    this.fetchMessagesIntervalId = setInterval(this.fetchNewMessages, 1000);
+  },
+  beforeDestroy() {
+    window.clearInterval(this.fetchMessagesIntervalId);
   },
 };
 </script>
