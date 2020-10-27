@@ -1427,6 +1427,1588 @@
 					],
 					"protocolProfileBehavior": {},
 					"_postman_isSubFolder": true
+				},
+				{
+					"name": "Edit",
+					"item": [
+						{
+							"name": "Edit first name",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "1759400d-2720-4df0-bd1d-b164af3251a4",
+										"exec": [
+											"var response = JSON.parse(responseBody);",
+											"",
+											"",
+											"pm.test(\"Status code is 200\", function () {",
+											"    pm.response.to.have.status(200);",
+											"});",
+											"",
+											"tests[\"JSON return code is 200\"] = response.code == 200",
+											"",
+											"tests[\"success is true\"] = response.success == true",
+											"tests[\"Message is correct\"] = response.message == \"First name successfully modified!\"",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "PATCH",
+								"header": [
+									{
+										"key": "debug-auth-token",
+										"type": "text",
+										"value": "{{debug_token}}"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"first_name\": \"{{first_name2}}\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{host}}/profile/edit/first_name",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"profile",
+										"edit",
+										"first_name"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get one user after edited first name",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "d0713f87-8adb-4541-bea2-1bb7d0de7f68",
+										"exec": [
+											"var response = JSON.parse(responseBody);",
+											"",
+											"",
+											"pm.test(\"Status code is 200\", function () {",
+											"    pm.response.to.have.status(200);",
+											"});",
+											"",
+											"first_name2 = pm.collectionVariables.get(\"first_name2\");",
+											"",
+											"tests[\"Is first name correct\"] = response.first_name == first_name2",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{host}}/users/{{email}}",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"users",
+										"{{email}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Edit last name",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "4d7063cd-d54e-4c6f-92b2-1495d0ea76b6",
+										"exec": [
+											"var response = JSON.parse(responseBody);",
+											"",
+											"",
+											"pm.test(\"Status code is 200\", function () {",
+											"    pm.response.to.have.status(200);",
+											"});",
+											"",
+											"tests[\"JSON return code is 200\"] = response.code == 200",
+											"",
+											"tests[\"success is true\"] = response.success == true",
+											"tests[\"Message is correct\"] = response.message == \"Last name successfully modified!\"",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "PATCH",
+								"header": [
+									{
+										"key": "debug-auth-token",
+										"type": "text",
+										"value": "{{debug_token}}"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"last_name\": \"{{last_name2}}\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{host}}/profile/edit/last_name",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"profile",
+										"edit",
+										"last_name"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get one user after edited last name",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "048c8526-f7f7-43f3-a944-5340d1cfb2a3",
+										"exec": [
+											"var response = JSON.parse(responseBody);",
+											"",
+											"",
+											"pm.test(\"Status code is 200\", function () {",
+											"    pm.response.to.have.status(200);",
+											"});",
+											"",
+											"last_name2 = pm.collectionVariables.get(\"last_name2\");",
+											"",
+											"tests[\"Is last name correct\"] = response.last_name == last_name2",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{host}}/users/{{email}}",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"users",
+										"{{email}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Edit username TAKEN",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "e3ba5eff-a98e-4ae6-abc6-43cb77ec404b",
+										"exec": [
+											"var response = JSON.parse(responseBody);",
+											"",
+											"",
+											"pm.test(\"Status code is 400\", function () {",
+											"    pm.response.to.have.status(400);",
+											"});",
+											"",
+											"tests[\"JSON return code is 400\"] = response.code == 400",
+											"",
+											"tests[\"success is true\"] = response.success == false",
+											"tests[\"Message is correct\"] = response.error.message == \"Username taken.\"",
+											"tests[\"Error type is Bad Request\"] = response.error.type == \"BadRequestError\""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "PATCH",
+								"header": [
+									{
+										"key": "debug-auth-token",
+										"type": "text",
+										"value": "{{debug_token}}"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"username\": \"{{username}}\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{host}}/profile/edit/username",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"profile",
+										"edit",
+										"username"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Edit username",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "6a56e377-3bbf-4aae-91c6-3d04213b30d1",
+										"exec": [
+											"var response = JSON.parse(responseBody);",
+											"",
+											"",
+											"pm.test(\"Status code is 200\", function () {",
+											"    pm.response.to.have.status(200);",
+											"});",
+											"",
+											"tests[\"JSON return code is 200\"] = response.code == 200",
+											"",
+											"tests[\"success is true\"] = response.success == true",
+											"tests[\"Message is correct\"] = response.message == \"Username successfully modified!\"",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "PATCH",
+								"header": [
+									{
+										"key": "debug-auth-token",
+										"type": "text",
+										"value": "{{debug_token}}"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"username\": \"{{username2}}\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{host}}/profile/edit/username",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"profile",
+										"edit",
+										"username"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get one user after edited username",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "ca092d7d-7c8b-4435-a8d7-f392320ee25e",
+										"exec": [
+											"var response = JSON.parse(responseBody);",
+											"",
+											"",
+											"pm.test(\"Status code is 200\", function () {",
+											"    pm.response.to.have.status(200);",
+											"});",
+											"",
+											"username2 = pm.collectionVariables.get(\"username2\");",
+											"",
+											"tests[\"Is username correct\"] = response.username == username2",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{host}}/users/{{email}}",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"users",
+										"{{email}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Edit bio too short",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "24bc9c2d-c260-4be6-8d22-ac1fb3a56a80",
+										"exec": [
+											"var response = JSON.parse(responseBody);",
+											"",
+											"",
+											"pm.test(\"Status code is 400\", function () {",
+											"    pm.response.to.have.status(400);",
+											"});",
+											"",
+											"tests[\"JSON return code is 400\"] = response.code == 400",
+											"",
+											"tests[\"success is true\"] = response.success == false",
+											"tests[\"Message is correct\"] = response.error.message == \"Bio is too short.\"",
+											"tests[\"Error type is Bad Request\"] = response.error.type == \"BadRequestError\""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "PATCH",
+								"header": [
+									{
+										"key": "debug-auth-token",
+										"type": "text",
+										"value": "{{debug_token}}"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"bio\": \"AWSRYHRYKlki\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{host}}/profile/edit/bio",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"profile",
+										"edit",
+										"bio"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Edit bio",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "16e53f1a-e6cd-4980-aba1-c2793383cf96",
+										"exec": [
+											"var response = JSON.parse(responseBody);",
+											"",
+											"",
+											"pm.test(\"Status code is 200\", function () {",
+											"    pm.response.to.have.status(200);",
+											"});",
+											"",
+											"tests[\"JSON return code is 200\"] = response.code == 200",
+											"",
+											"tests[\"success is true\"] = response.success == true",
+											"tests[\"Message is correct\"] = response.message == \"Bio successfully modified!\"",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "PATCH",
+								"header": [
+									{
+										"key": "debug-auth-token",
+										"type": "text",
+										"value": "{{debug_token}}"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"bio\": \"{{bio2}}\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{host}}/profile/edit/bio",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"profile",
+										"edit",
+										"bio"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get one user after edited bio",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "a1c262b2-e347-4bd8-be1f-39a81f06bcc1",
+										"exec": [
+											"var response = JSON.parse(responseBody);",
+											"",
+											"",
+											"pm.test(\"Status code is 200\", function () {",
+											"    pm.response.to.have.status(200);",
+											"});",
+											"",
+											"bio2 = pm.collectionVariables.get(\"bio2\");",
+											"",
+											"tests[\"Is bio correct\"] = response.bio == bio2",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{host}}/users/{{email}}",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"users",
+										"{{email}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Edit gender wrong",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "4aa2fefc-b449-40a5-8396-1cdc9a6d2d05",
+										"exec": [
+											"var response = JSON.parse(responseBody);",
+											"",
+											"",
+											"pm.test(\"Status code is 400\", function () {",
+											"    pm.response.to.have.status(400);",
+											"});",
+											"",
+											"tests[\"JSON return code is 400\"] = response.code == 400",
+											"",
+											"tests[\"success is true\"] = response.success == false",
+											"tests[\"Message is correct\"] = response.error.message == \"Gender must be male, female or other.\"",
+											"tests[\"Error type is Bad Request\"] = response.error.type == \"BadRequestError\""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "PATCH",
+								"header": [
+									{
+										"key": "debug-auth-token",
+										"type": "text",
+										"value": "{{debug_token}}"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"gender\": \"AWSRYHRYKlki\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{host}}/profile/edit/gender",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"profile",
+										"edit",
+										"gender"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Edit gender",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "b2c9dc55-ebb3-4aee-bbb0-e9aa5656b70e",
+										"exec": [
+											"var response = JSON.parse(responseBody);",
+											"",
+											"",
+											"pm.test(\"Status code is 200\", function () {",
+											"    pm.response.to.have.status(200);",
+											"});",
+											"",
+											"tests[\"JSON return code is 200\"] = response.code == 200",
+											"",
+											"tests[\"success is true\"] = response.success == true",
+											"tests[\"Message is correct\"] = response.message == \"Gender successfully modified!\"",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "PATCH",
+								"header": [
+									{
+										"key": "debug-auth-token",
+										"type": "text",
+										"value": "{{debug_token}}"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"gender\": \"{{gender2}}\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{host}}/profile/edit/gender",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"profile",
+										"edit",
+										"gender"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get one user after edited gender",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "a2d0dbc6-ab7d-48ad-b57b-291ba9aaade6",
+										"exec": [
+											"var response = JSON.parse(responseBody);",
+											"",
+											"",
+											"pm.test(\"Status code is 200\", function () {",
+											"    pm.response.to.have.status(200);",
+											"});",
+											"",
+											"gender2 = pm.collectionVariables.get(\"gender2\");",
+											"",
+											"tests[\"Is gender correct\"] = response.gender == gender2",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{host}}/users/{{email}}",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"users",
+										"{{email}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Edit orientation wrong",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "b9b1c187-14bd-40bf-8ec7-0334c76d5ca2",
+										"exec": [
+											"var response = JSON.parse(responseBody);",
+											"",
+											"",
+											"pm.test(\"Status code is 400\", function () {",
+											"    pm.response.to.have.status(400);",
+											"});",
+											"",
+											"tests[\"JSON return code is 400\"] = response.code == 400",
+											"",
+											"tests[\"success is true\"] = response.success == false",
+											"tests[\"Message is correct\"] = response.error.message == \"Orientation must be heterosexual, homosexual, bisexual or other.\"",
+											"tests[\"Error type is Bad Request\"] = response.error.type == \"BadRequestError\""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "PATCH",
+								"header": [
+									{
+										"key": "debug-auth-token",
+										"type": "text",
+										"value": "{{debug_token}}"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"orientation\": \"AWSRYHRYKlki\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{host}}/profile/edit/orientation",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"profile",
+										"edit",
+										"orientation"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Edit orientation",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "594eff93-0733-4f95-95b3-90c3ba3a2954",
+										"exec": [
+											"var response = JSON.parse(responseBody);",
+											"",
+											"",
+											"pm.test(\"Status code is 200\", function () {",
+											"    pm.response.to.have.status(200);",
+											"});",
+											"",
+											"tests[\"JSON return code is 200\"] = response.code == 200",
+											"",
+											"tests[\"success is true\"] = response.success == true",
+											"tests[\"Message is correct\"] = response.message == \"Orientation successfully modified!\"",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "PATCH",
+								"header": [
+									{
+										"key": "debug-auth-token",
+										"type": "text",
+										"value": "{{debug_token}}"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"orientation\": \"{{orientation2}}\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{host}}/profile/edit/orientation",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"profile",
+										"edit",
+										"orientation"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get one user after edited orientation",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "0181da0f-5bf6-48a7-b906-238dbb254681",
+										"exec": [
+											"var response = JSON.parse(responseBody);",
+											"",
+											"",
+											"pm.test(\"Status code is 200\", function () {",
+											"    pm.response.to.have.status(200);",
+											"});",
+											"",
+											"orientation2 = pm.collectionVariables.get(\"orientation2\");",
+											"",
+											"tests[\"Is orientation correct\"] = response.orientation == orientation2",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{host}}/users/{{email}}",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"users",
+										"{{email}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Edit birthdate wrong",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "2d1b75e8-fb71-40ba-9f43-f508e604dd10",
+										"exec": [
+											"var response = JSON.parse(responseBody);",
+											"",
+											"",
+											"pm.test(\"Status code is 400\", function () {",
+											"    pm.response.to.have.status(400);",
+											"});",
+											"",
+											"tests[\"JSON return code is 400\"] = response.code == 400",
+											"",
+											"tests[\"success is true\"] = response.success == false",
+											"tests[\"Message is correct\"] = response.error.message == \"Birthdate format must be %d/%m/%Y (day/month/year).\"",
+											"tests[\"Error type is Bad Request\"] = response.error.type == \"BadRequestError\""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "PATCH",
+								"header": [
+									{
+										"key": "debug-auth-token",
+										"type": "text",
+										"value": "{{debug_token}}"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"birthdate\": \"AWSRYHRYKlki\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{host}}/profile/edit/birthdate",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"profile",
+										"edit",
+										"birthdate"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Edit birthdate",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "722b8429-9a34-43d6-ba26-7c7c24681b1e",
+										"exec": [
+											"var response = JSON.parse(responseBody);",
+											"",
+											"",
+											"pm.test(\"Status code is 200\", function () {",
+											"    pm.response.to.have.status(200);",
+											"});",
+											"",
+											"tests[\"JSON return code is 200\"] = response.code == 200",
+											"",
+											"tests[\"success is true\"] = response.success == true",
+											"tests[\"Message is correct\"] = response.message == \"Birthdate successfully modified!\"",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "PATCH",
+								"header": [
+									{
+										"key": "debug-auth-token",
+										"type": "text",
+										"value": "{{debug_token}}"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"birthdate\": \"{{birthdate2}}\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{host}}/profile/edit/birthdate",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"profile",
+										"edit",
+										"birthdate"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get one user after edited birthdate",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "27076791-5e9d-439d-90d5-81904f4e00e7",
+										"exec": [
+											"var response = JSON.parse(responseBody);",
+											"",
+											"",
+											"pm.test(\"Status code is 200\", function () {",
+											"    pm.response.to.have.status(200);",
+											"});",
+											"",
+											"tests[\"Is birthdate correct\"] = response.birthdate == \"Sun, 25 Jun 2000 00:00:00 GMT\"",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{host}}/users/{{email}}",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"users",
+										"{{email}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Edit tags",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "edce131f-2e87-440b-a670-5885cf6c57b5",
+										"exec": [
+											"var response = JSON.parse(responseBody);",
+											"",
+											"",
+											"pm.test(\"Status code is 200\", function () {",
+											"    pm.response.to.have.status(200);",
+											"});",
+											"",
+											"tests[\"JSON return code is 200\"] = response.code == 200",
+											"",
+											"tests[\"success is true\"] = response.success == true",
+											"tests[\"Message is correct\"] = response.message == \"Tags successfully modified!\"",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "PATCH",
+								"header": [
+									{
+										"key": "debug-auth-token",
+										"type": "text",
+										"value": "{{debug_token}}"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"tags\": [\n        \"swimming\",\n        \"netflix\",\n        \"art\",\n        \"diy\"\n    ]\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{host}}/profile/edit/tags",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"profile",
+										"edit",
+										"tags"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get one user after edited tags",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "5ce6fb07-85cc-4031-bfaa-151e17e82003",
+										"exec": [
+											"var response = JSON.parse(responseBody);",
+											"",
+											"",
+											"pm.test(\"Status code is 200\", function () {",
+											"    pm.response.to.have.status(200);",
+											"});",
+											"",
+											"",
+											"tests[\"Tag #1 is correct\"] = response.tags[0].name == \"swimming\"",
+											"tests[\"Tag #2 is correct\"] = response.tags[1].name == \"netflix\"",
+											"tests[\"Tag #3 is correct\"] = response.tags[2].name == \"art\"",
+											"tests[\"Tag #4 is correct\"] = response.tags[3].name == \"diy\"",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{host}}/users/{{email}}",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"users",
+										"{{email}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Edit user email",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "6ee56da7-2bc7-4c33-a2e5-a7d0505ca0ab",
+										"exec": [
+											"var response = JSON.parse(responseBody);",
+											"",
+											"",
+											"pm.test(\"Status code is 200\", function () {",
+											"    pm.response.to.have.status(200);",
+											"});",
+											"",
+											"tests[\"JSON return code is 200\"] = response.code == 200",
+											"",
+											"tests[\"success is true\"] = response.success == true",
+											"tests[\"Message is correct\"] = response.message == \"Email sent for new email\"",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "PUT",
+								"header": [
+									{
+										"key": "debug-auth-token",
+										"type": "text",
+										"value": "{{debug_token}}"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"email\": \"{{email2}}\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{host}}/profile/edit/email",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"profile",
+										"edit",
+										"email"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get one user after edited email",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "fe614eda-0f6a-441e-ba4a-ea0426cb39b7",
+										"exec": [
+											"var response = JSON.parse(responseBody);",
+											"",
+											"",
+											"pm.test(\"Status code is 200\", function () {",
+											"    pm.response.to.have.status(200);",
+											"});",
+											"",
+											"email2 = pm.collectionVariables.get(\"email2\");",
+											"",
+											"tests[\"Is email correct\"] = response.email == email2",
+											"tests[\"Is confirmed == 0\"] = response.is_confirmed == 0"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{host}}/users/{{email2}}",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"users",
+										"{{email2}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Confirm user after email edit",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "af0ae0e6-f63b-4813-b5e0-9400c36b4bd0",
+										"exec": [
+											"var response = JSON.parse(responseBody);",
+											"",
+											"",
+											"pm.test(\"Status code is 200\", function () {",
+											"    pm.response.to.have.status(200);",
+											"});",
+											"",
+											"tests[\"JSON return code is 200\"] = response.code == 200",
+											"",
+											"tests[\"success is true\"] = response.success == true",
+											"tests[\"Message is correct\"] = response.message == \"User successfully confirmed.\"",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "debug-auth-token",
+										"type": "text",
+										"value": "{{debug_token}}"
+									}
+								],
+								"url": {
+									"raw": "{{host}}/debug/users/confirm/{{email2}}",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"debug",
+										"users",
+										"confirm",
+										"{{email2}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get one user after email edit and confirmation",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "5aa3043e-3f2b-4333-a90a-f82063bf9afd",
+										"exec": [
+											"var response = JSON.parse(responseBody);",
+											"",
+											"",
+											"pm.test(\"Status code is 200\", function () {",
+											"    pm.response.to.have.status(200);",
+											"});",
+											"",
+											"email2 = pm.collectionVariables.get(\"email2\");",
+											"",
+											"",
+											"tests[\"Is email correct\"] = response.email == email2",
+											"tests[\"Is confirmed == 0\"] = response.is_confirmed == 1"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{host}}/users/{{email2}}",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"users",
+										"{{email2}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Edit email with same email",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "904a610b-63e0-4af2-b24b-b9557467d199",
+										"exec": [
+											"var response = JSON.parse(responseBody);",
+											"",
+											"",
+											"pm.test(\"Status code is 400\", function () {",
+											"    pm.response.to.have.status(400);",
+											"});",
+											"",
+											"",
+											"tests[\"JSON return code is 400\"] = response.code == 400",
+											"",
+											"tests[\"success is false\"] = response.success == false",
+											"tests[\"Message is correct\"] = response.error.message == \"The new email is the same as the old one !\"",
+											"tests[\"Error type is Bad Request\"] = response.error.type == \"BadRequestError\""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n\t\"email\": \"{{email2}}\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{host}}/profile/edit/email",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"profile",
+										"edit",
+										"email"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Edit password",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "b3c02cee-7278-4d2c-9726-8b1f37aff66a",
+										"exec": [
+											"var response = JSON.parse(responseBody);",
+											"",
+											"",
+											"pm.test(\"Status code is 200\", function () {",
+											"    pm.response.to.have.status(200);",
+											"});",
+											"",
+											"",
+											"tests[\"success is true\"] = response.success == true",
+											"tests[\"Message is correct\"] = response.message == \"User password successfully updated.\"",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n\t\"old_password\": \"{{password}}\",\n\t\"new_password\": \"{{password2}}\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{host}}/profile/edit/password",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"profile",
+										"edit",
+										"password"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Login user after password edit",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "ed31d440-d163-4917-bfb3-83e2b85c3f93",
+										"exec": [
+											"var response = JSON.parse(responseBody);",
+											"",
+											"",
+											"pm.test(\"Status code is 200\", function () {",
+											"    pm.response.to.have.status(200);",
+											"});",
+											"",
+											"tests[\"JSON return code is 200\"] = response.code == 200",
+											"",
+											"tests[\"success is true\"] = response.success == true",
+											"",
+											"tests[\"Is profile completed is 1\"] = response.return.is_profile_completed == 1",
+											"",
+											"pm.collectionVariables.set(\"access_token\", response.return.access_token);",
+											"pm.collectionVariables.set(\"refresh_token\", response.return.refresh_token);"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n\t\"password\": \"{{password2}}\",\n\t\"username\": \"{{email2}}\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{host}}/auth/login",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"auth",
+										"login"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Edit geolocation with ip",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "8fc9f0a9-fc2b-43fe-b167-07f2d8b15539",
+										"exec": [
+											"var response = JSON.parse(responseBody);",
+											"",
+											"",
+											"pm.test(\"Status code is 200\", function () {",
+											"    pm.response.to.have.status(200);",
+											"});",
+											"",
+											"",
+											"tests[\"success is true\"] = response.success == true",
+											"tests[\"Message is correct\"] = response.message == \"New location sucessfully saved.\""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n\t\"ip\": \"{{ip}}\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{host}}/profile/edit/geolocation",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"profile",
+										"edit",
+										"geolocation"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get one user after ip geoloc edit",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "fe934a48-e836-4020-9a7f-679d55a2d22b",
+										"exec": [
+											"var response = JSON.parse(responseBody);",
+											"",
+											"",
+											"pm.test(\"Status code is 200\", function () {",
+											"    pm.response.to.have.status(200);",
+											"});",
+											"",
+											"tests[\"Is geohash correct\"] = response.geohash == \"u0bc2bxyswj9\""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{host}}/users/{{email2}}",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"users",
+										"{{email2}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Edit geolocation with lat lng",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "3724a5e6-42b8-404d-ae26-9fe7f04dd1e4",
+										"exec": [
+											"var response = JSON.parse(responseBody);",
+											"",
+											"",
+											"pm.test(\"Status code is 200\", function () {",
+											"    pm.response.to.have.status(200);",
+											"});",
+											"",
+											"",
+											"tests[\"success is true\"] = response.success == true",
+											"tests[\"Message is correct\"] = response.message == \"New location sucessfully saved.\""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n\t\"ip\": \"{{ip}}\",\n\t\"lat\": {{lat}},\n\t\"lng\": {{lng}}\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{host}}/profile/edit/geolocation",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"profile",
+										"edit",
+										"geolocation"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get one user after lat lng edit",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "be9af427-fbb5-4a55-accf-df55ff9b83da",
+										"exec": [
+											"var response = JSON.parse(responseBody);",
+											"",
+											"",
+											"pm.test(\"Status code is 200\", function () {",
+											"    pm.response.to.have.status(200);",
+											"});",
+											"",
+											"tests[\"Is geohash correct\"] = response.geohash == \"u0bcg01kq09g\""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{host}}/users/{{email2}}",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"users",
+										"{{email2}}"
+									]
+								}
+							},
+							"response": []
+						}
+					],
+					"protocolProfileBehavior": {},
+					"_postman_isSubFolder": true
 				}
 			],
 			"protocolProfileBehavior": {}
