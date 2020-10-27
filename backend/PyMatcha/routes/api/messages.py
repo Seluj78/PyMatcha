@@ -30,6 +30,7 @@ from PyMatcha.utils.errors import BadRequestError
 from PyMatcha.utils.errors import NotFoundError
 from PyMatcha.utils.success import Success
 from PyMatcha.utils.success import SuccessOutput
+from timeago import format as timeago_format
 
 
 REQUIRED_KEYS_NEW_MESSAGE = {"to_uid": str, "content": str}
@@ -44,6 +45,7 @@ def get_opened_conversations():
     returned_list = [
         {
             "last_message_timestamp": c.timestamp,
+            "last_message_timestamp_ago": timeago_format(c.timestamp, datetime.datetime.utcnow()),
             "last_message_content": c.content,
             "is_unseen": True if not c.is_seen and c.to_id == current_user.id else False,
             "with_user": get_user(c.to_id if c.to_id != current_user.id else c.from_id).to_dict(),
