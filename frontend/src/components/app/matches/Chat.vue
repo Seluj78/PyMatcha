@@ -32,16 +32,15 @@
         >{{message.content}}</h1>
       </div>
     </div>
-    <div class="send w-full flex items-stretch">
+    <form v-on:submit.prevent="sendMessage()" class="send w-full flex items-stretch">
       <div class="w-10/12 h-full">
         <input type="text" v-model="message" placeholder="Message..." class="h-full w-full border border-gray-500 rounded-md px-3 py-1 focus:outline-none active:outline-none text-gray-matcha">
       </div>
-      <div
-        class="w-2/12 rounded-md flex justify-center items-center bg-purple-matcha cursor-pointer ml-2"
-        v-on:click="sendMessage()">
+      <button type="submit"
+        class="w-2/12 rounded-md flex justify-center items-center bg-purple-matcha cursor-pointer ml-2">
         <img src="../../../assets/sendWhite.png" class="w-5 py-2">
-      </div>
-    </div>
+      </button>
+    </form>
   </div>
 </template>
 
