@@ -7,8 +7,8 @@
         <div class="mt-8 sm:mt-0">
           <div v-if="matches.length">
             <h1 class="text-xl md:text-base text-gray-matcha font-bold">Matches</h1>
-            <div class="overflow-scroll mt-4">
-              <Match v-on:chat="chat" v-for="match in matches" :key="match.id" v-bind:match="match"></Match>
+            <div class="overflow-scroll flex mt-4">
+              <Match v-bind:class="{'ml-2': index !== 0}" v-on:chat="chat" v-for="(match, index) in matches" :key="index" v-bind:match="match"></Match>
             </div>
           </div>
           <div v-else class="flex items-center">
@@ -24,7 +24,7 @@
         <div class="mt-8">
           <div v-if="messages.length">
             <h1 class="text-xl md:text-base text-gray-matcha text-left font-bold">Messages</h1>
-            <div class="overflow-scroll mt-4">
+            <div class="overflow-scroll md:h-64 mt-4">
               <Message v-on:chat="chat" v-for="message in messages" :key="message.with_user.id" v-bind:message="message"></Message>
             </div>
           </div>
@@ -103,10 +103,15 @@ export default {
         return;
       }
       for (let i = 0; i < matches.length; i += 1) {
+        let matchHasMessage = false;
         for (let j = 0; j < this.messages.length; j += 1) {
-          if (this.messages[j].with_user.id !== matches[i].user_1 && this.messages[j].with_user.id !== matches[i].user_2) {
-            await this.fetchMatch(matches[i].user_1, matches[i].user_2);
+          if (this.messages[j].with_user.id === matches[i].user_1 || this.messages[j].with_user.id === matches[i].user_2) {
+            matchHasMessage = true;
+            break;
           }
+        }
+        if (!matchHasMessage) {
+          await this.fetchMatch(matches[i].user_1, matches[i].user_2);
         }
       }
     },
