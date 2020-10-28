@@ -39,7 +39,7 @@ def view_profile(uid):
         raise NotFoundError(f"User {uid} not found.")
 
     if current_user.id == u.id:
-        raise BadRequestError("Cannot view yoursel")
+        raise BadRequestError("Cannot view yourself.")
     View.create(profile_id=u.id, viewer_id=current_user.id)
 
     user_dict = u.to_dict()
