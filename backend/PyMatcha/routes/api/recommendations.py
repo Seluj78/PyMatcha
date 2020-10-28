@@ -19,9 +19,11 @@
 import json
 
 from flask import Blueprint
+from flask import request
 from flask_jwt_extended import current_user
 from flask_jwt_extended import jwt_required
 from PyMatcha import redis
+from PyMatcha.utils.decorators import validate_params
 from PyMatcha.utils.errors import BadRequestError
 from PyMatcha.utils.recommendations import create_user_recommendations
 from PyMatcha.utils.success import SuccessOutput
@@ -30,10 +32,12 @@ recommendations_bp = Blueprint("recommendations", __name__)
 
 
 @recommendations_bp.route("/recommendations", methods=["GET"])
+@validate_params({"force": bool})
 @jwt_required
 def get_recommendations():
+    force = request.get_json()["force"]
     recommendations = redis.get(f"user_recommendations:{str(current_user.id)}")
-    if not recommendations:
+    if force or not recommendations:
         create_user_recommendations(current_user)
         recommendations = redis.get(f"user_recommendations:{str(current_user.id)}")
         if not recommendations:

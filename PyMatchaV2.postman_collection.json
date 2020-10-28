@@ -3912,9 +3912,21 @@
 							}
 						}
 					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
 					"request": {
 						"method": "GET",
 						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"force\": false\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
 						"url": {
 							"raw": "{{host}}/recommendations",
 							"host": [
@@ -4605,6 +4617,306 @@
 				}
 			],
 			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "Block",
+			"item": [
+				{
+					"name": "Unknown user",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "cb353df4-d947-49d1-b6f3-733be3b9bb0d",
+								"exec": [
+									"var response = JSON.parse(responseBody);",
+									"",
+									"",
+									"pm.test(\"Status code is 404\", function () {",
+									"    pm.response.to.have.status(404);",
+									"});",
+									"",
+									"tests[\"JSON return code is 404\"] = response.code == 404",
+									"",
+									"tests[\"success is true\"] = response.success == false",
+									"tests[\"Message is correct\"] = response.error.message == \"User -1 not found.\"",
+									"tests[\"Error type is Bad Request\"] = response.error.type == \"NotFoundError\""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{host}}/profile/block/-1",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"profile",
+								"block",
+								"-1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Yourself",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "316dfc3a-23bf-456f-945e-8171291da654",
+								"exec": [
+									"var response = JSON.parse(responseBody);",
+									"",
+									"",
+									"pm.test(\"Status code is 400\", function () {",
+									"    pm.response.to.have.status(400);",
+									"});",
+									"",
+									"tests[\"JSON return code is 400\"] = response.code == 400",
+									"",
+									"tests[\"success is true\"] = response.success == false",
+									"tests[\"Message is correct\"] = response.error.message == \"Cannot block yourself.\"",
+									"tests[\"Error type is Bad Request\"] = response.error.type == \"BadRequestError\""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"reason\": \"a\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/profile/block/{{id}}",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"profile",
+								"block",
+								"{{id}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "User 1500",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "598e5f86-9c2b-4354-9e56-e08e63f0035c",
+								"exec": [
+									"var response = JSON.parse(responseBody);",
+									"",
+									"",
+									"pm.test(\"Status code is 400\", function () {",
+									"    pm.response.to.have.status(400);",
+									"});",
+									"",
+									"tests[\"JSON return code is 400\"] = response.code == 400",
+									"",
+									"tests[\"success is true\"] = response.success == false",
+									"tests[\"Message is correct\"] = response.error.message == \"You already blocked this user.\"",
+									"tests[\"Error type is Bad Request\"] = response.error.type == \"BadRequestError\""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{host}}/profile/block/1500",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"profile",
+								"block",
+								"1500"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Block twice",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "7bf18855-d2f6-4764-b1d2-52b3efd99613",
+								"exec": [
+									"var response = JSON.parse(responseBody);",
+									"",
+									"",
+									"pm.test(\"Status code is 404\", function () {",
+									"    pm.response.to.have.status(404);",
+									"});",
+									"",
+									"tests[\"JSON return code is 404\"] = response.code == 404",
+									"",
+									"tests[\"success is true\"] = response.success == false",
+									"tests[\"Message is correct\"] = response.error.message == \"User -1 not found.\"",
+									"tests[\"Error type is Bad Request\"] = response.error.type == \"NotFoundError\""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{host}}/profile/block/-1",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"profile",
+								"block",
+								"-1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Search after block",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "c5a50ae2-29a3-44c7-b874-7592f67fd87a",
+								"exec": [
+									"var response = JSON.parse(responseBody);",
+									"",
+									"",
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"tests[\"Success is true\"] = response.success == true",
+									"",
+									"if (response.search_results.length != 0) {",
+									"    tests[\"User 1500 is not in search\"] = true",
+									"    for (var i = 0; i < response.search_results.length; i++) {",
+									"        user = response.search_results[i]",
+									"        if (user.id == 1500) {",
+									"            tests[\"User 1500 is not in search\"] = false",
+									"            break",
+									"        }",
+									"    }",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"min_age\": -1,\n    \"max_age\": -1,\n    \"min_score\": -1,\n    \"max_score\": -1,\n    \"tags\": [],\n    \"max_distance\": -1\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/search",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"search"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Force recommendations after block",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "fdef29e5-4bee-4d2e-8fbb-6145bc1388b4",
+								"exec": [
+									"var response = JSON.parse(responseBody);",
+									"",
+									"",
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"tests[\"JSON return code is 200\"] = response.code == 200",
+									"",
+									"tests[\"success is true\"] = response.success == true",
+									"",
+									"if (response.recommendations.length != 0) {",
+									"    tests[\"User 1500 is not in recommendations\"] = true",
+									"    for (var i = 0; i < response.recommendations.length; i++) {",
+									"        user = response.recommendations[i]",
+									"        if (user.id == 1500) {",
+									"            tests[\"User 1500 is not in recommendations\"] = false",
+									"            break",
+									"        }",
+									"    }",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"force\": true\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/recommendations",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"recommendations"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"protocolProfileBehavior": {}
 		}
 	],
 	"auth": {
@@ -4641,132 +4953,132 @@
 	],
 	"variable": [
 		{
-			"id": "98ccec9c-8026-41e3-b8a5-18a570e84be7",
+			"id": "9a58eeee-4fb7-4b90-82aa-986a1adf2d1f",
 			"key": "host",
 			"value": "http://127.0.0.1:5000"
 		},
 		{
-			"id": "df7c9744-5f7c-4244-8fe6-3725753d1280",
+			"id": "631bbe2e-a9e4-4639-9bb3-d3425deea872",
 			"key": "access_token",
 			"value": ""
 		},
 		{
-			"id": "21c47762-6954-4ea8-8378-85aa1d14e627",
+			"id": "f744d7f7-8a96-4fbb-b55a-bce1cc76bf3e",
 			"key": "refresh_token",
 			"value": ""
 		},
 		{
-			"id": "9383c525-ac05-4cd9-a700-77a0b2babfeb",
+			"id": "438af0ea-218a-4ce3-a96a-9b65b4c0ab21",
 			"key": "debug_token",
 			"value": "xX69jules69Xx"
 		},
 		{
-			"id": "9a3553ac-7481-4db6-89f4-f289753103d9",
+			"id": "5b7a1866-d0d2-4f60-86c7-42a4f321c035",
 			"key": "id",
-			"value": ""
+			"value": "1541"
 		},
 		{
-			"id": "5bbf0988-e4c4-4672-97d5-7e02040a3a5e",
+			"id": "2fc11642-6f77-426e-b96b-17ab6589cac6",
 			"key": "first_name",
 			"value": "Jules"
 		},
 		{
-			"id": "e64a1459-6f09-4d5c-91dd-ad102cc236f9",
+			"id": "414bb388-3cd2-404c-8bc8-75c6f6761aa7",
 			"key": "last_name",
 			"value": "Lasne"
 		},
 		{
-			"id": "4c28100d-8221-41a3-83c8-b1d5dfcf0a9c",
+			"id": "d97d7891-bd89-4953-a3eb-a28cab114f93",
 			"key": "email",
 			"value": "jules.lasne@example.org"
 		},
 		{
-			"id": "370a4573-07a8-483d-9d41-92a238d5677d",
+			"id": "73873df5-9189-458a-9d64-789a4d071665",
 			"key": "username",
 			"value": "seluj78"
 		},
 		{
-			"id": "6f65da81-caf8-40c0-8cd8-81d9b074840d",
+			"id": "6758c373-c99b-49d6-8f7e-43f23ffc3290",
 			"key": "password",
 			"value": "dolphin"
 		},
 		{
-			"id": "291f08ac-db4c-4b86-8b1b-6831571cbb5a",
+			"id": "d5f3904e-ad5c-4a94-8c38-4c433442c36e",
 			"key": "orientation",
 			"value": "heterosexual"
 		},
 		{
-			"id": "1041b7be-f243-419b-a583-f56454ba3951",
+			"id": "81a0ee79-36e0-4991-9029-5b2bfccb454d",
 			"key": "gender",
 			"value": "male"
 		},
 		{
-			"id": "197349c0-083f-4384-ba8a-ea17e454ea18",
+			"id": "1a1dc618-4ab5-4e71-a4aa-f213da967260",
 			"key": "bio",
 			"value": "Phasellus vel tortor vel elit scelerisque accumsan vel nec nunc. Ut condimentum vestibulum sapien non dictum. Vestibulum ac eleifend mi. Curabitur dictum vestibulum ex at placerat. Pellentesque odio mi, condimentum et sollicitudin at, finibus non leo. Aenean sed pulvinar nulla, nec tincidunt felis. Aenean nibh elit, aliquam sit amet lobortis et, pellentesque ut orci. Curabitur placerat sem id ex laoreet imperdiet. Curabitur dictum ac urna feugiat viverra. Vivamus nec pulvinar urna. Suspendisse vel ultrices est. Sed malesuada est vel orci venenatis scelerisque. Phasellus ultrices dignissim sapien, at mattis tellus mattis pulvinar. Sed ut euismod velit, id fermentum leo."
 		},
 		{
-			"id": "34f16299-586c-4c56-b814-bc681f690d71",
+			"id": "07e88a60-5619-4d61-bcce-0a414d907380",
 			"key": "birthdate",
 			"value": "06/04/1998"
 		},
 		{
-			"id": "58d5947c-2329-426d-a7bf-9e935bb63074",
+			"id": "81ec479f-d5e8-4fc7-a741-abfa29510bda",
 			"key": "first_name2",
 			"value": "Félix"
 		},
 		{
-			"id": "93a76ec2-89af-4f12-a241-895ec9c042d7",
+			"id": "c56a6746-33cf-4f3d-96c1-8a99adfa3ff9",
 			"key": "last_name2",
 			"value": "Ensal"
 		},
 		{
-			"id": "de009b26-064b-43bc-937c-e532aadd00df",
+			"id": "df34c636-e2a6-4d60-b82d-508c26fe03a8",
 			"key": "username2",
 			"value": "Ufree"
 		},
 		{
-			"id": "5d4be551-e3bd-4900-a44f-553d70afecd6",
+			"id": "f488bfa1-7c1a-4809-8c3e-c0c1d98392a2",
 			"key": "bio2",
 			"value": "Donec quis porttitor ante, ac pulvinar nulla. Vivamus dignissim, ipsum ultricies interdum suscipit, risus tellus auctor mi, eu auctor metus sem quis urna. In maximus placerat ipsum, nec sodales elit aliquet sed. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae; Phasellus malesuada velit felis, non volutpat ex bibendum at. Maecenas aliquet sodales quam at consequat. Sed faucibus consequat tempor. Fusce consequat eu sem non tempus. Duis dapibus nunc vel tempus semper. Pellentesque dignissim tellus odio, vel luctus ipsum suscipit quis. Curabitur id erat at quam varius fermentum non in massa."
 		},
 		{
-			"id": "5cecc0b2-5151-4d5d-b2ea-d1bab7db39b0",
+			"id": "3d246538-ca42-4fa0-b76f-d5a51f08c16d",
 			"key": "gender2",
 			"value": "other"
 		},
 		{
-			"id": "087e70f7-fc0c-4866-bc5c-24db20264445",
+			"id": "07623dc6-24aa-4317-ab69-20f878b0cca0",
 			"key": "orientation2",
 			"value": "bisexual"
 		},
 		{
-			"id": "e48155b3-8bed-4a31-bdfe-9c0818d2bcfa",
+			"id": "ee1a4a9b-2d7a-497f-ad03-79a8399ae558",
 			"key": "birthdate2",
 			"value": "25/06/2000"
 		},
 		{
-			"id": "a0293a8f-e981-4c23-8eb6-f22b3d343614",
+			"id": "ada45066-2d17-409a-b35d-9eb19372116c",
 			"key": "email2",
 			"value": "felix.ensal@example.org"
 		},
 		{
-			"id": "408080ea-8647-4d26-a47d-09aa6d690605",
+			"id": "048879e4-dc93-4f59-8add-a09835772d78",
 			"key": "password2",
 			"value": "dolphin2"
 		},
 		{
-			"id": "d94fc847-7e2d-42ef-8419-8f3e87503916",
+			"id": "d9c8f110-9690-48f2-804d-31296bc65bc4",
 			"key": "ip",
 			"value": "90.108.46.63"
 		},
 		{
-			"id": "8967fea3-776e-4e3c-9705-62cc88f4616e",
+			"id": "3ae485f2-7afd-4dce-89c6-73651337a0f4",
 			"key": "lat",
 			"value": "49.5271"
 		},
 		{
-			"id": "997f40a4-8d6e-4e76-934f-e6927e109ea8",
+			"id": "187ad03c-2637-483a-b74e-ba655de8569b",
 			"key": "lng",
 			"value": "1.1885"
 		}
