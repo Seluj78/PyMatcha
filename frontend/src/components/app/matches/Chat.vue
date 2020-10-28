@@ -16,7 +16,7 @@
         'text-left': message.to_id === loggedInUserId,
         'text-right': message.to_id !== loggedInUserId}"
          v-for="(message, index) in messages" :key="index">
-        <div v-if="displayDate(message.timestamp_ago)"
+        <div v-if="message.first_in_timespan"
              v-bind:class="{'text-center': true, 'mx-auto': true, 'mt-8': index !== 0}">
           <h1
             class="text-xs font-light inline-block rounded-md bg-gray-200 px-2 py-1">{{message.timestamp_ago}}</h1>
@@ -50,6 +50,7 @@
 </template>
 
 <script>
+/* eslint-disable no-param-reassign */
 import ChatUser from '@/components/app/matches/ChatUser.vue';
 
 export default {
@@ -66,6 +67,16 @@ export default {
     latestMessagesDate: null,
   }),
   methods: {
+    determineFirstMessagesOfTimespans(messages) {
+      const len = messages.length;
+      for (let i = 0; i < len; i += 1) {
+        if (this.displayDate(messages[i].timestamp_ago)) {
+          messages[i].first_in_timespan = true;
+        } else {
+          messages[i].first_in_timespan = false;
+        }
+      }
+    },
     displayDate(messageAgo) {
       if (messageAgo !== this.latestMessagesDate) {
         this.latestMessagesDate = messageAgo;
@@ -111,6 +122,7 @@ export default {
     async prepareChatForNewUser() {
       const messagesRequest = await this.$http.get(`/conversations/${this.chatWithUserId}`);
       this.messages = messagesRequest.data.messages;
+      this.determineFirstMessagesOfTimespans(this.messages);
       const userRequest = await this.$http.get(`/users/${this.chatWithUserId}`);
       this.user = userRequest.data;
       this.scrollChatToBottom();
