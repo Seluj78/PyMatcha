@@ -534,6 +534,106 @@
 					"name": "Login",
 					"item": [
 						{
+							"name": "Login incorrect email",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "dc0f765a-5518-4ec8-9b7d-75e270cc6e2d",
+										"exec": [
+											"var response = JSON.parse(responseBody);",
+											"",
+											"",
+											"pm.test(\"Status code is 401\", function () {",
+											"    pm.response.to.have.status(401);",
+											"});",
+											"",
+											"tests[\"JSON return code is 401\"] = response.code == 401",
+											"",
+											"tests[\"success is true\"] = response.success == false",
+											"tests[\"Message is correct\"] = response.error.message == \"Incorrect username or password.\"",
+											"tests[\"Error type is Bad Request\"] = response.error.type == \"UnauthorizedError\""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n\t\"password\": \"{{password}}\",\n\t\"username\": \"{{email}}1\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{host}}/auth/login",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"auth",
+										"login"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Login incorrect password",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "8919e3c3-dcb9-4b72-b13d-11fa7241cb1b",
+										"exec": [
+											"var response = JSON.parse(responseBody);",
+											"",
+											"",
+											"pm.test(\"Status code is 401\", function () {",
+											"    pm.response.to.have.status(401);",
+											"});",
+											"",
+											"tests[\"JSON return code is 401\"] = response.code == 401",
+											"",
+											"tests[\"success is true\"] = response.success == false",
+											"tests[\"Message is correct\"] = response.error.message == \"Incorrect username or password.\"",
+											"tests[\"Error type is Bad Request\"] = response.error.type == \"UnauthorizedError\""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n\t\"password\": \"{{password}}1\",\n\t\"username\": \"{{email}}\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{host}}/auth/login",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"auth",
+										"login"
+									]
+								}
+							},
+							"response": []
+						},
+						{
 							"name": "Login w/ username",
 							"event": [
 								{
@@ -620,106 +720,6 @@
 								"body": {
 									"mode": "raw",
 									"raw": "{\n\t\"password\": \"{{password}}\",\n\t\"username\": \"{{email}}\"\n}",
-									"options": {
-										"raw": {
-											"language": "json"
-										}
-									}
-								},
-								"url": {
-									"raw": "{{host}}/auth/login",
-									"host": [
-										"{{host}}"
-									],
-									"path": [
-										"auth",
-										"login"
-									]
-								}
-							},
-							"response": []
-						},
-						{
-							"name": "Login incorrect email",
-							"event": [
-								{
-									"listen": "test",
-									"script": {
-										"id": "dc0f765a-5518-4ec8-9b7d-75e270cc6e2d",
-										"exec": [
-											"var response = JSON.parse(responseBody);",
-											"",
-											"",
-											"pm.test(\"Status code is 401\", function () {",
-											"    pm.response.to.have.status(401);",
-											"});",
-											"",
-											"tests[\"JSON return code is 401\"] = response.code == 401",
-											"",
-											"tests[\"success is true\"] = response.success == false",
-											"tests[\"Message is correct\"] = response.error.message == \"Incorrect username or password.\"",
-											"tests[\"Error type is Bad Request\"] = response.error.type == \"UnauthorizedError\""
-										],
-										"type": "text/javascript"
-									}
-								}
-							],
-							"request": {
-								"method": "POST",
-								"header": [],
-								"body": {
-									"mode": "raw",
-									"raw": "{\n\t\"password\": \"{{password}}\",\n\t\"username\": \"{{email}}1\"\n}",
-									"options": {
-										"raw": {
-											"language": "json"
-										}
-									}
-								},
-								"url": {
-									"raw": "{{host}}/auth/login",
-									"host": [
-										"{{host}}"
-									],
-									"path": [
-										"auth",
-										"login"
-									]
-								}
-							},
-							"response": []
-						},
-						{
-							"name": "Login incorrect password",
-							"event": [
-								{
-									"listen": "test",
-									"script": {
-										"id": "8919e3c3-dcb9-4b72-b13d-11fa7241cb1b",
-										"exec": [
-											"var response = JSON.parse(responseBody);",
-											"",
-											"",
-											"pm.test(\"Status code is 401\", function () {",
-											"    pm.response.to.have.status(401);",
-											"});",
-											"",
-											"tests[\"JSON return code is 401\"] = response.code == 401",
-											"",
-											"tests[\"success is true\"] = response.success == false",
-											"tests[\"Message is correct\"] = response.error.message == \"Incorrect username or password.\"",
-											"tests[\"Error type is Bad Request\"] = response.error.type == \"UnauthorizedError\""
-										],
-										"type": "text/javascript"
-									}
-								}
-							],
-							"request": {
-								"method": "POST",
-								"header": [],
-								"body": {
-									"mode": "raw",
-									"raw": "{\n\t\"password\": \"{{password}}1\",\n\t\"username\": \"{{email}}\"\n}",
 									"options": {
 										"raw": {
 											"language": "json"
