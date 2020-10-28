@@ -5474,7 +5474,7 @@
 						"header": [
 							{
 								"key": "debug-auth-token",
-								"value": "xX69jules69Xx",
+								"value": "{{debug_token}}",
 								"type": "text"
 							}
 						],
@@ -5593,6 +5593,152 @@
 						}
 					},
 					"response": []
+				},
+				{
+					"name": "Debug set superlikes to 1 left",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "4ef760e7-8c5c-4b52-ba94-cb6bd55b7bfb",
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "debug-auth-token",
+								"value": "{{debug_token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/debug/superlikes_set/{{id}}/1",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"debug",
+								"superlikes_set",
+								"{{id}}",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Superlike user 1500",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "67051601-b827-4fd4-91ba-20470edf9c1a",
+								"exec": [
+									"var response = JSON.parse(responseBody);",
+									"",
+									"",
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"tests[\"Success is true\"] = response.success == true",
+									"tests[\"Message is correct\"] = response.message == \"It's a match !\""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"is_superlike\": true\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/like/1500",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"like",
+								"1500"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Superlike no left",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "6324057b-8477-403b-9387-eeb091f73d19",
+								"exec": [
+									"var response = JSON.parse(responseBody);",
+									"",
+									"",
+									"pm.test(\"Status code is 400\", function () {",
+									"    pm.response.to.have.status(400);",
+									"});",
+									"",
+									"tests[\"JSON return code is 400\"] = response.code == 400",
+									"",
+									"tests[\"success is true\"] = response.success == false",
+									"tests[\"Message is correct\"] = response.error.message.includes(\"No more superlikes today, come back in \")",
+									"tests[\"Error type is Bad Request\"] = response.error.type == \"BadRequestError\""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"is_superlike\": true\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/like/1500",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"like",
+								"1500"
+							]
+						}
+					},
+					"response": []
 				}
 			],
 			"protocolProfileBehavior": {}
@@ -5632,132 +5778,132 @@
 	],
 	"variable": [
 		{
-			"id": "3eff2f3b-b570-4035-b7e8-4ad3d395adfa",
+			"id": "d2836a81-379c-471a-879a-0ec35627f1eb",
 			"key": "host",
 			"value": "http://127.0.0.1:5000"
 		},
 		{
-			"id": "31166173-97dd-46c7-a4d1-45b8db8721a9",
+			"id": "cf08785e-2faa-4691-a7dc-ad9abcadcd7b",
 			"key": "access_token",
 			"value": ""
 		},
 		{
-			"id": "936999f6-0ec5-43eb-a6c7-f745638f88c4",
+			"id": "814092af-c3f2-4f56-848d-d6ac90447841",
 			"key": "refresh_token",
 			"value": ""
 		},
 		{
-			"id": "60f7bd6d-518b-465c-b2ff-37ad9a8ddcaa",
+			"id": "b543710c-cfde-44f4-9b8e-857c5eb485f8",
 			"key": "debug_token",
 			"value": "xX69jules69Xx"
 		},
 		{
-			"id": "289a75db-1846-4d46-99c5-ef9f287c803f",
+			"id": "88072eea-0d20-4ca4-97e0-c2ee618491c0",
 			"key": "id",
 			"value": "1541"
 		},
 		{
-			"id": "981eba27-dc15-46ba-8c15-3cd5ed7f006e",
+			"id": "a7643c8d-8323-4dcb-936f-42ff74141ec6",
 			"key": "first_name",
 			"value": "Jules"
 		},
 		{
-			"id": "0d6019e2-229d-403e-a6d2-cacaa6ad05a3",
+			"id": "84b578cb-e9a3-4c07-a5f2-5b198f556b96",
 			"key": "last_name",
 			"value": "Lasne"
 		},
 		{
-			"id": "838a135d-43a3-4fd6-8895-5287f1dc6f43",
+			"id": "3b9d4fd5-8e62-4fad-b8d5-25f2efc78075",
 			"key": "email",
 			"value": "jules.lasne@example.org"
 		},
 		{
-			"id": "8db08c45-ce5e-4540-a89d-2e6d7776f549",
+			"id": "5a52ea01-6390-4855-8cfc-924dc812ce77",
 			"key": "username",
 			"value": "seluj78"
 		},
 		{
-			"id": "667bb129-e473-4b14-b675-621b472f8651",
+			"id": "d20c5305-34bc-4b03-9690-6a81b7d834d5",
 			"key": "password",
 			"value": "dolphin"
 		},
 		{
-			"id": "b600f2f9-0a1a-4de6-8167-e864069c8b99",
+			"id": "650958e2-c132-400e-b8d2-49906afa8f22",
 			"key": "orientation",
 			"value": "heterosexual"
 		},
 		{
-			"id": "c7100dc6-846b-4b03-9d41-76322835821a",
+			"id": "f7670021-1990-40e2-8249-c9b5fea152d6",
 			"key": "gender",
 			"value": "male"
 		},
 		{
-			"id": "b4254536-0414-481c-854e-bc56144ccbf4",
+			"id": "90bed931-868e-4b24-b573-71a7233bba36",
 			"key": "bio",
 			"value": "Phasellus vel tortor vel elit scelerisque accumsan vel nec nunc. Ut condimentum vestibulum sapien non dictum. Vestibulum ac eleifend mi. Curabitur dictum vestibulum ex at placerat. Pellentesque odio mi, condimentum et sollicitudin at, finibus non leo. Aenean sed pulvinar nulla, nec tincidunt felis. Aenean nibh elit, aliquam sit amet lobortis et, pellentesque ut orci. Curabitur placerat sem id ex laoreet imperdiet. Curabitur dictum ac urna feugiat viverra. Vivamus nec pulvinar urna. Suspendisse vel ultrices est. Sed malesuada est vel orci venenatis scelerisque. Phasellus ultrices dignissim sapien, at mattis tellus mattis pulvinar. Sed ut euismod velit, id fermentum leo."
 		},
 		{
-			"id": "8229841c-48c6-4157-bf37-8bf4ae4de0b5",
+			"id": "c4ca62a5-6903-477d-b682-243c1d06468b",
 			"key": "birthdate",
 			"value": "06/04/1998"
 		},
 		{
-			"id": "5350b8f9-b04c-4edd-b959-4f5f57ce3293",
+			"id": "4a5c518c-a41f-4611-9b5d-a734499e7910",
 			"key": "first_name2",
 			"value": "Félix"
 		},
 		{
-			"id": "62fb999e-1a9a-454b-8dc4-42ba8dc63992",
+			"id": "01771c29-6310-4230-87a8-b1d4068a761c",
 			"key": "last_name2",
 			"value": "Ensal"
 		},
 		{
-			"id": "4700fca7-c565-40c5-b44d-0a91d95d3244",
+			"id": "2bc7243c-b385-41be-bc4a-d628ff79ce95",
 			"key": "username2",
 			"value": "Ufree"
 		},
 		{
-			"id": "f45ef0d6-ab1e-4eec-b731-b9866f364d91",
+			"id": "a0aa03ee-3772-42ff-bfad-ec2f3d28e464",
 			"key": "bio2",
 			"value": "Donec quis porttitor ante, ac pulvinar nulla. Vivamus dignissim, ipsum ultricies interdum suscipit, risus tellus auctor mi, eu auctor metus sem quis urna. In maximus placerat ipsum, nec sodales elit aliquet sed. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae; Phasellus malesuada velit felis, non volutpat ex bibendum at. Maecenas aliquet sodales quam at consequat. Sed faucibus consequat tempor. Fusce consequat eu sem non tempus. Duis dapibus nunc vel tempus semper. Pellentesque dignissim tellus odio, vel luctus ipsum suscipit quis. Curabitur id erat at quam varius fermentum non in massa."
 		},
 		{
-			"id": "485192de-cf36-495b-8b4b-cdf109f703e5",
+			"id": "18884990-7b48-4be8-8e61-761c6d3dc979",
 			"key": "gender2",
 			"value": "other"
 		},
 		{
-			"id": "5f4b8f66-7484-44ee-9dae-aa5f79152477",
+			"id": "e2d30757-1f6c-4664-a9ea-83876b38a131",
 			"key": "orientation2",
 			"value": "bisexual"
 		},
 		{
-			"id": "a3795d99-b7db-423e-87cc-8d20e8f86133",
+			"id": "b85e8078-9744-44c7-b6bc-b937f87d750e",
 			"key": "birthdate2",
 			"value": "25/06/2000"
 		},
 		{
-			"id": "41cc7819-8011-40b7-ac3e-f1981a005541",
+			"id": "f1355ae7-e5e3-49f1-9ee2-e2ed92778afc",
 			"key": "email2",
 			"value": "felix.ensal@example.org"
 		},
 		{
-			"id": "a667eb2f-6de8-435f-acd0-fca418679644",
+			"id": "bf6cd6ff-8f1d-4cfb-9825-7030edcbac09",
 			"key": "password2",
 			"value": "dolphin2"
 		},
 		{
-			"id": "446446e5-9925-427d-9757-94946b9dbf11",
+			"id": "0dd3794a-5cd4-46d5-8603-dcc3158f5ce2",
 			"key": "ip",
 			"value": "90.108.46.63"
 		},
 		{
-			"id": "6b593d94-e816-46df-aa3f-fa4714121fc4",
+			"id": "26e53ac8-73fe-4e96-9294-55d30d04e61e",
 			"key": "lat",
 			"value": "49.5271"
 		},
 		{
-			"id": "1b548b39-45ba-4083-bf8d-63235565bc63",
+			"id": "560743fa-d3ec-4820-a7d9-8dac787f96f0",
 			"key": "lng",
 			"value": "1.1885"
 		}
