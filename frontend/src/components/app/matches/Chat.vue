@@ -21,20 +21,9 @@
           <h1
             class="text-xs font-light inline-block rounded-md bg-gray-200 px-2 py-1">{{message.timestamp_ago}}</h1>
         </div>
-        <h1
-        v-bind:class="{
-          'p-2': true,
-          'px-4': true,
-          'mt-2': true,
-          'inline-block': true,
-          'max-w-xs': true,
-          'rounded-t-md': true,
-          'rounded-br-md': message.to_id === loggedInUserId,
-          'rounded-bl-md': message.to_id !== loggedInUserId,
-          'bg-purple-matcha': message.to_id === loggedInUserId,
-          'bg-green-500': message.to_id !== loggedInUserId,
-          'text-white-matcha': true}"
-        >{{message.content}}<span class="block text-xs font-light">{{getDateHoursMinutes(message.timestamp)}}</span></h1>
+        <MessageBubble
+          v-bind:loggedInUserId="loggedInUserId"
+          v-bind:message="message"></MessageBubble>
       </div>
     </div>
     <form v-on:submit.prevent="sendMessage()" class="send w-full flex items-stretch">
@@ -52,11 +41,13 @@
 <script>
 /* eslint-disable no-param-reassign */
 import ChatUser from '@/components/app/matches/ChatUser.vue';
+import MessageBubble from '@/components/app/matches/MessageBubble.vue';
 
 export default {
   props: ['chatWithUserId'],
   components: {
     ChatUser,
+    MessageBubble,
   },
   data: () => ({
     messages: null,
@@ -67,11 +58,6 @@ export default {
     latestMessagesDate: null,
   }),
   methods: {
-    getDateHoursMinutes(timestamp) {
-      const splitBySpace = timestamp.split(' ');
-      const splitByColon = splitBySpace[4].split(':');
-      return `${splitByColon[0]}:${splitByColon[1]}`;
-    },
     determineFirstMessagesOfTimespans(messages) {
       const len = messages.length;
       for (let i = 0; i < len; i += 1) {
