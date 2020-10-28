@@ -98,7 +98,7 @@ def debug_get_user_reports(uid):
 DEBUG_CREATE_FAKE_REPORT = {"reporter_id": int, "reported_id": int, "reason": str, "details": str}
 
 
-@debug_bp.route("/debug/reports", methods=["POST"])
+@debug_bp.route("/debug/report", methods=["POST"])
 @debug_token_required
 @validate_params(DEBUG_CREATE_FAKE_REPORT)
 def debug_create_report():
