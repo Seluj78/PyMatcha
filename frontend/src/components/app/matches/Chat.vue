@@ -15,7 +15,12 @@
       <div v-bind:class="{
         'text-left': message.to_id === loggedInUserId,
         'text-right': message.to_id !== loggedInUserId}"
-         v-for="message in messages" :key="message.id">
+         v-for="(message, index) in messages" :key="index">
+        <div v-if="displayDate(message.timestamp_ago)"
+             v-bind:class="{'text-center': true, 'mx-auto': true, 'mt-8': index !== 0}">
+          <h1
+            class="text-xs font-light inline-block rounded-md bg-gray-200 px-2 py-1">{{message.timestamp_ago}}</h1>
+        </div>
         <h1
         v-bind:class="{
           'p-2': true,
@@ -58,8 +63,16 @@ export default {
     message: '',
     loggedInUserId: null,
     fetchMessagesIntervalId: null,
+    latestMessagesDate: null,
   }),
   methods: {
+    displayDate(messageAgo) {
+      if (messageAgo !== this.latestMessagesDate) {
+        this.latestMessagesDate = messageAgo;
+        return (1);
+      }
+      return (0);
+    },
     scrollChatToBottom() {
       this.$nextTick(() => {
         const messageBox = document.getElementById('messageBox');
