@@ -90,11 +90,11 @@ export default {
       if (!this.message.length) {
         return;
       }
-      await this.$http.post('/messages/send', {
+      const response = await this.$http.post('/messages/send', {
         to_uid: this.user.id.toString(),
         content: this.message,
       });
-      this.messages.push({ to_id: this.chatWithUserId, content: this.message });
+      this.messages.push(response.data.new_message);
       this.message = '';
       this.$emit('new-message');
       this.scrollChatToBottom();
