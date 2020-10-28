@@ -110,6 +110,14 @@ def unlike_profile(uid):
         raise BadRequestError("You never liked this person in the first place.")
     Like.get_multi(liked_id=u.id, liker_id=current_user.id).delete()
 
+    m1 = Match.get_multi(user_1=u.id, user_2=current_user.id)
+    m2 = Match.get_multi(user_1=current_user.id, user_2=u.id)
+
+    if m1:
+        m1.delete()
+    elif m2:
+        m2.delete()
+
     Notification.create(
         trigger_id=current_user.id,
         user_id=u.id,

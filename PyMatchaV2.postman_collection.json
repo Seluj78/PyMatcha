@@ -5460,9 +5460,6 @@
 							"script": {
 								"id": "d201971a-3ca7-4c30-8f05-a8a34e1d4348",
 								"exec": [
-									"var response = JSON.parse(responseBody);",
-									"",
-									"",
 									"pm.test(\"Status code is 204\", function () {",
 									"    pm.response.to.have.status(204);",
 									"});",
@@ -5549,6 +5546,53 @@
 						}
 					},
 					"response": []
+				},
+				{
+					"name": "Unlike and unmatch user 1500",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "13f5c8a0-d060-4d86-88d7-eba02b808eac",
+								"exec": [
+									"var response = JSON.parse(responseBody);",
+									"",
+									"",
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"tests[\"Success is true\"] = response.success == true",
+									"tests[\"Message is correct\"] = response.message == \"Unliked user 1500.\""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"is_superlike\": false\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/unlike/1500",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"unlike",
+								"1500"
+							]
+						}
+					},
+					"response": []
 				}
 			],
 			"protocolProfileBehavior": {}
@@ -5588,132 +5632,132 @@
 	],
 	"variable": [
 		{
-			"id": "4373ff11-8a52-40c5-9079-a77c914b2c86",
+			"id": "3eff2f3b-b570-4035-b7e8-4ad3d395adfa",
 			"key": "host",
 			"value": "http://127.0.0.1:5000"
 		},
 		{
-			"id": "ec2a8f8c-1bcb-4bc9-9110-59e3ac167ed0",
+			"id": "31166173-97dd-46c7-a4d1-45b8db8721a9",
 			"key": "access_token",
 			"value": ""
 		},
 		{
-			"id": "7e46138f-8fe6-4d7a-9e4f-9c950191b692",
+			"id": "936999f6-0ec5-43eb-a6c7-f745638f88c4",
 			"key": "refresh_token",
 			"value": ""
 		},
 		{
-			"id": "41be3351-ab1a-434e-b756-f9ce49f33da8",
+			"id": "60f7bd6d-518b-465c-b2ff-37ad9a8ddcaa",
 			"key": "debug_token",
 			"value": "xX69jules69Xx"
 		},
 		{
-			"id": "fa4f771e-2f6a-4000-a6c5-3059329a7cf0",
+			"id": "289a75db-1846-4d46-99c5-ef9f287c803f",
 			"key": "id",
 			"value": "1541"
 		},
 		{
-			"id": "e7d0dbc3-11aa-47e4-bc7f-64850c774076",
+			"id": "981eba27-dc15-46ba-8c15-3cd5ed7f006e",
 			"key": "first_name",
 			"value": "Jules"
 		},
 		{
-			"id": "4e838f66-112b-45fe-9035-7143efe59fab",
+			"id": "0d6019e2-229d-403e-a6d2-cacaa6ad05a3",
 			"key": "last_name",
 			"value": "Lasne"
 		},
 		{
-			"id": "74f44d4b-4a13-4272-8f4f-76eed51a90c1",
+			"id": "838a135d-43a3-4fd6-8895-5287f1dc6f43",
 			"key": "email",
 			"value": "jules.lasne@example.org"
 		},
 		{
-			"id": "f3516a0b-1bee-4305-a4f9-b14e94503f90",
+			"id": "8db08c45-ce5e-4540-a89d-2e6d7776f549",
 			"key": "username",
 			"value": "seluj78"
 		},
 		{
-			"id": "930bfe06-be53-412a-b9b8-14ef9503843e",
+			"id": "667bb129-e473-4b14-b675-621b472f8651",
 			"key": "password",
 			"value": "dolphin"
 		},
 		{
-			"id": "ab54ec74-0cab-4c58-8b07-ad9dcb63bfc1",
+			"id": "b600f2f9-0a1a-4de6-8167-e864069c8b99",
 			"key": "orientation",
 			"value": "heterosexual"
 		},
 		{
-			"id": "261648b6-1443-428f-bfa0-6e37d952868a",
+			"id": "c7100dc6-846b-4b03-9d41-76322835821a",
 			"key": "gender",
 			"value": "male"
 		},
 		{
-			"id": "79ea677c-9672-47c2-9cee-4d75618a303d",
+			"id": "b4254536-0414-481c-854e-bc56144ccbf4",
 			"key": "bio",
 			"value": "Phasellus vel tortor vel elit scelerisque accumsan vel nec nunc. Ut condimentum vestibulum sapien non dictum. Vestibulum ac eleifend mi. Curabitur dictum vestibulum ex at placerat. Pellentesque odio mi, condimentum et sollicitudin at, finibus non leo. Aenean sed pulvinar nulla, nec tincidunt felis. Aenean nibh elit, aliquam sit amet lobortis et, pellentesque ut orci. Curabitur placerat sem id ex laoreet imperdiet. Curabitur dictum ac urna feugiat viverra. Vivamus nec pulvinar urna. Suspendisse vel ultrices est. Sed malesuada est vel orci venenatis scelerisque. Phasellus ultrices dignissim sapien, at mattis tellus mattis pulvinar. Sed ut euismod velit, id fermentum leo."
 		},
 		{
-			"id": "5252e35b-e584-4bca-8e1a-07ec510b819b",
+			"id": "8229841c-48c6-4157-bf37-8bf4ae4de0b5",
 			"key": "birthdate",
 			"value": "06/04/1998"
 		},
 		{
-			"id": "32d73dd1-5c06-4b16-8739-816d71ffa6a8",
+			"id": "5350b8f9-b04c-4edd-b959-4f5f57ce3293",
 			"key": "first_name2",
 			"value": "Félix"
 		},
 		{
-			"id": "2f89424c-4751-4d09-8e9c-625cb2e217c2",
+			"id": "62fb999e-1a9a-454b-8dc4-42ba8dc63992",
 			"key": "last_name2",
 			"value": "Ensal"
 		},
 		{
-			"id": "b3aba52d-c02d-43f0-915f-f091ef018be1",
+			"id": "4700fca7-c565-40c5-b44d-0a91d95d3244",
 			"key": "username2",
 			"value": "Ufree"
 		},
 		{
-			"id": "34128927-dafe-4ba7-80b1-108976e2357a",
+			"id": "f45ef0d6-ab1e-4eec-b731-b9866f364d91",
 			"key": "bio2",
 			"value": "Donec quis porttitor ante, ac pulvinar nulla. Vivamus dignissim, ipsum ultricies interdum suscipit, risus tellus auctor mi, eu auctor metus sem quis urna. In maximus placerat ipsum, nec sodales elit aliquet sed. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae; Phasellus malesuada velit felis, non volutpat ex bibendum at. Maecenas aliquet sodales quam at consequat. Sed faucibus consequat tempor. Fusce consequat eu sem non tempus. Duis dapibus nunc vel tempus semper. Pellentesque dignissim tellus odio, vel luctus ipsum suscipit quis. Curabitur id erat at quam varius fermentum non in massa."
 		},
 		{
-			"id": "d8258c3a-0329-437d-bb05-ff11e05d07cf",
+			"id": "485192de-cf36-495b-8b4b-cdf109f703e5",
 			"key": "gender2",
 			"value": "other"
 		},
 		{
-			"id": "d4b157c7-4304-4fbc-ad31-c1706cf0de7b",
+			"id": "5f4b8f66-7484-44ee-9dae-aa5f79152477",
 			"key": "orientation2",
 			"value": "bisexual"
 		},
 		{
-			"id": "211b0562-96cc-409f-bee1-60944ee02d89",
+			"id": "a3795d99-b7db-423e-87cc-8d20e8f86133",
 			"key": "birthdate2",
 			"value": "25/06/2000"
 		},
 		{
-			"id": "0858a0bc-fcf2-43aa-ad64-f2b810ddcf67",
+			"id": "41cc7819-8011-40b7-ac3e-f1981a005541",
 			"key": "email2",
 			"value": "felix.ensal@example.org"
 		},
 		{
-			"id": "9c258086-f239-4936-afce-e5b79d3e9d3b",
+			"id": "a667eb2f-6de8-435f-acd0-fca418679644",
 			"key": "password2",
 			"value": "dolphin2"
 		},
 		{
-			"id": "4feb0293-3e60-4693-accb-89a40932785c",
+			"id": "446446e5-9925-427d-9757-94946b9dbf11",
 			"key": "ip",
 			"value": "90.108.46.63"
 		},
 		{
-			"id": "cd643c12-e66f-4200-b9ea-b924d03a1e1c",
+			"id": "6b593d94-e816-46df-aa3f-fa4714121fc4",
 			"key": "lat",
 			"value": "49.5271"
 		},
 		{
-			"id": "16ec80cf-f7a8-4d6b-83ec-099a12e21c4c",
+			"id": "1b548b39-45ba-4083-bf8d-63235565bc63",
 			"key": "lng",
 			"value": "1.1885"
 		}
