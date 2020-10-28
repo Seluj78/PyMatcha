@@ -34,7 +34,7 @@
           'bg-purple-matcha': message.to_id === loggedInUserId,
           'bg-green-500': message.to_id !== loggedInUserId,
           'text-white-matcha': true}"
-        >{{message.content}}</h1>
+        >{{message.content}}<span class="block text-xs font-light">{{getDateHoursMinutes(message.timestamp)}}</span></h1>
       </div>
     </div>
     <form v-on:submit.prevent="sendMessage()" class="send w-full flex items-stretch">
@@ -67,6 +67,11 @@ export default {
     latestMessagesDate: null,
   }),
   methods: {
+    getDateHoursMinutes(timestamp) {
+      const splitBySpace = timestamp.split(' ');
+      const splitByColon = splitBySpace[4].split(':');
+      return `${splitByColon[0]}:${splitByColon[1]}`;
+    },
     determineFirstMessagesOfTimespans(messages) {
       const len = messages.length;
       for (let i = 0; i < len; i += 1) {
