@@ -948,6 +948,43 @@
 								}
 							},
 							"response": []
+						},
+						{
+							"name": "Get id after login",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "497921d2-c03f-42c8-8d81-efaa52e23f9d",
+										"exec": [
+											"var response = JSON.parse(responseBody);",
+											"",
+											"",
+											"pm.test(\"Status code is 200\", function () {",
+											"    pm.response.to.have.status(200);",
+											"});",
+											"",
+											"pm.collectionVariables.set(\"id\", response.id)"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{host}}/users/{{username}}",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"users",
+										"{{username}}"
+									]
+								}
+							},
+							"response": []
 						}
 					],
 					"protocolProfileBehavior": {},
@@ -3298,7 +3335,7 @@
 											"tests[\"JSON return code is 200\"] = response.code == 200",
 											"",
 											"tests[\"success is true\"] = response.success == true",
-											"tests[\"Profile's usernam is correct\"] = respons.profile.username == \"lazylion445\"",
+											"tests[\"Profile's usernam is correct\"] = response.profile.username == \"lazylion445\"",
 											"tests[\"Returned profile id is correct\"] = response.profile.id == 500"
 										],
 										"type": "text/javascript"
@@ -3928,132 +3965,132 @@
 	],
 	"variable": [
 		{
-			"id": "fdc04fff-2ccc-403e-9369-1f3d9ca6d462",
+			"id": "93d6d1e6-c6ed-4d72-bead-e9e34f2e9d10",
 			"key": "host",
 			"value": "http://127.0.0.1:5000"
 		},
 		{
-			"id": "6eeec8f4-858e-4e0a-bbf1-ef8a743923e9",
+			"id": "7cc87a33-c49d-4a23-87e0-67774b61231d",
 			"key": "access_token",
 			"value": ""
 		},
 		{
-			"id": "4dd1314c-af39-4289-b465-09efc0fd9b96",
+			"id": "d5920bb0-b9d8-4538-bd82-10c8befe947f",
 			"key": "refresh_token",
 			"value": ""
 		},
 		{
-			"id": "1f7f5d27-1eba-48f9-bb21-73c58d112d11",
+			"id": "6e83dcc2-7d2f-41ca-9175-e3e530ef4f83",
 			"key": "debug_token",
 			"value": "xX69jules69Xx"
 		},
 		{
-			"id": "3dbc6491-d534-414b-9b83-189167234960",
+			"id": "6519d63b-f070-4a2c-8b5e-624e6abb4485",
 			"key": "id",
 			"value": ""
 		},
 		{
-			"id": "6063c9c8-8b99-42c7-b7b6-5939d3c18430",
+			"id": "00fde37a-0784-49f6-be68-6877b13d5499",
 			"key": "first_name",
 			"value": "Jules"
 		},
 		{
-			"id": "8d0cb910-5d12-4f35-9910-3c6c3d57e443",
+			"id": "2f399ae5-3ed4-4e9e-8990-b5555c148a9d",
 			"key": "last_name",
 			"value": "Lasne"
 		},
 		{
-			"id": "db0f9c24-2123-461f-bfa7-d08848551262",
+			"id": "9d0662c3-9a73-47d6-a7f0-31bff9dfcf0e",
 			"key": "email",
 			"value": "jules.lasne@example.org"
 		},
 		{
-			"id": "414b1707-a364-4088-a979-855822afee67",
+			"id": "5549e674-9566-4c4c-b395-c84fb3603fd5",
 			"key": "username",
 			"value": "seluj78"
 		},
 		{
-			"id": "d67fb0bf-f6e4-4b35-8470-69fca442aaff",
+			"id": "8260e448-6c83-4659-b5c3-5cc85122cb0f",
 			"key": "password",
 			"value": "dolphin"
 		},
 		{
-			"id": "75c9b7f9-1e3f-4b4e-9b04-00a6e67b1b9b",
+			"id": "4057a214-d7fa-4cfa-b98b-cdc9559a0394",
 			"key": "orientation",
 			"value": "heterosexual"
 		},
 		{
-			"id": "0ccf3d47-3a30-4bee-9166-6ceb7c0e16c9",
+			"id": "5af5a9f1-81a3-4fb0-a14e-cfccbc087d9f",
 			"key": "gender",
 			"value": "male"
 		},
 		{
-			"id": "dd0c44a6-5d08-4a56-8722-3aac0ed1a863",
+			"id": "efb2a192-a2ea-4cb8-950b-254e7416a475",
 			"key": "bio",
 			"value": "Phasellus vel tortor vel elit scelerisque accumsan vel nec nunc. Ut condimentum vestibulum sapien non dictum. Vestibulum ac eleifend mi. Curabitur dictum vestibulum ex at placerat. Pellentesque odio mi, condimentum et sollicitudin at, finibus non leo. Aenean sed pulvinar nulla, nec tincidunt felis. Aenean nibh elit, aliquam sit amet lobortis et, pellentesque ut orci. Curabitur placerat sem id ex laoreet imperdiet. Curabitur dictum ac urna feugiat viverra. Vivamus nec pulvinar urna. Suspendisse vel ultrices est. Sed malesuada est vel orci venenatis scelerisque. Phasellus ultrices dignissim sapien, at mattis tellus mattis pulvinar. Sed ut euismod velit, id fermentum leo."
 		},
 		{
-			"id": "31b397b1-790c-4774-9f65-70652b07ad48",
+			"id": "fcedd55e-a3b9-4450-b85a-2c88872f11d5",
 			"key": "birthdate",
 			"value": "06/04/1998"
 		},
 		{
-			"id": "9bf4b9f9-653a-4284-837c-058ad6f7e286",
+			"id": "3895bf3d-b7ee-4985-aea4-c488e5dbbaa9",
 			"key": "first_name2",
 			"value": "Félix"
 		},
 		{
-			"id": "31d7457b-53aa-4306-a264-0bf221895d8a",
+			"id": "0ce97118-3451-4e8c-abd3-d96027405e7b",
 			"key": "last_name2",
 			"value": "Ensal"
 		},
 		{
-			"id": "ac213197-7a51-4808-a2e9-01a69a90081b",
+			"id": "62cf49c6-44fb-4db7-b002-9a17d0828332",
 			"key": "username2",
 			"value": "Ufree"
 		},
 		{
-			"id": "8f4c43aa-6f29-4044-954e-4cd4ae173f39",
+			"id": "bd104037-ec2b-4fc3-be5b-a58c39eadff6",
 			"key": "bio2",
 			"value": "Donec quis porttitor ante, ac pulvinar nulla. Vivamus dignissim, ipsum ultricies interdum suscipit, risus tellus auctor mi, eu auctor metus sem quis urna. In maximus placerat ipsum, nec sodales elit aliquet sed. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae; Phasellus malesuada velit felis, non volutpat ex bibendum at. Maecenas aliquet sodales quam at consequat. Sed faucibus consequat tempor. Fusce consequat eu sem non tempus. Duis dapibus nunc vel tempus semper. Pellentesque dignissim tellus odio, vel luctus ipsum suscipit quis. Curabitur id erat at quam varius fermentum non in massa."
 		},
 		{
-			"id": "c53e4a8d-d0d3-408e-9381-ad804567cb4f",
+			"id": "80874bc2-fabb-47ad-997a-609351147920",
 			"key": "gender2",
 			"value": "other"
 		},
 		{
-			"id": "30c4d468-5b81-4bef-856a-005e9bf9ef8b",
+			"id": "cbe8abf8-a947-4a9e-9470-794b15407fe1",
 			"key": "orientation2",
 			"value": "bisexual"
 		},
 		{
-			"id": "6d479be2-6f0e-4d46-994c-bb6959c427f8",
+			"id": "3fda48a6-7205-461c-b7d2-13dc28cd6d1e",
 			"key": "birthdate2",
 			"value": "25/06/2000"
 		},
 		{
-			"id": "40f5f460-aef2-46d6-9304-3588ddef7bd9",
+			"id": "e40758b8-a145-47f9-9f54-89fccea44a03",
 			"key": "email2",
 			"value": "felix.ensal@example.org"
 		},
 		{
-			"id": "43715781-fd0d-4aaa-ab05-aec1cb3712ab",
+			"id": "e73f1566-754f-4eda-bbd0-56c8a3cb1ea3",
 			"key": "password2",
 			"value": "dolphin2"
 		},
 		{
-			"id": "c9fed102-8d1c-4a02-ba31-3a31c44429a0",
+			"id": "94aa25d1-3716-42f9-9235-1c287bdeecb3",
 			"key": "ip",
 			"value": "90.108.46.63"
 		},
 		{
-			"id": "fc2f46d1-7d82-4227-8bea-c14e0b33dbbc",
+			"id": "986ac081-6e60-43b5-aaab-49c992e494d7",
 			"key": "lat",
 			"value": "49.5271"
 		},
 		{
-			"id": "f30ed5c5-e07a-428d-a433-d8d709b18adf",
+			"id": "e15b3daa-2d1d-4c1f-a24b-a9ad93556ee2",
 			"key": "lng",
 			"value": "1.1885"
 		}
