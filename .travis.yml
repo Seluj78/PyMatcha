@@ -66,7 +66,7 @@ jobs:
         # Wait for docker to be up
         - sleep 10
         # run newman tests
-        - newman run --color on 'PyMatcha.postman_collection.json'
+        - newman run --color on 'PyMatchaV2.postman_collection.json'
       after_script:
         # stop and remove docker to prevent them from block port at next iteration/test
         - docker stop $(docker ps -a -q)
