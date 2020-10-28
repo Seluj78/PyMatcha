@@ -19,7 +19,7 @@
         <div v-if="message.first_in_timespan"
              v-bind:class="{'text-center': true, 'mx-auto': true, 'mt-8': index !== 0}">
           <h1
-            class="text-xs font-light inline-block rounded-md bg-gray-200 px-2 py-1">{{message.timestamp_ago}}</h1>
+            class="text-xs font-light inline-block rounded-md bg-gray-200 px-2 py-1">{{message.timestamp_first}}</h1>
         </div>
         <MessageBubble
           v-bind:loggedInUserId="loggedInUserId"
@@ -61,16 +61,22 @@ export default {
     determineFirstMessagesOfTimespans(messages) {
       const len = messages.length;
       for (let i = 0; i < len; i += 1) {
-        if (this.displayDate(messages[i].timestamp_ago)) {
+        if (this.displayDate(messages[i].timestamp)) {
           messages[i].first_in_timespan = true;
+          messages[i].timestamp_first = this.getDayMonthday(messages[i].timestamp);
         } else {
           messages[i].first_in_timespan = false;
         }
       }
     },
-    displayDate(messageAgo) {
-      if (messageAgo !== this.latestMessagesDate) {
-        this.latestMessagesDate = messageAgo;
+    getDayMonthday(timestamp) {
+      const splitBySpace = timestamp.split(' ');
+      return `${splitBySpace[0]} ${splitBySpace[1]} ${splitBySpace[2]}`;
+    },
+    displayDate(timestamp) {
+      const dayMonthday = this.getDayMonthday(timestamp);
+      if (dayMonthday !== this.latestMessagesDate) {
+        this.latestMessagesDate = dayMonthday;
         return (1);
       }
       return (0);
