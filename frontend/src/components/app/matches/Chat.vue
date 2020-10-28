@@ -23,7 +23,7 @@
         </div>
         <MessageBubble
           v-bind:loggedInUserId="loggedInUserId"
-          v-bind:message="message"></MessageBubble>
+          v-bind:messagePassed="message"></MessageBubble>
       </div>
     </div>
     <form v-on:submit.prevent="sendMessage()" class="send w-full flex items-stretch">
