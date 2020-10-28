@@ -640,6 +640,106 @@
 							"response": []
 						},
 						{
+							"name": "Login incorrect email",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "dc0f765a-5518-4ec8-9b7d-75e270cc6e2d",
+										"exec": [
+											"var response = JSON.parse(responseBody);",
+											"",
+											"",
+											"pm.test(\"Status code is 401\", function () {",
+											"    pm.response.to.have.status(401);",
+											"});",
+											"",
+											"tests[\"JSON return code is 401\"] = response.code == 401",
+											"",
+											"tests[\"success is true\"] = response.success == false",
+											"tests[\"Message is correct\"] = response.error.message == \"Incorrect username or password.\"",
+											"tests[\"Error type is Bad Request\"] = response.error.type == \"UnauthorizedError\""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n\t\"password\": \"{{password}}\",\n\t\"username\": \"{{email}}1\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{host}}/auth/login",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"auth",
+										"login"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Login incorrect password",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "8919e3c3-dcb9-4b72-b13d-11fa7241cb1b",
+										"exec": [
+											"var response = JSON.parse(responseBody);",
+											"",
+											"",
+											"pm.test(\"Status code is 401\", function () {",
+											"    pm.response.to.have.status(401);",
+											"});",
+											"",
+											"tests[\"JSON return code is 401\"] = response.code == 401",
+											"",
+											"tests[\"success is true\"] = response.success == false",
+											"tests[\"Message is correct\"] = response.error.message == \"Incorrect username or password.\"",
+											"tests[\"Error type is Bad Request\"] = response.error.type == \"UnauthorizedError\""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n\t\"password\": \"{{password}}1\",\n\t\"username\": \"{{email}}\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{host}}/auth/login",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"auth",
+										"login"
+									]
+								}
+							},
+							"response": []
+						},
+						{
 							"name": "Refresh token",
 							"event": [
 								{
@@ -658,7 +758,7 @@
 											"",
 											"tests[\"success is true\"] = response.success == true",
 											"",
-											"pm.collectionVariables.set(\"user_access_token\", response.access_token);",
+											"pm.collectionVariables.set(\"access_token\", response.access_token);",
 											""
 										],
 										"type": "text/javascript"
@@ -3009,6 +3109,361 @@
 					],
 					"protocolProfileBehavior": {},
 					"_postman_isSubFolder": true
+				},
+				{
+					"name": "View",
+					"item": [
+						{
+							"name": "Viewed me",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "54da457d-74fb-4efb-8649-d88b8ec32b5f",
+										"exec": [
+											"var response = JSON.parse(responseBody);",
+											"",
+											"",
+											"pm.test(\"Status code is 200\", function () {",
+											"    pm.response.to.have.status(200);",
+											"});",
+											"",
+											"tests[\"JSON return code is 200\"] = response.code == 200",
+											"",
+											"tests[\"success is true\"] = response.success == true",
+											"tests[\"Viewed me list is empty\"] = response.viewed_me.length == 0",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{host}}/history/viewed/me",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"history",
+										"viewed",
+										"me"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Viewed profiles",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "e0b8a9ec-6ea3-4930-bb9e-e70a1dd7621d",
+										"exec": [
+											"var response = JSON.parse(responseBody);",
+											"",
+											"",
+											"pm.test(\"Status code is 200\", function () {",
+											"    pm.response.to.have.status(200);",
+											"});",
+											"",
+											"tests[\"JSON return code is 200\"] = response.code == 200",
+											"",
+											"tests[\"success is true\"] = response.success == true",
+											"tests[\"Viewed list is empty\"] = response.viewed.length == 0",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{host}}/history/viewed",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"history",
+										"viewed"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "View unknown user",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "e92ddcae-c1ec-40c9-8530-234c3769eaa7",
+										"exec": [
+											"var response = JSON.parse(responseBody);",
+											"",
+											"",
+											"pm.test(\"Status code is 404\", function () {",
+											"    pm.response.to.have.status(404);",
+											"});",
+											"",
+											"tests[\"JSON return code is 404\"] = response.code == 404",
+											"",
+											"tests[\"success is true\"] = response.success == false",
+											"tests[\"Message is correct\"] = response.error.message == \"User -1 not found.\"",
+											"tests[\"Error type is Bad Request\"] = response.error.type == \"NotFoundError\""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{host}}/profile/view/-1",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"profile",
+										"view",
+										"-1"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "View yourself",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "5cd46e01-f3db-4aca-b817-be229cdfc747",
+										"exec": [
+											"var response = JSON.parse(responseBody);",
+											"",
+											"",
+											"pm.test(\"Status code is 400\", function () {",
+											"    pm.response.to.have.status(400);",
+											"});",
+											"",
+											"tests[\"JSON return code is 400\"] = response.code == 400",
+											"",
+											"tests[\"success is true\"] = response.success == false",
+											"tests[\"Message is correct\"] = response.error.message == \"Cannot view yourself.\"",
+											"tests[\"Error type is Bad Request\"] = response.error.type == \"BadRequestError\""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{host}}/profile/view/{{id}}",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"profile",
+										"view",
+										"{{id}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "View someone's profile",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "3f895895-db7c-427b-b2fd-09a7ccccf7b1",
+										"exec": [
+											"var response = JSON.parse(responseBody);",
+											"",
+											"",
+											"pm.test(\"Status code is 200\", function () {",
+											"    pm.response.to.have.status(200);",
+											"});",
+											"",
+											"tests[\"JSON return code is 200\"] = response.code == 200",
+											"",
+											"tests[\"success is true\"] = response.success == true",
+											"tests[\"Profile's usernam is correct\"] = respons.profile.username == \"lazylion445\"",
+											"tests[\"Returned profile id is correct\"] = response.profile.id == 500"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{host}}/profile/view/500",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"profile",
+										"view",
+										"500"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Viewed profiles after viewing someone",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "03c0d267-fd39-4a7b-b186-380c0da2a000",
+										"exec": [
+											"var response = JSON.parse(responseBody);",
+											"",
+											"",
+											"pm.test(\"Status code is 200\", function () {",
+											"    pm.response.to.have.status(200);",
+											"});",
+											"",
+											"tests[\"JSON return code is 200\"] = response.code == 200",
+											"",
+											"tests[\"success is true\"] = response.success == true",
+											"tests[\"Viewed list is empty\"] = response.viewed.length == 1",
+											"tests[\"Viewed n1 is correct\"] = response.viewed[0].id == 500"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{host}}/history/viewed",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"history",
+										"viewed"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Create random views",
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"id": "2797ea16-a28a-4556-97f2-e0567e6ab328",
+										"exec": [
+											""
+										],
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "test",
+									"script": {
+										"id": "45437f7b-a193-45d4-bb71-4c94938ebc22",
+										"exec": [
+											"var response = JSON.parse(responseBody);",
+											"",
+											"",
+											"pm.test(\"Status code is 200\", function () {",
+											"    pm.response.to.have.status(200);",
+											"});",
+											"",
+											"tests[\"JSON return code is 200\"] = response.code == 200",
+											"",
+											"tests[\"success is true\"] = response.success == true"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "debug-auth-token",
+										"type": "text",
+										"value": "xX69jules69Xx"
+									}
+								],
+								"url": {
+									"raw": "{{host}}/debug/views/10",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"debug",
+										"views",
+										"10"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Viewed me after random views",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "f825bee1-cede-48e5-ba81-f3efeeae7773",
+										"exec": [
+											"var response = JSON.parse(responseBody);",
+											"",
+											"",
+											"pm.test(\"Status code is 200\", function () {",
+											"    pm.response.to.have.status(200);",
+											"});",
+											"",
+											"tests[\"JSON return code is 200\"] = response.code == 200",
+											"",
+											"tests[\"success is true\"] = response.success == true",
+											"tests[\"Viewed me list is empty\"] = response.viewed_me.length == 10",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{host}}/history/viewed/me",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"history",
+										"viewed",
+										"me"
+									]
+								}
+							},
+							"response": []
+						}
+					],
+					"protocolProfileBehavior": {},
+					"_postman_isSubFolder": true
 				}
 			],
 			"protocolProfileBehavior": {}
@@ -3048,132 +3503,132 @@
 	],
 	"variable": [
 		{
-			"id": "cc18e51c-8191-4f85-ad4b-2e60968e8c36",
+			"id": "8cc3334c-d47e-4548-8b46-147e7e1585bd",
 			"key": "host",
 			"value": "http://127.0.0.1:5000"
 		},
 		{
-			"id": "ebe96ce2-c1af-459e-9255-c8e3d4a77153",
+			"id": "d8f5a790-cba8-4601-b4e0-861999186263",
 			"key": "access_token",
 			"value": ""
 		},
 		{
-			"id": "673243d6-9ecb-437f-9145-12cee6b9a63c",
+			"id": "e2a881f5-78bf-444f-8cf9-c4d783291a06",
 			"key": "refresh_token",
 			"value": ""
 		},
 		{
-			"id": "3cebdb5e-7059-436b-99bb-b130b1200adb",
+			"id": "17fbfc52-7819-4f53-963a-c5fdf3552b6e",
 			"key": "debug_token",
 			"value": "xX69jules69Xx"
 		},
 		{
-			"id": "26de8db1-c6d3-4737-8fd4-75f07936f97b",
+			"id": "27df47e4-15ec-4075-b849-7862e0dd13b4",
 			"key": "id",
 			"value": ""
 		},
 		{
-			"id": "d9b7b263-0f7d-4022-a836-4c09cb156b88",
+			"id": "4a470641-038f-4cd5-99a0-7cfa8ac03f74",
 			"key": "first_name",
 			"value": "Jules"
 		},
 		{
-			"id": "77257a82-bbc2-4ed8-b080-62b4e6c390ca",
+			"id": "7ed67978-7afb-4f91-b790-19ca4b06dc0e",
 			"key": "last_name",
 			"value": "Lasne"
 		},
 		{
-			"id": "1926e609-62e7-4e8c-ab9c-aee89bee0682",
+			"id": "5ea7ba78-2e9e-4973-be4a-5a36adf5f79a",
 			"key": "email",
 			"value": "jules.lasne@example.org"
 		},
 		{
-			"id": "cdf0eb67-9aa5-496d-96f8-a2e01b31a93c",
+			"id": "b79fe95c-1523-4cd3-965e-c70abd23e263",
 			"key": "username",
 			"value": "seluj78"
 		},
 		{
-			"id": "434c2cfa-30e0-42b7-ab01-def88dfa51bd",
+			"id": "4acec158-c298-45cc-a198-ba814f7a662b",
 			"key": "password",
 			"value": "dolphin"
 		},
 		{
-			"id": "0c7a6781-c0fb-4b3f-9f69-77230f37fa41",
+			"id": "69cbf865-342b-46c5-bf48-d0c4836f9179",
 			"key": "orientation",
 			"value": "heterosexual"
 		},
 		{
-			"id": "ab819adf-5026-4c09-8f4d-b9f694767e28",
+			"id": "b8f44c9e-3500-4f9d-8d30-413311a68c68",
 			"key": "gender",
 			"value": "male"
 		},
 		{
-			"id": "3540089b-777a-41c3-a65e-32de1bbd97aa",
+			"id": "bd947886-9492-487c-ae7b-5b896e2c2c96",
 			"key": "bio",
 			"value": "Phasellus vel tortor vel elit scelerisque accumsan vel nec nunc. Ut condimentum vestibulum sapien non dictum. Vestibulum ac eleifend mi. Curabitur dictum vestibulum ex at placerat. Pellentesque odio mi, condimentum et sollicitudin at, finibus non leo. Aenean sed pulvinar nulla, nec tincidunt felis. Aenean nibh elit, aliquam sit amet lobortis et, pellentesque ut orci. Curabitur placerat sem id ex laoreet imperdiet. Curabitur dictum ac urna feugiat viverra. Vivamus nec pulvinar urna. Suspendisse vel ultrices est. Sed malesuada est vel orci venenatis scelerisque. Phasellus ultrices dignissim sapien, at mattis tellus mattis pulvinar. Sed ut euismod velit, id fermentum leo."
 		},
 		{
-			"id": "1b569826-c148-4139-8245-3bdc05cee549",
+			"id": "6c9d46c3-4826-420a-8006-e717e2f31948",
 			"key": "birthdate",
 			"value": "06/04/1998"
 		},
 		{
-			"id": "c0072ec1-ee3e-4262-b70c-4b49bd2f044e",
+			"id": "f63ce711-afe0-4457-9edf-0a5e2a6b1754",
 			"key": "first_name2",
 			"value": "Félix"
 		},
 		{
-			"id": "0b878650-a3a5-4bf6-ad00-74a62acf0496",
+			"id": "71ec1bdf-7430-4b25-8f83-11cf2ba8c169",
 			"key": "last_name2",
 			"value": "Ensal"
 		},
 		{
-			"id": "48fd224c-7d78-4083-99c2-b77bd8c4b67e",
+			"id": "6c35ddef-0f29-44ba-a5f5-2b79b1be640c",
 			"key": "username2",
 			"value": "Ufree"
 		},
 		{
-			"id": "9703fdf4-4afa-4993-803e-60f2aec9f870",
+			"id": "3bca2673-bff0-4c74-b1b7-93755bff068f",
 			"key": "bio2",
 			"value": "Donec quis porttitor ante, ac pulvinar nulla. Vivamus dignissim, ipsum ultricies interdum suscipit, risus tellus auctor mi, eu auctor metus sem quis urna. In maximus placerat ipsum, nec sodales elit aliquet sed. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae; Phasellus malesuada velit felis, non volutpat ex bibendum at. Maecenas aliquet sodales quam at consequat. Sed faucibus consequat tempor. Fusce consequat eu sem non tempus. Duis dapibus nunc vel tempus semper. Pellentesque dignissim tellus odio, vel luctus ipsum suscipit quis. Curabitur id erat at quam varius fermentum non in massa."
 		},
 		{
-			"id": "3753cc4d-9fc4-49b0-9827-65ce5e1b2e58",
+			"id": "815901f0-a538-4f56-ad4c-b17693900afe",
 			"key": "gender2",
 			"value": "other"
 		},
 		{
-			"id": "8d97f853-f4e4-4158-94f2-dabd5d9434a5",
+			"id": "9a2230bf-daa5-4f63-8ce6-2a6d34483e88",
 			"key": "orientation2",
 			"value": "bisexual"
 		},
 		{
-			"id": "d16047aa-dba2-479a-a053-5d627198dd64",
+			"id": "3580349c-b3c7-48d5-81c8-427431fa152a",
 			"key": "birthdate2",
 			"value": "25/06/2000"
 		},
 		{
-			"id": "31ab1b71-117b-412e-a602-1fe053fb34f8",
+			"id": "2010181e-372a-4786-b654-7c5179956371",
 			"key": "email2",
 			"value": "felix.ensal@example.org"
 		},
 		{
-			"id": "3e867355-5614-44ee-a569-0f7615317a31",
+			"id": "ae3dd43b-3b3e-44ad-a8a3-944916f4a436",
 			"key": "password2",
 			"value": "dolphin2"
 		},
 		{
-			"id": "330888dc-70e8-4a54-a498-105d4fb5000a",
+			"id": "c014060f-8737-4103-a68b-694774ca301e",
 			"key": "ip",
 			"value": "90.108.46.63"
 		},
 		{
-			"id": "1b296b80-eac0-4719-953b-379087d5b15c",
+			"id": "516e8a5a-626c-4a0f-bf10-daabc3f901a7",
 			"key": "lat",
 			"value": "49.5271"
 		},
 		{
-			"id": "5b4b5085-b935-47af-9778-0e4595e94130",
+			"id": "fce3648b-b2fd-4a14-b465-82a6358684b9",
 			"key": "lng",
 			"value": "1.1885"
 		}
