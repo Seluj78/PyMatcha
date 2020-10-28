@@ -3851,6 +3851,30 @@
 			"item": [
 				{
 					"name": "Calc recommendations",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "894a8b37-b908-4168-8fb1-b7e50e646311",
+								"exec": [
+									"var response = JSON.parse(responseBody);",
+									"",
+									"",
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"tests[\"JSON return code is 200\"] = response.code == 200",
+									"",
+									"tests[\"success is true\"] = response.success == true",
+									"",
+									"tests[\"Recommendations length is correct\"] = response.recommendations.length > 10",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
 					"request": {
 						"method": "GET",
 						"header": [],
@@ -3904,132 +3928,132 @@
 	],
 	"variable": [
 		{
-			"id": "541037b5-3d21-48e8-9a20-f9fc643d699c",
+			"id": "fdc04fff-2ccc-403e-9369-1f3d9ca6d462",
 			"key": "host",
 			"value": "http://127.0.0.1:5000"
 		},
 		{
-			"id": "792ce9b3-e277-464d-8a2c-d7bf262a7e48",
+			"id": "6eeec8f4-858e-4e0a-bbf1-ef8a743923e9",
 			"key": "access_token",
 			"value": ""
 		},
 		{
-			"id": "645cd205-0ae7-40ce-bf47-281be1aa2e67",
+			"id": "4dd1314c-af39-4289-b465-09efc0fd9b96",
 			"key": "refresh_token",
 			"value": ""
 		},
 		{
-			"id": "a0fe80b7-d5cb-4cc7-b4e5-d63d0d3084fe",
+			"id": "1f7f5d27-1eba-48f9-bb21-73c58d112d11",
 			"key": "debug_token",
 			"value": "xX69jules69Xx"
 		},
 		{
-			"id": "9129d21c-4378-4e3f-bbc8-6fa7c09f6f98",
+			"id": "3dbc6491-d534-414b-9b83-189167234960",
 			"key": "id",
 			"value": ""
 		},
 		{
-			"id": "ae3baf17-0c00-49de-bbc0-d549f5bd08c3",
+			"id": "6063c9c8-8b99-42c7-b7b6-5939d3c18430",
 			"key": "first_name",
 			"value": "Jules"
 		},
 		{
-			"id": "9e963f34-91a2-466a-84a4-594532319f53",
+			"id": "8d0cb910-5d12-4f35-9910-3c6c3d57e443",
 			"key": "last_name",
 			"value": "Lasne"
 		},
 		{
-			"id": "5ad206c5-063a-4455-8da4-5bd77b2a014c",
+			"id": "db0f9c24-2123-461f-bfa7-d08848551262",
 			"key": "email",
 			"value": "jules.lasne@example.org"
 		},
 		{
-			"id": "ad4376e3-d04f-4896-af97-45c4976ad611",
+			"id": "414b1707-a364-4088-a979-855822afee67",
 			"key": "username",
 			"value": "seluj78"
 		},
 		{
-			"id": "ecbfb5db-93ee-4459-9bc8-1cdf47e9af1f",
+			"id": "d67fb0bf-f6e4-4b35-8470-69fca442aaff",
 			"key": "password",
 			"value": "dolphin"
 		},
 		{
-			"id": "75622435-dd81-44c3-bb17-f96e8c192fc8",
+			"id": "75c9b7f9-1e3f-4b4e-9b04-00a6e67b1b9b",
 			"key": "orientation",
 			"value": "heterosexual"
 		},
 		{
-			"id": "63c072e2-350d-4be5-a379-2289faa34133",
+			"id": "0ccf3d47-3a30-4bee-9166-6ceb7c0e16c9",
 			"key": "gender",
 			"value": "male"
 		},
 		{
-			"id": "1923570f-939d-4ac1-b915-94eb2cecd6f3",
+			"id": "dd0c44a6-5d08-4a56-8722-3aac0ed1a863",
 			"key": "bio",
 			"value": "Phasellus vel tortor vel elit scelerisque accumsan vel nec nunc. Ut condimentum vestibulum sapien non dictum. Vestibulum ac eleifend mi. Curabitur dictum vestibulum ex at placerat. Pellentesque odio mi, condimentum et sollicitudin at, finibus non leo. Aenean sed pulvinar nulla, nec tincidunt felis. Aenean nibh elit, aliquam sit amet lobortis et, pellentesque ut orci. Curabitur placerat sem id ex laoreet imperdiet. Curabitur dictum ac urna feugiat viverra. Vivamus nec pulvinar urna. Suspendisse vel ultrices est. Sed malesuada est vel orci venenatis scelerisque. Phasellus ultrices dignissim sapien, at mattis tellus mattis pulvinar. Sed ut euismod velit, id fermentum leo."
 		},
 		{
-			"id": "ebc7335b-2930-4ec8-8aaf-223af9149677",
+			"id": "31b397b1-790c-4774-9f65-70652b07ad48",
 			"key": "birthdate",
 			"value": "06/04/1998"
 		},
 		{
-			"id": "b49bd622-f80e-423b-a3c5-65d7ea7d5f93",
+			"id": "9bf4b9f9-653a-4284-837c-058ad6f7e286",
 			"key": "first_name2",
 			"value": "Félix"
 		},
 		{
-			"id": "f47b337b-27ff-4eb4-8cfb-5619466b5df3",
+			"id": "31d7457b-53aa-4306-a264-0bf221895d8a",
 			"key": "last_name2",
 			"value": "Ensal"
 		},
 		{
-			"id": "512416fd-05f8-467e-9c4d-15aeef56370f",
+			"id": "ac213197-7a51-4808-a2e9-01a69a90081b",
 			"key": "username2",
 			"value": "Ufree"
 		},
 		{
-			"id": "b9ee6fd3-4acd-4276-8354-2836a5daa88c",
+			"id": "8f4c43aa-6f29-4044-954e-4cd4ae173f39",
 			"key": "bio2",
 			"value": "Donec quis porttitor ante, ac pulvinar nulla. Vivamus dignissim, ipsum ultricies interdum suscipit, risus tellus auctor mi, eu auctor metus sem quis urna. In maximus placerat ipsum, nec sodales elit aliquet sed. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae; Phasellus malesuada velit felis, non volutpat ex bibendum at. Maecenas aliquet sodales quam at consequat. Sed faucibus consequat tempor. Fusce consequat eu sem non tempus. Duis dapibus nunc vel tempus semper. Pellentesque dignissim tellus odio, vel luctus ipsum suscipit quis. Curabitur id erat at quam varius fermentum non in massa."
 		},
 		{
-			"id": "844add9e-d1dc-4b5c-b1e3-9cdf22b14a57",
+			"id": "c53e4a8d-d0d3-408e-9381-ad804567cb4f",
 			"key": "gender2",
 			"value": "other"
 		},
 		{
-			"id": "f75ad0da-eb3a-49ca-90fe-8b9254718a82",
+			"id": "30c4d468-5b81-4bef-856a-005e9bf9ef8b",
 			"key": "orientation2",
 			"value": "bisexual"
 		},
 		{
-			"id": "94225746-19f2-49e5-8cc2-f5723da8a2e6",
+			"id": "6d479be2-6f0e-4d46-994c-bb6959c427f8",
 			"key": "birthdate2",
 			"value": "25/06/2000"
 		},
 		{
-			"id": "2db471e3-88ba-475e-ae6d-e415da8562fd",
+			"id": "40f5f460-aef2-46d6-9304-3588ddef7bd9",
 			"key": "email2",
 			"value": "felix.ensal@example.org"
 		},
 		{
-			"id": "303bd82d-c723-4e47-8060-03b9d924724a",
+			"id": "43715781-fd0d-4aaa-ab05-aec1cb3712ab",
 			"key": "password2",
 			"value": "dolphin2"
 		},
 		{
-			"id": "9c39959f-84c6-44fd-a407-c86811b59ab9",
+			"id": "c9fed102-8d1c-4a02-ba31-3a31c44429a0",
 			"key": "ip",
 			"value": "90.108.46.63"
 		},
 		{
-			"id": "72350e59-76c8-40d5-a43a-ea53184617b2",
+			"id": "fc2f46d1-7d82-4227-8bea-c14e0b33dbbc",
 			"key": "lat",
 			"value": "49.5271"
 		},
 		{
-			"id": "513439e2-60e8-4899-a0f9-753b6253c2be",
+			"id": "f30ed5c5-e07a-428d-a433-d8d709b18adf",
 			"key": "lng",
 			"value": "1.1885"
 		}
