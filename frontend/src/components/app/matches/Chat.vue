@@ -19,7 +19,7 @@
         <div v-if="message.first_in_timespan"
              v-bind:class="{'text-center': true, 'mx-auto': true, 'mt-8': index !== 0}">
           <h1
-            class="text-xs font-light inline-block rounded-md bg-gray-200 px-2 py-1">{{message.timestamp_first}}</h1>
+            class="text-sm inline-block rounded-md bg-gray-200 px-2 py-1">{{message.timestamp_first}}</h1>
         </div>
         <MessageBubble
           v-bind:loggedInUserId="loggedInUserId"
