@@ -4910,6 +4910,247 @@
 						}
 					},
 					"response": []
+				},
+				{
+					"name": "Unblock unknow",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "96a0beaa-f104-4ff8-82bd-4df42a27b245",
+								"exec": [
+									"var response = JSON.parse(responseBody);",
+									"",
+									"",
+									"pm.test(\"Status code is 404\", function () {",
+									"    pm.response.to.have.status(404);",
+									"});",
+									"",
+									"tests[\"JSON return code is 404\"] = response.code == 404",
+									"",
+									"tests[\"success is true\"] = response.success == false",
+									"tests[\"Message is correct\"] = response.error.message == \"User -1 not found.\"",
+									"tests[\"Error type is Bad Request\"] = response.error.type == \"NotFoundError\""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{host}}/profile/unblock/-1",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"profile",
+								"unblock",
+								"-1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Unblock user 1500",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "b5670637-b5cb-4117-b130-39cc7922b23c",
+								"exec": [
+									"var response = JSON.parse(responseBody);",
+									"",
+									"",
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"tests[\"Success is true\"] = response.success == true",
+									"tests[\"Message is correct\"] = response.message == \"Unblock successful.\"",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{host}}/profile/unblock/1500",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"profile",
+								"unblock",
+								"1500"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Double unblock",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "252fd8b0-535d-49df-bc9a-e432515a602a",
+								"exec": [
+									"var response = JSON.parse(responseBody);",
+									"",
+									"",
+									"pm.test(\"Status code is 400\", function () {",
+									"    pm.response.to.have.status(400);",
+									"});",
+									"",
+									"tests[\"JSON return code is 400\"] = response.code == 400",
+									"",
+									"tests[\"success is true\"] = response.success == false",
+									"tests[\"Message is correct\"] = response.error.message == \"You didn't block this user.\"",
+									"tests[\"Error type is Bad Request\"] = response.error.type == \"BadRequestError\""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{host}}/profile/unblock/1500",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"profile",
+								"unblock",
+								"1500"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Search after unblock",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "175e190a-98af-43cd-85ab-1f1e5daaf0a5",
+								"exec": [
+									"var response = JSON.parse(responseBody);",
+									"",
+									"",
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"tests[\"Success is true\"] = response.success == true",
+									"",
+									"if (response.search_results.length != 0) {",
+									"    tests[\"User 1500 is in search\"] = false",
+									"    for (var i = 0; i < response.search_results.length; i++) {",
+									"        user = response.search_results[i]",
+									"        if (user.id == 1500) {",
+									"            tests[\"User 1500 is in search\"] = true",
+									"            break",
+									"        }",
+									"    }",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"min_age\": -1,\n    \"max_age\": -1,\n    \"min_score\": -1,\n    \"max_score\": -1,\n    \"tags\": [],\n    \"max_distance\": -1\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/search",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"search"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Force recommendations after unblock",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "a97db51f-4ea1-4622-bfbd-6e1172ac51a3",
+								"exec": [
+									"var response = JSON.parse(responseBody);",
+									"",
+									"",
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"tests[\"JSON return code is 200\"] = response.code == 200",
+									"",
+									"tests[\"success is true\"] = response.success == true",
+									"",
+									"if (response.recommendations.length != 0) {",
+									"    tests[\"User 1500 is in recommendations\"] = false",
+									"    for (var i = 0; i < response.recommendations.length; i++) {",
+									"        user = response.recommendations[i]",
+									"        if (user.id == 1500) {",
+									"            tests[\"User 1500 is in recommendations\"] = true",
+									"            break",
+									"        }",
+									"    }",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"force\": true\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/recommendations",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"recommendations"
+							]
+						}
+					},
+					"response": []
 				}
 			],
 			"protocolProfileBehavior": {}
