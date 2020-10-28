@@ -5154,6 +5154,404 @@
 				}
 			],
 			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "Like/Unlike/Superlike/Match",
+			"item": [
+				{
+					"name": "Unknown user",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "5be57c99-071e-48ce-b32c-e8d842fcff9d",
+								"exec": [
+									"var response = JSON.parse(responseBody);",
+									"",
+									"",
+									"pm.test(\"Status code is 404\", function () {",
+									"    pm.response.to.have.status(404);",
+									"});",
+									"",
+									"tests[\"JSON return code is 404\"] = response.code == 404",
+									"",
+									"tests[\"success is true\"] = response.success == false",
+									"tests[\"Message is correct\"] = response.error.message == \"User -1 not found.\"",
+									"tests[\"Error type is Bad Request\"] = response.error.type == \"NotFoundError\""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"is_superlike\": false\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/like/-1",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"like",
+								"-1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Yourself",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "960b47f4-6b01-42ba-b9e8-4ef9a6b9ba5e",
+								"exec": [
+									"var response = JSON.parse(responseBody);",
+									"",
+									"",
+									"pm.test(\"Status code is 400\", function () {",
+									"    pm.response.to.have.status(400);",
+									"});",
+									"",
+									"tests[\"JSON return code is 400\"] = response.code == 400",
+									"",
+									"tests[\"success is true\"] = response.success == false",
+									"tests[\"Message is correct\"] = response.error.message == \"Cannot like yourself.\"",
+									"tests[\"Error type is Bad Request\"] = response.error.type == \"BadRequestError\""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"is_superlike\": false\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/like/{{id}}",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"like",
+								"{{id}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Like user 1500",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "a0edff03-ba29-4d31-bdef-02495831640b",
+								"exec": [
+									"var response = JSON.parse(responseBody);",
+									"",
+									"",
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"tests[\"Success is true\"] = response.success == true",
+									"tests[\"Message is correct\"] = response.message == \"Liked user.\""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"is_superlike\": false\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/like/1500",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"like",
+								"1500"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Like twice",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "03267b04-e4be-4ac8-9714-3c0d1be36db3",
+								"exec": [
+									"var response = JSON.parse(responseBody);",
+									"",
+									"",
+									"pm.test(\"Status code is 400\", function () {",
+									"    pm.response.to.have.status(400);",
+									"});",
+									"",
+									"tests[\"JSON return code is 400\"] = response.code == 400",
+									"",
+									"tests[\"success is true\"] = response.success == false",
+									"tests[\"Message is correct\"] = response.error.message == \"You already liked this person.\"",
+									"tests[\"Error type is Bad Request\"] = response.error.type == \"BadRequestError\""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"is_superlike\": false\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/like/1500",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"like",
+								"1500"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Unlike user 1500",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "e9106911-2a30-4a1f-a65c-8ea7584fb6f0",
+								"exec": [
+									"var response = JSON.parse(responseBody);",
+									"",
+									"",
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"tests[\"Success is true\"] = response.success == true",
+									"tests[\"Message is correct\"] = response.message == \"Unliked user 1500.\""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"is_superlike\": false\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/unlike/1500",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"unlike",
+								"1500"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Unlike twice",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "f8b65c42-5e2e-487c-9831-dfd820ebe395",
+								"exec": [
+									"var response = JSON.parse(responseBody);",
+									"",
+									"",
+									"pm.test(\"Status code is 400\", function () {",
+									"    pm.response.to.have.status(400);",
+									"});",
+									"",
+									"tests[\"JSON return code is 400\"] = response.code == 400",
+									"",
+									"tests[\"success is true\"] = response.success == false",
+									"tests[\"Message is correct\"] = response.error.message == \"You never liked this person in the first place.\"",
+									"tests[\"Error type is Bad Request\"] = response.error.type == \"BadRequestError\""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"is_superlike\": false\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/unlike/1500",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"unlike",
+								"1500"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Debug like from 1500",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "d201971a-3ca7-4c30-8f05-a8a34e1d4348",
+								"exec": [
+									"var response = JSON.parse(responseBody);",
+									"",
+									"",
+									"pm.test(\"Status code is 204\", function () {",
+									"    pm.response.to.have.status(204);",
+									"});",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "debug-auth-token",
+								"value": "xX69jules69Xx",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"liker_uid\": \"1500\",\n    \"liked_uid\": \"{{id}}\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/debug/like",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"debug",
+								"like"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Like and match user 1500",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "8850d7aa-a0fd-4284-9b36-881db1132b36",
+								"exec": [
+									"var response = JSON.parse(responseBody);",
+									"",
+									"",
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"tests[\"Success is true\"] = response.success == true",
+									"tests[\"Message is correct\"] = response.message == \"It's a match !\""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"is_superlike\": false\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/like/1500",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"like",
+								"1500"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"protocolProfileBehavior": {}
 		}
 	],
 	"auth": {
@@ -5190,132 +5588,132 @@
 	],
 	"variable": [
 		{
-			"id": "9a58eeee-4fb7-4b90-82aa-986a1adf2d1f",
+			"id": "4373ff11-8a52-40c5-9079-a77c914b2c86",
 			"key": "host",
 			"value": "http://127.0.0.1:5000"
 		},
 		{
-			"id": "631bbe2e-a9e4-4639-9bb3-d3425deea872",
+			"id": "ec2a8f8c-1bcb-4bc9-9110-59e3ac167ed0",
 			"key": "access_token",
 			"value": ""
 		},
 		{
-			"id": "f744d7f7-8a96-4fbb-b55a-bce1cc76bf3e",
+			"id": "7e46138f-8fe6-4d7a-9e4f-9c950191b692",
 			"key": "refresh_token",
 			"value": ""
 		},
 		{
-			"id": "438af0ea-218a-4ce3-a96a-9b65b4c0ab21",
+			"id": "41be3351-ab1a-434e-b756-f9ce49f33da8",
 			"key": "debug_token",
 			"value": "xX69jules69Xx"
 		},
 		{
-			"id": "5b7a1866-d0d2-4f60-86c7-42a4f321c035",
+			"id": "fa4f771e-2f6a-4000-a6c5-3059329a7cf0",
 			"key": "id",
 			"value": "1541"
 		},
 		{
-			"id": "2fc11642-6f77-426e-b96b-17ab6589cac6",
+			"id": "e7d0dbc3-11aa-47e4-bc7f-64850c774076",
 			"key": "first_name",
 			"value": "Jules"
 		},
 		{
-			"id": "414bb388-3cd2-404c-8bc8-75c6f6761aa7",
+			"id": "4e838f66-112b-45fe-9035-7143efe59fab",
 			"key": "last_name",
 			"value": "Lasne"
 		},
 		{
-			"id": "d97d7891-bd89-4953-a3eb-a28cab114f93",
+			"id": "74f44d4b-4a13-4272-8f4f-76eed51a90c1",
 			"key": "email",
 			"value": "jules.lasne@example.org"
 		},
 		{
-			"id": "73873df5-9189-458a-9d64-789a4d071665",
+			"id": "f3516a0b-1bee-4305-a4f9-b14e94503f90",
 			"key": "username",
 			"value": "seluj78"
 		},
 		{
-			"id": "6758c373-c99b-49d6-8f7e-43f23ffc3290",
+			"id": "930bfe06-be53-412a-b9b8-14ef9503843e",
 			"key": "password",
 			"value": "dolphin"
 		},
 		{
-			"id": "d5f3904e-ad5c-4a94-8c38-4c433442c36e",
+			"id": "ab54ec74-0cab-4c58-8b07-ad9dcb63bfc1",
 			"key": "orientation",
 			"value": "heterosexual"
 		},
 		{
-			"id": "81a0ee79-36e0-4991-9029-5b2bfccb454d",
+			"id": "261648b6-1443-428f-bfa0-6e37d952868a",
 			"key": "gender",
 			"value": "male"
 		},
 		{
-			"id": "1a1dc618-4ab5-4e71-a4aa-f213da967260",
+			"id": "79ea677c-9672-47c2-9cee-4d75618a303d",
 			"key": "bio",
 			"value": "Phasellus vel tortor vel elit scelerisque accumsan vel nec nunc. Ut condimentum vestibulum sapien non dictum. Vestibulum ac eleifend mi. Curabitur dictum vestibulum ex at placerat. Pellentesque odio mi, condimentum et sollicitudin at, finibus non leo. Aenean sed pulvinar nulla, nec tincidunt felis. Aenean nibh elit, aliquam sit amet lobortis et, pellentesque ut orci. Curabitur placerat sem id ex laoreet imperdiet. Curabitur dictum ac urna feugiat viverra. Vivamus nec pulvinar urna. Suspendisse vel ultrices est. Sed malesuada est vel orci venenatis scelerisque. Phasellus ultrices dignissim sapien, at mattis tellus mattis pulvinar. Sed ut euismod velit, id fermentum leo."
 		},
 		{
-			"id": "07e88a60-5619-4d61-bcce-0a414d907380",
+			"id": "5252e35b-e584-4bca-8e1a-07ec510b819b",
 			"key": "birthdate",
 			"value": "06/04/1998"
 		},
 		{
-			"id": "81ec479f-d5e8-4fc7-a741-abfa29510bda",
+			"id": "32d73dd1-5c06-4b16-8739-816d71ffa6a8",
 			"key": "first_name2",
 			"value": "Félix"
 		},
 		{
-			"id": "c56a6746-33cf-4f3d-96c1-8a99adfa3ff9",
+			"id": "2f89424c-4751-4d09-8e9c-625cb2e217c2",
 			"key": "last_name2",
 			"value": "Ensal"
 		},
 		{
-			"id": "df34c636-e2a6-4d60-b82d-508c26fe03a8",
+			"id": "b3aba52d-c02d-43f0-915f-f091ef018be1",
 			"key": "username2",
 			"value": "Ufree"
 		},
 		{
-			"id": "f488bfa1-7c1a-4809-8c3e-c0c1d98392a2",
+			"id": "34128927-dafe-4ba7-80b1-108976e2357a",
 			"key": "bio2",
 			"value": "Donec quis porttitor ante, ac pulvinar nulla. Vivamus dignissim, ipsum ultricies interdum suscipit, risus tellus auctor mi, eu auctor metus sem quis urna. In maximus placerat ipsum, nec sodales elit aliquet sed. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae; Phasellus malesuada velit felis, non volutpat ex bibendum at. Maecenas aliquet sodales quam at consequat. Sed faucibus consequat tempor. Fusce consequat eu sem non tempus. Duis dapibus nunc vel tempus semper. Pellentesque dignissim tellus odio, vel luctus ipsum suscipit quis. Curabitur id erat at quam varius fermentum non in massa."
 		},
 		{
-			"id": "3d246538-ca42-4fa0-b76f-d5a51f08c16d",
+			"id": "d8258c3a-0329-437d-bb05-ff11e05d07cf",
 			"key": "gender2",
 			"value": "other"
 		},
 		{
-			"id": "07623dc6-24aa-4317-ab69-20f878b0cca0",
+			"id": "d4b157c7-4304-4fbc-ad31-c1706cf0de7b",
 			"key": "orientation2",
 			"value": "bisexual"
 		},
 		{
-			"id": "ee1a4a9b-2d7a-497f-ad03-79a8399ae558",
+			"id": "211b0562-96cc-409f-bee1-60944ee02d89",
 			"key": "birthdate2",
 			"value": "25/06/2000"
 		},
 		{
-			"id": "ada45066-2d17-409a-b35d-9eb19372116c",
+			"id": "0858a0bc-fcf2-43aa-ad64-f2b810ddcf67",
 			"key": "email2",
 			"value": "felix.ensal@example.org"
 		},
 		{
-			"id": "048879e4-dc93-4f59-8add-a09835772d78",
+			"id": "9c258086-f239-4936-afce-e5b79d3e9d3b",
 			"key": "password2",
 			"value": "dolphin2"
 		},
 		{
-			"id": "d9c8f110-9690-48f2-804d-31296bc65bc4",
+			"id": "4feb0293-3e60-4693-accb-89a40932785c",
 			"key": "ip",
 			"value": "90.108.46.63"
 		},
 		{
-			"id": "3ae485f2-7afd-4dce-89c6-73651337a0f4",
+			"id": "cd643c12-e66f-4200-b9ea-b924d03a1e1c",
 			"key": "lat",
 			"value": "49.5271"
 		},
 		{
-			"id": "187ad03c-2637-483a-b74e-ba655de8569b",
+			"id": "16ec80cf-f7a8-4d6b-83ec-099a12e21c4c",
 			"key": "lng",
 			"value": "1.1885"
 		}
