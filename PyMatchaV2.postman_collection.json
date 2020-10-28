@@ -4725,15 +4725,11 @@
 									"var response = JSON.parse(responseBody);",
 									"",
 									"",
-									"pm.test(\"Status code is 400\", function () {",
-									"    pm.response.to.have.status(400);",
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
 									"});",
 									"",
-									"tests[\"JSON return code is 400\"] = response.code == 400",
-									"",
-									"tests[\"success is true\"] = response.success == false",
-									"tests[\"Message is correct\"] = response.error.message == \"You already blocked this user.\"",
-									"tests[\"Error type is Bad Request\"] = response.error.type == \"BadRequestError\""
+									"tests[\"Success is true\"] = response.success == true"
 								],
 								"type": "text/javascript"
 							}
