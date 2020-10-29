@@ -18,20 +18,27 @@
             'bg-purple-matcha': message.to_id === loggedInUserId,
             'bg-green-500': message.to_id !== loggedInUserId,
             'text-white-matcha': true}"
-    >{{message.content}}<span class="block text-xs font-light">{{getDateHoursMinutes(message.timestamp)}}</span></h1>
+    >{{message.content}}<span class="block text-sm font-light">{{getDateHoursMinutes(message.timestamp)}}</span></h1>
     <img v-if="message.to_id === loggedInUserId && message.is_liked"
          src="../../../assets/heartGreen.png" class="w-6 ml-2 inline-block absolute heart"
          v-on:dblclick="likeMessage(message.id, message.is_liked)">
+    <h1 v-if="last" class="text-gray-600">{{getSeenMessage(message.is_seen, message.timestamp_ago)}}</h1>
   </div>
 </template>
 
 <script>
 export default {
-  props: ['messagePassed', 'loggedInUserId'],
+  props: ['messagePassed', 'loggedInUserId', 'last'],
   data: () => ({
     message: {},
   }),
   methods: {
+    getSeenMessage(status, ago) {
+      if (status === 0) {
+        return 'Delivered';
+      }
+      return `Seen ${ago}`;
+    },
     getDateHoursMinutes(timestamp) {
       if (!timestamp) {
         return '';

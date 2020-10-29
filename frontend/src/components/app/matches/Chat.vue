@@ -22,7 +22,8 @@
             class="text-sm inline-block rounded-md bg-gray-200 px-2 py-1">{{message.timestamp_first}}</h1>
         </div>
         <MessageBubble
-          :key="index + message.is_liked"
+          :key="index + message.is_liked + message.is_seen"
+          v-bind:last="index === messages.length - 1"
           v-bind:loggedInUserId="loggedInUserId"
           v-bind:messagePassed="message"></MessageBubble>
       </div>
