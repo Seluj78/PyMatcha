@@ -41,6 +41,7 @@
       </div>
       <Chat class="absolute top-0 w-full h-full bg-white-matcha
       md:relative md:ml-4"
+            :key="chatWithUserId"
             v-if="chatWithUserId"
             v-bind:chatWithUserId="chatWithUserId"
             v-on:new-message="fetchMessages"

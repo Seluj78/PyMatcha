@@ -128,15 +128,6 @@ export default {
       this.scrollChatToBottom();
     },
   },
-  watch: {
-    chatWithUserId: {
-      async handler() {
-        if (this.chatWithUserId) {
-          await this.prepareChatForNewUser();
-        }
-      },
-    },
-  },
   async beforeMount() {
     await this.prepareChatForNewUser();
     this.loggedInUserId = this.$store.getters.getLoggedInUser.id;
