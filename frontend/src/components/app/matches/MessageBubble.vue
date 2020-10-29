@@ -20,7 +20,7 @@
             'text-white-matcha': true}"
     >{{message.content}}<span class="block text-xs font-light">{{getDateHoursMinutes(message.timestamp)}}</span></h1>
     <img v-if="message.to_id === loggedInUserId && message.is_liked"
-         src="../../../assets/heart.png" class="w-6 ml-2 inline-block absolute heart"
+         src="../../../assets/heartGreen.png" class="w-6 ml-2 inline-block absolute heart"
          v-on:dblclick="likeMessage(message.id, message.is_liked)">
   </div>
 </template>
