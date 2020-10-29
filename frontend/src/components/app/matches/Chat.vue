@@ -137,7 +137,7 @@ export default {
   async beforeMount() {
     await this.prepareChatForNewUser();
     this.loggedInUserId = this.$store.getters.getLoggedInUser.id;
-    this.fetchMessagesIntervalId = setInterval(this.fetchNewMessages, 1000);
+    this.fetchMessagesIntervalId = setInterval(this.fetchNewMessages, 2000);
   },
   beforeDestroy() {
     window.clearInterval(this.fetchMessagesIntervalId);
