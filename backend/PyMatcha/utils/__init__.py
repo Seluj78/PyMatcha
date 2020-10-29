@@ -4,6 +4,7 @@ from PyMatcha.utils.tables import _create_images_table
 from PyMatcha.utils.tables import _create_likes_table
 from PyMatcha.utils.tables import _create_matches_table
 from PyMatcha.utils.tables import _create_messages_table
+from PyMatcha.utils.tables import _create_notifications_table
 from PyMatcha.utils.tables import _create_reports_table
 from PyMatcha.utils.tables import _create_tags_table
 from PyMatcha.utils.tables import _create_user_table
@@ -19,6 +20,7 @@ create_matches_table = _create_matches_table
 create_messages_table = _create_messages_table
 create_images_table = _create_images_table
 create_blocks_table = _create_blocks_table
+create_notifications_table = _create_notifications_table
 
 __all__ = [
     "hash_password",
@@ -32,4 +34,5 @@ __all__ = [
     "create_messages_table",
     "create_images_table",
     "create_blocks_table",
+    "create_notifications_table",
 ]

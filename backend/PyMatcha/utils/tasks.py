@@ -15,6 +15,7 @@ MATCHES_MULTIPLIER = 4
 REPORTS_MULTIPLIER = 10
 VIEW_MULTIPLIER = 1
 MESSAGES_DIVIDER = 5
+INACTIVITY_DIVIDER = 10
 
 
 @celery.on_after_configure.connect
@@ -23,7 +24,7 @@ def setup_periodic_tasks(sender, **kwargs):
     sender.add_periodic_task(3600, update_heat_scores.s(), name="Update heat scores every hour")
     sender.add_periodic_task(60, update_user_recommendations.s(), name="Update user recommendations every minute")
     sender.add_periodic_task(60, reset_superlikes.s(), name="Update user recommendations every minute")
-    sender.add_periodic_task(30, take_random_users_online.s(), name="Set 100 random users online every 30 seconds")
+    sender.add_periodic_task(30, take_random_users_online.s(), name="Set 250 random users online every 30 seconds")
     sender.add_periodic_task(
         600, calc_search_min_max.s(), name="Update Minimum and Maximum scores and ages for search every 10 minutes"
     )
@@ -53,11 +54,19 @@ def update_heat_scores():
         score -= reports_received * REPORTS_MULTIPLIER
         score += views * VIEW_MULTIPLIER
         score += ceil(messages / MESSAGES_DIVIDER)
+
+        now = datetime.datetime.utcnow()
+        monday1 = now - datetime.timedelta(days=now.weekday())
+        monday2 = user.date_lastseen - datetime.timedelta(days=user.date_lastseen.weekday())
+        weeks_passed_since_last_activity = int((monday1 - monday2).days / 7)
+
+        score -= weeks_passed_since_last_activity * INACTIVITY_DIVIDER
+
         if score < 0:
             score = 0
         user.heat_score = score
         user.save()
-        return f"Updated heat score for user {user.id}: {user.heat_score}."
+    return "Successfully updated heat scores."
 
 
 @celery.task
@@ -71,10 +80,7 @@ def take_users_offline():
             went_offline_count += 1
         else:
             stayed_online_count += 1
-    return (
-        f"{stayed_online_count} stayed online and "
-        f"{went_offline_count} went offline for {went_offline_count + stayed_online_count} users"
-    )
+    return f"{stayed_online_count} stayed online and {went_offline_count} went offline."
 
 
 @celery.task
@@ -127,11 +133,11 @@ def calc_search_min_max():
 
 @celery.task
 def take_random_users_online():
-    for user in User.select_random(100):
+    for user in User.select_random(250):
         if not user.skip_recommendations:
             # User isn't a bot, so skip him
             continue
         user.is_online = True
         user.date_lastseen = datetime.datetime.utcnow()
         user.save()
-    return "Successfully set 100 users online"
+    return "Successfully set 250 users online"

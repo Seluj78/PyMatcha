@@ -31,6 +31,7 @@ from PyMatcha.models.image import Image
 from PyMatcha.models.like import Like
 from PyMatcha.models.match import Match
 from PyMatcha.models.message import Message
+from PyMatcha.models.notification import Notification
 from PyMatcha.models.report import Report
 from PyMatcha.models.tag import Tag
 from PyMatcha.models.view import View
@@ -266,6 +267,12 @@ class User(Model):
 
     def get_blocks(self):
         return Block.get_multis(blocker_id=self.id)
+
+    def get_all_notifications(self):
+        return Notification.get_multis(user_id=self.id)
+
+    def get_unread_notifications(self):
+        return Notification.get_multis(user_id=self.id, is_seen=False)
 
     def already_likes(self, liked_id: int) -> bool:
         with self.db.cursor() as c:
