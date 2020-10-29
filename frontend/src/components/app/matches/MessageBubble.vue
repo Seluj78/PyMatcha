@@ -37,6 +37,9 @@ export default {
       if (status === 0) {
         return 'Delivered';
       }
+      if (ago.search('seconds') !== -1) {
+        return 'Seen just now';
+      }
       return `Seen ${ago}`;
     },
     getDateHoursMinutes(timestamp) {
