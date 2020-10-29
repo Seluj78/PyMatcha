@@ -285,7 +285,6 @@ export default {
     if (window.innerWidth >= 768) {
       this.show = 'profile';
     }
-    console.log(this.$store.getters.getLoggedInUser);
     const user = await this.$http.get(`/users/${this.$store.getters.getLoggedInUser.id}`);
     await this.$store.dispatch('login', user.data);
     const tags = this.$store.getters.getLoggedInUser.tags;

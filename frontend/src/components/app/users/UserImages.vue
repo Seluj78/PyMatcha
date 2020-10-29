@@ -1,6 +1,4 @@
 <template>
-  <!-- eslint-disable max-len-->
-  <!--      v-for="(image, index) in this.images" :key="image.id"-->
   <div
     class="relative image-height"
     v-bind:style="{
@@ -38,8 +36,12 @@
 </template>
 
 <script>
+import imageMan from '../../../assets/recommendations/avatars/man1.png';
+import imageWoman from '../../../assets/recommendations/avatars/woman1.png';
+import imageOther from '../../../assets/recommendations/avatars/other.png';
+
 export default {
-  props: ['images'],
+  props: ['images', 'gender'],
   data: () => ({
     currentImage: 0,
     imagesCount: 0,
@@ -59,7 +61,16 @@ export default {
       this.currentImage = index;
     },
     getImage() {
-      return this.images[this.currentImage].link;
+      if (this.images.length) {
+        return this.images[this.currentImage].link;
+      }
+      if (this.gender === 'male') {
+        return imageMan;
+      }
+      if (this.gender === 'female') {
+        return imageWoman;
+      }
+      return imageOther;
     },
   },
   beforeMount() {

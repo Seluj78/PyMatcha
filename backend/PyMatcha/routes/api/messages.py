@@ -31,6 +31,8 @@ from PyMatcha.utils.errors import BadRequestError
 from PyMatcha.utils.errors import NotFoundError
 from PyMatcha.utils.success import Success
 from PyMatcha.utils.success import SuccessOutput
+from PyMatcha.utils.success import SuccessOutputMessage
+from timeago import format as timeago_format
 
 
 REQUIRED_KEYS_NEW_MESSAGE = {"to_uid": str, "content": str}
@@ -45,6 +47,7 @@ def get_opened_conversations():
     returned_list = [
         {
             "last_message_timestamp": c.timestamp,
+            "last_message_timestamp_ago": timeago_format(c.timestamp, datetime.datetime.utcnow()),
             "last_message_content": c.content,
             "is_unseen": True if not c.is_seen and c.to_id == current_user.id else False,
             "with_user": get_user(c.to_id if c.to_id != current_user.id else c.from_id).to_dict(),
@@ -72,6 +75,9 @@ def send_message():
 
     current_user.send_message(to_id=to_user.id, content=content)
     current_app.logger.debug("/messages -> Message successfully sent to {}.".format(to_uid))
+    
+    new_message = Message.get_multis(to_id=to_user.id, content=content, from_id=current_user.id)[-1] 
+    
     Notification.create(
         trigger_id=current_user.id,
         user_id=to_user.id,
@@ -79,7 +85,8 @@ def send_message():
         type="message",
         link_to=f"conversation/{current_user.id}",
     )
-    return Success("Message successfully sent to {}.".format(to_uid))
+    
+    return SuccessOutputMessage("new_message", new_message.to_dict(), "Message successfully sent to {}.".format(to_uid))    
 
 
 @messages_bp.route("/conversations/<with_uid>", methods=["GET"])
@@ -95,6 +102,7 @@ def get_conversation_messsages(with_uid):
 
     message_list = current_user.get_messages_with_user(with_user.id)
     message_list = [m.to_dict() for m in message_list]
+    message_list = sorted(message_list, key=lambda item: item["timestamp"])
     return SuccessOutput("messages", message_list)
 
 

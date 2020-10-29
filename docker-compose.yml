@@ -25,7 +25,6 @@ services:
   redis:
     container_name: redis
     image: redis:4.0.5-alpine
-    command: ["redis-server", "--appendonly", "yes"]
     hostname: redis
     ports:
       - '6379:6379'

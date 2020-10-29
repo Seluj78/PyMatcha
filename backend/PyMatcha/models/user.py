@@ -312,7 +312,7 @@ class User(Model):
         return match_list
 
     def send_message(self, to_id, content):
-        Message.create(from_id=self.id, to_id=to_id, content=content)
+        Message.create(from_id=self.id, to_id=to_id, content=content, timestamp=datetime.datetime.utcnow())
 
     def get_messages(self) -> List[Message]:
         with self.db.cursor() as c:

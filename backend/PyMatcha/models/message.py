@@ -20,10 +20,12 @@ from __future__ import annotations
 
 import logging
 from datetime import datetime
+from typing import Dict
 
 from PyMatcha.utils import create_messages_table
 from PyMatcha.utils.orm import Field
 from PyMatcha.utils.orm import Model
+from timeago import format as timeago_format
 
 
 class Message(Model):
@@ -32,8 +34,8 @@ class Message(Model):
     id = Field(int, modifiable=False)
     from_id = Field(int)
     to_id = Field(int)
-    timestamp = Field(datetime)
-    seen_timestamp = Field(datetime)
+    timestamp = Field(datetime, fmt="%Y-%m-%d %H:%M:%S")
+    seen_timestamp = Field(datetime, fmt="%Y-%m-%d %H:%M:%S")
     content = Field(str)
     is_seen = Field(bool)
     is_liked = Field(bool)
@@ -60,6 +62,16 @@ class Message(Model):
         new_message.save()
         logging.debug("Created new message")
         return new_message
+
+    def to_dict(self) -> Dict:
+        returned_dict = super().to_dict()
+        returned_dict["timestamp_ago"] = timeago_format(self.timestamp, datetime.utcnow())
+        if self.seen_timestamp:
+            returned_dict["seen_timestamp_ago"] = timeago_format(self.seen_timestamp, datetime.utcnow())
+        else:
+            returned_dict["seen_timestamp_ago"] = None
+
+        return returned_dict
 
     @classmethod
     def create_table(cls):
