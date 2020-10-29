@@ -5691,7 +5691,7 @@
 					"response": []
 				},
 				{
-					"name": "Superlike no left",
+					"name": "No superlike left",
 					"event": [
 						{
 							"listen": "test",
@@ -5708,7 +5708,6 @@
 									"tests[\"JSON return code is 400\"] = response.code == 400",
 									"",
 									"tests[\"success is true\"] = response.success == false",
-									"tests[\"Message is correct\"] = response.error.message.includes(\"No more superlikes today, come back in \")",
 									"tests[\"Error type is Bad Request\"] = response.error.type == \"BadRequestError\""
 								],
 								"type": "text/javascript"
@@ -5742,6 +5741,30 @@
 				}
 			],
 			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "DEBUG redis view all keys Copy",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "debug-auth-token",
+						"value": "xX69jules69Xx",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{host}}/debug/redis",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"debug",
+						"redis"
+					]
+				}
+			},
+			"response": []
 		}
 	],
 	"auth": {
@@ -5778,132 +5801,132 @@
 	],
 	"variable": [
 		{
-			"id": "d2836a81-379c-471a-879a-0ec35627f1eb",
+			"id": "016be7ad-bd80-42e4-96f8-d55383c3b11f",
 			"key": "host",
 			"value": "http://127.0.0.1:5000"
 		},
 		{
-			"id": "cf08785e-2faa-4691-a7dc-ad9abcadcd7b",
+			"id": "aa6b18c4-00b1-4898-b179-a778f8eb22d3",
 			"key": "access_token",
 			"value": ""
 		},
 		{
-			"id": "814092af-c3f2-4f56-848d-d6ac90447841",
+			"id": "a2ab4909-7b20-4ae8-ab51-9577cd8f0c49",
 			"key": "refresh_token",
 			"value": ""
 		},
 		{
-			"id": "b543710c-cfde-44f4-9b8e-857c5eb485f8",
+			"id": "9f379677-3fe3-4564-9ba4-73ef35d62017",
 			"key": "debug_token",
 			"value": "xX69jules69Xx"
 		},
 		{
-			"id": "88072eea-0d20-4ca4-97e0-c2ee618491c0",
+			"id": "b82afb6d-cf2d-4f70-b4df-83fcfb322adc",
 			"key": "id",
 			"value": "1541"
 		},
 		{
-			"id": "a7643c8d-8323-4dcb-936f-42ff74141ec6",
+			"id": "fc3c54f1-630d-4c08-a36e-9a0ad1d0d28f",
 			"key": "first_name",
 			"value": "Jules"
 		},
 		{
-			"id": "84b578cb-e9a3-4c07-a5f2-5b198f556b96",
+			"id": "89a52dd6-a282-4188-a76a-e5d3e718156f",
 			"key": "last_name",
 			"value": "Lasne"
 		},
 		{
-			"id": "3b9d4fd5-8e62-4fad-b8d5-25f2efc78075",
+			"id": "73e5b15a-3965-4a4f-80aa-b0915cad78bc",
 			"key": "email",
 			"value": "jules.lasne@example.org"
 		},
 		{
-			"id": "5a52ea01-6390-4855-8cfc-924dc812ce77",
+			"id": "075de87b-7956-4273-8c84-355a90d4c74f",
 			"key": "username",
 			"value": "seluj78"
 		},
 		{
-			"id": "d20c5305-34bc-4b03-9690-6a81b7d834d5",
+			"id": "ba44447f-2337-4020-8e8a-793f140aa7df",
 			"key": "password",
 			"value": "dolphin"
 		},
 		{
-			"id": "650958e2-c132-400e-b8d2-49906afa8f22",
+			"id": "b1107373-435b-4349-b8f2-4eede74a5c6b",
 			"key": "orientation",
 			"value": "heterosexual"
 		},
 		{
-			"id": "f7670021-1990-40e2-8249-c9b5fea152d6",
+			"id": "e8c5caa3-cb4d-44eb-a6e6-94b7c337d0d6",
 			"key": "gender",
 			"value": "male"
 		},
 		{
-			"id": "90bed931-868e-4b24-b573-71a7233bba36",
+			"id": "4c54dbcf-9975-4ae7-9018-05ea851b4279",
 			"key": "bio",
 			"value": "Phasellus vel tortor vel elit scelerisque accumsan vel nec nunc. Ut condimentum vestibulum sapien non dictum. Vestibulum ac eleifend mi. Curabitur dictum vestibulum ex at placerat. Pellentesque odio mi, condimentum et sollicitudin at, finibus non leo. Aenean sed pulvinar nulla, nec tincidunt felis. Aenean nibh elit, aliquam sit amet lobortis et, pellentesque ut orci. Curabitur placerat sem id ex laoreet imperdiet. Curabitur dictum ac urna feugiat viverra. Vivamus nec pulvinar urna. Suspendisse vel ultrices est. Sed malesuada est vel orci venenatis scelerisque. Phasellus ultrices dignissim sapien, at mattis tellus mattis pulvinar. Sed ut euismod velit, id fermentum leo."
 		},
 		{
-			"id": "c4ca62a5-6903-477d-b682-243c1d06468b",
+			"id": "3ba6ad34-a299-4dd9-b36e-f749a1d637d6",
 			"key": "birthdate",
 			"value": "06/04/1998"
 		},
 		{
-			"id": "4a5c518c-a41f-4611-9b5d-a734499e7910",
+			"id": "76354452-4c45-4fdb-a9bd-3f528d49f0b1",
 			"key": "first_name2",
 			"value": "Félix"
 		},
 		{
-			"id": "01771c29-6310-4230-87a8-b1d4068a761c",
+			"id": "c49b01ae-cb94-4d53-9c6a-ca7752159829",
 			"key": "last_name2",
 			"value": "Ensal"
 		},
 		{
-			"id": "2bc7243c-b385-41be-bc4a-d628ff79ce95",
+			"id": "f3bb4cce-bf03-422d-b5d9-d349a2f0dd52",
 			"key": "username2",
 			"value": "Ufree"
 		},
 		{
-			"id": "a0aa03ee-3772-42ff-bfad-ec2f3d28e464",
+			"id": "cbdec3ef-57b7-4bac-95d5-d379a160d3ba",
 			"key": "bio2",
 			"value": "Donec quis porttitor ante, ac pulvinar nulla. Vivamus dignissim, ipsum ultricies interdum suscipit, risus tellus auctor mi, eu auctor metus sem quis urna. In maximus placerat ipsum, nec sodales elit aliquet sed. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae; Phasellus malesuada velit felis, non volutpat ex bibendum at. Maecenas aliquet sodales quam at consequat. Sed faucibus consequat tempor. Fusce consequat eu sem non tempus. Duis dapibus nunc vel tempus semper. Pellentesque dignissim tellus odio, vel luctus ipsum suscipit quis. Curabitur id erat at quam varius fermentum non in massa."
 		},
 		{
-			"id": "18884990-7b48-4be8-8e61-761c6d3dc979",
+			"id": "fd8cdfdb-0b38-4201-9e29-ac6ddd535a6d",
 			"key": "gender2",
 			"value": "other"
 		},
 		{
-			"id": "e2d30757-1f6c-4664-a9ea-83876b38a131",
+			"id": "670c37f9-fbe5-4dcf-bc96-d891240c0063",
 			"key": "orientation2",
 			"value": "bisexual"
 		},
 		{
-			"id": "b85e8078-9744-44c7-b6bc-b937f87d750e",
+			"id": "b0ab8e2f-30b5-48b1-a7c5-b26611bfe9a1",
 			"key": "birthdate2",
 			"value": "25/06/2000"
 		},
 		{
-			"id": "f1355ae7-e5e3-49f1-9ee2-e2ed92778afc",
+			"id": "1d1b0689-e1cd-4111-9982-d0fd4ed5218a",
 			"key": "email2",
 			"value": "felix.ensal@example.org"
 		},
 		{
-			"id": "bf6cd6ff-8f1d-4cfb-9825-7030edcbac09",
+			"id": "4f16f48b-277f-4e11-a7d3-44a91b916b7b",
 			"key": "password2",
 			"value": "dolphin2"
 		},
 		{
-			"id": "0dd3794a-5cd4-46d5-8603-dcc3158f5ce2",
+			"id": "9931c495-83c7-411b-849f-573617f7c820",
 			"key": "ip",
 			"value": "90.108.46.63"
 		},
 		{
-			"id": "26e53ac8-73fe-4e96-9294-55d30d04e61e",
+			"id": "411b19b7-0883-4cca-a438-86a93fb44654",
 			"key": "lat",
 			"value": "49.5271"
 		},
 		{
-			"id": "560743fa-d3ec-4820-a7d9-8dac787f96f0",
+			"id": "07508f96-a011-4537-85fa-91f0c0911a3f",
 			"key": "lng",
 			"value": "1.1885"
 		}
