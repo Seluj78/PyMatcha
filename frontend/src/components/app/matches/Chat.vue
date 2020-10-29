@@ -22,6 +22,7 @@
             class="text-sm inline-block rounded-md bg-gray-200 px-2 py-1">{{message.timestamp_first}}</h1>
         </div>
         <MessageBubble
+          :key="index + message.is_liked"
           v-bind:loggedInUserId="loggedInUserId"
           v-bind:messagePassed="message"></MessageBubble>
       </div>
@@ -108,10 +109,9 @@ export default {
     async fetchNewMessages() {
       const messagesRequest = await this.$http.get(`/conversations/${this.chatWithUserId}`);
       const newMessages = messagesRequest.data.messages;
-      if (newMessages.length > this.messages.length) {
-        for (let i = this.messages.length; i < newMessages.length; i += 1) {
-          this.messages.push(newMessages[i]);
-        }
+      const oldMessageCount = this.messages.length;
+      this.messages = newMessages;
+      if (newMessages.length > oldMessageCount) {
         this.$emit('new-message');
         this.scrollChatToBottom();
       }
