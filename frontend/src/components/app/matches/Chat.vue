@@ -107,6 +107,7 @@ export default {
       this.scrollChatToBottom();
     },
     async fetchNewMessages() {
+      await this.$http.post(`/messages/see/${this.chatWithUserId}`);
       const messagesRequest = await this.$http.get(`/conversations/${this.chatWithUserId}`);
       const newMessages = messagesRequest.data.messages;
       const oldMessageCount = this.messages.length;
@@ -117,6 +118,7 @@ export default {
       }
     },
     async prepareChatForNewUser() {
+      await this.$http.post(`/messages/see/${this.chatWithUserId}`);
       const messagesRequest = await this.$http.get(`/conversations/${this.chatWithUserId}`);
       this.messages = messagesRequest.data.messages;
       this.determineFirstMessagesOfTimespans(this.messages);
