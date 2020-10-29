@@ -2,7 +2,7 @@
   <!--  eslint-disable max-len -->
   <div class="noSelect mt-2 relative">
     <img v-if="message.to_id !== loggedInUserId && message.is_liked"
-      src="../../../assets/heart.png" class="w-6 mr-2 inline-block"
+      src="../../../assets/heart.png" class="w-6 mr-2 inline-block heart"
       v-on:dblclick="likeMessage(message.id, message.is_liked)">
     <h1
       v-on:dblclick="likeMessage(message.id, message.is_liked)"
