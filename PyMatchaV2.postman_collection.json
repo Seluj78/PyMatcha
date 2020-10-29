@@ -5743,6 +5743,324 @@
 			"protocolProfileBehavior": {}
 		},
 		{
+			"name": "Messages",
+			"item": [
+				{
+					"name": "Get no conversations",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "8f3a8bac-d32f-41fe-9372-28ee6e461c8a",
+								"exec": [
+									"var response = JSON.parse(responseBody);",
+									"",
+									"",
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"tests[\"Conversations are empty\"] = response.conversations.length == 0"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{host}}/conversations",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"conversations"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Send message to unknow user",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "753ade9d-d723-43b9-87db-d704ac283e05",
+								"exec": [
+									"var response = JSON.parse(responseBody);",
+									"",
+									"",
+									"pm.test(\"Status code is 404\", function () {",
+									"    pm.response.to.have.status(404);",
+									"});",
+									"",
+									"tests[\"JSON return code is 404\"] = response.code == 404",
+									"",
+									"tests[\"success is false\"] = response.success == false",
+									"tests[\"Message is correct\"] = response.error.message == \"Recipient -1 not found.\"",
+									"tests[\"Error type is Bad Request\"] = response.error.type == \"NotFoundError\""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"to_uid\": \"-1\",\n    \"content\": \"Hello!\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/messages/send",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"messages",
+								"send"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Send message to self",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "1878ae75-2f6b-4510-ab50-29e36d5be765",
+								"exec": [
+									"var response = JSON.parse(responseBody);",
+									"",
+									"",
+									"pm.test(\"Status code is 400\", function () {",
+									"    pm.response.to.have.status(400);",
+									"});",
+									"",
+									"tests[\"JSON return code is 400\"] = response.code == 400",
+									"",
+									"tests[\"success is false\"] = response.success == false",
+									"tests[\"Message is correct\"] = response.error.message == \"Cannot send a message to yourself.\"",
+									"tests[\"Error type is Bad Request\"] = response.error.type == \"BadRequestError\""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"to_uid\": \"{{id}}\",\n    \"content\": \"Hello World !\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/messages/send",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"messages",
+								"send"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Send message to user 1500",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "7147f883-a158-43fc-9eaa-98782c736164",
+								"exec": [
+									"var response = JSON.parse(responseBody);",
+									"",
+									"",
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"tests[\"Message is correct\"] = response.message == \"Message successfully sent to 1500.\""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"to_uid\": \"1500\",\n    \"content\": \"Hello World !\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/messages/send",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"messages",
+								"send"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get conversations after message sent",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "b8b68751-2ea4-499d-abaf-f87f3b55bcd3",
+								"exec": [
+									"var response = JSON.parse(responseBody);",
+									"",
+									"",
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"tests[\"Conversations is empty\"] = response.conversations.length == 1",
+									"tests[\"Message is not unseen because you send the message\"] = response.conversations[0].is_unseen == false",
+									"tests[\"Message content is correct\"] = response.conversations[0].last_message_content == \"Hello World !\"",
+									"tests[\"With user is correct\"] = response.conversations[0].with_user.id == 1500"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{host}}/conversations",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"conversations"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Debug get message from user 1500",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "4247b805-535a-42e3-91ab-773a2505bbc1",
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "debug-auth-token",
+								"type": "text",
+								"value": "{{debug_token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"from_uid\": \"1500\",\n    \"to_uid\": \"{{id}}\",\n    \"content\": \"My Reply\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/debug/messages/send",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"debug",
+								"messages",
+								"send"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get conversations after reply from user 1500",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "2a370659-d7b6-40a5-9ae6-c406415e4c1c",
+								"exec": [
+									"var response = JSON.parse(responseBody);",
+									"",
+									"",
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"tests[\"Conversations is empty\"] = response.conversations.length == 1",
+									"tests[\"Message is unseen because you received the message\"] = response.conversations[0].is_unseen == true",
+									"tests[\"Message content is correct\"] = response.conversations[0].last_message_content == \"My Reply\"",
+									"tests[\"With user is correct\"] = response.conversations[0].with_user.id == 1500"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{host}}/conversations",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"conversations"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"protocolProfileBehavior": {}
+		},
+		{
 			"name": "DEBUG redis view all keys Copy",
 			"request": {
 				"method": "GET",
@@ -5801,132 +6119,132 @@
 	],
 	"variable": [
 		{
-			"id": "016be7ad-bd80-42e4-96f8-d55383c3b11f",
+			"id": "f1dec525-46e8-4101-8fad-cd6759ff63ea",
 			"key": "host",
 			"value": "http://127.0.0.1:5000"
 		},
 		{
-			"id": "aa6b18c4-00b1-4898-b179-a778f8eb22d3",
+			"id": "33ee09d9-c457-4791-b527-951de784888c",
 			"key": "access_token",
 			"value": ""
 		},
 		{
-			"id": "a2ab4909-7b20-4ae8-ab51-9577cd8f0c49",
+			"id": "84e106db-267f-4651-ae54-bb7018852944",
 			"key": "refresh_token",
 			"value": ""
 		},
 		{
-			"id": "9f379677-3fe3-4564-9ba4-73ef35d62017",
+			"id": "a0964ccf-6db8-4841-a91f-c2f75d11b780",
 			"key": "debug_token",
 			"value": "xX69jules69Xx"
 		},
 		{
-			"id": "b82afb6d-cf2d-4f70-b4df-83fcfb322adc",
+			"id": "7d50df49-38c3-4e52-b308-49b9c32d53ef",
 			"key": "id",
 			"value": "1541"
 		},
 		{
-			"id": "fc3c54f1-630d-4c08-a36e-9a0ad1d0d28f",
+			"id": "8bcf7886-3668-4488-bda9-81792c8179d4",
 			"key": "first_name",
 			"value": "Jules"
 		},
 		{
-			"id": "89a52dd6-a282-4188-a76a-e5d3e718156f",
+			"id": "5776777f-54ad-4f61-b073-62899ea4b46d",
 			"key": "last_name",
 			"value": "Lasne"
 		},
 		{
-			"id": "73e5b15a-3965-4a4f-80aa-b0915cad78bc",
+			"id": "8431c5a0-e70e-4a6b-b83a-d373769e5946",
 			"key": "email",
 			"value": "jules.lasne@example.org"
 		},
 		{
-			"id": "075de87b-7956-4273-8c84-355a90d4c74f",
+			"id": "671795cd-ddca-4abb-862f-1b3b719f8f72",
 			"key": "username",
 			"value": "seluj78"
 		},
 		{
-			"id": "ba44447f-2337-4020-8e8a-793f140aa7df",
+			"id": "e1655b0d-c0b9-4a9c-a272-4c1f91079614",
 			"key": "password",
 			"value": "dolphin"
 		},
 		{
-			"id": "b1107373-435b-4349-b8f2-4eede74a5c6b",
+			"id": "33018e3d-16e6-47ee-9b2d-b76c82ed6261",
 			"key": "orientation",
 			"value": "heterosexual"
 		},
 		{
-			"id": "e8c5caa3-cb4d-44eb-a6e6-94b7c337d0d6",
+			"id": "868be13a-b4ce-4109-8284-c919b7edba71",
 			"key": "gender",
 			"value": "male"
 		},
 		{
-			"id": "4c54dbcf-9975-4ae7-9018-05ea851b4279",
+			"id": "2b34232b-c614-44a1-a179-75b673d6b398",
 			"key": "bio",
 			"value": "Phasellus vel tortor vel elit scelerisque accumsan vel nec nunc. Ut condimentum vestibulum sapien non dictum. Vestibulum ac eleifend mi. Curabitur dictum vestibulum ex at placerat. Pellentesque odio mi, condimentum et sollicitudin at, finibus non leo. Aenean sed pulvinar nulla, nec tincidunt felis. Aenean nibh elit, aliquam sit amet lobortis et, pellentesque ut orci. Curabitur placerat sem id ex laoreet imperdiet. Curabitur dictum ac urna feugiat viverra. Vivamus nec pulvinar urna. Suspendisse vel ultrices est. Sed malesuada est vel orci venenatis scelerisque. Phasellus ultrices dignissim sapien, at mattis tellus mattis pulvinar. Sed ut euismod velit, id fermentum leo."
 		},
 		{
-			"id": "3ba6ad34-a299-4dd9-b36e-f749a1d637d6",
+			"id": "dbd1e3d9-17bd-427f-a320-a9ccd90be412",
 			"key": "birthdate",
 			"value": "06/04/1998"
 		},
 		{
-			"id": "76354452-4c45-4fdb-a9bd-3f528d49f0b1",
+			"id": "96096aad-3ff5-4e87-bf79-d58d977c370c",
 			"key": "first_name2",
 			"value": "Félix"
 		},
 		{
-			"id": "c49b01ae-cb94-4d53-9c6a-ca7752159829",
+			"id": "8de66ed3-5dec-4b83-bb42-bf22c8faf4ec",
 			"key": "last_name2",
 			"value": "Ensal"
 		},
 		{
-			"id": "f3bb4cce-bf03-422d-b5d9-d349a2f0dd52",
+			"id": "e7823e75-ccf1-4b58-9d09-4b10a31ec351",
 			"key": "username2",
 			"value": "Ufree"
 		},
 		{
-			"id": "cbdec3ef-57b7-4bac-95d5-d379a160d3ba",
+			"id": "a494e3d6-3cf3-42a4-9ed9-44366774c1c2",
 			"key": "bio2",
 			"value": "Donec quis porttitor ante, ac pulvinar nulla. Vivamus dignissim, ipsum ultricies interdum suscipit, risus tellus auctor mi, eu auctor metus sem quis urna. In maximus placerat ipsum, nec sodales elit aliquet sed. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae; Phasellus malesuada velit felis, non volutpat ex bibendum at. Maecenas aliquet sodales quam at consequat. Sed faucibus consequat tempor. Fusce consequat eu sem non tempus. Duis dapibus nunc vel tempus semper. Pellentesque dignissim tellus odio, vel luctus ipsum suscipit quis. Curabitur id erat at quam varius fermentum non in massa."
 		},
 		{
-			"id": "fd8cdfdb-0b38-4201-9e29-ac6ddd535a6d",
+			"id": "d17c9205-66f1-4972-9eeb-db73b6745dc9",
 			"key": "gender2",
 			"value": "other"
 		},
 		{
-			"id": "670c37f9-fbe5-4dcf-bc96-d891240c0063",
+			"id": "933536a5-63a9-430c-9154-5cbe7ae7404e",
 			"key": "orientation2",
 			"value": "bisexual"
 		},
 		{
-			"id": "b0ab8e2f-30b5-48b1-a7c5-b26611bfe9a1",
+			"id": "b289193c-665d-437d-ac2d-e2a3a291113b",
 			"key": "birthdate2",
 			"value": "25/06/2000"
 		},
 		{
-			"id": "1d1b0689-e1cd-4111-9982-d0fd4ed5218a",
+			"id": "832429a5-5624-475f-a877-8423c2a70a35",
 			"key": "email2",
 			"value": "felix.ensal@example.org"
 		},
 		{
-			"id": "4f16f48b-277f-4e11-a7d3-44a91b916b7b",
+			"id": "a0467c08-434f-4687-bbae-4988ff3b8074",
 			"key": "password2",
 			"value": "dolphin2"
 		},
 		{
-			"id": "9931c495-83c7-411b-849f-573617f7c820",
+			"id": "c59a2487-9019-4518-80fa-4f8eb7919467",
 			"key": "ip",
 			"value": "90.108.46.63"
 		},
 		{
-			"id": "411b19b7-0883-4cca-a438-86a93fb44654",
+			"id": "6a904b86-e389-4065-b8da-73abc5eeb266",
 			"key": "lat",
 			"value": "49.5271"
 		},
 		{
-			"id": "07508f96-a011-4537-85fa-91f0c0911a3f",
+			"id": "4a9e826f-230c-4a6c-aeeb-1808f40a502c",
 			"key": "lng",
 			"value": "1.1885"
 		}

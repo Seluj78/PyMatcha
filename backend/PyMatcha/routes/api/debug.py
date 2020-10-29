@@ -112,7 +112,7 @@ def debug_send_message():
     from_id = get_user(data["from_uid"]).id
     to_id = get_user(data["to_uid"]).id
     Message.create(from_id=from_id, to_id=to_id, content=data["content"])
-    return "", 204
+    return "", 200
 
 
 # @debug_bp.route("/debug/reset_ci", methods=["DELETE"])
