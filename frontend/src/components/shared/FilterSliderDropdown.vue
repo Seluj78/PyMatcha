@@ -54,6 +54,9 @@ export default {
     this.slider.min = this.min;
     this.slider.max = this.max;
     this.slider.start = this.min;
+    if (this.slider.min === this.slider.max) {
+      this.slider.max += 1;
+    }
     noUiSlider.create(this.$refs.slider, {
       start: [this.slider.startMin, this.slider.startMax],
       step: this.slider.step,
