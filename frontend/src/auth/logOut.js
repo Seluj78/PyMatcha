@@ -14,4 +14,5 @@ export const logOut = async () => {
   localStorage.removeItem(process.env.VUE_APP_REFRESH_TOKEN);
   localStorage.removeItem(process.env.VUE_APP_VUEX_PERSISTED_STATE);
   localStorage.removeItem(process.env.VUE_APP_SECURE_LS_METADATA);
+  window.location.reload();
 };
