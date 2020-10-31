@@ -15,6 +15,7 @@ import Settings from '../views/app/Settings.vue';
 import User from '../components/app/users/User.vue';
 import History from '../views/app/History.vue';
 import Matches from '../views/app/Matches.vue';
+import SignOut from '../views/auth/SignOut.vue';
 import store from '../store/index';
 
 Vue.use(VueRouter);
@@ -130,6 +131,11 @@ const routes = [
   {
     path: '/matches',
     component: Matches,
+    beforeEnter: notLoggedInRedirectLogin,
+  },
+  {
+    path: '/accounts/signout',
+    component: SignOut,
     beforeEnter: notLoggedInRedirectLogin,
   },
 ];

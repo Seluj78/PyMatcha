@@ -1,7 +1,7 @@
 /* eslint-disable max-len */
 import jwtDecode from 'jwt-decode';
 import Axios from 'axios';
-import { logOut } from './logOut';
+import router from '@/router';
 
 export const setAccessToken = (token) => (localStorage.setItem(process.env.VUE_APP_ACCESS_TOKEN, token));
 export const setRefreshToken = (token) => (localStorage.setItem(process.env.VUE_APP_REFRESH_TOKEN, token));
@@ -24,7 +24,7 @@ export const renewAccessToken = async () => {
       const response = await Axios.post('/auth/refresh', {});
       localStorage.setItem('matchaAccessToken', response.data.access_token);
     } catch (error) {
-      await logOut();
+      await router.push('/accounts/signout');
     }
   }
 };
