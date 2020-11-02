@@ -2,7 +2,7 @@
   <!-- eslint-disable max-len -->
   <!-- eslint-disable vue/no-deprecated-v-on-native-modifier -->
   <nav class="md:flex md:justify-between md:items-center md:py-5">
-    <div class="flex items-center justify-between px-5 py-3 md:p-0">
+    <div class="flex items-center justify-between px-5 py-3 md:p-0 w-full">
       <div id="logo">
         <router-link to="/">
           <div class="flex justify-center items-center">
@@ -11,7 +11,7 @@
           </div>
         </router-link>
       </div>
-      <NavBarBell v-if="loggedIn" class="md:invisible"></NavBarBell>
+      <NavBarBell v-if="loggedIn"></NavBarBell>
       <div id="burger" class="md:hidden">
         <button type="button" class="block text-gray-800 focus:outline-none" v-on:click="isOpen = !isOpen">
           <svg class="w-8 h-8 text-purple-matcha fill-current" viewBox="0 0 24 24">
@@ -21,7 +21,6 @@
         </button>
       </div>
     </div>
-    <NavBarBell v-if="loggedIn" class="invisible md:visible"></NavBarBell>
     <div id="links" v-on:click="isOpen = !isOpen" v-bind:class="isOpen ? 'block' : 'hidden'" class="px-2 pb-5 text-center md:p-0 md:block md:flex md:items-center">
       <div v-if="!loggedIn" class="md:flex md:bg-purple-matcha md:border-2 md:border-purple-matcha md:rounded-lg">
         <router-link to="/accounts/signin" class="navigation-button-logged-in md:hover:bg-white-matcha md:hover:text-purple-matcha md:text-purple-matcha md:bg-white-matcha md:py-2 md:px-8 md:rounded-md mx-0">Sign In</router-link>
