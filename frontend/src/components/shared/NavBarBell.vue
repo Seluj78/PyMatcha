@@ -22,15 +22,16 @@
       'z-50': true,
       'rounded-md': true}">
       <div v-bind:class="{
-        'py-4': true,
-        'flex': true,
         'word-break': true,
-        'items-center': true,
         'border-b': true,
         'font-bold': notification.is_seen,}"
            v-for="notification in notifications" :key="notification.id">
-        <img v-bind:src="getImage(notification.type)" class="w-4 h-4">
-        <h1 class="ml-4">{{notification.text}}</h1>
+        <router-link
+          v-bind:to="notification.link_to"
+          class="py-4 flex items-center word-break cursor-pointer">
+          <img v-bind:src="getImage(notification.type)" class="w-4 h-4">
+          <h1 class="ml-4">{{notification.content}}</h1>
+        </router-link>
       </div>
     </div>
   </div>
@@ -50,16 +51,16 @@ export default {
   data: () => ({
     notify: true,
     notifications: [
-      { text: 'Samantha liked you', is_seen: false, type: 'like', id: 1 },
-      { text: 'Bae liked you', id: 2, is_seen: false, type: 'dislike' },
-      { text: 'Samantha liked you', id: 3, is_seen: false, type: 'message' },
-      { text: 'Bae liked you', id: 4, is_seen: false, type: 'match' },
-      { text: 'Samantha liked you', id: 5, is_seen: true, type: 'view' },
-      { text: 'Bae liked you', id: 6, is_seen: true, type: 'like' },
-      { text: 'Samantha liked you', id: 7, is_seen: true, type: 'like' },
-      { text: 'Bae liked you', id: 8, is_seen: true, type: 'like' },
-      { text: 'Samantha liked you', id: 9, is_seen: true, type: 'like' },
-      { text: 'Bae liked youBae liked youBae liked youBae liked youBae liked youBae liked you', id: 10, is_seen: true, type: 'like' },
+      { content: 'Samantha liked you', is_seen: false, type: 'like', id: 1, link_to: 'google.com' },
+      { content: 'Bae liked you', id: 2, is_seen: false, type: 'dislike', link_to: 'google.com' },
+      { content: 'Samantha liked you', id: 3, is_seen: false, type: 'message', link_to: 'google.com' },
+      { content: 'Bae liked you', id: 4, is_seen: false, type: 'match', link_to: 'google.com' },
+      { content: 'Samantha liked you', id: 5, is_seen: true, type: 'view', link_to: 'google.com' },
+      { content: 'Bae liked you', id: 6, is_seen: true, type: 'like', link_to: 'google.com' },
+      { content: 'Samantha liked you', id: 7, is_seen: true, type: 'like', link_to: 'google.com' },
+      { content: 'Bae liked you', id: 8, is_seen: true, type: 'like', link_to: 'google.com' },
+      { content: 'Samantha liked you', id: 9, is_seen: true, type: 'like', link_to: 'google.com' },
+      { content: 'Bae liked youBae liked youBae liked youBae liked youBae liked youBae liked you', id: 10, is_seen: true, type: 'like', link_to: 'google.com' },
     ],
     showNotifications: false,
   }),
