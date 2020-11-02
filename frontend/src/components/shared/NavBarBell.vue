@@ -26,7 +26,7 @@
         'word-break': true,
         'border-b': true,
         'font-bold': !notification.is_seen,}"
-           v-for="notification in notifications" :key="notification.id">
+           v-for="(notification, index) in notifications" :key="index">
         <router-link
           v-bind:to="notification.link_to"
           class="py-4 flex items-center word-break cursor-pointer">
@@ -49,10 +49,12 @@ import match from '../../assets/linkBlack.png';
 /* eslint-disable object-curly-newline */
 /* eslint-disable consistent-return */
 /* eslint-disable max-len */
+/* eslint-disable no-await-in-loop */
+/* eslint-disable prefer-destructuring */
 
 export default {
   data: () => ({
-    notify: true,
+    notify: false,
     // notifications: [
     //   { content: 'Samantha liked you', is_seen: false, type: 'like', id: 1, link_to: 'google.com' },
     //   { content: 'Bae liked you', id: 2, is_seen: false, type: 'dislike', link_to: 'google.com' },
@@ -69,7 +71,20 @@ export default {
     showNotifications: false,
   }),
   methods: {
-    toggle() {
+    async makeNotificationsSeen() {
+      const length = this.notifications.length;
+      for (let i = 0; i < length; i += 1) {
+        if (!this.notifications[i].is_seen) {
+          await this.$http.post(`/notifications/read/${this.notifications[i].id}`);
+          this.notifications[i].is_seen = 1;
+        }
+      }
+    },
+    async toggle() {
+      if (this.showNotifications) {
+        this.notify = false;
+        await this.makeNotificationsSeen();
+      }
       this.showNotifications = !this.showNotifications;
     },
     close(event) {
@@ -119,7 +134,7 @@ export default {
   },
   async beforeMount() {
     await this.fetchNotifications();
-    await this.newNotificationCheck();
+    // await this.newNotificationCheck();
     await this.fetchNewNotifications();
   },
 };
