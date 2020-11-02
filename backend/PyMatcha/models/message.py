@@ -53,8 +53,6 @@ class Message(Model):
     ) -> Message:
         if not timestamp:
             timestamp = datetime.utcnow()
-        if not seen_timestamp:
-            seen_timestamp = datetime.utcnow()
         new_message = Message(
             from_id=from_id,
             to_id=to_id,
