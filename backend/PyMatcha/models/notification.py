@@ -20,11 +20,13 @@ from __future__ import annotations
 
 import logging
 from datetime import datetime
+from typing import Dict
 from typing import Optional
 
 from PyMatcha.utils import create_notifications_table
 from PyMatcha.utils.orm import Field
 from PyMatcha.utils.orm import Model
+from timeago import format as timeago_format
 
 
 class Notification(Model):
@@ -69,3 +71,8 @@ class Notification(Model):
     @classmethod
     def create_table(cls):
         create_notifications_table(cls.db)
+
+    def to_dict(self) -> Dict:
+        returned_dict = super().to_dict()
+        returned_dict["dt_received_ago"] = timeago_format(self.dt_received, datetime.utcnow())
+        return returned_dict
