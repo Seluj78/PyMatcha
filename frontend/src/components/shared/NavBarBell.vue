@@ -26,9 +26,9 @@
         'word-break': true,
         'border-b': true,
         'font-bold': !notification.is_seen,}"
-           v-for="(notification, index) in notifications" :key="index">
+           v-for="(notification, index) in notifications" :key="index + notification.is_seen.toString()">
         <router-link
-          v-bind:to="notification.link_to"
+          v-bind:to="getRouterLink(notification.link_to)"
           class="py-4 flex items-center word-break cursor-pointer">
           <img v-bind:src="getImage(notification.type)" class="w-4 h-4">
           <h1 class="ml-4">{{notification.content}}</h1>
@@ -45,6 +45,8 @@ import heartBroken from '../../assets/brokenHeart.png';
 import message from '../../assets/message.png';
 import view from '../../assets/eye.png';
 import match from '../../assets/linkBlack.png';
+import superlike from '../../assets/superlikeNotification.png';
+import messageLike from '../../assets/likeComment.png';
 
 /* eslint-disable object-curly-newline */
 /* eslint-disable consistent-return */
@@ -71,6 +73,12 @@ export default {
     showNotifications: false,
   }),
   methods: {
+    getRouterLink(link) {
+      if (!link) {
+        return '/';
+      }
+      return link;
+    },
     async makeNotificationsSeen() {
       const length = this.notifications.length;
       for (let i = 0; i < length; i += 1) {
@@ -87,17 +95,18 @@ export default {
       }
       this.showNotifications = !this.showNotifications;
     },
-    close(event) {
+    async close(event) {
       if (!event.currentTarget.contains(event.relatedTarget)) {
         this.showNotifications = false;
         this.notify = false;
+        await this.makeNotificationsSeen();
       }
     },
     getImage(type) {
       if (type === 'like') {
         return heart;
       }
-      if (type === 'dislike') {
+      if (type === 'unlike') {
         return heartBroken;
       }
       if (type === 'match') {
@@ -108,6 +117,12 @@ export default {
       }
       if (type === 'message') {
         return message;
+      }
+      if (type === 'superlike') {
+        return superlike;
+      }
+      if (type === 'message_like') {
+        return messageLike;
       }
     },
     async fetchNotifications() {
