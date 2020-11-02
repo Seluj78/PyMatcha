@@ -21,10 +21,11 @@
       'mt-10': true,
       'z-50': true,
       'rounded-md': true}">
-      <div v-bind:class="{
+      <div
+        v-bind:class="{
         'word-break': true,
         'border-b': true,
-        'font-bold': notification.is_seen,}"
+        'font-bold': !notification.is_seen,}"
            v-for="notification in notifications" :key="notification.id">
         <router-link
           v-bind:to="notification.link_to"
@@ -33,6 +34,7 @@
           <h1 class="ml-4">{{notification.content}}</h1>
         </router-link>
       </div>
+      <h1 v-if="!notifications.length" class="py-4 flex items-center">No notifications</h1>
     </div>
   </div>
 </template>
@@ -46,22 +48,24 @@ import match from '../../assets/linkBlack.png';
 
 /* eslint-disable object-curly-newline */
 /* eslint-disable consistent-return */
+/* eslint-disable max-len */
 
 export default {
   data: () => ({
     notify: true,
-    notifications: [
-      { content: 'Samantha liked you', is_seen: false, type: 'like', id: 1, link_to: 'google.com' },
-      { content: 'Bae liked you', id: 2, is_seen: false, type: 'dislike', link_to: 'google.com' },
-      { content: 'Samantha liked you', id: 3, is_seen: false, type: 'message', link_to: 'google.com' },
-      { content: 'Bae liked you', id: 4, is_seen: false, type: 'match', link_to: 'google.com' },
-      { content: 'Samantha liked you', id: 5, is_seen: true, type: 'view', link_to: 'google.com' },
-      { content: 'Bae liked you', id: 6, is_seen: true, type: 'like', link_to: 'google.com' },
-      { content: 'Samantha liked you', id: 7, is_seen: true, type: 'like', link_to: 'google.com' },
-      { content: 'Bae liked you', id: 8, is_seen: true, type: 'like', link_to: 'google.com' },
-      { content: 'Samantha liked you', id: 9, is_seen: true, type: 'like', link_to: 'google.com' },
-      { content: 'Bae liked youBae liked youBae liked youBae liked youBae liked youBae liked you', id: 10, is_seen: true, type: 'like', link_to: 'google.com' },
-    ],
+    // notifications: [
+    //   { content: 'Samantha liked you', is_seen: false, type: 'like', id: 1, link_to: 'google.com' },
+    //   { content: 'Bae liked you', id: 2, is_seen: false, type: 'dislike', link_to: 'google.com' },
+    //   { content: 'Samantha liked you', id: 3, is_seen: false, type: 'message', link_to: 'google.com' },
+    //   { content: 'Bae liked you', id: 4, is_seen: false, type: 'match', link_to: 'google.com' },
+    //   { content: 'Samantha liked you', id: 5, is_seen: true, type: 'view', link_to: 'google.com' },
+    //   { content: 'Bae liked you', id: 6, is_seen: true, type: 'like', link_to: 'google.com' },
+    //   { content: 'Samantha liked you', id: 7, is_seen: true, type: 'like', link_to: 'google.com' },
+    //   { content: 'Bae liked you', id: 8, is_seen: true, type: 'like', link_to: 'google.com' },
+    //   { content: 'Samantha liked you', id: 9, is_seen: true, type: 'like', link_to: 'google.com' },
+    //   { content: 'Bae liked youBae liked youBae liked youBae liked youBae liked youBae liked you', id: 10, is_seen: true, type: 'like', link_to: 'google.com' },
+    // ],
+    notifications: [],
     showNotifications: false,
   }),
   methods: {
@@ -91,6 +95,32 @@ export default {
         return message;
       }
     },
+    async fetchNotifications() {
+      const notificationsRequest = await this.$http.get('/notifications');
+      this.notifications = notificationsRequest.data.notifications;
+    },
+    async newNotificationCheck() {
+      const notificationsRequest = await this.$http.get('/notifications/unread');
+      const { notifications } = notificationsRequest.data;
+      this.notify = notifications.length;
+    },
+    async fetchNewNotifications() {
+      const notificationsRequest = await this.$http.get('/notifications/unread');
+      const { notifications } = notificationsRequest.data;
+      const count = notifications.length;
+      if (!count) {
+        return;
+      }
+      for (let i = 0; i < count; i += 1) {
+        this.notifications.unshift(notifications[i]);
+      }
+      this.notify = true;
+    },
+  },
+  async beforeMount() {
+    await this.fetchNotifications();
+    await this.newNotificationCheck();
+    await this.fetchNewNotifications();
   },
 };
 </script>
