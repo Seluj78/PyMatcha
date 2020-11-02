@@ -46,7 +46,7 @@ class Notification(Model):
         type: str,
         link_to: Optional[str],
         is_seen: bool = False,
-        dt_received: datetime = datetime.utcnow(),
+        dt_received: Optional[datetime] = None,
     ) -> Optional[Notification]:
         if type not in ["match", "like", "superlike", "unlike", "view", "message", "message_like"]:
             raise ValueError(
@@ -57,6 +57,8 @@ class Notification(Model):
         blocked_ids = [block.blocked_id for block in get_user(user_id).get_blocks()]
         if trigger_id in blocked_ids:
             return None
+        if not dt_received:
+            dt_received = datetime.utcnow()
         new_notif = Notification(
             user_id=user_id, content=content, type=type, link_to=link_to, is_seen=is_seen, dt_received=dt_received
         )

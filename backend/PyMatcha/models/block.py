@@ -20,6 +20,7 @@ from __future__ import annotations
 
 import datetime
 import logging
+from typing import Optional
 
 from PyMatcha.utils import create_blocks_table
 from PyMatcha.utils.orm import Field
@@ -35,7 +36,9 @@ class Block(Model):
     dt_blocked = Field(datetime.datetime, fmt="%Y-%m-%d %H:%M:%S")
 
     @staticmethod
-    def create(blocker_id: int, blocked_id: int, dt_blocked: datetime.datetime = datetime.datetime.utcnow()) -> Block:
+    def create(blocker_id: int, blocked_id: int, dt_blocked: Optional[datetime.datetime] = None) -> Block:
+        if not dt_blocked:
+            dt_blocked = datetime.datetime.utcnow()
         new_blocked = Block(blocker_id=blocker_id, blocked_id=blocked_id, dt_blocked=dt_blocked)
         new_blocked.save()
         logging.debug("Creating new block")

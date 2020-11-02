@@ -21,6 +21,7 @@ from __future__ import annotations
 import logging
 from datetime import datetime
 from typing import Dict
+from typing import Optional
 
 from PyMatcha.utils import create_messages_table
 from PyMatcha.utils.orm import Field
@@ -45,11 +46,13 @@ class Message(Model):
         from_id: int,
         to_id: int,
         content: str,
-        timestamp: datetime = datetime.utcnow(),
+        timestamp: Optional[datetime] = None,
         seen_timestamp: datetime = None,
         is_seen: bool = False,
         is_liked: bool = False,
     ) -> Message:
+        if not timestamp:
+            datetime.utcnow()
         new_message = Message(
             from_id=from_id,
             to_id=to_id,

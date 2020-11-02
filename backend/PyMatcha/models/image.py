@@ -20,6 +20,7 @@ from __future__ import annotations
 
 import logging
 from datetime import datetime
+from typing import Optional
 
 from PyMatcha.utils import create_images_table
 from PyMatcha.utils.orm import Field
@@ -36,7 +37,9 @@ class Image(Model):
     is_primary = Field(bool)
 
     @staticmethod
-    def create(user_id: int, link: str, is_primary: bool = False, timestamp: datetime = datetime.utcnow()) -> Image:
+    def create(user_id: int, link: str, is_primary: bool = False, timestamp: Optional[datetime] = None) -> Image:
+        if not timestamp:
+            timestamp = datetime.utcnow()
         new_image = Image(user_id=user_id, link=link, is_primary=is_primary, timestamp=timestamp)
         new_image.save()
         logging.debug("Creating new image")

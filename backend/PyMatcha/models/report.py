@@ -20,6 +20,7 @@ from __future__ import annotations
 
 import datetime
 import logging
+from typing import Optional
 
 from PyMatcha.utils import create_reports_table
 from PyMatcha.utils.orm import Field
@@ -43,8 +44,10 @@ class Report(Model):
         reporter_id: int,
         reason: str,
         details: str = None,
-        dt_reported: datetime.datetime = datetime.datetime.utcnow(),
+        dt_reported: Optional[datetime.datetime] = None,
     ) -> Report:
+        if not dt_reported:
+            dt_reported = datetime.datetime.utcnow()
         new_report = Report(
             reported_id=reported_id, reporter_id=reporter_id, reason=reason, details=details, dt_reported=dt_reported
         )

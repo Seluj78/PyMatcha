@@ -20,6 +20,7 @@ from __future__ import annotations
 
 import datetime
 import logging
+from typing import Optional
 
 from PyMatcha.utils import create_matches_table
 from PyMatcha.utils.orm import Field
@@ -35,7 +36,9 @@ class Match(Model):
     dt_matched = Field(datetime.datetime, fmt="%Y-%m-%d %H:%M:%S")
 
     @staticmethod
-    def create(user_1: int, user_2: int, dt_matched: datetime.datetime = datetime.datetime.utcnow()) -> Match:
+    def create(user_1: int, user_2: int, dt_matched: Optional[datetime.datetime] = None) -> Match:
+        if not dt_matched:
+            dt_matched = datetime.datetime.utcnow()
         new_match = Match(user_1=user_1, user_2=user_2, dt_matched=dt_matched)
         new_match.save()
         logging.debug("Creating new match")

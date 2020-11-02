@@ -20,6 +20,7 @@ from __future__ import annotations
 
 import datetime
 import logging
+from typing import Optional
 
 from PyMatcha.utils import create_views_table
 from PyMatcha.utils.orm import Field
@@ -35,7 +36,9 @@ class View(Model):
     dt_seen = Field(datetime.datetime, fmt="%Y-%m-%d %H:%M:%S")
 
     @staticmethod
-    def create(profile_id: int, viewer_id: int, dt_seen: datetime.datetime = datetime.datetime.utcnow()) -> View:
+    def create(profile_id: int, viewer_id: int, dt_seen: Optional[datetime.datetime] = None) -> View:
+        if not dt_seen:
+            dt_seen = datetime.datetime.utcnow()
         new_view = View(profile_id=profile_id, viewer_id=viewer_id, dt_seen=dt_seen)
         new_view.save()
         logging.debug("Creating new view")

@@ -20,6 +20,7 @@ from __future__ import annotations
 
 import datetime
 import logging
+from typing import Optional
 
 from PyMatcha.utils import create_likes_table
 from PyMatcha.utils.orm import Field
@@ -37,11 +38,10 @@ class Like(Model):
 
     @staticmethod
     def create(
-        liker_id: int,
-        liked_id: int,
-        is_superlike: str = False,
-        dt_liked: datetime.datetime = datetime.datetime.utcnow(),
+        liker_id: int, liked_id: int, is_superlike: str = False, dt_liked: Optional[datetime.datetime] = None
     ) -> Like:
+        if not dt_liked:
+            dt_liked = datetime.datetime.utcnow()
         new_like = Like(liker_id=liker_id, liked_id=liked_id, is_superlike=is_superlike, dt_liked=dt_liked)
         new_like.save()
         logging.debug("Creating new like")

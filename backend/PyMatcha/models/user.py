@@ -84,8 +84,8 @@ class User(Model):
         geohash: str,
         heat_score: int = 0,
         is_online: bool = False,
-        date_joined: datetime.datetime = datetime.datetime.utcnow(),
-        date_lastseen: datetime.datetime = datetime.datetime.utcnow(),
+        date_joined: Optional[datetime.datetime] = None,
+        date_lastseen: Optional[datetime.datetime] = None,
         is_profile_completed: bool = False,
         is_confirmed: bool = False,
         confirmed_on: datetime.datetime = None,
@@ -125,6 +125,12 @@ class User(Model):
 
         # Encrypt password
         password = hash_password(password)
+
+        if not date_joined:
+            date_joined = datetime.datetime.utcnow()
+
+        if not date_lastseen:
+            date_lastseen = datetime.datetime.utcnow()
 
         new_user = User(
             first_name=first_name,
