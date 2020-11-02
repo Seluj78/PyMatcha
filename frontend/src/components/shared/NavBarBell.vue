@@ -128,6 +128,7 @@ export default {
     async fetchNotifications() {
       const notificationsRequest = await this.$http.get('/notifications');
       this.notifications = notificationsRequest.data.notifications;
+      this.notifications = this.notifications.reverse();
     },
     async newNotificationCheck() {
       const notificationsRequest = await this.$http.get('/notifications/unread');
