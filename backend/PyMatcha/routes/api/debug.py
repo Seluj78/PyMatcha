@@ -17,6 +17,7 @@ from PyMatcha.utils.decorators import debug_token_required
 from PyMatcha.utils.decorators import validate_params
 from PyMatcha.utils.errors import NotFoundError
 from PyMatcha.utils.success import Success
+from PyMatcha.utils.success import SuccessOutput
 
 # from PyMatcha.utils.success import SuccessDeleted
 
@@ -113,6 +114,14 @@ def debug_send_message():
     to_id = get_user(data["to_uid"]).id
     Message.create(from_id=from_id, to_id=to_id, content=data["content"])
     return "", 200
+
+
+@debug_bp.route("/debug/messages/<uid>", methods=["GET"])
+@debug_token_required
+def debug_get_user_messages(uid):
+    user = get_user(uid)
+    messages = [msg.to_dict() for msg in user.get_messages()]
+    return SuccessOutput("messages", messages)
 
 
 # @debug_bp.route("/debug/reset_ci", methods=["DELETE"])

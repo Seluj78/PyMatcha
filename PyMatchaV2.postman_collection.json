@@ -5945,7 +5945,9 @@
 									"tests[\"Conversations is empty\"] = response.conversations.length == 1",
 									"tests[\"Message is not unseen because you send the message\"] = response.conversations[0].is_unseen == false",
 									"tests[\"Message content is correct\"] = response.conversations[0].last_message_content == \"Hello World !\"",
-									"tests[\"With user is correct\"] = response.conversations[0].with_user.id == 1500"
+									"tests[\"With user is correct\"] = response.conversations[0].with_user.id == 1500",
+									"",
+									"pm.collectionVariables.set(\"my_msg_id\", response.conversations[0].last_message_id);"
 								],
 								"type": "text/javascript"
 							}
@@ -6056,6 +6058,438 @@
 						}
 					},
 					"response": []
+				},
+				{
+					"name": "Get unseen messages",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "ef1dd221-656e-462b-a117-b26d38ed3bdf",
+								"exec": [
+									"var response = JSON.parse(responseBody);",
+									"",
+									"",
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"tests[\"Message is correct\"] = response.new_messages.length == 1",
+									"tests[\"New message content is correct\"] = response.new_messages[0].content == \"My Reply\"",
+									"tests[\"New message is_seen\"] = response.new_messages[0].is_seen == 0",
+									"tests[\"New message seen timestamp is null\"] = response.new_messages[0].seen_timestamp == null"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{host}}/messages/unseen",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"messages",
+								"unseen"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "See unknown user messages",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "c10fdf82-4601-4809-bc42-87eb8f71d50c",
+								"exec": [
+									"var response = JSON.parse(responseBody);",
+									"",
+									"",
+									"pm.test(\"Status code is 404\", function () {",
+									"    pm.response.to.have.status(404);",
+									"});",
+									"",
+									"tests[\"JSON return code is 404\"] = response.code == 404",
+									"",
+									"tests[\"success is false\"] = response.success == false",
+									"tests[\"Message is correct\"] = response.error.message == \"With user -1 not found.\"",
+									"tests[\"Error type is Bad Request\"] = response.error.type == \"NotFoundError\""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{host}}/messages/see/-1",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"messages",
+								"see",
+								"-1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "See messages from user 1500",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "fe6b2c23-2828-4915-b1f1-828ae6ebd27d",
+								"exec": [
+									"var response = JSON.parse(responseBody);",
+									"",
+									"",
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"tests[\"Message is correct\"] = response.message == \"Messages marked as seen.\""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{host}}/messages/see/1500",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"messages",
+								"see",
+								"1500"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get conversations after seeing",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "0311cf34-8792-42fa-8264-8f6d340e6596",
+								"exec": [
+									"var response = JSON.parse(responseBody);",
+									"",
+									"",
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"tests[\"Conversations is empty\"] = response.conversations.length == 1",
+									"tests[\"Message is not unseen\"] = response.conversations[0].is_unseen == false",
+									"tests[\"Message content is correct\"] = response.conversations[0].last_message_content == \"My Reply\"",
+									"tests[\"With user is correct\"] = response.conversations[0].with_user.id == 1500"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{host}}/conversations",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"conversations"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get unseen messages after seeing",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "f197a023-817f-497a-8784-a5abfe13d49b",
+								"exec": [
+									"var response = JSON.parse(responseBody);",
+									"",
+									"",
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"tests[\"Message is correct\"] = response.new_messages.length == 0"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{host}}/messages/unseen",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"messages",
+								"unseen"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Like unknown message",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "7377c1ad-9faf-42c3-8cf9-28550b957cd2",
+								"exec": [
+									"var response = JSON.parse(responseBody);",
+									"",
+									"",
+									"pm.test(\"Status code is 404\", function () {",
+									"    pm.response.to.have.status(404);",
+									"});",
+									"",
+									"tests[\"JSON return code is 404\"] = response.code == 404",
+									"",
+									"tests[\"success is false\"] = response.success == false",
+									"tests[\"Message is correct\"] = response.error.message == \"Message -1 not found.\"",
+									"tests[\"Error type is Bad Request\"] = response.error.type == \"NotFoundError\""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{host}}/messages/like/-1",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"messages",
+								"like",
+								"-1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Like your own message",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "8ab1e42a-71f6-42ee-8c6a-a390f2cd7a80",
+								"exec": [
+									"var response = JSON.parse(responseBody);",
+									"",
+									"",
+									"pm.test(\"Status code is 400\", function () {",
+									"    pm.response.to.have.status(400);",
+									"});",
+									"",
+									"tests[\"JSON return code is 400\"] = response.code == 400",
+									"",
+									"tests[\"success is false\"] = response.success == false",
+									"tests[\"Message is correct\"] = response.error.message == \"Cannot like your own message.\"",
+									"tests[\"Error type is Bad Request\"] = response.error.type == \"BadRequestError\""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{host}}/messages/like/{{my_msg_id}}",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"messages",
+								"like",
+								"{{my_msg_id}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Debug send message between two users",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "5025a227-f1ce-4ec6-8558-9635256cfe72",
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "debug-auth-token",
+								"type": "text",
+								"value": "{{debug_token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"from_uid\": \"1500\",\n    \"to_uid\": \"1501\",\n    \"content\": \"It's a secret\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/debug/messages/send",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"debug",
+								"messages",
+								"send"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Debug get message from 1500 to 1501",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "7a30e283-5421-442b-bb58-ce50248951b6",
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"var response = JSON.parse(responseBody);",
+									"",
+									"pm.collectionVariables.set(\"other_msg_id\", response.messages[response.messages.length - 1].id);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "debug-auth-token",
+								"type": "text",
+								"value": "{{debug_token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"from_uid\": \"1500\",\n    \"to_uid\": \"1501\",\n    \"content\": \"It's a secret\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/debug/messages/1500",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"debug",
+								"messages",
+								"1500"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Like a message not for you",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "b8109b29-14c6-4a99-875d-90752e6d4020",
+								"exec": [
+									"var response = JSON.parse(responseBody);",
+									"",
+									"",
+									"pm.test(\"Status code is 400\", function () {",
+									"    pm.response.to.have.status(400);",
+									"});",
+									"",
+									"tests[\"JSON return code is 400\"] = response.code == 400",
+									"",
+									"tests[\"success is false\"] = response.success == false",
+									"tests[\"Message is correct\"] = response.error.message == \"Cannot like a message that isn't destined to you.\"",
+									"tests[\"Error type is Bad Request\"] = response.error.type == \"BadRequestError\""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{host}}/messages/like/{{other_msg_id}}",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"messages",
+								"like",
+								"{{other_msg_id}}"
+							]
+						}
+					},
+					"response": []
 				}
 			],
 			"protocolProfileBehavior": {}
@@ -6119,134 +6553,144 @@
 	],
 	"variable": [
 		{
-			"id": "f1dec525-46e8-4101-8fad-cd6759ff63ea",
+			"id": "525c08dc-b38e-4550-be88-6f08a09cdb67",
 			"key": "host",
 			"value": "http://127.0.0.1:5000"
 		},
 		{
-			"id": "33ee09d9-c457-4791-b527-951de784888c",
+			"id": "dc3107c9-1e82-49ef-b87e-299c44b71175",
 			"key": "access_token",
 			"value": ""
 		},
 		{
-			"id": "84e106db-267f-4651-ae54-bb7018852944",
+			"id": "469e905f-912c-4c38-b0f6-4ef2eba5c080",
 			"key": "refresh_token",
 			"value": ""
 		},
 		{
-			"id": "a0964ccf-6db8-4841-a91f-c2f75d11b780",
+			"id": "21ca47ac-afd5-43bf-a122-94ef74d67a76",
 			"key": "debug_token",
 			"value": "xX69jules69Xx"
 		},
 		{
-			"id": "7d50df49-38c3-4e52-b308-49b9c32d53ef",
+			"id": "7a9da366-a587-4be3-a822-958bd0315b9f",
 			"key": "id",
 			"value": "1541"
 		},
 		{
-			"id": "8bcf7886-3668-4488-bda9-81792c8179d4",
+			"id": "42420f0a-eab2-4cdf-9dea-d23c7eb4e453",
 			"key": "first_name",
 			"value": "Jules"
 		},
 		{
-			"id": "5776777f-54ad-4f61-b073-62899ea4b46d",
+			"id": "dc6fdeb4-340e-413e-8fef-e1b48d9af18d",
 			"key": "last_name",
 			"value": "Lasne"
 		},
 		{
-			"id": "8431c5a0-e70e-4a6b-b83a-d373769e5946",
+			"id": "e1a2ad42-3d74-48cb-8445-744bd1f4ae6c",
 			"key": "email",
 			"value": "jules.lasne@example.org"
 		},
 		{
-			"id": "671795cd-ddca-4abb-862f-1b3b719f8f72",
+			"id": "26f7d0c9-b70f-4040-93e3-cd18bb3e940e",
 			"key": "username",
 			"value": "seluj78"
 		},
 		{
-			"id": "e1655b0d-c0b9-4a9c-a272-4c1f91079614",
+			"id": "d6a41606-51e9-469e-a2d0-09c89d34bbf7",
 			"key": "password",
 			"value": "dolphin"
 		},
 		{
-			"id": "33018e3d-16e6-47ee-9b2d-b76c82ed6261",
+			"id": "961e3ae2-f94e-4276-bcde-ecbfbda27954",
 			"key": "orientation",
 			"value": "heterosexual"
 		},
 		{
-			"id": "868be13a-b4ce-4109-8284-c919b7edba71",
+			"id": "50471d30-d726-4ada-8066-bea3df8b92c5",
 			"key": "gender",
 			"value": "male"
 		},
 		{
-			"id": "2b34232b-c614-44a1-a179-75b673d6b398",
+			"id": "063f5ba8-0a59-454f-aeb9-4eb6cfe7abbd",
 			"key": "bio",
 			"value": "Phasellus vel tortor vel elit scelerisque accumsan vel nec nunc. Ut condimentum vestibulum sapien non dictum. Vestibulum ac eleifend mi. Curabitur dictum vestibulum ex at placerat. Pellentesque odio mi, condimentum et sollicitudin at, finibus non leo. Aenean sed pulvinar nulla, nec tincidunt felis. Aenean nibh elit, aliquam sit amet lobortis et, pellentesque ut orci. Curabitur placerat sem id ex laoreet imperdiet. Curabitur dictum ac urna feugiat viverra. Vivamus nec pulvinar urna. Suspendisse vel ultrices est. Sed malesuada est vel orci venenatis scelerisque. Phasellus ultrices dignissim sapien, at mattis tellus mattis pulvinar. Sed ut euismod velit, id fermentum leo."
 		},
 		{
-			"id": "dbd1e3d9-17bd-427f-a320-a9ccd90be412",
+			"id": "b537f8d6-66c2-478b-b11e-8b335f0abc00",
 			"key": "birthdate",
 			"value": "06/04/1998"
 		},
 		{
-			"id": "96096aad-3ff5-4e87-bf79-d58d977c370c",
+			"id": "a16910c5-523b-4441-ae3a-8dee8a75304f",
 			"key": "first_name2",
 			"value": "Félix"
 		},
 		{
-			"id": "8de66ed3-5dec-4b83-bb42-bf22c8faf4ec",
+			"id": "f52e79a1-9423-48fd-9b52-0b703d5c447d",
 			"key": "last_name2",
 			"value": "Ensal"
 		},
 		{
-			"id": "e7823e75-ccf1-4b58-9d09-4b10a31ec351",
+			"id": "434627ff-ba53-4129-9505-b8a30308b74a",
 			"key": "username2",
 			"value": "Ufree"
 		},
 		{
-			"id": "a494e3d6-3cf3-42a4-9ed9-44366774c1c2",
+			"id": "3abec574-694b-49f8-ba7c-0239c4312cb8",
 			"key": "bio2",
 			"value": "Donec quis porttitor ante, ac pulvinar nulla. Vivamus dignissim, ipsum ultricies interdum suscipit, risus tellus auctor mi, eu auctor metus sem quis urna. In maximus placerat ipsum, nec sodales elit aliquet sed. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae; Phasellus malesuada velit felis, non volutpat ex bibendum at. Maecenas aliquet sodales quam at consequat. Sed faucibus consequat tempor. Fusce consequat eu sem non tempus. Duis dapibus nunc vel tempus semper. Pellentesque dignissim tellus odio, vel luctus ipsum suscipit quis. Curabitur id erat at quam varius fermentum non in massa."
 		},
 		{
-			"id": "d17c9205-66f1-4972-9eeb-db73b6745dc9",
+			"id": "b07056e9-16f4-41f9-b676-575a84709f3f",
 			"key": "gender2",
 			"value": "other"
 		},
 		{
-			"id": "933536a5-63a9-430c-9154-5cbe7ae7404e",
+			"id": "9c16e8e0-0eaa-4c2e-898c-3c90dc1526a1",
 			"key": "orientation2",
 			"value": "bisexual"
 		},
 		{
-			"id": "b289193c-665d-437d-ac2d-e2a3a291113b",
+			"id": "37ca4895-a2df-4425-b2c0-9af6888987ca",
 			"key": "birthdate2",
 			"value": "25/06/2000"
 		},
 		{
-			"id": "832429a5-5624-475f-a877-8423c2a70a35",
+			"id": "7476be14-edc5-479b-a3e5-bf73f1874f3b",
 			"key": "email2",
 			"value": "felix.ensal@example.org"
 		},
 		{
-			"id": "a0467c08-434f-4687-bbae-4988ff3b8074",
+			"id": "9250599e-01a5-4c26-8031-e18403a51922",
 			"key": "password2",
 			"value": "dolphin2"
 		},
 		{
-			"id": "c59a2487-9019-4518-80fa-4f8eb7919467",
+			"id": "b191dae0-e265-4ac8-bf86-42cbf98fe01e",
 			"key": "ip",
 			"value": "90.108.46.63"
 		},
 		{
-			"id": "6a904b86-e389-4065-b8da-73abc5eeb266",
+			"id": "07dcab1a-3f35-4c8d-8c35-c0ddedbe326d",
 			"key": "lat",
 			"value": "49.5271"
 		},
 		{
-			"id": "4a9e826f-230c-4a6c-aeeb-1808f40a502c",
+			"id": "74cf732b-113d-421a-a453-451c5674598a",
 			"key": "lng",
 			"value": "1.1885"
+		},
+		{
+			"id": "3980002f-996f-4fc5-ad53-ad0f74fbfb7f",
+			"key": "my_msg_id",
+			"value": "69"
+		},
+		{
+			"id": "62800d58-0420-44b0-b9f3-4ff112243deb",
+			"key": "other_msg_id",
+			"value": ""
 		}
 	],
 	"protocolProfileBehavior": {}

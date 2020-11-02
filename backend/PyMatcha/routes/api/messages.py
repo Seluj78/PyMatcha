@@ -46,6 +46,7 @@ def get_opened_conversations():
     conv_list = current_user.get_conversation_list()
     returned_list = [
         {
+            "last_message_id": c.id,
             "last_message_timestamp": c.timestamp,
             "last_message_timestamp_ago": timeago_format(c.timestamp, datetime.datetime.utcnow()),
             "last_message_content": c.content,
