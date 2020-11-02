@@ -71,6 +71,7 @@ export default {
     // ],
     notifications: [],
     showNotifications: false,
+    fetchNotificationsIntervalId: null,
   }),
   methods: {
     getRouterLink(link) {
@@ -136,22 +137,22 @@ export default {
       this.notify = notifications.length;
     },
     async fetchNewNotifications() {
-      const notificationsRequest = await this.$http.get('/notifications/unread');
-      const { notifications } = notificationsRequest.data;
-      const count = notifications.length;
-      if (!count) {
+      const newNotificationsRequest = await this.$http.get('/notifications/unread');
+      const newNotifications = newNotificationsRequest.data.notifications;
+      if (!newNotifications.length) {
         return;
       }
-      for (let i = 0; i < count; i += 1) {
-        this.notifications.unshift(notifications[i]);
-      }
+      await this.fetchNotifications();
       this.notify = true;
     },
   },
   async beforeMount() {
     await this.fetchNotifications();
-    // await this.newNotificationCheck();
-    await this.fetchNewNotifications();
+    await this.newNotificationCheck();
+    this.fetchNotificationsIntervalId = setInterval(this.fetchNewNotifications, 5000);
+  },
+  beforeDestroy() {
+    window.clearInterval(this.fetchNotificationsIntervalId);
   },
 };
 </script>
