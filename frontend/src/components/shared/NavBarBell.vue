@@ -1,6 +1,6 @@
 <template>
   <!-- eslint-disable max-len -->
-  <div class="ml-auto mr-8 relative pr-1 z-50 outline-none" @focusout="close" tabindex="1">
+  <div v-if="notificationsFetched" class="ml-auto mr-8 relative pr-1 z-50 outline-none" @focusout="close" tabindex="1">
     <div class="outline-none">
       <img v-on:click="toggle()" src="../../assets/bell.png" class="w-5 cursor-pointer">
       <div v-on:click="toggle()" v-if="notify" class="w-3 h-3 bg-purple-matcha cursor-pointer rounded-full absolute right-0 bottom-0 ml-2 pl-1"></div>
@@ -70,6 +70,7 @@ export default {
     //   { content: 'Bae liked youBae liked youBae liked youBae liked youBae liked youBae liked you', id: 10, is_seen: true, type: 'like', link_to: 'google.com' },
     // ],
     notifications: [],
+    notificationsFetched: false,
     showNotifications: false,
     fetchNotificationsIntervalId: null,
   }),
@@ -150,6 +151,7 @@ export default {
     await this.fetchNotifications();
     await this.newNotificationCheck();
     this.fetchNotificationsIntervalId = setInterval(this.fetchNewNotifications, 5000);
+    this.notificationsFetched = true;
   },
   beforeDestroy() {
     window.clearInterval(this.fetchNotificationsIntervalId);
