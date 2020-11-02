@@ -6908,6 +6908,269 @@
 			"protocolProfileBehavior": {}
 		},
 		{
+			"name": "Notifications",
+			"item": [
+				{
+					"name": "All notifications",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "06e897c0-f1ce-4c56-beb7-108f0d3ec454",
+								"exec": [
+									"var response = JSON.parse(responseBody);",
+									"",
+									"",
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"tests[\"JSON return code is 200\"] = response.code == 200",
+									"",
+									"tests[\"success is true\"] = response.success == true",
+									"tests[\"Notifications list length is 12\"] = response.notifications.length == 2",
+									"tests[\"Notification 1 is unread\"] = response.notifications[0].is_seen == 0",
+									"tests[\"Notification 1 is of type match\"] = response.notifications[0].type == \"match\"",
+									"",
+									"",
+									"tests[\"Notification 2 is unread\"] = response.notifications[1].is_seen == 0",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{host}}/notifications",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"notifications"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Unread notifications",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "024fce99-38c5-4ab3-830f-ef1df7c0f89d",
+								"exec": [
+									"var response = JSON.parse(responseBody);",
+									"",
+									"",
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"tests[\"JSON return code is 200\"] = response.code == 200",
+									"",
+									"tests[\"success is true\"] = response.success == true",
+									"tests[\"Notifications list length is 12\"] = response.notifications.length == 2",
+									"",
+									"pm.collectionVariables.set(\"notif_id\", response.notifications[0].id);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{host}}/notifications/unread",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"notifications",
+								"unread"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Read unknow notif",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "8eac7377-72ae-4f5d-abf8-63e9702c8f11",
+								"exec": [
+									"var response = JSON.parse(responseBody);",
+									"",
+									"",
+									"pm.test(\"Status code is 404\", function () {",
+									"    pm.response.to.have.status(404);",
+									"});",
+									"",
+									"tests[\"JSON return code is 404\"] = response.code == 404",
+									"",
+									"tests[\"success is false\"] = response.success == false",
+									"tests[\"Message is correct\"] = response.error.message == \"Notification id -1 not found.\"",
+									"tests[\"Error type is Bad Request\"] = response.error.type == \"NotFoundError\""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{host}}/notifications/read/-1",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"notifications",
+								"read",
+								"-1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Read notification",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "cf93f142-ba38-454d-8573-a0181076800a",
+								"exec": [
+									"var response = JSON.parse(responseBody);",
+									"",
+									"",
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"tests[\"JSON return code is 200\"] = response.code == 200",
+									"",
+									"tests[\"success is true\"] = response.success == true",
+									"tests[\"Message is correct\"] = response.message == \"Mark as read.\"",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{host}}/notifications/read/{{notif_id}}",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"notifications",
+								"read",
+								"{{notif_id}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Unread notifications after seeing one",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "400da851-9687-4a2c-8864-f1c66b46eedf",
+								"exec": [
+									"var response = JSON.parse(responseBody);",
+									"",
+									"",
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"tests[\"JSON return code is 200\"] = response.code == 200",
+									"",
+									"tests[\"success is true\"] = response.success == true",
+									"tests[\"Notifications list length is 12\"] = response.notifications.length == 1",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{host}}/notifications/unread",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"notifications",
+								"unread"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "All notifications after seeing one",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "cc980ef3-facf-4f04-84ad-87504fbb5a73",
+								"exec": [
+									"var response = JSON.parse(responseBody);",
+									"",
+									"",
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"tests[\"JSON return code is 200\"] = response.code == 200",
+									"",
+									"tests[\"success is true\"] = response.success == true",
+									"tests[\"Notifications list length is 12\"] = response.notifications.length == 2",
+									"tests[\"Notification 1 is unread\"] = response.notifications[0].is_seen == 1",
+									"tests[\"Notification 1 is of type match\"] = response.notifications[0].type == \"match\"",
+									"",
+									"",
+									"tests[\"Notification 2 is unread\"] = response.notifications[1].is_seen == 0",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{host}}/notifications",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"notifications"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"protocolProfileBehavior": {}
+		},
+		{
 			"name": "DEBUG redis view all keys Copy",
 			"request": {
 				"method": "GET",
@@ -6966,158 +7229,163 @@
 	],
 	"variable": [
 		{
-			"id": "163d0e4b-dc1f-4a44-a292-4c9bac132665",
+			"id": "8aaaf0c0-1806-40b7-9d7b-0954a71dc3b9",
 			"key": "host",
 			"value": "http://127.0.0.1:5000"
 		},
 		{
-			"id": "78720fb6-a880-48f0-b4ef-0037783bf669",
+			"id": "95faefe5-c01d-4df2-81f8-32e6db4957f4",
 			"key": "access_token",
 			"value": ""
 		},
 		{
-			"id": "aa4eedd4-8031-4652-9247-65b4ba37ed29",
+			"id": "d0036cbb-bb2b-46b0-80ad-4ed2fd66a3b8",
 			"key": "refresh_token",
 			"value": ""
 		},
 		{
-			"id": "23889e71-efcb-4728-801d-bfb2022e98fe",
+			"id": "b67f9a9a-ef28-4470-b737-1a481f0f78ff",
 			"key": "debug_token",
 			"value": "xX69jules69Xx"
 		},
 		{
-			"id": "0148db13-e991-4798-a3b0-f44b48efe48c",
+			"id": "e100395e-5914-45b6-9862-517df5a25b08",
 			"key": "id",
 			"value": "1541"
 		},
 		{
-			"id": "fe20ffb6-aac2-4e80-ab26-9aefd3dff208",
+			"id": "53888475-4c79-431a-a0b0-7248eaa43e6d",
 			"key": "first_name",
 			"value": "Jules"
 		},
 		{
-			"id": "edd557e6-77c9-4cf4-a872-a8585d6a0ef8",
+			"id": "01468d21-698a-41ea-96ba-6c2d5b883b27",
 			"key": "last_name",
 			"value": "Lasne"
 		},
 		{
-			"id": "986ecc90-2f6c-42f2-93e4-a67f138b6f85",
+			"id": "c0b5c56a-c191-436c-a131-e3c2be51f02c",
 			"key": "email",
 			"value": "jules.lasne@example.org"
 		},
 		{
-			"id": "3e64ae43-dded-44e5-b776-98ffe04ee4aa",
+			"id": "daaa07da-857c-45b2-b916-87a9679407e0",
 			"key": "username",
 			"value": "seluj78"
 		},
 		{
-			"id": "c34d3320-9c9d-490f-b725-eed4adc6f685",
+			"id": "24247832-9604-4b09-9bd7-c85139d59038",
 			"key": "password",
 			"value": "dolphin"
 		},
 		{
-			"id": "8129ea96-3a68-4c8b-be2c-a1ede91badd6",
+			"id": "b41261ca-02b3-4397-811e-7591d2888fb9",
 			"key": "orientation",
 			"value": "heterosexual"
 		},
 		{
-			"id": "2248859d-0a33-4a3e-b1f4-9deba7ae583f",
+			"id": "94446f0a-78f0-44c9-b790-dfdfd5cfff3a",
 			"key": "gender",
 			"value": "male"
 		},
 		{
-			"id": "452a6796-cc7b-435f-97f4-2efb7afdd70b",
+			"id": "41d4db2e-8605-48f8-af96-f6fd8bab1a9f",
 			"key": "bio",
 			"value": "Phasellus vel tortor vel elit scelerisque accumsan vel nec nunc. Ut condimentum vestibulum sapien non dictum. Vestibulum ac eleifend mi. Curabitur dictum vestibulum ex at placerat. Pellentesque odio mi, condimentum et sollicitudin at, finibus non leo. Aenean sed pulvinar nulla, nec tincidunt felis. Aenean nibh elit, aliquam sit amet lobortis et, pellentesque ut orci. Curabitur placerat sem id ex laoreet imperdiet. Curabitur dictum ac urna feugiat viverra. Vivamus nec pulvinar urna. Suspendisse vel ultrices est. Sed malesuada est vel orci venenatis scelerisque. Phasellus ultrices dignissim sapien, at mattis tellus mattis pulvinar. Sed ut euismod velit, id fermentum leo."
 		},
 		{
-			"id": "c3621a0a-8c7e-49bf-9b17-e6a8e1484415",
+			"id": "304e5325-1e7e-4bcb-8f9a-cb42710183cd",
 			"key": "birthdate",
 			"value": "06/04/1998"
 		},
 		{
-			"id": "456a4f1b-a442-486c-9f1b-db0e9482137a",
+			"id": "d0985a09-668b-4636-8ab4-e06992caccb1",
 			"key": "first_name2",
 			"value": "Félix"
 		},
 		{
-			"id": "7248fdf1-ec59-4f81-970e-2475a7e76b47",
+			"id": "5f8d0133-d794-4988-8d61-859083482062",
 			"key": "last_name2",
 			"value": "Ensal"
 		},
 		{
-			"id": "d123ea78-d69c-4fac-b8a4-3578fb6e9bfe",
+			"id": "719c8fc1-7055-4447-a5b7-3117cde70fdc",
 			"key": "username2",
 			"value": "Ufree"
 		},
 		{
-			"id": "d67cb0bb-9868-4bcf-a9dc-1573af8b0fc0",
+			"id": "a6530617-fc8c-4955-82ff-76e72d53bca0",
 			"key": "bio2",
 			"value": "Donec quis porttitor ante, ac pulvinar nulla. Vivamus dignissim, ipsum ultricies interdum suscipit, risus tellus auctor mi, eu auctor metus sem quis urna. In maximus placerat ipsum, nec sodales elit aliquet sed. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae; Phasellus malesuada velit felis, non volutpat ex bibendum at. Maecenas aliquet sodales quam at consequat. Sed faucibus consequat tempor. Fusce consequat eu sem non tempus. Duis dapibus nunc vel tempus semper. Pellentesque dignissim tellus odio, vel luctus ipsum suscipit quis. Curabitur id erat at quam varius fermentum non in massa."
 		},
 		{
-			"id": "2a12e123-db0c-4d79-969b-31894ec15fcb",
+			"id": "67b52c2b-a255-4b2c-b6b6-1a7725286d86",
 			"key": "gender2",
 			"value": "other"
 		},
 		{
-			"id": "bb387766-228f-4f45-a5bb-78a0df792184",
+			"id": "cee5ffe3-6105-4c3d-92ce-1bc0e821c743",
 			"key": "orientation2",
 			"value": "bisexual"
 		},
 		{
-			"id": "d06d3ca4-3449-496c-85e6-2a5d8c5cd861",
+			"id": "cb15d65f-6881-4dc6-b3dd-5f594f32c7fb",
 			"key": "birthdate2",
 			"value": "25/06/2000"
 		},
 		{
-			"id": "81a8eb26-fc75-4ed0-b44b-be7cf56b92cb",
+			"id": "1cacaa10-d2dd-48d6-b684-6fa49dfd5477",
 			"key": "email2",
 			"value": "felix.ensal@example.org"
 		},
 		{
-			"id": "651ca1c6-b5b1-498e-83b1-dffb7e20e2ee",
+			"id": "29a7a358-d278-409e-8945-dec865346465",
 			"key": "password2",
 			"value": "dolphin2"
 		},
 		{
-			"id": "760f4fca-5052-4a0c-af5e-adb7eb027b35",
+			"id": "ccae8135-2a50-4604-8e43-07add03067dc",
 			"key": "ip",
 			"value": "90.108.46.63"
 		},
 		{
-			"id": "c3d0318d-5f53-4744-b715-deb1064cce21",
+			"id": "e7a26831-834e-40fb-baf9-752568f1f044",
 			"key": "lat",
 			"value": "49.5271"
 		},
 		{
-			"id": "5441f50b-b340-4676-83c5-49b8aa269247",
+			"id": "b22c8881-541d-4b9b-a144-d0658ead1a8b",
 			"key": "lng",
 			"value": "1.1885"
 		},
 		{
-			"id": "8a2dd752-e68e-4b08-a166-ec4d14562444",
+			"id": "1163d7dd-8b2d-4f7b-a67c-75b457a4c49c",
 			"key": "my_msg_id",
 			"value": "-1"
 		},
 		{
-			"id": "39538ea3-6252-4812-97e9-57326b18cc5d",
+			"id": "e369a8a4-308d-4dd0-80cd-5426c917f865",
 			"key": "to_me_msg_id",
 			"value": "-1"
 		},
 		{
-			"id": "31b13517-b6e0-483b-bc90-cce4a1e6093f",
+			"id": "37d74017-e262-45d5-9fdd-024e4cf564df",
 			"key": "other_msg_id",
 			"value": "-1"
 		},
 		{
-			"id": "d52a932c-e827-458b-8263-c2ad56d3aed0",
+			"id": "44949df4-c7f3-46cd-8536-0dbd888090ed",
 			"key": "user_access_token",
 			"value": ""
 		},
 		{
-			"id": "c0f54c17-fbdc-40b2-a791-aa0da60b4e65",
+			"id": "87455c22-d53d-4f5d-bf4e-322217b9deb2",
 			"key": "user_refresh_token",
+			"value": ""
+		},
+		{
+			"id": "6b72663a-7185-4384-a2b2-9092884e9448",
+			"key": "notif_id",
 			"value": ""
 		}
 	],
