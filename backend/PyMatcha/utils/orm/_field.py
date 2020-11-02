@@ -1,9 +1,7 @@
-import pymysql
-
 from datetime import datetime
 
+import pymysql
 from PyMatcha import database_config
-
 
 # Connect to the database
 connection = pymysql.connect(**database_config)

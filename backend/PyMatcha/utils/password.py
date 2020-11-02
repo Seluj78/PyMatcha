@@ -1,7 +1,7 @@
 """
     PyMatcha - A Python Dating Website
     Copyright (C) 2018-2019 jlasne/gmorer
-    <jlasne@student.42.fr> - <gmorer@student.42.fr>
+    <jlasne@student.42.fr> - <lauris.skraucis@gmail.com>
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -16,11 +16,20 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 """
+from argon2 import PasswordHasher
+from argon2.exceptions import VerificationError
 
-import uuid
-import hashlib
+ph = PasswordHasher()
 
 
 def hash_password(password: str) -> str:
-    salt = uuid.uuid4().hex
-    return hashlib.sha256(salt.encode() + password.encode()).hexdigest() + ":" + salt
+    return ph.hash(password)
+
+
+def check_password(hash: str, password: str) -> bool:
+    try:
+        ph.verify(hash, password)
+    except VerificationError:
+        return False
+    else:
+        return True

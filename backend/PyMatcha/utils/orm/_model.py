@@ -1,7 +1,8 @@
-import pymysql
-
+import logging
 from copy import deepcopy
+from typing import List
 
+import pymysql
 from PyMatcha import database_config
 from PyMatcha.utils.orm import Field
 
@@ -176,6 +177,7 @@ class Model(object):
         with self.db.cursor() as c:
             c.execute(query, tuple(values))
             self.db.commit()
+            c.close()
 
     def update(self, _dict={}, **kwargs):
         """
@@ -190,7 +192,7 @@ class Model(object):
             for k, v in data.items():
                 self[k] = v
         else:
-            raise Exception("Nothing to update")
+            raise Exception("Nothing to update.")
 
     def delete(self):
         """
@@ -208,19 +210,22 @@ class Model(object):
                     )
                 )
                 self.db.commit()
+                logging.debug("deleted {} from table {}".format(self.id, self.table_name))
+                c.close()
         else:
-            raise Exception("{} Not in database {}".format(self.id, self.table_name))
+            logging.warning("{} Not in table {}".format(self.id, self.table_name))
+            raise Exception("{} Not in table {}".format(self.id, self.table_name))
 
     @classmethod
     def get(cls, **kwargs):
         """
         Get a model from the database, using a single keyword argument as a filter.
 
-        Class method allows you to use without instanciation eg.
+        Class method allows you to use without instantiation eg.
 
             model = Model.get(username="test")
 
-        Returns a populated user instance on success and raises an error if the row count was 0
+        Returns a populated user instance on success and returns none if nothing was found
 
         """
 
@@ -228,6 +233,60 @@ class Model(object):
             return False
         key = next(iter(kwargs))
         val = kwargs[key]
+        if isinstance(val, str):
+            typ = "CHAR"
+        else:
+            typ = None
+        temp = cls()
+        fields = ", ".join(temp.fields.keys())
+        with temp.db.cursor() as c:
+            if typ:
+                query = f"""
+                    SELECT {fields}
+                    FROM {cls.table_name}
+                    WHERE {key}=CAST('{val}' AS {typ} CHARACTER SET utf8mb4);
+                """
+            else:
+                query = f"""
+                    SELECT {fields}
+                    FROM {cls.table_name}
+                    WHERE {key}={val};
+                """
+            c.execute(query)
+
+            data = c.fetchone()
+            c.close()
+        if data:
+            return cls(data)
+        else:
+            return None
+
+    @classmethod
+    def get_multi(cls, **kwargs):
+        """
+        Get a model from the database, using multiple keyword argument as a filter.
+
+        Class method allows you to use without instanciation eg.
+
+            model = Model.get(username="test", email="test@example.org")
+
+        Returns a populated user instance on success and raises an error if the row count was 0
+
+        """
+
+        keys = []
+        values = []
+        for key, value in kwargs.items():
+            keys.append(key)
+            values.append(value)
+
+        where = ""
+        length = len(keys)
+        for index, (key, value) in enumerate(zip(keys, values)):
+            if index == length - 1:
+                where = where + f"{key}={value}"
+            else:
+                where = where + f"{key}={value} and "
 
         temp = cls()
         with temp.db.cursor() as c:
@@ -237,29 +296,112 @@ class Model(object):
                     {fields}
                 FROM 
                     {table} 
-                WHERE   {cond}=%s""".format(
-                    fields=", ".join(temp.fields.keys()), table=cls.table_name, cond=key
-                ),
-                (val,),
+                WHERE   {where}""".format(
+                    fields=", ".join(temp.fields.keys()), table=cls.table_name, where=where
+                )
             )
-
             data = c.fetchone()
+            c.close()
         if data:
             return cls(data)
         else:
-            raise ValueError("Not found")
+            return None
+
+    @classmethod
+    def get_multis(cls, **kwargs) -> List:
+        """
+        Get models from the database, using multiple keyword argument as a filter.
+
+        Class method allows you to use without instanciation eg.
+
+            model = Model.get(username="test", email="test@example.org")
+
+        Returns list of instances on success and raises an error if the row count was 0
+        """
+
+        keys = []
+        values = []
+        for key, value in kwargs.items():
+            keys.append(key)
+            values.append(value)
+
+        where = ""
+        length = len(keys)
+        for index, (key, value) in enumerate(zip(keys, values)):
+            if isinstance(value, str):
+                if index == length - 1:
+                    where = where + f"{key}='{value}'"
+                else:
+                    where = where + f"{key}='{value}' and "
+            else:
+                if index == length - 1:
+                    where = where + f"{key}={value}"
+                else:
+                    where = where + f"{key}={value} and "
+        temp = cls()
+        with temp.db.cursor() as c:
+            c.execute(
+                """
+                SELECT 
+                    {fields}
+                FROM 
+                    {table} 
+                WHERE   {where}""".format(
+                    fields=", ".join(temp.fields.keys()), table=cls.table_name, where=where
+                )
+            )
+
+            data = c.fetchall()
+            c.close()
+        if data:
+            ret_list = []
+            for i in data:
+                ret_list.append(cls(i))
+            return ret_list
+        else:
+            return []
 
     @classmethod
     def select_all(cls):
+        logging.debug("Getting all items from table {}".format(cls.table_name))
         temp = cls()
         with temp.db.cursor() as c:
             c.execute("""SELECT * FROM {}""".format(cls.table_name))
             data = c.fetchall()
+            c.close()
+        for item in data:
+            yield cls(item)
+
+    @classmethod
+    def select_random(cls, count):
+        logging.debug(f"Getting {count} random entries from {cls.table_name}")
+        temp = cls()
+        with temp.db.cursor() as c:
+            c.execute(
+                """
+                SELECT * FROM {}
+                ORDER BY RAND()
+                LIMIT {}
+                """.format(
+                    temp.table_name, count
+                )
+            )
+            data = c.fetchall()
+            c.close()
         for item in data:
             yield cls(item)
 
     @classmethod
     def drop_table(cls):
+        logging.warning("Dropping table {}".format(cls.table_name))
         with cls.db.cursor() as c:
             c.execute("""DROP TABLE {}""".format(cls.table_name))
             cls.db.commit()
+            c.close()
+
+    def to_dict(self):
+        ret_dict = dict()
+        for field_name, field in self.fields.items():
+            field_value = field.value
+            ret_dict[field_name] = field_value
+        return ret_dict

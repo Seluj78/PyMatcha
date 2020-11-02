@@ -1,7 +1,7 @@
 """
     PyMatcha - A Python Dating Website
     Copyright (C) 2018-2019 jlasne/gmorer
-    <jlasne@student.42.fr> - <gmorer@student.42.fr>
+    <jlasne@student.42.fr> - <lauris.skraucis@gmail.com>
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -16,37 +16,46 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 """
-
-from flask import Blueprint, jsonify
-
-import flask_jwt_extended as fjwt
-
-import PyMatcha.models.user as user
-
-from PyMatcha.errors import NotFoundError
-
-User = user.User
-get_user = user.get_user
+from flask import Blueprint
+from flask import current_app
+from flask import jsonify
+from flask_jwt_extended import jwt_required
+from PyMatcha.models.user import get_user
+from PyMatcha.models.user import User
+from PyMatcha.utils.errors import NotFoundError
 
 
 user_bp = Blueprint("user", __name__)
 
 
-@user_bp.route("/users/", methods=["GET"])
-@fjwt.jwt_required
+@user_bp.route("/users", methods=["GET"])
+@jwt_required
 def get_all_users():
+    current_app.logger.info("/users/ -> Call")
     user_list = []
     for u in User.select_all():
-        user_list.append(u.get_all_info())
+        user_list.append(u.to_dict())
+    current_app.logger.info("/users/ -> Returning all users list")
     return jsonify(user_list)
 
 
 @user_bp.route("/users/<uid>", methods=["GET"])
-@fjwt.jwt_required
+@jwt_required
 def get_one_user(uid):
+    current_app.logger.info("/users/{} -> Call".format(uid))
     try:
         u = get_user(uid)
     except NotFoundError:
-        raise NotFoundError("User {} not found".format(uid), "Check given uid and try again")
+        raise NotFoundError("User {} not found".format(uid))
     else:
-        return jsonify(u.get_all_info())
+        current_app.logger.info("/users/{} -> Returning info on user {}".format(uid, uid))
+        return jsonify(u.to_dict())
+
+
+@user_bp.route("/users/online", methods=["GET"])
+@jwt_required
+def get_all_online_users():
+    online_user_list = []
+    for user in User.get_multis(is_online=True):
+        online_user_list.append(user.to_dict())
+    return jsonify(online_user_list)

@@ -1,0 +1,95 @@
+<template>
+  <!-- eslint-disable max-len -->
+  <div class="auth-container">
+    <div class="auth-sub-container-error mb-4" v-if="error.happened">
+      <h1 class="auth-sub-container-error-message">{{error.message}}</h1>
+    </div>
+    <div class="auth-sub-container">
+      <div class="auth-sub-container-content">
+        <div class="flex">
+          <img src="../../assets/logo.png" class="h-12">
+          <h1 class="text-purple-matcha text-4xl font-bold ml-2">Matcha</h1>
+        </div>
+      </div>
+      <div class="auth-sub-container-content mt-4">
+        <ValidationObserver v-slot="{ handleSubmit, invalid }">
+          <form @submit.prevent="handleSubmit(onSubmit)">
+            <ValidationProvider name="Username" rules="required|max:100" v-slot="{errors}">
+              <input type="text" placeholder="Username" v-model="formData.username" class="matcha-input">
+              <span class="matcha-input-error">{{ errors[0] }}</span>
+            </ValidationProvider>
+            <ValidationProvider name="Password" rules="required|max:100" v-slot="{errors}">
+              <input type="password" placeholder="Password" v-model="formData.password" class="matcha-input">
+              <span class="matcha-input-error">{{ errors[0] }}</span>
+            </ValidationProvider>
+            <input type="submit" :disabled="invalid" value="Sign In" v-bind:class="{'auth-sub-container-content-submit-button': true, 'opacity-50': invalid, 'cursor-pointer': !invalid}">
+          </form>
+        </ValidationObserver>
+      </div>
+      <hr class="bg-gray-300 w-full my-4">
+      <div class="auth-sub-container-content">
+        <router-link to="/accounts/password/forgot" class="auth-sub-container-content-link">Forgot password?</router-link>
+      </div>
+    </div>
+    <div class="auth-sub-container-thinner mt-4">
+      <div class="auth-sub-container-content">
+        <h1 class="auth-sub-container-content-paragraph">Don't have an account? <router-link to="/accounts/signup" class="auth-sub-container-content-link">Sign up</router-link></h1>
+      </div>
+    </div>
+  </div>
+</template>
+
+<script>
+import jwtDecode from 'jwt-decode';
+import { setAccessToken, setRefreshToken } from '../../auth/tokens';
+
+export default {
+  data: () => ({
+    formData: {
+      username: '',
+      password: '',
+    },
+    error: {
+      happened: false,
+      message: '',
+    },
+  }),
+  methods: {
+    async onSubmit() {
+      try {
+        this.clearError();
+        const response = await this.signInUser(this.formData);
+        setAccessToken(response.data.return.access_token);
+        setRefreshToken(response.data.return.refresh_token);
+        const userId = this.getUserFromJwt(response.data.return.access_token).id;
+        const user = await this.$http.get(`/users/${userId}`);
+        await this.$store.dispatch('login', user.data);
+        if (response.data.return.is_profile_completed) {
+          this.$router.push('/browse');
+        } else {
+          this.$router.push('/onboarding');
+        }
+      } catch (error) {
+        this.displayError(this.$errorMessenger(error));
+      }
+    },
+    async signInUser(user) {
+      const response = await this.$http.post('/auth/login', user);
+      return response;
+    },
+    getUserFromJwt(token) {
+      const { identity } = jwtDecode(token);
+      return identity;
+    },
+    clearError() {
+      this.error.message = '';
+      this.error.happened = false;
+    },
+    displayError(message) {
+      this.error.message = message;
+      this.error.happened = true;
+    },
+  },
+};
+
+</script>
