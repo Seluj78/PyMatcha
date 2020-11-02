@@ -75,9 +75,9 @@ def send_message():
 
     current_user.send_message(to_id=to_user.id, content=content)
     current_app.logger.debug("/messages -> Message successfully sent to {}.".format(to_uid))
-    
-    new_message = Message.get_multis(to_id=to_user.id, content=content, from_id=current_user.id)[-1] 
-    
+
+    new_message = Message.get_multis(to_id=to_user.id, content=content, from_id=current_user.id)[-1]
+
     Notification.create(
         trigger_id=current_user.id,
         user_id=to_user.id,
@@ -85,8 +85,8 @@ def send_message():
         type="message",
         link_to=f"conversation/{current_user.id}",
     )
-    
-    return SuccessOutputMessage("new_message", new_message.to_dict(), "Message successfully sent to {}.".format(to_uid))    
+
+    return SuccessOutputMessage("new_message", new_message.to_dict(), "Message successfully sent to {}.".format(to_uid))
 
 
 @messages_bp.route("/conversations/<with_uid>", methods=["GET"])
