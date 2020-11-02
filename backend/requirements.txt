@@ -3,7 +3,7 @@ gunicorn==20.0.4
 
 flask-cors==3.0.9
 
-python-dotenv==0.14.0
+python-dotenv==0.15.0
 
 Geohash==1.0
 python-geohash==0.8.5
