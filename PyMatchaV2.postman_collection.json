@@ -6392,7 +6392,7 @@
 					"response": []
 				},
 				{
-					"name": "Debug get message from 1500 to 1501",
+					"name": "Debug get message sent of 1500",
 					"event": [
 						{
 							"listen": "test",
@@ -6405,7 +6405,8 @@
 									"",
 									"var response = JSON.parse(responseBody);",
 									"",
-									"pm.collectionVariables.set(\"other_msg_id\", response.messages[response.messages.length - 1].id);"
+									"pm.collectionVariables.set(\"other_msg_id\", response.messages[response.messages.length - 1].id);",
+									"pm.collectionVariables.set(\"to_me_msg_id\", response.messages[response.messages.length - 2].id);"
 								],
 								"type": "text/javascript"
 							}
@@ -6490,6 +6491,86 @@
 						}
 					},
 					"response": []
+				},
+				{
+					"name": "Like a message",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "8ebd4d53-f5ea-4fac-a434-ea229902840b",
+								"exec": [
+									"var response = JSON.parse(responseBody);",
+									"",
+									"",
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"tests[\"Message is correct\"] = response.message == \"Liked message 70.\""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{host}}/messages/like/{{to_me_msg_id}}",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"messages",
+								"like",
+								"{{to_me_msg_id}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Like a message twice",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "7d26a209-cab4-46c4-8a5c-02355e29ba84",
+								"exec": [
+									"var response = JSON.parse(responseBody);",
+									"",
+									"",
+									"pm.test(\"Status code is 400\", function () {",
+									"    pm.response.to.have.status(400);",
+									"});",
+									"",
+									"tests[\"JSON return code is 400\"] = response.code == 400",
+									"",
+									"tests[\"success is false\"] = response.success == false",
+									"tests[\"Message is correct\"] = response.error.message == \"Message is already liked.\"",
+									"tests[\"Error type is Bad Request\"] = response.error.type == \"BadRequestError\""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{host}}/messages/like/{{to_me_msg_id}}",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"messages",
+								"like",
+								"{{to_me_msg_id}}"
+							]
+						}
+					},
+					"response": []
 				}
 			],
 			"protocolProfileBehavior": {}
@@ -6553,143 +6634,148 @@
 	],
 	"variable": [
 		{
-			"id": "525c08dc-b38e-4550-be88-6f08a09cdb67",
+			"id": "bd2d6367-870c-4b0b-b112-793b4ae72ab2",
 			"key": "host",
 			"value": "http://127.0.0.1:5000"
 		},
 		{
-			"id": "dc3107c9-1e82-49ef-b87e-299c44b71175",
+			"id": "771b7bd1-8ec5-4fff-9556-ed7bd64b1bfd",
 			"key": "access_token",
 			"value": ""
 		},
 		{
-			"id": "469e905f-912c-4c38-b0f6-4ef2eba5c080",
+			"id": "bb22e726-9de0-413c-a513-bf74d03db168",
 			"key": "refresh_token",
 			"value": ""
 		},
 		{
-			"id": "21ca47ac-afd5-43bf-a122-94ef74d67a76",
+			"id": "1484d0d7-729d-4413-a4a2-54afb7bc2b30",
 			"key": "debug_token",
 			"value": "xX69jules69Xx"
 		},
 		{
-			"id": "7a9da366-a587-4be3-a822-958bd0315b9f",
+			"id": "165b1b91-e48c-4161-b0db-00dbff20bfb4",
 			"key": "id",
 			"value": "1541"
 		},
 		{
-			"id": "42420f0a-eab2-4cdf-9dea-d23c7eb4e453",
+			"id": "6cf61114-027d-4c24-9d06-220a68ca8cd1",
 			"key": "first_name",
 			"value": "Jules"
 		},
 		{
-			"id": "dc6fdeb4-340e-413e-8fef-e1b48d9af18d",
+			"id": "0de6b86b-801f-4647-ae2c-1388ea018c80",
 			"key": "last_name",
 			"value": "Lasne"
 		},
 		{
-			"id": "e1a2ad42-3d74-48cb-8445-744bd1f4ae6c",
+			"id": "76d3b5f1-e996-4b48-9142-a7dc910f3ac8",
 			"key": "email",
 			"value": "jules.lasne@example.org"
 		},
 		{
-			"id": "26f7d0c9-b70f-4040-93e3-cd18bb3e940e",
+			"id": "508fbe7a-2fc2-4bd5-945d-9c1a1ccea155",
 			"key": "username",
 			"value": "seluj78"
 		},
 		{
-			"id": "d6a41606-51e9-469e-a2d0-09c89d34bbf7",
+			"id": "a16573bb-bc1d-48e4-82a1-d8e9a00a4988",
 			"key": "password",
 			"value": "dolphin"
 		},
 		{
-			"id": "961e3ae2-f94e-4276-bcde-ecbfbda27954",
+			"id": "7b5be438-63f9-4b95-a67e-96457c8ccf12",
 			"key": "orientation",
 			"value": "heterosexual"
 		},
 		{
-			"id": "50471d30-d726-4ada-8066-bea3df8b92c5",
+			"id": "2aa5e509-3322-4fec-8934-ed318a28ad14",
 			"key": "gender",
 			"value": "male"
 		},
 		{
-			"id": "063f5ba8-0a59-454f-aeb9-4eb6cfe7abbd",
+			"id": "f743c6c2-9800-4494-acf6-1e1fc202b566",
 			"key": "bio",
 			"value": "Phasellus vel tortor vel elit scelerisque accumsan vel nec nunc. Ut condimentum vestibulum sapien non dictum. Vestibulum ac eleifend mi. Curabitur dictum vestibulum ex at placerat. Pellentesque odio mi, condimentum et sollicitudin at, finibus non leo. Aenean sed pulvinar nulla, nec tincidunt felis. Aenean nibh elit, aliquam sit amet lobortis et, pellentesque ut orci. Curabitur placerat sem id ex laoreet imperdiet. Curabitur dictum ac urna feugiat viverra. Vivamus nec pulvinar urna. Suspendisse vel ultrices est. Sed malesuada est vel orci venenatis scelerisque. Phasellus ultrices dignissim sapien, at mattis tellus mattis pulvinar. Sed ut euismod velit, id fermentum leo."
 		},
 		{
-			"id": "b537f8d6-66c2-478b-b11e-8b335f0abc00",
+			"id": "4568cf8b-9fe2-4fca-9ab3-3eeee3022cbd",
 			"key": "birthdate",
 			"value": "06/04/1998"
 		},
 		{
-			"id": "a16910c5-523b-4441-ae3a-8dee8a75304f",
+			"id": "cf159f5f-8062-4fcd-9ec2-6856c661f075",
 			"key": "first_name2",
 			"value": "Félix"
 		},
 		{
-			"id": "f52e79a1-9423-48fd-9b52-0b703d5c447d",
+			"id": "5d5d2a15-6e3a-46e9-911c-d264f690e82e",
 			"key": "last_name2",
 			"value": "Ensal"
 		},
 		{
-			"id": "434627ff-ba53-4129-9505-b8a30308b74a",
+			"id": "d24bc1d8-55d4-4301-beb2-99eda20b2ef2",
 			"key": "username2",
 			"value": "Ufree"
 		},
 		{
-			"id": "3abec574-694b-49f8-ba7c-0239c4312cb8",
+			"id": "ae07ef10-162f-47b8-920a-95aeafe9963a",
 			"key": "bio2",
 			"value": "Donec quis porttitor ante, ac pulvinar nulla. Vivamus dignissim, ipsum ultricies interdum suscipit, risus tellus auctor mi, eu auctor metus sem quis urna. In maximus placerat ipsum, nec sodales elit aliquet sed. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae; Phasellus malesuada velit felis, non volutpat ex bibendum at. Maecenas aliquet sodales quam at consequat. Sed faucibus consequat tempor. Fusce consequat eu sem non tempus. Duis dapibus nunc vel tempus semper. Pellentesque dignissim tellus odio, vel luctus ipsum suscipit quis. Curabitur id erat at quam varius fermentum non in massa."
 		},
 		{
-			"id": "b07056e9-16f4-41f9-b676-575a84709f3f",
+			"id": "ceef2acd-1c7f-44e0-9be9-e9e578c13b75",
 			"key": "gender2",
 			"value": "other"
 		},
 		{
-			"id": "9c16e8e0-0eaa-4c2e-898c-3c90dc1526a1",
+			"id": "95f6601b-3181-4668-ad74-b9d9c285d44d",
 			"key": "orientation2",
 			"value": "bisexual"
 		},
 		{
-			"id": "37ca4895-a2df-4425-b2c0-9af6888987ca",
+			"id": "9b84e690-caaf-4279-b323-95962879537f",
 			"key": "birthdate2",
 			"value": "25/06/2000"
 		},
 		{
-			"id": "7476be14-edc5-479b-a3e5-bf73f1874f3b",
+			"id": "f89b28b6-c4b0-493b-9d6c-8a078af0b74e",
 			"key": "email2",
 			"value": "felix.ensal@example.org"
 		},
 		{
-			"id": "9250599e-01a5-4c26-8031-e18403a51922",
+			"id": "92bb66ff-01f2-439b-9c4a-326eb35f7a76",
 			"key": "password2",
 			"value": "dolphin2"
 		},
 		{
-			"id": "b191dae0-e265-4ac8-bf86-42cbf98fe01e",
+			"id": "c19f84bd-5551-44ab-8506-273424baecaa",
 			"key": "ip",
 			"value": "90.108.46.63"
 		},
 		{
-			"id": "07dcab1a-3f35-4c8d-8c35-c0ddedbe326d",
+			"id": "9f3d5dca-f148-478c-a7c3-14374fef51d5",
 			"key": "lat",
 			"value": "49.5271"
 		},
 		{
-			"id": "74cf732b-113d-421a-a453-451c5674598a",
+			"id": "901452d2-5f3c-4628-b2d5-35a7b1451a65",
 			"key": "lng",
 			"value": "1.1885"
 		},
 		{
-			"id": "3980002f-996f-4fc5-ad53-ad0f74fbfb7f",
+			"id": "d4c44ddb-b543-4229-89bd-cd668fa25764",
 			"key": "my_msg_id",
 			"value": "69"
 		},
 		{
-			"id": "62800d58-0420-44b0-b9f3-4ff112243deb",
+			"id": "1600e0c7-d993-495d-aa2d-07fe1b58508e",
 			"key": "other_msg_id",
+			"value": ""
+		},
+		{
+			"id": "ddf2b160-fc99-45cf-8e13-f51befbd1aa3",
+			"key": "to_me_msg_id",
 			"value": ""
 		}
 	],
