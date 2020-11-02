@@ -30,14 +30,13 @@
       <router-link v-if="loggedIn" to="/matches" v-bind:class="{'navigation-button-logged-in': true, 'font-black': currentRoute === 'Matches'}">Matches</router-link>
       <router-link v-if="loggedIn" to="/settings" v-bind:class="{'navigation-button-logged-in': true, 'font-black': currentRoute === 'Settings'}">Settings</router-link>
       <router-link v-if="loggedIn" to="/history" v-bind:class="{'navigation-button-logged-in': true, 'font-black': currentRoute === 'History'}">History</router-link>
-      <router-link v-if="loggedIn" v-on:click.native="logout()" to="/" class="navigation-button-logged-in">Exit</router-link>
+      <router-link v-if="loggedIn" to="/accounts/signout" class="navigation-button-logged-in">Exit</router-link>
     </div>
   </nav>
 </template>
 
 <script>
 /* eslint-disable indent */
-import { logOut } from '@/auth/logOut';
 
 export default {
   name: 'Navigation',
@@ -50,11 +49,6 @@ export default {
   computed: {
     loggedIn() {
       return this.$store.getters.getLoggedInUser;
-    },
-  },
-  methods: {
-    async logout() {
-      await logOut();
     },
   },
 };
