@@ -97,4 +97,4 @@ def history_blocked():
         user_dict["common_tags"] = common_tags
         user_dict["distance"] = distance
         blocked_people.append(user_dict)
-    return SuccessOutput("bloked", blocked_people)
+    return SuccessOutput("blocked", blocked_people)

@@ -6507,7 +6507,7 @@
 									"    pm.response.to.have.status(200);",
 									"});",
 									"",
-									"tests[\"Message is correct\"] = response.message == \"Liked message 70.\""
+									"tests[\"Message is correct\"] = response.success = true"
 								],
 								"type": "text/javascript"
 							}
@@ -6587,7 +6587,7 @@
 									"    pm.response.to.have.status(200);",
 									"});",
 									"",
-									"tests[\"Message is correct\"] = response.message == \"Unliked message 70.\""
+									"tests[\"Message is correct\"] = response.success == true"
 								],
 								"type": "text/javascript"
 							}
@@ -6656,6 +6656,258 @@
 			"protocolProfileBehavior": {}
 		},
 		{
+			"name": "HIstory",
+			"item": [
+				{
+					"name": "Viewed profiles",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "6c7ff5c3-1816-4e51-a3d8-7538d4fda84e",
+								"exec": [
+									"var response = JSON.parse(responseBody);",
+									"",
+									"",
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"tests[\"JSON return code is 200\"] = response.code == 200",
+									"",
+									"tests[\"success is true\"] = response.success == true",
+									"tests[\"Viewed list is empty\"] = response.viewed.length == 1",
+									"tests[\"Viewed n1 is correct\"] = response.viewed[0].id == 500"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{host}}/history/viewed",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"history",
+								"viewed"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Profiles viewed me",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "00fea48e-8525-4286-9178-cd1fd585cd43",
+								"exec": [
+									"var response = JSON.parse(responseBody);",
+									"",
+									"",
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"tests[\"JSON return code is 200\"] = response.code == 200",
+									"",
+									"tests[\"success is true\"] = response.success == true",
+									"tests[\"Viewed me list is empty\"] = response.viewed_me.length == 10",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{host}}/history/viewed/me",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"history",
+								"viewed",
+								"me"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Liked profiles",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "339022fb-0180-491a-98b4-2939382b7a75",
+								"exec": [
+									"var response = JSON.parse(responseBody);",
+									"",
+									"",
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"tests[\"JSON return code is 200\"] = response.code == 200",
+									"",
+									"tests[\"success is true\"] = response.success == true",
+									"tests[\"Liked list is filled with 1 entry\"] = response.liked.length == 1",
+									"tests[\"Liked n1 is correct\"] = response.liked[0].id == 1500"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{host}}/history/liked",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"history",
+								"liked"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Profiled liked me",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "162b979a-d093-49a4-9d51-cd3227d070ac",
+								"exec": [
+									"var response = JSON.parse(responseBody);",
+									"",
+									"",
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"tests[\"JSON return code is 200\"] = response.code == 200",
+									"",
+									"tests[\"success is true\"] = response.success == true",
+									"tests[\"Liked me list contains one entry\"] = response.liked_me.length == 1",
+									"tests[\"Liked me first entry's id is 1500\"] = response.liked_me[0].id == 1500",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{host}}/history/liked/me",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"history",
+								"liked",
+								"me"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Block user 1500",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "739b106b-ac34-4958-8a25-c0c03a959600",
+								"exec": [
+									"var response = JSON.parse(responseBody);",
+									"",
+									"",
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"tests[\"Success is true\"] = response.success == true"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{host}}/profile/block/1500",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"profile",
+								"block",
+								"1500"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Blocked profiles",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "a5fd8356-150a-4d52-a7a2-81791689242e",
+								"exec": [
+									"var response = JSON.parse(responseBody);",
+									"",
+									"",
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"tests[\"JSON return code is 200\"] = response.code == 200",
+									"",
+									"tests[\"success is true\"] = response.success == true",
+									"tests[\"Blocked list is equal to 1\"] = response.blocked.length == 1",
+									"tests[\"Blocked entry n1 is user 1500\"] = response.blocked[0].id = 1500"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{host}}/history/blocked",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"history",
+								"blocked"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"protocolProfileBehavior": {}
+		},
+		{
 			"name": "DEBUG redis view all keys Copy",
 			"request": {
 				"method": "GET",
@@ -6714,148 +6966,158 @@
 	],
 	"variable": [
 		{
-			"id": "2dd74830-e069-4506-8cf0-8ec8633d3ba9",
+			"id": "163d0e4b-dc1f-4a44-a292-4c9bac132665",
 			"key": "host",
 			"value": "http://127.0.0.1:5000"
 		},
 		{
-			"id": "8f2de949-78ab-4b07-9d56-f93ed30c7a48",
+			"id": "78720fb6-a880-48f0-b4ef-0037783bf669",
 			"key": "access_token",
 			"value": ""
 		},
 		{
-			"id": "0d6988ca-f14c-479f-b84b-06515db0f422",
+			"id": "aa4eedd4-8031-4652-9247-65b4ba37ed29",
 			"key": "refresh_token",
 			"value": ""
 		},
 		{
-			"id": "520a88f7-46ec-4afa-a039-709903093326",
+			"id": "23889e71-efcb-4728-801d-bfb2022e98fe",
 			"key": "debug_token",
 			"value": "xX69jules69Xx"
 		},
 		{
-			"id": "c608f080-018e-49e6-b0fd-e5a9dc47548f",
+			"id": "0148db13-e991-4798-a3b0-f44b48efe48c",
 			"key": "id",
 			"value": "1541"
 		},
 		{
-			"id": "11573f4d-aeab-43f3-ac2c-5fa3a7d605b1",
+			"id": "fe20ffb6-aac2-4e80-ab26-9aefd3dff208",
 			"key": "first_name",
 			"value": "Jules"
 		},
 		{
-			"id": "306570b6-50cb-4563-a247-52998def0391",
+			"id": "edd557e6-77c9-4cf4-a872-a8585d6a0ef8",
 			"key": "last_name",
 			"value": "Lasne"
 		},
 		{
-			"id": "b2a7dfff-5669-4d66-855e-8017a9bbddd3",
+			"id": "986ecc90-2f6c-42f2-93e4-a67f138b6f85",
 			"key": "email",
 			"value": "jules.lasne@example.org"
 		},
 		{
-			"id": "dea38571-c4f1-4474-a6e9-89088c2938ab",
+			"id": "3e64ae43-dded-44e5-b776-98ffe04ee4aa",
 			"key": "username",
 			"value": "seluj78"
 		},
 		{
-			"id": "6d48f67a-cbaa-4223-acb7-d4f70142e598",
+			"id": "c34d3320-9c9d-490f-b725-eed4adc6f685",
 			"key": "password",
 			"value": "dolphin"
 		},
 		{
-			"id": "37fc1f4e-964c-417c-825f-46b69ed03671",
+			"id": "8129ea96-3a68-4c8b-be2c-a1ede91badd6",
 			"key": "orientation",
 			"value": "heterosexual"
 		},
 		{
-			"id": "f37c7cd5-6e25-4cd3-863b-9f06adcc1db2",
+			"id": "2248859d-0a33-4a3e-b1f4-9deba7ae583f",
 			"key": "gender",
 			"value": "male"
 		},
 		{
-			"id": "3d40a479-ff2f-4130-a96f-a654b680fae6",
+			"id": "452a6796-cc7b-435f-97f4-2efb7afdd70b",
 			"key": "bio",
 			"value": "Phasellus vel tortor vel elit scelerisque accumsan vel nec nunc. Ut condimentum vestibulum sapien non dictum. Vestibulum ac eleifend mi. Curabitur dictum vestibulum ex at placerat. Pellentesque odio mi, condimentum et sollicitudin at, finibus non leo. Aenean sed pulvinar nulla, nec tincidunt felis. Aenean nibh elit, aliquam sit amet lobortis et, pellentesque ut orci. Curabitur placerat sem id ex laoreet imperdiet. Curabitur dictum ac urna feugiat viverra. Vivamus nec pulvinar urna. Suspendisse vel ultrices est. Sed malesuada est vel orci venenatis scelerisque. Phasellus ultrices dignissim sapien, at mattis tellus mattis pulvinar. Sed ut euismod velit, id fermentum leo."
 		},
 		{
-			"id": "154a491c-b318-48b5-8fcc-deec4024b713",
+			"id": "c3621a0a-8c7e-49bf-9b17-e6a8e1484415",
 			"key": "birthdate",
 			"value": "06/04/1998"
 		},
 		{
-			"id": "62d4c98d-9326-45b0-a7ef-9cd83b661a3a",
+			"id": "456a4f1b-a442-486c-9f1b-db0e9482137a",
 			"key": "first_name2",
 			"value": "Félix"
 		},
 		{
-			"id": "1f6192fa-246e-40ac-b861-f8d0bf209bb2",
+			"id": "7248fdf1-ec59-4f81-970e-2475a7e76b47",
 			"key": "last_name2",
 			"value": "Ensal"
 		},
 		{
-			"id": "b409e91f-3b1f-43ce-8d0b-bc5f825dccc5",
+			"id": "d123ea78-d69c-4fac-b8a4-3578fb6e9bfe",
 			"key": "username2",
 			"value": "Ufree"
 		},
 		{
-			"id": "4ce3ded1-8f4e-43b3-b5ad-0d3efb6d580a",
+			"id": "d67cb0bb-9868-4bcf-a9dc-1573af8b0fc0",
 			"key": "bio2",
 			"value": "Donec quis porttitor ante, ac pulvinar nulla. Vivamus dignissim, ipsum ultricies interdum suscipit, risus tellus auctor mi, eu auctor metus sem quis urna. In maximus placerat ipsum, nec sodales elit aliquet sed. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae; Phasellus malesuada velit felis, non volutpat ex bibendum at. Maecenas aliquet sodales quam at consequat. Sed faucibus consequat tempor. Fusce consequat eu sem non tempus. Duis dapibus nunc vel tempus semper. Pellentesque dignissim tellus odio, vel luctus ipsum suscipit quis. Curabitur id erat at quam varius fermentum non in massa."
 		},
 		{
-			"id": "aa6b5c48-5db3-4e1c-ab86-3ee86552b99f",
+			"id": "2a12e123-db0c-4d79-969b-31894ec15fcb",
 			"key": "gender2",
 			"value": "other"
 		},
 		{
-			"id": "058264c1-b0dc-4030-a7c0-c60cb2e70735",
+			"id": "bb387766-228f-4f45-a5bb-78a0df792184",
 			"key": "orientation2",
 			"value": "bisexual"
 		},
 		{
-			"id": "6a72eb42-11e3-478c-a88b-cbc5c38752b7",
+			"id": "d06d3ca4-3449-496c-85e6-2a5d8c5cd861",
 			"key": "birthdate2",
 			"value": "25/06/2000"
 		},
 		{
-			"id": "05303017-d1e1-4129-a81d-ab24ee385e96",
+			"id": "81a8eb26-fc75-4ed0-b44b-be7cf56b92cb",
 			"key": "email2",
 			"value": "felix.ensal@example.org"
 		},
 		{
-			"id": "76b6d7f1-c03a-46da-b9b9-789a3f9983db",
+			"id": "651ca1c6-b5b1-498e-83b1-dffb7e20e2ee",
 			"key": "password2",
 			"value": "dolphin2"
 		},
 		{
-			"id": "be7f7aa3-00d6-4321-b553-282893c5ef4f",
+			"id": "760f4fca-5052-4a0c-af5e-adb7eb027b35",
 			"key": "ip",
 			"value": "90.108.46.63"
 		},
 		{
-			"id": "e7242767-4dda-4c0b-917b-5ad2ea4022e2",
+			"id": "c3d0318d-5f53-4744-b715-deb1064cce21",
 			"key": "lat",
 			"value": "49.5271"
 		},
 		{
-			"id": "a772af7d-f32a-45cd-8c21-329d2ef5fc92",
+			"id": "5441f50b-b340-4676-83c5-49b8aa269247",
 			"key": "lng",
 			"value": "1.1885"
 		},
 		{
-			"id": "99c1a78d-f272-47f5-be48-66167d19768b",
+			"id": "8a2dd752-e68e-4b08-a166-ec4d14562444",
 			"key": "my_msg_id",
-			"value": "69"
+			"value": "-1"
 		},
 		{
-			"id": "a06bc5bc-7467-4576-bded-6a1c85430697",
+			"id": "39538ea3-6252-4812-97e9-57326b18cc5d",
+			"key": "to_me_msg_id",
+			"value": "-1"
+		},
+		{
+			"id": "31b13517-b6e0-483b-bc90-cce4a1e6093f",
 			"key": "other_msg_id",
+			"value": "-1"
+		},
+		{
+			"id": "d52a932c-e827-458b-8263-c2ad56d3aed0",
+			"key": "user_access_token",
 			"value": ""
 		},
 		{
-			"id": "8c6d75cb-beaa-4e0c-8726-e07b657af57d",
-			"key": "to_me_msg_id",
+			"id": "c0f54c17-fbdc-40b2-a791-aa0da60b4e65",
+			"key": "user_refresh_token",
 			"value": ""
 		}
 	],
