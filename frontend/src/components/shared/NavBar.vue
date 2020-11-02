@@ -39,7 +39,6 @@
 <script>
 /* eslint-disable indent */
 
-import { logOut } from '@/auth/logOut';
 import NavBarBell from '@/components/shared/NavBarBell.vue';
 
 export default {
