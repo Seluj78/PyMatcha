@@ -47,12 +47,14 @@ class Message(Model):
         to_id: int,
         content: str,
         timestamp: Optional[datetime] = None,
-        seen_timestamp: datetime = None,
+        seen_timestamp: Optional[datetime] = None,
         is_seen: bool = False,
         is_liked: bool = False,
     ) -> Message:
         if not timestamp:
-            datetime.utcnow()
+            timestamp = datetime.utcnow()
+        if not seen_timestamp:
+            seen_timestamp = datetime.utcnow()
         new_message = Message(
             from_id=from_id,
             to_id=to_id,
