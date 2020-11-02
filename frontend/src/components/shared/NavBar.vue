@@ -11,6 +11,7 @@
           </div>
         </router-link>
       </div>
+      <NavBarBell v-if="loggedIn" class="md:invisible"></NavBarBell>
       <div id="burger" class="md:hidden">
         <button type="button" class="block text-gray-800 focus:outline-none" v-on:click="isOpen = !isOpen">
           <svg class="w-8 h-8 text-purple-matcha fill-current" viewBox="0 0 24 24">
@@ -20,6 +21,7 @@
         </button>
       </div>
     </div>
+    <NavBarBell v-if="loggedIn" class="invisible md:visible"></NavBarBell>
     <div id="links" v-on:click="isOpen = !isOpen" v-bind:class="isOpen ? 'block' : 'hidden'" class="px-2 pb-5 text-center md:p-0 md:block md:flex md:items-center">
       <div v-if="!loggedIn" class="md:flex md:bg-purple-matcha md:border-2 md:border-purple-matcha md:rounded-lg">
         <router-link to="/accounts/signin" class="navigation-button-logged-in md:hover:bg-white-matcha md:hover:text-purple-matcha md:text-purple-matcha md:bg-white-matcha md:py-2 md:px-8 md:rounded-md mx-0">Sign In</router-link>
@@ -38,9 +40,15 @@
 <script>
 /* eslint-disable indent */
 
+import { logOut } from '@/auth/logOut';
+import NavBarBell from '@/components/shared/NavBarBell.vue';
+
 export default {
   name: 'Navigation',
   props: ['currentRoute'],
+  components: {
+    NavBarBell,
+  },
   data() {
     return {
       isOpen: false,
