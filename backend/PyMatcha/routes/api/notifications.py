@@ -13,13 +13,15 @@ notifications_bp = Blueprint("notifications", __name__)
 @notifications_bp.route("/notifications", methods=["GET"])
 @jwt_required
 def get_all_notifications():
-    return SuccessOutput("notifications", current_user.get_all_notifications())
+    all_notifications = [notif.to_dict() for notif in current_user.get_all_notifications()]
+    return SuccessOutput("notifications", all_notifications)
 
 
 @notifications_bp.route("/notifications/unread", methods=["GET"])
 @jwt_required
 def get_unread_notifications():
-    return SuccessOutput("notifications", current_user.get_unread_notifications())
+    unread_notifications = [notif.to_dict() for notif in current_user.get_unread_notifications()]
+    return SuccessOutput("notifications", unread_notifications)
 
 
 @notifications_bp.route("/notifications/read/<n_id>", methods=["POST"])
