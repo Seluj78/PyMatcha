@@ -1,8 +1,8 @@
 <template>
   <!-- eslint-disable max-len -->
   <!-- eslint-disable vue/no-deprecated-v-on-native-modifier -->
-  <nav class="sm:flex sm:justify-between sm:items-center sm:py-5">
-    <div class="flex items-center justify-between px-5 py-3 sm:p-0">
+  <nav class="md:flex md:justify-between md:items-center md:py-5">
+    <div class="flex items-center justify-between px-5 py-3 md:p-0">
       <div id="logo">
         <router-link to="/">
           <div class="flex justify-center items-center">
@@ -11,7 +11,7 @@
           </div>
         </router-link>
       </div>
-      <div id="burger" class="sm:hidden">
+      <div id="burger" class="md:hidden">
         <button type="button" class="block text-gray-800 focus:outline-none" v-on:click="isOpen = !isOpen">
           <svg class="w-8 h-8 text-purple-matcha fill-current" viewBox="0 0 24 24">
             <path v-if="!isOpen" fill-rule="evenodd" d="M4 5h16a1 1 0 0 1 0 2H4a1 1 0 1 1 0-2zm0 6h16a1 1 0 0 1 0 2H4a1 1 0 0 1 0-2zm0 6h16a1 1 0 0 1 0 2H4a1 1 0 0 1 0-2z"/>
@@ -20,10 +20,10 @@
         </button>
       </div>
     </div>
-    <div id="links" v-on:click="isOpen = !isOpen" v-bind:class="isOpen ? 'block' : 'hidden'" class="px-2 pb-5 text-center sm:p-0 sm:block sm:flex sm:items-center">
-      <div v-if="!loggedIn" class="sm:flex sm:bg-purple-matcha sm:border-2 sm:border-purple-matcha sm:rounded-lg">
-        <router-link to="/accounts/signin" class="navigation-button-logged-in sm:hover:bg-white-matcha sm:hover:text-purple-matcha sm:text-purple-matcha sm:bg-white-matcha sm:py-2 sm:px-8 sm:rounded-md mx-0">Sign In</router-link>
-        <router-link to="/accounts/signup" class="navigation-button-logged-in sm:hover:bg-purple-matcha sm:hover:text-white-matcha sm:text-white-matcha sm:py-2 sm:px-8">Get Started</router-link>
+    <div id="links" v-on:click="isOpen = !isOpen" v-bind:class="isOpen ? 'block' : 'hidden'" class="px-2 pb-5 text-center md:p-0 md:block md:flex md:items-center">
+      <div v-if="!loggedIn" class="md:flex md:bg-purple-matcha md:border-2 md:border-purple-matcha md:rounded-lg">
+        <router-link to="/accounts/signin" class="navigation-button-logged-in md:hover:bg-white-matcha md:hover:text-purple-matcha md:text-purple-matcha md:bg-white-matcha md:py-2 md:px-8 md:rounded-md mx-0">Sign In</router-link>
+        <router-link to="/accounts/signup" class="navigation-button-logged-in md:hover:bg-purple-matcha md:hover:text-white-matcha md:text-white-matcha md:py-2 md:px-8">Get Started</router-link>
       </div>
       <router-link v-if="loggedIn" to="/browse" v-bind:class="{'navigation-button-logged-in': true, 'font-black': currentRoute === 'Browse'}">Browse</router-link>
       <router-link v-if="loggedIn" to="/search" v-bind:class="{'navigation-button-logged-in': true, 'font-black': currentRoute === 'Search'}">Search</router-link>

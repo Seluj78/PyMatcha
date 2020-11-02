@@ -29,6 +29,12 @@
 
     @screen md {
         .navigation-button-logged-in {
+            @apply px-2;
+        }
+    }
+
+    @screen lg {
+        .navigation-button-logged-in {
             @apply px-5;
             @apply mx-1;
             @apply my-0;
