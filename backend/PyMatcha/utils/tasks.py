@@ -30,7 +30,7 @@ def setup_periodic_tasks(sender, **kwargs):
     sender.add_periodic_task(
         600, calc_search_min_max.s(), name="Update Minimum and Maximum scores and ages for search every 10 minutes"
     )
-    # sender.add_periodic_task(30, random_bot_action.s(), name="200 random bots actions")
+    sender.add_periodic_task(10, random_bot_action.s(), name="Bots will do random actions")
 
 
 @celery.task
@@ -148,9 +148,6 @@ def take_random_users_online():
 
 @celery.task
 def random_bot_action():
-    for user in User.select_random(200):
-        if not user.is_online and not user.is_bot:
-            continue
-        else:
-            decide_bot_action(user)
-    return "200 bots done actions"
+    for user in User.select_random_multis(10, is_bot=True, is_online=True):
+        decide_bot_action(user)
+    return "Done 10 random actions"
