@@ -39,10 +39,10 @@ def _prepare_chatbot(bot_name):
     return chatbot
 
 
-def _get_recommendations(bot_user: User):
+def _get_recommendations(bot_user: User, ignore_bots: bool):
     recommendations = redis.get(f"user_recommendations:{str(bot_user.id)}")
     if not recommendations:
-        create_user_recommendations(bot_user)
+        create_user_recommendations(bot_user, ignore_bots)
         recommendations = redis.get(f"user_recommendations:{str(bot_user.id)}")
         if not recommendations:
             raise ValueError("Recommendations could not be calculated")
@@ -136,7 +136,7 @@ def _botaction_send_message_over_old_one(bot_user: User, chatbot):
 
 
 def decide_bot_action(bot_user: User):
-    recommendations = _get_recommendations(bot_user)
+    recommendations = _get_recommendations(bot_user, ignore_bots=True)
 
     # The bot will first view 0 to 10 profiles
     for _ in range(0, randrange(0, 10)):
