@@ -138,12 +138,12 @@ def _botaction_send_message_over_old_one(bot_user: User, chatbot):
 def decide_bot_action(bot_user: User):
     recommendations = _get_recommendations(bot_user, ignore_bots=True)
 
-    # The bot will first view 0 to 10 profiles
-    for _ in range(0, randrange(0, 10)):
+    # The bot will first view 0 to 3 profiles
+    for _ in range(0, randrange(0, 3)):
         _botaction_view(bot_user, recommendations)
 
-    # The bot will then like 0 to 3 profiles
-    for _ in range(0, randrange(0, 3)):
+    # The bot will then like 0 to 2 profiles
+    for _ in range(0, randrange(0, 2)):
         _botaction_like(bot_user, recommendations)
 
     matches = bot_user.get_matches()
