@@ -163,7 +163,12 @@ def bot_respond_to_message(bot_id: int, from_id: int, message_id: int):
     bot_user = User.get(id=bot_id)
     from_user = User.get(id=from_id)
     message = Message.get(id=message_id)
+
+    message.is_seen = True
+    message.save()
+
     chatbot = _prepare_chatbot(bot_user.username)
     reply = chatbot.get_response(message.content)
-    bot_user.send_message(from_user.id, reply)
+    bot_user.send_message(from_user.id, reply.text)
+
     return f"Bot {bot_id} successfully replied to {from_id}"

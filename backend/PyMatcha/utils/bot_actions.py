@@ -117,7 +117,7 @@ def _botaction_respond_to_unread(bot_user: User, chatbot):
     except IndexError:
         return
     bot_reply = chatbot.get_response(message_to_reply.content)
-    bot_user.send_message(to_id=message_to_reply.from_id, content=bot_reply)
+    bot_user.send_message(to_id=message_to_reply.from_id, content=bot_reply.text)
 
 
 def _botaction_send_message_over_old_one(bot_user: User, chatbot):
@@ -132,7 +132,7 @@ def _botaction_send_message_over_old_one(bot_user: User, chatbot):
         other_user = message_to_reply.to_id
 
     bot_reply = chatbot.get_response(".")
-    bot_user.send_message(to_id=other_user, content=bot_reply)
+    bot_user.send_message(to_id=other_user, content=bot_reply.text)
 
 
 def decide_bot_action(bot_user: User):
