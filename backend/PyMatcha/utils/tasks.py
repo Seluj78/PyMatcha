@@ -89,7 +89,7 @@ def take_users_offline():
 @celery.task
 def update_user_recommendations():
     count = 0
-    for user_to_update in User.get_multis(skip_recommendations=False):
+    for user_to_update in User.get_multis(is_bot=False):
         create_user_recommendations(user_to_update)
         count += 1
     return f"Successfully updated recommendations for {count} users."
@@ -137,7 +137,7 @@ def calc_search_min_max():
 @celery.task
 def take_random_users_online():
     for user in User.select_random(250):
-        if not user.skip_recommendations:
+        if not user.is_bot:
             # User isn't a bot, so skip him
             continue
         user.is_online = True
@@ -149,7 +149,7 @@ def take_random_users_online():
 @celery.task
 def random_bot_action():
     for user in User.select_random(200):
-        if not user.is_online and not user.skip_recommendations:
+        if not user.is_online and not user.is_bot:
             continue
         else:
             decide_bot_action(user)
