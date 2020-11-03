@@ -399,6 +399,63 @@ class Model(object):
             yield cls(item)
 
     @classmethod
+    def select_random_multis(cls, count, **kwargs):
+        """
+        Get models from the database, using multiple keyword argument as a filter.
+
+        Class method allows you to use without instanciation eg.
+
+            model = Model.get(username="test", email="test@example.org")
+
+        Returns list of instances on success and raises an error if the row count was 0
+        """
+
+        keys = []
+        values = []
+        for key, value in kwargs.items():
+            keys.append(key)
+            values.append(value)
+
+        where = ""
+        length = len(keys)
+        for index, (key, value) in enumerate(zip(keys, values)):
+            if isinstance(value, str):
+                if index == length - 1:
+                    where = where + f"{key}='{value}'"
+                else:
+                    where = where + f"{key}='{value}' and "
+            else:
+                if index == length - 1:
+                    where = where + f"{key}={value}"
+                else:
+                    where = where + f"{key}={value} and "
+        temp = cls()
+        with temp.db.cursor() as c:
+            c.execute(
+                """
+                SELECT
+                    {fields}
+                FROM
+                    {table}
+                WHERE   {where}
+                ORDER BY RAND()
+                LIMIT {count}
+                """.format(
+                    fields=", ".join(temp.fields.keys()), table=cls.table_name, where=where, count=count
+                )
+            )
+
+            data = c.fetchall()
+            c.close()
+        if data:
+            ret_list = []
+            for i in data:
+                ret_list.append(cls(i))
+            return ret_list
+        else:
+            return []
+
+    @classmethod
     def drop_table(cls):
         logging.warning("Dropping table {}".format(cls.table_name))
         with cls.db.cursor() as c:
