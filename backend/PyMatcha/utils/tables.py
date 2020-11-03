@@ -49,7 +49,7 @@ def _create_user_table(db):
         is_profile_completed BOOLEAN DEFAULT (FALSE),
         is_confirmed         BOOLEAN DEFAULT (FALSE),
         confirmed_on         DATETIME DEFAULT NULL,
-        skip_recommendations BOOLEAN DEFAULT (FALSE),
+        is_bot               BOOLEAN DEFAULT (FALSE),
         superlikes_counter   INT DEFAULT 5,
         superlikes_reset_dt  DATETIME DEFAULT NULL
         ) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci ;

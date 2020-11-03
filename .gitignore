@@ -134,3 +134,4 @@ www/
 .env.ci
 .env.dev
 .env.docker
+backend/sentence_tokenizer.pickle
