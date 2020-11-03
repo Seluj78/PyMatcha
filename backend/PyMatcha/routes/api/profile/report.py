@@ -37,16 +37,17 @@ def report_profile(uid):
     data = request.get_json()
     reason = data["reason"]
 
-    if reason not in ["harassment", "bot", "spam", "inappropriate content"]:
-        raise BadRequestError("Reason must be 'harassment', 'bot', 'spam' or 'inappropriate content'")
-
-    details = None
     try:
         u = get_user(uid)
     except NotFoundError:
         raise NotFoundError(f"User {uid} not found.")
     if current_user.id == u.id:
         raise BadRequestError("Cannot report yourself.")
+
+    if reason not in ["harassment", "bot", "spam", "inappropriate content"]:
+        raise BadRequestError("Reason must be 'harassment', 'bot', 'spam' or 'inappropriate content'.")
+
+    details = None
     Report.create(reporter_id=current_user.id, reported_id=u.id, reason=reason, details=details)
 
     return Success(f"Report created on user {u.email}.")

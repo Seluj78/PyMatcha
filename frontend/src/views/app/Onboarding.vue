@@ -136,7 +136,11 @@ export default {
         this.slideCurrent += 1;
         await this.bus.$emit('send-user-location-to-backend');
         await this.$http.post('/profile/complete', this.userData);
-        const recommendationsRequest = await this.$http.get('/recommendations');
+        const recommendationsRequest = await this.$http.get('/recommendations', {
+          data: {
+            force: false,
+          },
+        });
         const recommendationsFromSettingUp = recommendationsRequest.data.recommendations;
         await this.$store.dispatch('profileCompleted');
         await this.$router.push({ name: Browse, params: { recommendationsFromSettingUp } });

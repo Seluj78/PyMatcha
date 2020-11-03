@@ -75,7 +75,7 @@ export default {
         this.recommendations = recommendationsRequest.data.liked_me;
       } else if (request === 'Whom I blocked') {
         const recommendationsRequest = await this.$http.get('/history/blocked');
-        this.recommendations = recommendationsRequest.data.bloked;
+        this.recommendations = recommendationsRequest.data.blocked;
       }
       this.recommendations = Object.values(this.recommendations.reduce((acc, cur) => Object.assign(acc, { [cur.id]: cur }), {}));
       this.recommendations.sort((a, b) => a.distance - b.distance);

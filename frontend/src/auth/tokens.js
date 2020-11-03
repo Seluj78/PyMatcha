@@ -3,9 +3,6 @@ import jwtDecode from 'jwt-decode';
 import Axios from 'axios';
 import router from '@/router';
 
-export const setAccessToken = (token) => (localStorage.setItem(process.env.VUE_APP_ACCESS_TOKEN, token));
-export const setRefreshToken = (token) => (localStorage.setItem(process.env.VUE_APP_REFRESH_TOKEN, token));
-
 export const getAccessToken = () => (localStorage.getItem(process.env.VUE_APP_ACCESS_TOKEN));
 export const getRefreshToken = () => (localStorage.getItem(process.env.VUE_APP_REFRESH_TOKEN));
 
