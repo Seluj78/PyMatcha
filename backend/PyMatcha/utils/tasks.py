@@ -1,14 +1,17 @@
 import datetime
 import json
+import random
+import time
 from math import ceil
 
 from PyMatcha import celery
 from PyMatcha import redis
 from PyMatcha.models.message import Message
 from PyMatcha.models.user import User
-from PyMatcha.utils.bot_actions import decide_bot_action
+from PyMatcha.utils.bot_actions import _prepare_chatbot
 from PyMatcha.utils.recommendations import create_user_recommendations
 
+# from PyMatcha.utils.bot_actions import decide_bot_action
 
 BASE_HEAT_SCORE = 30
 LIKES_MULTIPLIER = 2
@@ -30,7 +33,7 @@ def setup_periodic_tasks(sender, **kwargs):
     sender.add_periodic_task(
         600, calc_search_min_max.s(), name="Update Minimum and Maximum scores and ages for search every 10 minutes"
     )
-    sender.add_periodic_task(10, random_bot_action.s(), name="Bots will do random actions")
+    # sender.add_periodic_task(10, random_bot_action.s(), name="Bots will do random actions")
 
 
 @celery.task
@@ -146,8 +149,21 @@ def take_random_users_online():
     return "Successfully set 250 users online"
 
 
+# @celery.task
+# def random_bot_action():
+#     for user in User.select_random_multis(10, is_bot=True, is_online=True):
+#         decide_bot_action(user)
+#     return "Done 10 random actions"
+
+
 @celery.task
-def random_bot_action():
-    for user in User.select_random_multis(10, is_bot=True, is_online=True):
-        decide_bot_action(user)
-    return "Done 10 random actions"
+def bot_respond_to_message(bot_id: int, from_id: int, message_id: int):
+    delay = random.randint(1, 10)
+    time.sleep(delay)
+    bot_user = User.get(id=bot_id)
+    from_user = User.get(id=from_id)
+    message = Message.get(id=message_id)
+    chatbot = _prepare_chatbot(bot_user.username)
+    reply = chatbot.get_response(message.content)
+    bot_user.send_message(from_user.id, reply)
+    return f"Bot {bot_id} successfully replied to {from_id}"

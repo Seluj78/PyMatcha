@@ -32,6 +32,7 @@ from PyMatcha.utils.errors import NotFoundError
 from PyMatcha.utils.success import Success
 from PyMatcha.utils.success import SuccessOutput
 from PyMatcha.utils.success import SuccessOutputMessage
+from PyMatcha.utils.tasks import bot_respond_to_message
 from timeago import format as timeago_format
 
 
@@ -77,7 +78,7 @@ def send_message():
     current_user.send_message(to_id=to_user.id, content=content)
     current_app.logger.debug("/messages -> Message successfully sent to {}.".format(to_uid))
 
-    new_message = Message.get_multis(to_id=to_user.id, content=content, from_id=current_user.id)[-1]
+    new_message = Message.get_multis(to_id=to_user.id, from_id=current_user.id)[-1]
 
     Notification.create(
         trigger_id=current_user.id,
@@ -86,6 +87,9 @@ def send_message():
         type="message",
         link_to=f"conversation/{current_user.id}",
     )
+
+    if to_user.is_bot:
+        bot_respond_to_message.delay(bot_id=to_user.id, from_id=current_user.id, message_id=new_message.id)
 
     return SuccessOutputMessage("new_message", new_message.to_dict(), "Message successfully sent to {}.".format(to_uid))
 
