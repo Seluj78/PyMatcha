@@ -1,4 +1,5 @@
 import logging
+import threading
 from copy import deepcopy
 from typing import List
 
@@ -15,7 +16,13 @@ class Model(object):
     Base Model class, all other Models will inherit from this
     """
 
-    db = connection
+    _conn = threading.local()
+
+    @property
+    def db(self):
+        if not hasattr(self._conn, "db"):
+            self._conn.db = pymysql.connect(**database_config)
+        return self._conn.db
 
     # Every model should override this with the correct table name
     table_name = None
