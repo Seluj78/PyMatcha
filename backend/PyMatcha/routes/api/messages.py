@@ -89,7 +89,10 @@ def send_message():
     )
 
     if to_user.is_bot:
-        bot_respond_to_message.delay(bot_id=to_user.id, from_id=current_user.id, message_id=new_message.id)
+        new_message.is_seen = True
+        new_message.seen_timestamp = datetime.datetime.utcnow()
+        new_message.save()
+        bot_respond_to_message.delay(bot_id=to_user.id, from_id=current_user.id, message_content=content)
 
     return SuccessOutputMessage("new_message", new_message.to_dict(), "Message successfully sent to {}.".format(to_uid))
 

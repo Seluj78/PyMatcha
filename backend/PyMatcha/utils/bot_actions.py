@@ -153,13 +153,7 @@ def decide_bot_action(bot_user: User):
         return
 
     for match in matches:
-        # if match.user_1 == bot_user.id:
-        #     other_user_id = match.user_2
-        # else:
-        #     other_user_id = match.user_1
-
         chatbot = _prepare_chatbot(bot_user.username)
-
         message_actions = [
             _botaction_respond_to_unread,
             _botaction_message_new_conversation,
