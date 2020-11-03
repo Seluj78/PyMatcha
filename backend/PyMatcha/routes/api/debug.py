@@ -9,6 +9,7 @@ from flask_jwt_extended import jwt_required
 from PyMatcha import redis
 from PyMatcha.models.like import Like
 from PyMatcha.models.message import Message
+from PyMatcha.models.notification import Notification
 from PyMatcha.models.report import Report
 from PyMatcha.models.user import get_user
 from PyMatcha.models.user import User
@@ -19,7 +20,6 @@ from PyMatcha.utils.errors import NotFoundError
 from PyMatcha.utils.success import Success
 from PyMatcha.utils.success import SuccessOutput
 
-# from PyMatcha.utils.success import SuccessDeleted
 
 debug_bp = Blueprint("debug", __name__)
 
@@ -124,46 +124,22 @@ def debug_get_user_messages(uid):
     return SuccessOutput("messages", messages)
 
 
-# @debug_bp.route("/debug/reset_ci", methods=["DELETE"])
-# @debug_token_required
-# def debug_reset_ci():
-#     data = request.get_json()
-#     user_id = data["username"]
-#     user = User.get(username=user_id)
-#     for like in user.get_likes_sent():
-#         like.delete()
-#     for like in user.get_likes_received():
-#         like.delete()
-#     for image in user.get_images():
-#         image.delete()
-#     for match in user.get_matches():
-#         match.delete()
-#     for message in user.get_messages():
-#         message.delete()
-#     for report in user.get_reports_received():
-#         report.delete()
-#     for report in user.get_reports_sent():
-#         report.delete()
-#     for tag in user.get_tags():
-#         tag.delete()
-#     for view in user.get_views():
-#         view.delete()
-#     for view in user.get_view_history():
-#         view.delete()
-#     for block in user.get_blocks():
-#         block.delete()
-#     return Success("Done")
-
-
-# @debug_bp.route("/debug/users/<uid>", methods=["DELETE"])
-# @debug_token_required
-# def delete_user(uid):
-#     current_app.logger.info("DELETE /debug/users/{} -> Call".format(uid))
-#     try:
-#         u = get_user(uid)
-#     except NotFoundError:
-#         raise NotFoundError("User {} not found".format(uid))
-#     else:
-#         current_app.logger.info("/debug/users/{} -> DELETE user {}".format(uid, uid))
-#         u.delete()
-#         return SuccessDeleted("User {} Deleted.".format(uid))
+@debug_bp.route("/debug/reset/<uid>", methods=["DELETE"])
+@debug_token_required
+def debug_reset_ci(uid):
+    user = get_user(uid)
+    [entry.delete() for entry in user.get_tags()]
+    [entry.delete() for entry in user.get_views()]
+    [entry.delete() for entry in user.get_view_history()]
+    [entry.delete() for entry in user.get_reports_received()]
+    [entry.delete() for entry in user.get_reports_sent()]
+    [entry.delete() for entry in user.get_messages()]
+    [entry.delete() for entry in user.get_matches()]
+    [entry.delete() for entry in user.get_likes_sent()]
+    [entry.delete() for entry in user.get_likes_received()]
+    [entry.delete() for entry in user.get_blocks()]
+    [entry.delete() for entry in Notification.select_all()]
+    user.delete()
+    user = get_user(1500)
+    [entry.delete() for entry in user.get_messages()]
+    return "", 200
