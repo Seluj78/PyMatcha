@@ -49,11 +49,7 @@ export default {
       if (this.recommendationsFromSettingUp) {
         this.recommendations = this.recommendationsFromSettingUp;
       } else {
-        const recommendationsRequest = await this.$http.get('/recommendations', {
-          data: {
-            force: false,
-          },
-        });
+        const recommendationsRequest = await this.$http.get('/recommendations');
         this.recommendations = recommendationsRequest.data.recommendations;
       }
       this.recommendations.sort((a, b) => a.distance - b.distance);
