@@ -49,15 +49,24 @@ export default {
   data() {
     return {
       isOpen: false,
+      route: null,
     };
+  },
+  watch: {
+    $route(to) {
+      this.route = to.name;
+    },
   },
   computed: {
     loggedIn() {
       return this.$store.getters.getLoggedInUser;
     },
     currentRoute() {
-      return this.$router.currentRoute.name;
+      return this.route;
     },
+  },
+  beforeMount() {
+    this.route = this.$router.currentRoute.name;
   },
 };
 </script>
