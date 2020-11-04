@@ -56,8 +56,7 @@ export default {
       return this.$store.getters.getLoggedInUser;
     },
     currentRoute() {
-      console.log(this.$router.currentRoute);
-      return this.$route.name;
+      return this.$router.currentRoute.name;
     },
   },
 };
