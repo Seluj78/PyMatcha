@@ -1,7 +1,6 @@
 <template>
   <!--  eslint-disable max-len -->
   <div class="mx-4 sm:mx-16 lg:mx-32">
-    <NavBar v-bind:currentRoute="'Matches'"></NavBar>
     <section v-if="fetchingDone" class="mx-auto relative md:flex md:items-start md:justify-center">
       <div class="md:w-full md:max-w-xs md:shadow-md md:rounded-md md:p-8 md:flex md:flex-col md:justify-start">
         <div class="mt-8 sm:mt-0">
@@ -66,7 +65,6 @@
 /* eslint-disable max-len */
 /* eslint-disable no-await-in-loop */
 
-import NavBar from '@/components/shared/NavBar.vue';
 import Match from '@/components/app/matches/Match.vue';
 import Chat from '@/components/app/matches/Chat.vue';
 import Message from '@/components/app/matches/Message.vue';
@@ -74,7 +72,6 @@ import Message from '@/components/app/matches/Message.vue';
 export default {
   components: {
     Chat,
-    NavBar,
     Match,
     Message,
   },
