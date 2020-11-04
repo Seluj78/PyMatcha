@@ -1,5 +1,6 @@
 <template>
   <div id="app" class="antialiased" v-bind:style="{background: getBackground}">
+    <NavBar class="px-4 sm:px-16 lg:px-32"></NavBar>
     <keep-alive include="Browse,Search,History">
       <router-view/>
     </keep-alive>
@@ -8,7 +9,12 @@
 
 <script>
 
+import NavBar from '@/components/shared/NavBar.vue';
+
 export default {
+  components: {
+    NavBar,
+  },
   computed: {
     getBackground() {
       const currentRoute = this.$route.name;

@@ -4884,28 +4884,22 @@
 							}
 						}
 					],
-					"protocolProfileBehavior": {
-						"disableBodyPruning": true
-					},
 					"request": {
 						"method": "GET",
 						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n    \"force\": true\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
 						"url": {
-							"raw": "{{host}}/recommendations",
+							"raw": "{{host}}/recommendations?force=True",
 							"host": [
 								"{{host}}"
 							],
 							"path": [
 								"recommendations"
+							],
+							"query": [
+								{
+									"key": "force",
+									"value": "True"
+								}
 							]
 						}
 					},
@@ -5125,28 +5119,22 @@
 							}
 						}
 					],
-					"protocolProfileBehavior": {
-						"disableBodyPruning": true
-					},
 					"request": {
 						"method": "GET",
 						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n    \"force\": true\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
 						"url": {
-							"raw": "{{host}}/recommendations",
+							"raw": "{{host}}/recommendations?force=True",
 							"host": [
 								"{{host}}"
 							],
 							"path": [
 								"recommendations"
+							],
+							"query": [
+								{
+									"key": "force",
+									"value": "True"
+								}
 							]
 						}
 					},
@@ -7254,162 +7242,162 @@
 	],
 	"variable": [
 		{
-			"id": "47260898-0119-4788-89b6-a52b48930a7a",
+			"id": "de9d17be-f7ca-4a75-af2e-dcfd5d60609a",
 			"key": "host",
 			"value": "http://127.0.0.1:5000"
 		},
 		{
-			"id": "6af9f454-6d0c-4283-98a8-b6a3e0c97626",
+			"id": "0cd6ffc1-1c75-47c2-8d8d-f5125648afac",
 			"key": "access_token",
 			"value": ""
 		},
 		{
-			"id": "ded3e3a3-bf44-4ef9-a8b2-9560c813108d",
+			"id": "ed3db240-4fad-45f5-8a7a-095a337c5816",
 			"key": "refresh_token",
 			"value": ""
 		},
 		{
-			"id": "6aa13788-a429-4915-9422-b373b52521a4",
+			"id": "821388fc-d8c6-4bbe-8646-2ab446976be9",
 			"key": "debug_token",
 			"value": "xX69jules69Xx"
 		},
 		{
-			"id": "9c6a6a27-5258-495a-997f-ea269fc738f0",
+			"id": "a10bcfc0-96f5-4e8e-84c4-076155ac6fbc",
 			"key": "id",
 			"value": "1541"
 		},
 		{
-			"id": "e789f83c-9116-4cba-9431-fa3a29aa8991",
+			"id": "47865117-86d5-457d-ab4b-be67216a58a7",
 			"key": "first_name",
 			"value": "Jules"
 		},
 		{
-			"id": "9a4ea950-8015-4b65-ab6b-e8cb9d185271",
+			"id": "01bb833b-a658-48d5-a2cc-b76e1016bb90",
 			"key": "last_name",
 			"value": "Lasne"
 		},
 		{
-			"id": "4b1bb76b-f41d-42ad-8716-327aa05c2b5e",
+			"id": "daa86e8b-d927-4bae-a05a-6b4b28f43712",
 			"key": "email",
 			"value": "jules.lasne@example.org"
 		},
 		{
-			"id": "54979fe4-d4ff-4535-9cc1-0893f3eee1b7",
+			"id": "192efd3a-7603-421c-be59-1fa2d8a9a0bb",
 			"key": "username",
 			"value": "seluj78"
 		},
 		{
-			"id": "255ad113-0fb8-4896-a144-fec8139654c2",
+			"id": "a78f5409-bfb0-45db-aa9c-b28d771ed2de",
 			"key": "password",
 			"value": "dolphin"
 		},
 		{
-			"id": "4c8ae2b2-855e-4c8c-990a-dd1959518ebd",
+			"id": "bfcf2884-20c9-4ad9-b14f-82c6df4d248e",
 			"key": "orientation",
 			"value": "heterosexual"
 		},
 		{
-			"id": "ddb7fc8a-d559-4a83-bb15-faa3553c4351",
+			"id": "db6ac697-a874-44a1-9157-e9d522bce9bc",
 			"key": "gender",
 			"value": "male"
 		},
 		{
-			"id": "8b174ed5-7393-4f00-8e5f-f97306aac6bd",
+			"id": "6e9c5155-e56d-408a-8211-8cdb37083737",
 			"key": "bio",
 			"value": "Phasellus vel tortor vel elit scelerisque accumsan vel nec nunc. Ut condimentum vestibulum sapien non dictum. Vestibulum ac eleifend mi. Curabitur dictum vestibulum ex at placerat. Pellentesque odio mi, condimentum et sollicitudin at, finibus non leo. Aenean sed pulvinar nulla, nec tincidunt felis. Aenean nibh elit, aliquam sit amet lobortis et, pellentesque ut orci. Curabitur placerat sem id ex laoreet imperdiet. Curabitur dictum ac urna feugiat viverra. Vivamus nec pulvinar urna. Suspendisse vel ultrices est. Sed malesuada est vel orci venenatis scelerisque. Phasellus ultrices dignissim sapien, at mattis tellus mattis pulvinar. Sed ut euismod velit, id fermentum leo."
 		},
 		{
-			"id": "987a790c-5a8f-4b91-9df0-3153aa98be67",
+			"id": "2de8e81c-9179-406d-8873-5aff4b739f54",
 			"key": "birthdate",
 			"value": "06/04/1998"
 		},
 		{
-			"id": "52b12993-612e-4f9f-af33-9309d110d6eb",
+			"id": "7e1d9f45-350f-4d91-8a16-0eaa1abf8685",
 			"key": "first_name2",
 			"value": "Félix"
 		},
 		{
-			"id": "14298d39-6b97-4480-9372-337be3dee725",
+			"id": "a19f2e27-d89a-443d-8d5f-b18dfa38a298",
 			"key": "last_name2",
 			"value": "Ensal"
 		},
 		{
-			"id": "81be5b1d-aa61-4ede-a828-77fc2b4d01a3",
+			"id": "db1dfa44-09c4-4e85-9568-15ddfb78d7e7",
 			"key": "username2",
 			"value": "Ufree"
 		},
 		{
-			"id": "8f9d3da5-5a4b-4299-9294-4c08caa8fb22",
+			"id": "bba960c3-9465-4b1c-90b2-8c0bba49091b",
 			"key": "bio2",
 			"value": "Donec quis porttitor ante, ac pulvinar nulla. Vivamus dignissim, ipsum ultricies interdum suscipit, risus tellus auctor mi, eu auctor metus sem quis urna. In maximus placerat ipsum, nec sodales elit aliquet sed. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae; Phasellus malesuada velit felis, non volutpat ex bibendum at. Maecenas aliquet sodales quam at consequat. Sed faucibus consequat tempor. Fusce consequat eu sem non tempus. Duis dapibus nunc vel tempus semper. Pellentesque dignissim tellus odio, vel luctus ipsum suscipit quis. Curabitur id erat at quam varius fermentum non in massa."
 		},
 		{
-			"id": "8873940b-6d9f-424c-9de8-8078e40c7a3b",
+			"id": "ebc5791e-9317-409b-9195-0c869829de4b",
 			"key": "gender2",
 			"value": "other"
 		},
 		{
-			"id": "d584ba79-0a76-4ccb-ad8b-dde82b751450",
+			"id": "7ffd0db7-a926-4c8e-bfb5-3efb4ffa81ac",
 			"key": "orientation2",
 			"value": "bisexual"
 		},
 		{
-			"id": "a1c35569-b32b-4270-a088-d10690dbce65",
+			"id": "75392ec7-f738-441d-af69-671b36a89b67",
 			"key": "birthdate2",
 			"value": "25/06/2000"
 		},
 		{
-			"id": "27a9b0e4-0820-459f-b80b-50a16ebf63e7",
+			"id": "5f247ade-3d4f-4b66-8e66-4949a809835a",
 			"key": "email2",
 			"value": "felix.ensal@example.org"
 		},
 		{
-			"id": "427927f9-950a-4b48-96af-3b193dbf09a7",
+			"id": "79fbeabd-8711-4b7e-a3ce-a2fff88216aa",
 			"key": "password2",
 			"value": "dolphin2"
 		},
 		{
-			"id": "c81312a4-4813-49d5-abaf-95b0b23636a3",
+			"id": "010ca345-c7b8-4443-8996-5a0d1ddffa40",
 			"key": "ip",
 			"value": "90.108.46.63"
 		},
 		{
-			"id": "43556024-37c9-44c6-a975-e834af8d1e69",
+			"id": "dcc0c64a-7c6d-48da-ad72-8f1259b12c70",
 			"key": "lat",
 			"value": "49.5271"
 		},
 		{
-			"id": "3fcf977a-7491-4035-80e3-7002dcd536b5",
+			"id": "a1f10ead-5858-4820-b474-93b50f9d7b59",
 			"key": "lng",
 			"value": "1.1885"
 		},
 		{
-			"id": "d4368742-3888-452e-a72a-c0c73d84369d",
+			"id": "ad61ddc7-cb2a-4fc7-ba25-ddb68a83a7a8",
 			"key": "my_msg_id",
 			"value": "-1"
 		},
 		{
-			"id": "69455489-9556-4f4a-ac9a-9a7052b4d733",
+			"id": "cf98244b-d9b5-4f6b-969a-dea0bf631e93",
 			"key": "to_me_msg_id",
 			"value": "-1"
 		},
 		{
-			"id": "31c3a4ae-cb35-49a2-9f03-388e21304c02",
+			"id": "bcd2370c-fee5-4f5c-aad8-ff80ccec2c8c",
 			"key": "other_msg_id",
 			"value": "-1"
 		},
 		{
-			"id": "a986e223-6946-40bb-bfa8-f540dfed458f",
+			"id": "c3fef2db-d89f-4cab-8e93-9aa0f7746395",
 			"key": "user_access_token",
 			"value": ""
 		},
 		{
-			"id": "2d248ea3-6d54-4429-872c-d6f4c5f2d47d",
+			"id": "0e10a01a-fe4d-4d3b-865c-3e34bfb98003",
 			"key": "user_refresh_token",
 			"value": ""
 		},
 		{
-			"id": "1be795f6-bc59-4264-b657-6722c2e4ffcf",
+			"id": "45055d3a-d126-443d-9c60-b41b65109fe7",
 			"key": "notif_id",
 			"value": ""
 		}

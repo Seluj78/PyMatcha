@@ -103,7 +103,7 @@ const routes = [
   },
   {
     path: '/browse',
-    name: Browse,
+    name: 'Browse',
     component: Browse,
     beforeEnter: notLoggedInRedirectLogin,
     props: true,
@@ -111,31 +111,37 @@ const routes = [
   {
     path: '/search',
     component: Search,
+    name: 'Search',
     beforeEnter: notLoggedInRedirectLogin,
   },
   {
     path: '/settings',
     component: Settings,
+    name: 'Settings',
     beforeEnter: notLoggedInRedirectLogin,
   },
   {
     path: '/users/:id',
     component: User,
+    name: 'Users',
     beforeEnter: notLoggedInRedirectLogin,
   },
   {
     path: '/history',
     component: History,
+    name: 'History',
     beforeEnter: notLoggedInRedirectLogin,
   },
   {
     path: '/matches',
     component: Matches,
+    name: 'Matches',
     beforeEnter: notLoggedInRedirectLogin,
   },
   {
     path: '/accounts/signout',
     component: SignOut,
+    name: 'SignOut',
     beforeEnter: notLoggedInRedirectLogin,
   },
 ];

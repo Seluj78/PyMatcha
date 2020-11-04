@@ -1,7 +1,6 @@
 <template>
   <!-- eslint-disable max-len -->
   <div class="mx-4 sm:mx-16 lg:mx-32">
-    <NavBar v-bind:currentRoute="'Search'"></NavBar>
     <section v-if="recommendationsAnalysisDone" class="mx-auto">
       <div class="sort-button rounded-md text-lg lg:text-2xl w-24 ml-auto" v-on:click="searchAgain()">
         <h1 class="noSelect capitalize">←</h1>
@@ -63,7 +62,6 @@
 
 <script>
 /* eslint-disable max-len */
-import NavBar from '@/components/shared/NavBar.vue';
 import FilterSlider from '@/components/shared/FilterSlider.vue';
 import MultipleFilters from '@/components/shared/MultipleFilters.vue';
 import Recommendations from '@/components/app/recommendations/Recommendations.vue';
@@ -72,7 +70,6 @@ export default {
   name: 'Search',
   components: {
     MultipleFilters,
-    NavBar,
     FilterSlider,
     Recommendations,
   },

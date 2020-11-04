@@ -1,7 +1,6 @@
 <template>
   <!-- eslint-disable max-len -->
   <div class="mx-4 sm:mx-16 lg:mx-32">
-    <NavBar v-bind:currentRoute="'History'"></NavBar>
     <section class="mx-auto mt-4">
       <div class="flex items-center justify-center md:justify-start w-full mb-4">
         <h1
@@ -27,7 +26,6 @@
 <script>
 /* eslint-disable max-len */
 
-import NavBar from '@/components/shared/NavBar.vue';
 import HistoryRecommendations from '@/components/app/recommendations/HistoryRecommendations.vue';
 import DropdownDisplayChoiceHistory from '@/components/shared/DropdownDisplayChoiceHistory.vue';
 
@@ -35,7 +33,6 @@ export default {
   name: 'History',
   props: ['recommendationsFromSettingUp'],
   components: {
-    NavBar,
     HistoryRecommendations,
     DropdownDisplayChoiceHistory,
   },

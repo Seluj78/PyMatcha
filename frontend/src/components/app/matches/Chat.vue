@@ -112,6 +112,7 @@ export default {
       const messagesRequest = await this.$http.get(`/conversations/${this.chatWithUserId}`);
       const newMessages = messagesRequest.data.messages;
       const oldMessageCount = this.messages.length;
+      this.determineFirstMessagesOfTimespans(newMessages);
       this.messages = newMessages;
       if (newMessages.length > oldMessageCount) {
         this.$emit('new-message');
