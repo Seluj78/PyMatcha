@@ -31,6 +31,7 @@
         <router-link
           v-if="notification.link_to"
           v-bind:to="notification.link_to"
+          v-on:click.native="toggle"
           class="py-4 flex items-center word-break cursor-pointer">
           <img v-bind:src="getImage(notification.type)" class="w-4 h-4">
           <h1 class="ml-4">{{notification.content}}</h1>
