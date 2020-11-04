@@ -1,7 +1,6 @@
 <template>
   <!-- eslint-disable max-len -->
   <div class="sm:mx-16 lg:mx-32">
-    <NavBar v-bind:currentRoute="'Browse'"></NavBar>
     <section class="mx-auto">
       <div v-on:click="goBack()" class="sort-button py-0 ml-auto rounded-md text-lg w-20 md:w-16 mr-4 sm:mr-0 mb-4">
         <h1 class="noSelect">←</h1>
@@ -16,13 +15,11 @@
 <script>
 import UserImages from '@/components/app/users/UserImages.vue';
 import UserProfile from '@/components/app/users/UserProfile.vue';
-import NavBar from '@/components/shared/NavBar.vue';
 
 export default {
   components: {
     UserImages,
     UserProfile,
-    NavBar,
   },
   data: () => ({
     user: null,
