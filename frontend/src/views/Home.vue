@@ -2,7 +2,6 @@
   <!-- eslint-disable max-len -->
   <!-- eslint-disable no-trailing-spaces -->
   <div class="home mx-4">
-  <NavBar></NavBar>
 
   <section class="shadow-lg mb-8 h-full flex rounded-lg">
     <div class="intro bg-white-matcha rounded-lg w-full md:w-2/3
@@ -56,13 +55,12 @@ flex flex-col justify-center md:rounded-tr-none md:rounded-br-none">
 </template>
 
 <script>
-import NavBar from '@/components/shared/NavBar.vue';
+
 import Footer from '@/components/shared/Footer.vue';
 
 export default {
   name: 'Home',
   components: {
-    NavBar,
     Footer,
   },
 };
