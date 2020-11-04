@@ -74,7 +74,7 @@ export default {
       if (type === 'match' || type === 'message' || type === 'message_like') {
         return '/matches';
       }
-      return link;
+      return `/${link}`;
     },
     async makeNotificationsSeen() {
       const length = this.notifications.length;
