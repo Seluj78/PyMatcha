@@ -43,7 +43,6 @@ import NavBarBell from '@/components/shared/NavBarBell.vue';
 
 export default {
   name: 'Navigation',
-  props: ['currentRoute'],
   components: {
     NavBarBell,
   },
@@ -55,6 +54,10 @@ export default {
   computed: {
     loggedIn() {
       return this.$store.getters.getLoggedInUser;
+    },
+    currentRoute() {
+      console.log(this.$router.currentRoute);
+      return this.$route.name;
     },
   },
 };
