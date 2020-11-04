@@ -64,18 +64,6 @@ import messageLike from '../../assets/likeComment.png';
 export default {
   data: () => ({
     notify: false,
-    // notifications: [
-    //   { content: 'Samantha liked you', is_seen: false, type: 'like', id: 1, link_to: 'google.com' },
-    //   { content: 'Bae liked you', id: 2, is_seen: false, type: 'dislike', link_to: 'google.com' },
-    //   { content: 'Samantha liked you', id: 3, is_seen: false, type: 'message', link_to: 'google.com' },
-    //   { content: 'Bae liked you', id: 4, is_seen: false, type: 'match', link_to: 'google.com' },
-    //   { content: 'Samantha liked you', id: 5, is_seen: true, type: 'view', link_to: 'google.com' },
-    //   { content: 'Bae liked you', id: 6, is_seen: true, type: 'like', link_to: 'google.com' },
-    //   { content: 'Samantha liked you', id: 7, is_seen: true, type: 'like', link_to: 'google.com' },
-    //   { content: 'Bae liked you', id: 8, is_seen: true, type: 'like', link_to: 'google.com' },
-    //   { content: 'Samantha liked you', id: 9, is_seen: true, type: 'like', link_to: 'google.com' },
-    //   { content: 'Bae liked youBae liked youBae liked youBae liked youBae liked youBae liked you', id: 10, is_seen: true, type: 'like', link_to: 'google.com' },
-    // ],
     notifications: [],
     notificationsFetched: false,
     showNotifications: false,
