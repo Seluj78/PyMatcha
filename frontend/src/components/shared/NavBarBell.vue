@@ -30,7 +30,7 @@
 
         <router-link
           v-if="notification.link_to"
-          v-bind:to="notification.link_to"
+          v-bind:to="getLinkTo(notification.type, notification.link_to)"
           v-on:click.native="toggle"
           class="py-4 flex items-center word-break cursor-pointer">
           <img v-bind:src="getImage(notification.type)" class="w-4 h-4">
@@ -82,6 +82,12 @@ export default {
     fetchNotificationsIntervalId: null,
   }),
   methods: {
+    getLinkTo(type, link) {
+      if (type === 'match' || type === 'message' || type === 'message_like') {
+        return '/matches';
+      }
+      return link;
+    },
     async makeNotificationsSeen() {
       const length = this.notifications.length;
       for (let i = 0; i < length; i += 1) {
