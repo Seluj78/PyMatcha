@@ -1,7 +1,7 @@
 <template>
   <!-- eslint-disable max-len -->
   <!-- eslint-disable vue/no-deprecated-v-on-native-modifier -->
-  <nav class="md:flex md:justify-between md:items-center md:py-5">
+  <nav v-if="showNavigationBar" class="md:flex md:justify-between md:items-center md:py-5">
     <div class="flex items-center justify-between px-5 py-3 md:p-0 w-full">
       <div id="logo">
         <router-link to="/">
@@ -50,6 +50,17 @@ export default {
     return {
       isOpen: false,
       route: null,
+      dontShowOn: [
+        'SignUp',
+        'SignIn',
+        'ForgotPassword',
+        'ResetPassword',
+        'ResetPasswordError',
+        'AccountVerified',
+        'AccountVerifiedError',
+        'Onboarding',
+        'SignOut',
+      ],
     };
   },
   methods: {
@@ -70,6 +81,9 @@ export default {
     },
     currentRoute() {
       return this.route;
+    },
+    showNavigationBar() {
+      return this.dontShowOn.indexOf(this.route) === -1;
     },
   },
   beforeMount() {

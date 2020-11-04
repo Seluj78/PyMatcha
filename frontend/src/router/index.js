@@ -141,6 +141,7 @@ const routes = [
   {
     path: '/accounts/signout',
     component: SignOut,
+    name: 'SignOut',
     beforeEnter: notLoggedInRedirectLogin,
   },
 ];
