@@ -71,8 +71,13 @@ export default {
   methods: {
     async linkTo(type, link) {
       await this.toggle();
-      if ((type === 'match' || type === 'message' || type === 'message_like') && this.$route.path !== '/matches') {
-        await this.$router.push('/matches');
+      console.log(type);
+      console.log(this.$route.path);
+      if (type === 'match' || type === 'message' || type === 'message_like') {
+        if (this.$route.path !== '/matches') {
+          await this.$router.push('/matches');
+        }
+        return;
       }
       if (this.$route.path !== `/${link}`) {
         await this.$router.push(`/${link}`);
