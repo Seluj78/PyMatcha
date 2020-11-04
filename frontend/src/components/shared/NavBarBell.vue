@@ -28,14 +28,13 @@
         'font-bold': !notification.is_seen,}"
            v-for="(notification, index) in notifications" :key="index + notification.is_seen.toString()">
 
-        <router-link
+        <div
           v-if="notification.link_to"
-          v-bind:to="getLinkTo(notification.type, notification.link_to)"
-          v-on:click.native="toggle"
+          v-on:click="linkTo(notification.type, notification.link_to)"
           class="py-4 flex items-center word-break cursor-pointer">
           <img v-bind:src="getImage(notification.type)" class="w-4 h-4">
           <h1 class="ml-4">{{notification.content}}</h1>
-        </router-link>
+        </div>
         <div v-else class="py-4 flex items-center word-break">
           <img v-bind:src="getImage(notification.type)" class="w-4 h-4">
           <h1 class="ml-4">{{notification.content}}</h1>
@@ -70,11 +69,14 @@ export default {
     fetchNotificationsIntervalId: null,
   }),
   methods: {
-    getLinkTo(type, link) {
-      if (type === 'match' || type === 'message' || type === 'message_like') {
-        return '/matches';
+    async linkTo(type, link) {
+      await this.toggle();
+      if ((type === 'match' || type === 'message' || type === 'message_like') && this.$route.path !== '/matches') {
+        await this.$router.push('/matches');
       }
-      return `/${link}`;
+      if (this.$route.path !== `/${link}`) {
+        await this.$router.push(`/${link}`);
+      }
     },
     async makeNotificationsSeen() {
       const length = this.notifications.length;
