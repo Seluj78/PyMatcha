@@ -7,4 +7,5 @@ ENV PYTHONDONTWRITEBYTECODE 1
 EXPOSE 5000
 ADD .env .
 RUN export $(cat .env | xargs)
-CMD celery -A PyMatcha.celery worker --concurrency=1 -E --loglevel=INFO -B
+RUN python -m spacy download en
+CMD celery -A PyMatcha.celery worker -E --loglevel=INFO -B --pool=threads

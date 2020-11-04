@@ -13,7 +13,7 @@ def default_date_converter(o):
         return o.__str__()
 
 
-def create_user_recommendations(user_to_update):
+def create_user_recommendations(user_to_update, ignore_bots: bool = False):
     today = datetime.datetime.utcnow()
     user_to_update_recommendations = []
     if not user_to_update.birthdate:
@@ -38,6 +38,8 @@ def create_user_recommendations(user_to_update):
     blocked_ids = [u.blocked_id for u in user_to_update.get_blocks()]
 
     for user in query:
+        if user.is_bot and ignore_bots:
+            continue
         if user.id == user_to_update.id:
             continue
         if user.id in matches_id or user.id in likes_sent_user_ids:

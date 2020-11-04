@@ -40,3 +40,6 @@ pyimgur==0.6.0
 Pillow==8.0.1
 
 timeago==1.0.14
+
+chatterbot==1.1.0
+chatterbot-corpus==1.2.0
