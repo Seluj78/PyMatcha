@@ -1,7 +1,10 @@
 <template>
   <!-- eslint-disable max-len -->
   <div class="w-full md:w-auto md:mx-16 lg:mx-32 relative md:flex items-start h-auto md:mb-16">
-    <section class="w-auto md:max-w-xss md:shadow-md md:rounded-md">
+    <div v-if="!settingsFetched" class="mx-auto flex items-center justify-center mt-32">
+      <img class="h-36" src="../../assets/loading.svg">
+    </div>
+    <section v-if="settingsFetched" class="w-auto md:max-w-xss md:shadow-md md:rounded-md">
       <div class="w-full md:hidden h-1 bg-white-matcha"></div>
       <div class="md:border-b profile-card text-wrap p-16 md:py-8 flex flex-col w-full md:rounded-t-md">
         <div class="mx-auto overflow-hidden w-48 h-48 md:w-24 md:h-24 rounded-full">
@@ -26,7 +29,7 @@
         <MenuButton v-on:click.native="showSetting('profile')" v-bind:class="{'md:px-8':true, 'md:bg-purple-200': getShow === 'profile'}" v-bind:text="'Profile'"></MenuButton>
       </div>
     </section>
-    <section v-if="getShow === 'account'" class="flex flex-col items-center z-10 absolute bg-white-matcha px-8 md:pb-8 w-full top-0 left-0 h-full md:h-auto md:ml-4 md:relative md:shadow-md md:rounded-md">
+    <section v-if="getShow === 'account' && settingsFetched" class="flex flex-col items-center z-10 absolute bg-white-matcha px-8 md:pb-8 w-full top-0 left-0 h-full md:h-auto md:ml-4 md:relative md:shadow-md md:rounded-md">
       <SectionHeader v-bind:name="'account'" v-on:click.native="closeSetting()"></SectionHeader>
       <AccountInput
         v-bind:name="'First Name'"
@@ -49,7 +52,7 @@
         v-bind:type="'password'"
         v-bind:currentValuePassed="''"></AccountInput>
     </section>
-    <section v-if="getShow === 'profile'" class="flex flex-col items-start z-10 absolute bg-white-matcha w-full top-0 left-0 md:ml-4 md:relative md:shadow-md md:rounded-md">
+    <section v-if="getShow === 'profile' && settingsFetched" class="flex flex-col items-start z-10 absolute bg-white-matcha w-full top-0 left-0 md:ml-4 md:relative md:shadow-md md:rounded-md">
       <div class="px-8 w-full">
         <SectionHeader class="mx-auto" v-bind:name="'profile'" v-on:click.native="closeSetting()"></SectionHeader>
       </div>
@@ -157,6 +160,7 @@ export default {
       error: null,
     },
     locationUpdateSuccess: false,
+    settingsFetched: false,
   }),
   computed: {
     getShow() {
@@ -288,6 +292,7 @@ export default {
     }
     const userViewsReceivedRequest = await this.$http.get('/history/viewed/me');
     this.userViewsReceived = userViewsReceivedRequest.data.viewed_me.length;
+    this.settingsFetched = true;
   },
 };
 </script>
