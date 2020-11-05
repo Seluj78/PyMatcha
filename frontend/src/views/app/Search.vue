@@ -1,6 +1,13 @@
 <template>
   <!-- eslint-disable max-len -->
-  <div class="mx-4 sm:mx-16 lg:mx-32">
+  <div v-bind:class="{
+    'mx-4': true,
+    'sm:mx-16': true,
+    'lg:mx-32': true,
+    'md:flex': searchedAtLeastOnce}">
+    <div v-if="!recommendationsAnalysisDone && !sliderValuesFetched" class="mx-auto flex items-center justify-center mt-32">
+      <img class="h-36" src="../../assets/loading.svg">
+    </div>
     <section v-if="recommendationsAnalysisDone" class="mx-auto">
       <div class="sort-button rounded-md text-lg lg:text-2xl w-24 ml-auto" v-on:click="searchAgain()">
         <h1 class="noSelect capitalize">←</h1>
@@ -13,7 +20,7 @@
     <section v-on:click="setError(null)"
              v-if="!recommendationsAnalysisDone && sliderValuesFetched"
              class="flex flex-col my-8 md:my-12">
-        <div><img src="../../assets/search.png" class="w-20 mb-4 mx-auto"></div>
+        <div class="md:hidden"><img src="../../assets/search.png" class="w-20 mb-4 mx-auto"></div>
         <div>
           <FilterSlider
             v-bind:min="sliders.age.min"
@@ -53,8 +60,11 @@
         </div>
       <div class="auth-sub-container-error mx-auto max-w-md" v-if="error"><h1 class="auth-sub-container-error-message">{{ error }}</h1></div>
       <div class="mx-auto w-full max-w-md">
-        <h1 v-on:click="search()" class="onboarding-sub-container-content-button-outline w-48 text-lg font-normal max-w-full bg-purple-matcha w-full text-white-matcha mx-auto">
+        <h1 v-if="!submitted" v-on:click="search()" class="onboarding-sub-container-content-button-outline w-48 text-lg font-normal max-w-full bg-purple-matcha w-full text-white-matcha mx-auto">
           Search</h1>
+        <div v-else class="flex items-center justify-center mt-4">
+          <img class="h-12" src="../../assets/loading.svg">
+        </div>
       </div>
     </section>
   </div>
@@ -88,21 +98,23 @@ export default {
     sliderValuesFetched: false,
     filters: {
       age: {
-        min: null,
-        max: null,
+        min: -1,
+        max: -1,
       },
       distance: {
         min: 0,
-        max: null,
+        max: -1,
       },
       popularity: {
-        min: null,
-        max: null,
+        min: -1,
+        max: -1,
       },
       interests: [],
     },
     recommendationsAnalysisDone: false,
     error: null,
+    searchedAtLeastOnce: false,
+    submitted: false,
   }),
   methods: {
     saveFilter(...range) {
@@ -131,6 +143,7 @@ export default {
       this.sliderValuesFetched = true;
     },
     async search() {
+      this.submitted = true;
       const searchRequest = await this.$http.post('/search', {
         min_age: this.filters.age.min,
         max_age: this.filters.age.max,
@@ -154,6 +167,7 @@ export default {
       }
       this.recommendations = searchRequest.data.search_results;
       if (this.recommendations.length === 0) {
+        this.submitted = false;
         this.setError('0 profiles found. Please, try expanding your search criteria.');
         return;
       }
@@ -169,6 +183,8 @@ export default {
           this.recommendations[i].interests.push(interests[j].name);
         }
       }
+      this.submitted = false;
+      this.searchedAtLeastOnce = true;
       this.recommendationsAnalysisDone = true;
       this.scrollToTop();
     },
