@@ -10,14 +10,17 @@
         <h1 class="auth-sub-container-content-heading">Forgot password?</h1>
         <h1 class="text-sm text-gray-matcha text-center">Enter your email and we will send you a link, so you can log in again</h1>
       </div>
-      <div class="auth-sub-container-content mt-4" v-if="!forgotPasswordEmailSent">
-        <ValidationObserver v-slot="{ handleSubmit, invalid }">
+      <div class="auth-sub-container-content mt-4 w-full" v-if="!forgotPasswordEmailSent">
+        <ValidationObserver v-slot="{ handleSubmit, invalid }" class="w-full">
           <form @submit.prevent="handleSubmit(onSubmit)">
             <ValidationProvider name="Email" rules="required|email|max:50" v-slot="{errors}">
               <input type="email" placeholder="Email" v-model="formData.email" class="matcha-input">
               <span class="matcha-input-error">{{ errors[0] }}</span>
             </ValidationProvider>
-            <input type="submit" :disabled="invalid" value="Send reset link" v-bind:class="{'auth-sub-container-content-submit-button': true, 'opacity-50': invalid, 'cursor-pointer': !invalid}">
+            <input v-if="!submitted" type="submit" :disabled="invalid" value="Send reset link" v-bind:class="{'auth-sub-container-content-submit-button': true, 'opacity-50': invalid, 'cursor-pointer': !invalid}">
+            <div v-else class="flex items-center justify-center mt-4">
+              <img class="h-12" src="../../assets/loading.svg">
+            </div>
           </form>
         </ValidationObserver>
       </div>
@@ -47,15 +50,19 @@ export default {
       happened: false,
       message: '',
     },
+    submitted: false,
   }),
   methods: {
     async onSubmit() {
       try {
+        this.submitted = true;
         this.clearError();
         await this.sendResetPasswordLink();
         this.forgotPasswordEmailSent = true;
+        this.submitted = false;
       } catch (error) {
         this.displayError(this.$errorMessenger(error));
+        this.submitted = false;
       }
     },
     async sendResetPasswordLink() {
