@@ -33,14 +33,14 @@ class Image(Model):
     id = Field(int, modifiable=False)
     user_id = Field(int)
     link = Field(str)
-    timestamp = Field(datetime, fmt="%Y-%m-%d %H:%M:%S")
+    dt_added = Field(datetime, fmt="%Y-%m-%d %H:%M:%S")
     is_primary = Field(bool)
 
     @staticmethod
-    def create(user_id: int, link: str, is_primary: bool = False, timestamp: Optional[datetime] = None) -> Image:
-        if not timestamp:
-            timestamp = datetime.utcnow()
-        new_image = Image(user_id=user_id, link=link, is_primary=is_primary, timestamp=timestamp)
+    def create(user_id: int, link: str, is_primary: bool = False, dt_added: Optional[datetime] = None) -> Image:
+        if not dt_added:
+            dt_added = datetime.utcnow()
+        new_image = Image(user_id=user_id, link=link, is_primary=is_primary, dt_added=dt_added)
         new_image.save()
         logging.debug("Creating new image")
         return new_image

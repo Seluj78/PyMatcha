@@ -35,8 +35,8 @@ class Message(Model):
     id = Field(int, modifiable=False)
     from_id = Field(int)
     to_id = Field(int)
-    timestamp = Field(datetime, fmt="%Y-%m-%d %H:%M:%S")
-    seen_timestamp = Field(datetime, fmt="%Y-%m-%d %H:%M:%S")
+    dt_sent = Field(datetime, fmt="%Y-%m-%d %H:%M:%S")
+    dt_seen = Field(datetime, fmt="%Y-%m-%d %H:%M:%S")
     content = Field(str)
     is_seen = Field(bool)
     is_liked = Field(bool)
@@ -46,19 +46,19 @@ class Message(Model):
         from_id: int,
         to_id: int,
         content: str,
-        timestamp: Optional[datetime] = None,
-        seen_timestamp: Optional[datetime] = None,
+        dt_sent: Optional[datetime] = None,
+        dt_seen: Optional[datetime] = None,
         is_seen: bool = False,
         is_liked: bool = False,
     ) -> Message:
-        if not timestamp:
-            timestamp = datetime.utcnow()
+        if not dt_sent:
+            dt_sent = datetime.utcnow()
         new_message = Message(
             from_id=from_id,
             to_id=to_id,
             content=content,
-            timestamp=timestamp,
-            seen_timestamp=seen_timestamp,
+            dt_sent=dt_sent,
+            dt_seen=dt_seen,
             is_seen=is_seen,
             is_liked=is_liked,
         )

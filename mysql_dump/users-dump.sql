@@ -50,7 +50,7 @@ DROP TABLE IF EXISTS `images`;
 CREATE TABLE `images` (
   `id` int NOT NULL AUTO_INCREMENT,
   `user_id` int NOT NULL,
-  `timestamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `dt_added` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `link` varchar(256) NOT NULL,
   `is_primary` tinyint(1) DEFAULT '0',
   PRIMARY KEY (`id`)
@@ -129,8 +129,8 @@ CREATE TABLE `messages` (
   `id` int NOT NULL AUTO_INCREMENT,
   `from_id` int NOT NULL,
   `to_id` int NOT NULL,
-  `timestamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `seen_timestamp` timestamp NULL DEFAULT NULL,
+  `dt_sent` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `dt_seen` timestamp NULL DEFAULT NULL,
   `content` longtext NOT NULL,
   `is_liked` tinyint(1) DEFAULT '0',
   `is_seen` tinyint(1) DEFAULT '0',
@@ -248,8 +248,8 @@ CREATE TABLE `users` (
   `birthdate` date DEFAULT NULL,
   `geohash` varchar(256) DEFAULT NULL,
   `heat_score` int DEFAULT NULL,
-  `date_joined` datetime DEFAULT CURRENT_TIMESTAMP,
-  `date_lastseen` datetime DEFAULT CURRENT_TIMESTAMP,
+  `dt_joined` datetime DEFAULT CURRENT_TIMESTAMP,
+  `dt_lastseen` datetime DEFAULT CURRENT_TIMESTAMP,
   `previous_reset_token` varchar(256) DEFAULT NULL,
   `is_online` tinyint(1) DEFAULT (false),
   `is_profile_completed` tinyint(1) DEFAULT (false),
@@ -308,4 +308,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2020-11-03 13:50:40
+-- Dump completed on 2020-11-03 19:32:02

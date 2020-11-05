@@ -60,8 +60,8 @@ class User(Model):
     geohash = Field(str)
     heat_score = Field(int)
     is_online = Field(bool)
-    date_joined = Field(datetime.datetime, fmt="%Y-%m-%d %H:%M:%S")
-    date_lastseen = Field(datetime.datetime, fmt="%Y-%m-%d %H:%M:%S")
+    dt_joined = Field(datetime.datetime, fmt="%Y-%m-%d %H:%M:%S")
+    dt_lastseen = Field(datetime.datetime, fmt="%Y-%m-%d %H:%M:%S")
     is_profile_completed = Field(bool)
     is_confirmed = Field(bool)
     confirmed_on = Field(datetime.datetime, fmt="%Y-%m-%d %H:%M:%S")
@@ -84,8 +84,8 @@ class User(Model):
         geohash: str,
         heat_score: int = 0,
         is_online: bool = False,
-        date_joined: Optional[datetime.datetime] = None,
-        date_lastseen: Optional[datetime.datetime] = None,
+        dt_joined: Optional[datetime.datetime] = None,
+        dt_lastseen: Optional[datetime.datetime] = None,
         is_profile_completed: bool = False,
         is_confirmed: bool = False,
         confirmed_on: datetime.datetime = None,
@@ -126,11 +126,11 @@ class User(Model):
         # Encrypt password
         password = hash_password(password)
 
-        if not date_joined:
-            date_joined = datetime.datetime.utcnow()
+        if not dt_joined:
+            dt_joined = datetime.datetime.utcnow()
 
-        if not date_lastseen:
-            date_lastseen = datetime.datetime.utcnow()
+        if not dt_lastseen:
+            dt_lastseen = datetime.datetime.utcnow()
 
         new_user = User(
             first_name=first_name,
@@ -145,8 +145,8 @@ class User(Model):
             geohash=geohash,
             heat_score=heat_score,
             is_online=is_online,
-            date_joined=date_joined,
-            date_lastseen=date_lastseen,
+            dt_joined=dt_joined,
+            dt_lastseen=dt_lastseen,
             is_profile_completed=is_profile_completed,
             is_confirmed=is_confirmed,
             confirmed_on=confirmed_on,
@@ -187,8 +187,8 @@ class User(Model):
             geohash=None,
             heat_score=0,
             is_online=False,
-            date_joined=datetime.datetime.utcnow(),
-            date_lastseen=datetime.datetime.utcnow(),
+            dt_joined=datetime.datetime.utcnow(),
+            dt_lastseen=datetime.datetime.utcnow(),
             is_profile_completed=False,
             is_confirmed=False,
             confirmed_on=None,
@@ -211,7 +211,7 @@ class User(Model):
         returned_dict["likes"] = {"sent": [], "received": []}
         returned_dict["likes"]["sent"] = [like.to_dict() for like in self.get_likes_sent()]
         returned_dict["likes"]["received"] = [like.to_dict() for like in self.get_likes_received()]
-        returned_dict["last_seen"] = timeago_format(self.date_lastseen, datetime.datetime.utcnow())
+        returned_dict["last_seen"] = timeago_format(self.dt_lastseen, datetime.datetime.utcnow())
         returned_dict["blocks"] = [block.to_dict() for block in self.get_blocks()]
         returned_dict.pop("password")
         returned_dict.pop("previous_reset_token")
@@ -237,7 +237,7 @@ class User(Model):
             "email": self.email,
             "username": self.username,
             "is_online": self.is_online,
-            "date_lastseen": self.date_lastseen,
+            "dt_lastseen": self.dt_lastseen,
         }
 
     def get_images(self):
@@ -318,7 +318,7 @@ class User(Model):
         return match_list
 
     def send_message(self, to_id, content):
-        Message.create(from_id=self.id, to_id=to_id, content=content, timestamp=datetime.datetime.utcnow())
+        Message.create(from_id=self.id, to_id=to_id, content=content, dt_sent=datetime.datetime.utcnow())
 
     def get_messages(self) -> List[Message]:
         with self.db.cursor() as c:
@@ -328,8 +328,8 @@ class User(Model):
                 messages.from_id as from_id, 
                 messages.to_id as to_id, 
                 messages.id as id, 
-                messages.timestamp as timestamp, 
-                messages.seen_timestamp as seen_timestamp, 
+                messages.dt_sent as dt_sent,
+                messages.dt_seen as dt_seen,
                 messages.content as content, 
                 messages.is_liked as is_liked, 
                 messages.is_seen as is_seen
@@ -386,8 +386,8 @@ class User(Model):
                 messages.from_id as from_id, 
                 messages.to_id as to_id, 
                 messages.id as id, 
-                messages.timestamp as timestamp, 
-                messages.seen_timestamp as seen_timestamp, 
+                messages.dt_sent as dt_sent,
+                messages.dt_seen as dt_seen,
                 messages.content as content, 
                 messages.is_liked as is_liked, 
                 messages.is_seen as is_seen
@@ -399,8 +399,8 @@ class User(Model):
                 SELECT messages.from_id as from_id, 
                 messages.to_id as to_id, 
                 messages.id as id, 
-                messages.timestamp as timestamp, 
-                messages.seen_timestamp as seen_timestamp, 
+                messages.dt_sent as dt_sent,
+                messages.dt_seen as dt_seen,
                 messages.content as content, 
                 messages.is_liked as is_liked, 
                 messages.is_seen as is_seen

@@ -61,7 +61,7 @@ def update_heat_scores():
 
         now = datetime.datetime.utcnow()
         monday1 = now - datetime.timedelta(days=now.weekday())
-        monday2 = user.date_lastseen - datetime.timedelta(days=user.date_lastseen.weekday())
+        monday2 = user.dt_lastseen - datetime.timedelta(days=user.dt_lastseen.weekday())
         weeks_passed_since_last_activity = int((monday1 - monday2).days / 7)
 
         score -= weeks_passed_since_last_activity * INACTIVITY_DIVIDER
@@ -78,7 +78,7 @@ def take_users_offline():
     went_offline_count = 0
     stayed_online_count = 0
     for user in User.get_multis(is_online=True):
-        if user.date_lastseen + datetime.timedelta(minutes=2) < datetime.datetime.utcnow():
+        if user.dt_lastseen + datetime.timedelta(minutes=2) < datetime.datetime.utcnow():
             user.is_online = False
             user.save()
             went_offline_count += 1
@@ -142,7 +142,7 @@ def take_random_users_online():
             # User isn't a bot, so skip him
             continue
         user.is_online = True
-        user.date_lastseen = datetime.datetime.utcnow()
+        user.dt_lastseen = datetime.datetime.utcnow()
         user.save()
     return "Successfully set 250 users online"
 
