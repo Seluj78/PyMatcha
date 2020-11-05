@@ -79,7 +79,7 @@ def search():
         else:
             distance = -1
             if max_distance != -1:
-                raise BadRequestError("user needs to sets his location first")
+                raise BadRequestError("user needs to sets his location first.")
 
         common_tags = []
         if tags:

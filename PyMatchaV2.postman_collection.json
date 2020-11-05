@@ -1017,7 +1017,7 @@
 											"tests[\"JSON return code is 400\"] = response.code == 400",
 											"",
 											"tests[\"success is true\"] = response.success == false",
-											"tests[\"Message is correct\"] = response.error.message == \"Orientation must be one of 'heterosexual', 'homosexual', 'bisexual', 'other'\"",
+											"tests[\"Message is correct\"] = response.error.message == \"Orientation must be one of 'heterosexual', 'homosexual', 'bisexual' or 'other'.\"",
 											"tests[\"Error type is Bad Request\"] = response.error.type == \"BadRequestError\""
 										],
 										"type": "text/javascript"
@@ -1217,7 +1217,7 @@
 											"tests[\"JSON return code is 400\"] = response.code == 400",
 											"",
 											"tests[\"success is true\"] = response.success == false",
-											"tests[\"Message is correct\"] = response.error.message == \"Gender must be one of 'male', 'female', 'other'\"",
+											"tests[\"Message is correct\"] = response.error.message == \"Gender must be one of 'male', 'female' or 'other'.\"",
 											"tests[\"Error type is Bad Request\"] = response.error.type == \"BadRequestError\""
 										],
 										"type": "text/javascript"
@@ -1267,7 +1267,7 @@
 											"tests[\"JSON return code is 400\"] = response.code == 400",
 											"",
 											"tests[\"success is true\"] = response.success == false",
-											"tests[\"Message is correct\"] = response.error.message == \"Birthdate format must be %d/%m/%Y (day/month/year)\"",
+											"tests[\"Message is correct\"] = response.error.message == \"Birthdate format must be %d/%m/%Y (day/month/year).\"",
 											"tests[\"Error type is Bad Request\"] = response.error.type == \"BadRequestError\""
 										],
 										"type": "text/javascript"
@@ -1366,7 +1366,7 @@
 											"",
 											"",
 											"tests[\"success is true\"] = response.success == true",
-											"tests[\"Message is correct\"] = response.message == \"Profile completed !\"",
+											"tests[\"Message is correct\"] = response.message == \"Profile completed!\"",
 											""
 										],
 										"type": "text/javascript"
@@ -1416,7 +1416,7 @@
 											"tests[\"JSON return code is 400\"] = response.code == 400",
 											"",
 											"tests[\"success is true\"] = response.success == false",
-											"tests[\"Message is correct\"] = response.error.message == \"The user has already completed his profile\"",
+											"tests[\"Message is correct\"] = response.error.message == \"The user has already completed his profile.\"",
 											"tests[\"Error type is Bad Request\"] = response.error.type == \"BadRequestError\""
 										],
 										"type": "text/javascript"
@@ -2647,7 +2647,7 @@
 											"tests[\"JSON return code is 200\"] = response.code == 200",
 											"",
 											"tests[\"success is true\"] = response.success == true",
-											"tests[\"Message is correct\"] = response.message == \"Email sent for new email\"",
+											"tests[\"Message is correct\"] = response.message == \"Email sent for new email.\"",
 											""
 										],
 										"type": "text/javascript"
@@ -2835,7 +2835,7 @@
 											"tests[\"JSON return code is 400\"] = response.code == 400",
 											"",
 											"tests[\"success is false\"] = response.success == false",
-											"tests[\"Message is correct\"] = response.error.message == \"The new email is the same as the old one !\"",
+											"tests[\"Message is correct\"] = response.error.message == \"The new email is the same as the old one!\"",
 											"tests[\"Error type is Bad Request\"] = response.error.type == \"BadRequestError\""
 										],
 										"type": "text/javascript"
@@ -3912,21 +3912,9 @@
 							}
 						}
 					],
-					"protocolProfileBehavior": {
-						"disableBodyPruning": true
-					},
 					"request": {
 						"method": "GET",
 						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n    \"force\": false\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
 						"url": {
 							"raw": "{{host}}/recommendations",
 							"host": [
@@ -6065,7 +6053,7 @@
 									"tests[\"Message is correct\"] = response.new_messages.length == 1",
 									"tests[\"New message content is correct\"] = response.new_messages[0].content == \"My Reply\"",
 									"tests[\"New message is_seen\"] = response.new_messages[0].is_seen == 0",
-									"tests[\"New message seen timestamp is null\"] = response.new_messages[0].dt_seen == null"
+									"tests[\"New message seen timestamp is null\"] = response.new_messages[0].seen_timestamp == null"
 								],
 								"type": "text/javascript"
 							}
@@ -7242,162 +7230,162 @@
 	],
 	"variable": [
 		{
-			"id": "de9d17be-f7ca-4a75-af2e-dcfd5d60609a",
+			"id": "e811fee2-10bd-4e63-b886-cc1946705856",
 			"key": "host",
 			"value": "http://127.0.0.1:5000"
 		},
 		{
-			"id": "0cd6ffc1-1c75-47c2-8d8d-f5125648afac",
+			"id": "ba122eb7-71df-47a8-841d-91b6bfd89387",
 			"key": "access_token",
 			"value": ""
 		},
 		{
-			"id": "ed3db240-4fad-45f5-8a7a-095a337c5816",
+			"id": "98193ebc-fa83-4f44-8147-13de73d3b3f0",
 			"key": "refresh_token",
 			"value": ""
 		},
 		{
-			"id": "821388fc-d8c6-4bbe-8646-2ab446976be9",
+			"id": "3bfdbc11-e9cc-4d04-9b8e-8a67fee432dc",
 			"key": "debug_token",
 			"value": "xX69jules69Xx"
 		},
 		{
-			"id": "a10bcfc0-96f5-4e8e-84c4-076155ac6fbc",
+			"id": "c8ec10d4-a851-4299-bff0-b4aca2002b30",
 			"key": "id",
 			"value": "1541"
 		},
 		{
-			"id": "47865117-86d5-457d-ab4b-be67216a58a7",
+			"id": "b1cf2f86-7dbd-45d2-869f-dc04eed95b62",
 			"key": "first_name",
 			"value": "Jules"
 		},
 		{
-			"id": "01bb833b-a658-48d5-a2cc-b76e1016bb90",
+			"id": "474bcbe8-f836-4aae-adb2-5a00812d72a8",
 			"key": "last_name",
 			"value": "Lasne"
 		},
 		{
-			"id": "daa86e8b-d927-4bae-a05a-6b4b28f43712",
+			"id": "f11e06b0-aac6-4560-9b9e-cbbe67bbe8f7",
 			"key": "email",
 			"value": "jules.lasne@example.org"
 		},
 		{
-			"id": "192efd3a-7603-421c-be59-1fa2d8a9a0bb",
+			"id": "1866dd97-53c0-4d4f-a4cf-4c387cf3175b",
 			"key": "username",
 			"value": "seluj78"
 		},
 		{
-			"id": "a78f5409-bfb0-45db-aa9c-b28d771ed2de",
+			"id": "448f5dcd-7274-4762-8868-4c7e3b02f556",
 			"key": "password",
 			"value": "dolphin"
 		},
 		{
-			"id": "bfcf2884-20c9-4ad9-b14f-82c6df4d248e",
+			"id": "2cc1fe19-2966-4d6b-8ca7-37f4d220e07e",
 			"key": "orientation",
 			"value": "heterosexual"
 		},
 		{
-			"id": "db6ac697-a874-44a1-9157-e9d522bce9bc",
+			"id": "cb817277-16e2-45da-bc32-e06e27e3ff2e",
 			"key": "gender",
 			"value": "male"
 		},
 		{
-			"id": "6e9c5155-e56d-408a-8211-8cdb37083737",
+			"id": "64e3e105-500a-47e2-a12f-a47ef51d4506",
 			"key": "bio",
 			"value": "Phasellus vel tortor vel elit scelerisque accumsan vel nec nunc. Ut condimentum vestibulum sapien non dictum. Vestibulum ac eleifend mi. Curabitur dictum vestibulum ex at placerat. Pellentesque odio mi, condimentum et sollicitudin at, finibus non leo. Aenean sed pulvinar nulla, nec tincidunt felis. Aenean nibh elit, aliquam sit amet lobortis et, pellentesque ut orci. Curabitur placerat sem id ex laoreet imperdiet. Curabitur dictum ac urna feugiat viverra. Vivamus nec pulvinar urna. Suspendisse vel ultrices est. Sed malesuada est vel orci venenatis scelerisque. Phasellus ultrices dignissim sapien, at mattis tellus mattis pulvinar. Sed ut euismod velit, id fermentum leo."
 		},
 		{
-			"id": "2de8e81c-9179-406d-8873-5aff4b739f54",
+			"id": "525b237e-bc49-402f-83a2-75bc35f2ae40",
 			"key": "birthdate",
 			"value": "06/04/1998"
 		},
 		{
-			"id": "7e1d9f45-350f-4d91-8a16-0eaa1abf8685",
+			"id": "1dafa785-b449-46b6-b2a4-bda80ba08a6e",
 			"key": "first_name2",
 			"value": "Félix"
 		},
 		{
-			"id": "a19f2e27-d89a-443d-8d5f-b18dfa38a298",
+			"id": "2279c155-e988-4222-9c16-5bd2e636ae27",
 			"key": "last_name2",
 			"value": "Ensal"
 		},
 		{
-			"id": "db1dfa44-09c4-4e85-9568-15ddfb78d7e7",
+			"id": "3751b96e-4798-4d77-9bf1-5730126e2ece",
 			"key": "username2",
 			"value": "Ufree"
 		},
 		{
-			"id": "bba960c3-9465-4b1c-90b2-8c0bba49091b",
+			"id": "84449713-bd71-4871-8ef9-7b02093c96ea",
 			"key": "bio2",
 			"value": "Donec quis porttitor ante, ac pulvinar nulla. Vivamus dignissim, ipsum ultricies interdum suscipit, risus tellus auctor mi, eu auctor metus sem quis urna. In maximus placerat ipsum, nec sodales elit aliquet sed. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae; Phasellus malesuada velit felis, non volutpat ex bibendum at. Maecenas aliquet sodales quam at consequat. Sed faucibus consequat tempor. Fusce consequat eu sem non tempus. Duis dapibus nunc vel tempus semper. Pellentesque dignissim tellus odio, vel luctus ipsum suscipit quis. Curabitur id erat at quam varius fermentum non in massa."
 		},
 		{
-			"id": "ebc5791e-9317-409b-9195-0c869829de4b",
+			"id": "647dfa7b-eb67-4f21-b4cc-fe6d19cda8f4",
 			"key": "gender2",
 			"value": "other"
 		},
 		{
-			"id": "7ffd0db7-a926-4c8e-bfb5-3efb4ffa81ac",
+			"id": "11b66034-8c20-4679-8e1c-64ed3ad5b96a",
 			"key": "orientation2",
 			"value": "bisexual"
 		},
 		{
-			"id": "75392ec7-f738-441d-af69-671b36a89b67",
+			"id": "1ca9a540-000f-4a74-8df6-0ebc2e03bddf",
 			"key": "birthdate2",
 			"value": "25/06/2000"
 		},
 		{
-			"id": "5f247ade-3d4f-4b66-8e66-4949a809835a",
+			"id": "9ee76a1e-4855-43e0-9218-259454c756b3",
 			"key": "email2",
 			"value": "felix.ensal@example.org"
 		},
 		{
-			"id": "79fbeabd-8711-4b7e-a3ce-a2fff88216aa",
+			"id": "4ac76d74-a031-4d8c-9cac-dd540b5728a1",
 			"key": "password2",
 			"value": "dolphin2"
 		},
 		{
-			"id": "010ca345-c7b8-4443-8996-5a0d1ddffa40",
+			"id": "9302899f-a618-4ff4-814a-535005eed81b",
 			"key": "ip",
 			"value": "90.108.46.63"
 		},
 		{
-			"id": "dcc0c64a-7c6d-48da-ad72-8f1259b12c70",
+			"id": "6374e52f-9724-4ec8-81c8-e9b1ae0a20ca",
 			"key": "lat",
 			"value": "49.5271"
 		},
 		{
-			"id": "a1f10ead-5858-4820-b474-93b50f9d7b59",
+			"id": "3f58f617-2dba-4989-8da2-aec28eacafcf",
 			"key": "lng",
 			"value": "1.1885"
 		},
 		{
-			"id": "ad61ddc7-cb2a-4fc7-ba25-ddb68a83a7a8",
+			"id": "2f2d737c-c260-47db-8f3b-c225a7d32de1",
 			"key": "my_msg_id",
 			"value": "-1"
 		},
 		{
-			"id": "cf98244b-d9b5-4f6b-969a-dea0bf631e93",
+			"id": "0de03435-37c2-4813-838e-0de40c36b7ce",
 			"key": "to_me_msg_id",
 			"value": "-1"
 		},
 		{
-			"id": "bcd2370c-fee5-4f5c-aad8-ff80ccec2c8c",
+			"id": "8afb1dc0-c9d0-460e-bce5-a6047420f732",
 			"key": "other_msg_id",
 			"value": "-1"
 		},
 		{
-			"id": "c3fef2db-d89f-4cab-8e93-9aa0f7746395",
+			"id": "bcbb4d24-0bb9-476e-9dbc-7ac99436d5ae",
 			"key": "user_access_token",
 			"value": ""
 		},
 		{
-			"id": "0e10a01a-fe4d-4d3b-865c-3e34bfb98003",
+			"id": "a612edb9-36c3-4d77-8de4-07d5a00254d4",
 			"key": "user_refresh_token",
 			"value": ""
 		},
 		{
-			"id": "45055d3a-d126-443d-9c60-b41b65109fe7",
+			"id": "f6b87f6a-3ad5-4beb-980c-20a3d7645c2f",
 			"key": "notif_id",
 			"value": ""
 		}

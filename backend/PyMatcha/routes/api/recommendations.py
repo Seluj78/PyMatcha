@@ -39,5 +39,5 @@ def get_recommendations():
         create_user_recommendations(current_user)
         recommendations = redis.get(f"user_recommendations:{str(current_user.id)}")
         if not recommendations:
-            raise BadRequestError("User recommendations cannot be calculated")
+            raise BadRequestError("User recommendations cannot be calculated.")
     return SuccessOutput("recommendations", json.loads(recommendations))

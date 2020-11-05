@@ -94,7 +94,7 @@ def send_message():
         new_message.save()
         bot_respond_to_message.delay(bot_id=to_user.id, from_id=current_user.id, message_content=content)
 
-    return SuccessOutputMessage("new_message", new_message.to_dict(), "Message successfully sent to {}.".format(to_uid))
+    return SuccessOutputMessage("new_message", new_message.to_dict(), "Message successfully sent.")
 
 
 @messages_bp.route("/conversations/<with_uid>", methods=["GET"])
