@@ -42,8 +42,8 @@ def _create_user_table(db):
         birthdate            DATE DEFAULT NULL,
         geohash              VARCHAR(256) DEFAULT NULL,
         heat_score           INT DEFAULT NULL,
-        date_joined          DATETIME DEFAULT NOW(),
-        date_lastseen        DATETIME DEFAULT NOW(),
+        dt_joined            DATETIME DEFAULT NOW(),
+        dt_lastseen          DATETIME DEFAULT NOW(),
         previous_reset_token VARCHAR(256),
         is_online            BOOLEAN DEFAULT (FALSE),
         is_profile_completed BOOLEAN DEFAULT (FALSE),
@@ -168,8 +168,8 @@ def _create_messages_table(db):
         id             INT auto_increment PRIMARY KEY,
         from_id        INT NOT NULL,
         to_id          INT NOT NULL,
-        timestamp      TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-        seen_timestamp TIMESTAMP,
+        dt_sent        DATETIME DEFAULT NOW(),
+        dt_seen        DATETIME DEFAULT NOW(),
         content        LONGTEXT NOT NULL,
         is_liked       BOOLEAN DEFAULT FALSE,
         is_seen        BOOLEAN DEFAULT FALSE
@@ -190,7 +190,7 @@ def _create_images_table(db):
         (
         id             INT auto_increment PRIMARY KEY,
         user_id        INT NOT NULL,
-        timestamp      TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+        dt_added       DATETIME DEFAULT NOW(),
         link           VARCHAR(256) NOT NULL,
         is_primary     BOOLEAN DEFAULT FALSE
         ) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci ;

@@ -70,9 +70,9 @@ def populate_users(amount=150, drop_user_table=False):
             old = geohash[0:2]
             geohash = geohash.replace(old, FRANCE_GEOHASH_START[0], 1)
 
-        date_joined = gen_datetime(min_year=2017, max_year=datetime.datetime.now().year)
+        dt_joined = gen_datetime(min_year=2017, max_year=datetime.datetime.now().year)
 
-        date_lastseen = gen_datetime(min_year=2017, max_year=datetime.datetime.now().year)
+        dt_lastseen = gen_datetime(min_year=2017, max_year=datetime.datetime.now().year)
         username = user.get_username()
 
         birthdate = gen_datetime(min_year=1985, max_year=datetime.datetime.now().year - 18).date()
@@ -90,8 +90,8 @@ def populate_users(amount=150, drop_user_table=False):
                 geohash=geohash,
                 heat_score=random.randint(0, 150),
                 is_online=random.choice([True, False]),
-                date_joined=date_joined,
-                date_lastseen=date_lastseen,
+                dt_joined=dt_joined,
+                dt_lastseen=dt_lastseen,
                 is_profile_completed=True,
                 is_confirmed=True,
                 confirmed_on=datetime.datetime.utcnow(),

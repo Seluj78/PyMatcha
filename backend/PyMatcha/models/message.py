@@ -35,8 +35,8 @@ class Message(Model):
     id = Field(int, modifiable=False)
     from_id = Field(int)
     to_id = Field(int)
-    timestamp = Field(datetime, fmt="%Y-%m-%d %H:%M:%S")
-    seen_timestamp = Field(datetime, fmt="%Y-%m-%d %H:%M:%S")
+    dt_sent = Field(datetime, fmt="%Y-%m-%d %H:%M:%S")
+    dt_seen = Field(datetime, fmt="%Y-%m-%d %H:%M:%S")
     content = Field(str)
     is_seen = Field(bool)
     is_liked = Field(bool)
@@ -46,19 +46,19 @@ class Message(Model):
         from_id: int,
         to_id: int,
         content: str,
-        timestamp: Optional[datetime] = None,
-        seen_timestamp: Optional[datetime] = None,
+        dt_sent: Optional[datetime] = None,
+        dt_seen: Optional[datetime] = None,
         is_seen: bool = False,
         is_liked: bool = False,
     ) -> Message:
-        if not timestamp:
-            timestamp = datetime.utcnow()
+        if not dt_sent:
+            dt_sent = datetime.utcnow()
         new_message = Message(
             from_id=from_id,
             to_id=to_id,
             content=content,
-            timestamp=timestamp,
-            seen_timestamp=seen_timestamp,
+            dt_sent=dt_sent,
+            dt_seen=dt_seen,
             is_seen=is_seen,
             is_liked=is_liked,
         )
@@ -68,11 +68,11 @@ class Message(Model):
 
     def to_dict(self) -> Dict:
         returned_dict = super().to_dict()
-        returned_dict["timestamp_ago"] = timeago_format(self.timestamp, datetime.utcnow())
-        if self.seen_timestamp:
-            returned_dict["seen_timestamp_ago"] = timeago_format(self.seen_timestamp, datetime.utcnow())
+        returned_dict["dt_sent_ago"] = timeago_format(self.dt_sent, datetime.utcnow())
+        if self.dt_seen:
+            returned_dict["dt_seen_ago"] = timeago_format(self.dt_seen, datetime.utcnow())
         else:
-            returned_dict["seen_timestamp_ago"] = None
+            returned_dict["dt_seen_ago"] = None
 
         return returned_dict
 

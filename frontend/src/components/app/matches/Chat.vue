@@ -63,9 +63,9 @@ export default {
     determineFirstMessagesOfTimespans(messages) {
       const len = messages.length;
       for (let i = 0; i < len; i += 1) {
-        if (this.displayDate(messages[i].timestamp)) {
+        if (this.displayDate(messages[i].dt_sent)) {
           messages[i].first_in_timespan = true;
-          messages[i].timestamp_first = this.getDayMonthday(messages[i].timestamp);
+          messages[i].timestamp_first = this.getDayMonthday(messages[i].dt_sent);
         } else {
           messages[i].first_in_timespan = false;
         }
@@ -112,8 +112,9 @@ export default {
       const messagesRequest = await this.$http.get(`/conversations/${this.chatWithUserId}`);
       const newMessages = messagesRequest.data.messages;
       const oldMessageCount = this.messages.length;
-      this.determineFirstMessagesOfTimespans(newMessages);
       this.messages = newMessages;
+      this.latestMessagesDate = null;
+      this.determineFirstMessagesOfTimespans(this.messages);
       if (newMessages.length > oldMessageCount) {
         this.$emit('new-message');
         this.scrollChatToBottom();

@@ -1728,10 +1728,10 @@ components:
         confirmed_on:
           type: date
           example: Wed, 16 Sep 2020 15:20:02 GMT
-        date_joined:
+        dt_joined:
           type: date
           example: Wed, 16 Sep 2020 15:18:02 GMT
-        date_lastseen:
+        dt_lastseen:
           type: date
           example: Wed, 19 Sep 2020 19:24:02 GMT
         is_confirmed:
@@ -1945,11 +1945,11 @@ components:
           type: integer
           example: 1
           description: The unique id of the message
-        timestamp:
+        dt_added:
           type: date
           description: When was the message sent
           example: Wed, 16 Sep 2020 15:38:15 GMT
-        seen_timestamp:
+        dt_seen:
           type: date
           description: When was the message seen
           example: Wed, 16 Sep 2020 15:39:15 GMT
@@ -1980,11 +1980,11 @@ components:
           type: integer
           example: 1
           description: The unique id of the message
-        timestamp:
+        dt_added:
           type: date
           description: When was the message sent
           example: Wed, 16 Sep 2020 15:38:15 GMT
-        seen_timestamp:
+        dt_seen:
           type: date
           description: When was the message seen
           example: Wed, 16 Sep 2020 15:39:15 GMT
@@ -2060,10 +2060,10 @@ components:
         confirmed_on:
           type: date
           example: Wed, 16 Sep 2020 15:20:02 GMT
-        date_joined:
+        dt_joined:
           type: date
           example: Wed, 16 Sep 2020 15:18:02 GMT
-        date_lastseen:
+        dt_lastseen:
           type: date
           example: Wed, 19 Sep 2020 19:24:02 GMT
         is_confirmed:
@@ -2121,7 +2121,7 @@ components:
           type: integer
           description: The user id
           example: 1
-        date_lastseen:
+        dt_lastseen:
           type: timestamp
           description: Timestamp of last time the user was online
           example: 1600332058.537065,
@@ -2140,7 +2140,7 @@ components:
           type: string
           description: The image link
           example: https://i.imgur.com/OCqF907.png
-        timestamp:
+        dt_added:
           type: date
           description: When was the image added
           example: Wed, 19 Sep 2020 19:24:02 GMT
@@ -2196,10 +2196,10 @@ components:
         confirmed_on:
           type: date
           example: Wed, 16 Sep 2020 15:20:02 GMT
-        date_joined:
+        dt_joined:
           type: date
           example: Wed, 16 Sep 2020 15:18:02 GMT
-        date_lastseen:
+        dt_lastseen:
           type: date
           example: Wed, 19 Sep 2020 19:24:02 GMT
         is_confirmed:

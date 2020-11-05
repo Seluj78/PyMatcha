@@ -48,8 +48,8 @@ def get_opened_conversations():
     returned_list = [
         {
             "last_message_id": c.id,
-            "last_message_timestamp": c.timestamp,
-            "last_message_timestamp_ago": timeago_format(c.timestamp, datetime.datetime.utcnow()),
+            "last_message_dt_sent": c.dt_sent,
+            "last_message_dt_sent_ago": timeago_format(c.dt_sent, datetime.datetime.utcnow()),
             "last_message_content": c.content,
             "is_unseen": True if not c.is_seen and c.to_id == current_user.id else False,
             "with_user": get_user(c.to_id if c.to_id != current_user.id else c.from_id).to_dict(),
@@ -90,7 +90,7 @@ def send_message():
 
     if to_user.is_bot:
         new_message.is_seen = True
-        new_message.seen_timestamp = datetime.datetime.utcnow()
+        new_message.dt_seen = datetime.datetime.utcnow()
         new_message.save()
         bot_respond_to_message.delay(bot_id=to_user.id, from_id=current_user.id, message_content=content)
 
@@ -110,7 +110,7 @@ def get_conversation_messsages(with_uid):
 
     message_list = current_user.get_messages_with_user(with_user.id)
     message_list = [m.to_dict() for m in message_list]
-    message_list = sorted(message_list, key=lambda item: item["timestamp"])
+    message_list = sorted(message_list, key=lambda item: item["dt_sent"])
     return SuccessOutput("messages", message_list)
 
 
@@ -124,7 +124,7 @@ def see_conversation_messages(with_uid):
     unseen_messages = Message.get_multis(from_id=with_user.id, to_id=current_user.id, is_seen=False)
     for message in unseen_messages:
         message.is_seen = True
-        message.seen_timestamp = datetime.datetime.utcnow()
+        message.dt_seen = datetime.datetime.utcnow()
         message.save()
     return Success("Messages marked as seen.")
 
