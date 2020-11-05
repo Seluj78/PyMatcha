@@ -107,8 +107,11 @@
       <div class="text-center px-8 py-8 border-t border-gray-300 w-full">
         <h1 class="inline-block mr-3 font-bold text-gray-matcha leading-none">Location</h1>
         <h1 class="text-md font-normal opacity-50 text-gray-matcha mx-auto pb-2 max-w-sm">If you refused sharing location, it will be approximated from your computer address </h1>
-        <h1 v-if="!locationUpdateSuccess" class="mx-auto onboarding-sub-container-content-button-outline max-w-sm border font-normal mt-2 px-2 cursor-pointer" v-on:click="updateLocation()">Update current location</h1>
-        <h1 v-else class="mx-auto onboarding-sub-container-content-button-outline max-w-sm border font-normal mt-2 px-2 cursor-pointer text-green-500">Success</h1>
+        <h1 v-if="!locationUpdateSuccess && !fetching" class="mx-auto onboarding-sub-container-content-button-outline max-w-sm border font-normal mt-2 px-2 cursor-pointer" v-on:click="updateLocation()">Update current location</h1>
+        <h1 v-if="locationUpdateSuccess && !fetching" class="mx-auto onboarding-sub-container-content-button-outline max-w-sm border font-normal mt-2 px-2 cursor-pointer text-green-500">Success</h1>
+        <div v-if="fetching" class="mx-auto flex items-center justify-center mt-4">
+          <img class="h-12" src="../../assets/loading.svg">
+        </div>
       </div>
       <div class="text-center py-8 w-full px-8 border-t border-gray-300">
         <h1 class="font-bold text-gray-matcha">Images<span class="text-md font-normal ml-2 opacity-50 text-gray-matcha">{{this.$store.getters.getLoggedInUser.images.length}} / 5</span></h1>
@@ -161,6 +164,7 @@ export default {
     },
     locationUpdateSuccess: false,
     settingsFetched: false,
+    fetching: false,
   }),
   computed: {
     getShow() {
@@ -169,6 +173,7 @@ export default {
   },
   methods: {
     async updateLocation() {
+      this.fetching = true;
       navigator.geolocation.getCurrentPosition(
         this.locationAllowed,
         this.locationDenied,
@@ -180,6 +185,7 @@ export default {
       const { longitude } = position.coords;
       const locationData = { lat: latitude, lng: longitude, ip: '0.0.0.0' };
       await this.$http.put('/profile/edit/geolocation', locationData);
+      this.fetching = false;
       this.locationUpdateSuccess = true;
       setTimeout(() => {
         this.locationUpdateSuccess = false;
@@ -191,6 +197,7 @@ export default {
       const { ip } = ipRequest;
       const locationData = { ip };
       await this.$http.put('/profile/edit/geolocation', locationData);
+      this.fetching = false;
       this.locationUpdateSuccess = true;
       setTimeout(() => {
         this.locationUpdateSuccess = false;
