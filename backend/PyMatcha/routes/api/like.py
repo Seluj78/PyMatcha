@@ -13,6 +13,7 @@ from PyMatcha.utils.decorators import validate_params
 from PyMatcha.utils.errors import BadRequestError
 from PyMatcha.utils.errors import NotFoundError
 from PyMatcha.utils.success import Success
+from timeago import format as timeago_format
 
 like_bp = Blueprint("like", __name__)
 
@@ -38,12 +39,8 @@ def like_profile(uid):
             if current_user.superlikes_reset_dt < datetime.utcnow():
                 raise BadRequestError("Your superlikes are being restored, try again in a second")
             else:
-                next_reset_delta = current_user.superlikes_reset_dt - datetime.utcnow()
-                seconds = next_reset_delta.total_seconds()
-                hours = int(seconds // 3600)
-                minutes = int((seconds % 3600) // 60)
-                seconds = int(seconds % 60)
-                raise BadRequestError(f"No more superlikes today, come back in {hours}h:{minutes}m:{seconds}s")
+                ta_format = timeago_format(current_user.superlikes_reset_dt, datetime.utcnow())
+                raise BadRequestError(f"No more superlikes today, come back {ta_format}")
         else:
             current_user.superlikes_counter -= 1
             if current_user.superlikes_counter <= 0:
