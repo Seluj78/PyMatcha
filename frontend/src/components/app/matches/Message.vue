@@ -21,7 +21,7 @@
     <div class="ml-4 w-full">
       <div class="flex justify-between">
         <h1 class="font-bold">{{this.match.first_name}}</h1>
-        <h1 class="text-sm opacity-50">{{this.message.last_message_timestamp_ago}}</h1>
+        <h1 class="text-sm opacity-50">{{this.message.last_message_dt_sent_ago}}</h1>
       </div>
       <h1 v-bind:class="{'opacity-50': this.message.is_unseen}">{{getMessage}}</h1>
     </div>
