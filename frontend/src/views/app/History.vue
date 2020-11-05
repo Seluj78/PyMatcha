@@ -1,7 +1,10 @@
 <template>
   <!-- eslint-disable max-len -->
   <div class="mx-4 sm:mx-16 lg:mx-32">
-    <section class="mx-auto mt-4">
+    <div v-if="!historyFetched" class="mx-auto flex items-center justify-center mt-32">
+      <img class="h-36" src="../../assets/loading.svg">
+    </div>
+    <section v-else class="mx-auto mt-4">
       <div class="flex items-center justify-center md:justify-start w-full mb-4">
         <h1
           class="text-3xl sm:text-5xl my-4 inline-block text-center leading-none onboarding-sub-container-content-heading">
@@ -55,6 +58,7 @@ export default {
     },
     recommendationsAnalysisDone: false,
     filteredCount: null,
+    historyFetched: false,
   }),
   methods: {
     async fetchUsers(request) {
@@ -108,6 +112,7 @@ export default {
           }
         }
       }
+      this.historyFetched = true;
       this.recommendationsAnalysisDone = true;
     },
     browseAgain() {
@@ -120,6 +125,7 @@ export default {
       this.recommendationsAnalysis.popularity.max = null;
       this.recommendationsAnalysis.interests = [];
       this.recommendationsAnalysisDone = false;
+      this.historyFetched = false;
     },
     updateHistory(...args) {
       const [key, value] = args;
