@@ -68,11 +68,11 @@ class Message(Model):
 
     def to_dict(self) -> Dict:
         returned_dict = super().to_dict()
-        returned_dict["timestamp_ago"] = timeago_format(self.timestamp, datetime.utcnow())
-        if self.seen_timestamp:
-            returned_dict["seen_timestamp_ago"] = timeago_format(self.seen_timestamp, datetime.utcnow())
+        returned_dict["dt_sent_ago"] = timeago_format(self.dt_sent, datetime.utcnow())
+        if self.dt_seen:
+            returned_dict["dt_seen_ago"] = timeago_format(self.dt_seen, datetime.utcnow())
         else:
-            returned_dict["seen_timestamp_ago"] = None
+            returned_dict["dt_seen_ago"] = None
 
         return returned_dict
 

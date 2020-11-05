@@ -48,8 +48,8 @@ def get_opened_conversations():
     returned_list = [
         {
             "last_message_id": c.id,
-            "last_message_timestamp": c.dt_sent,
-            "last_message_timestamp_ago": timeago_format(c.dt_sent, datetime.datetime.utcnow()),
+            "last_message_dt_sent": c.dt_sent,
+            "last_message_dt_sent_ago": timeago_format(c.dt_sent, datetime.datetime.utcnow()),
             "last_message_content": c.content,
             "is_unseen": True if not c.is_seen and c.to_id == current_user.id else False,
             "with_user": get_user(c.to_id if c.to_id != current_user.id else c.from_id).to_dict(),
