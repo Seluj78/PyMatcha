@@ -118,10 +118,13 @@
         <div class="auth-sub-container-error mt-8" v-if="image.error">
           <h1 class="auth-sub-container-error-message">{{image.error}}</h1>
         </div>
-        <button v-if="this.$store.getters.getLoggedInUser.images.length < 6" class="overflow-hidden relative onboarding-sub-container-content-button-outline border w-full max-w-sm my-4">
+        <button v-if="this.$store.getters.getLoggedInUser.images.length < 5 && !fetchingImages" class="overflow-hidden relative onboarding-sub-container-content-button-outline border w-full max-w-sm my-4">
           <input style="padding-left: 100%;" class="cursor-pointer opacity-0 absolute top-0 left-0 w-full h-full rounded-md" type="file" v-on:change="selectFile()" ref="file">
           <img src="../../assets/onboarding/cloudPurple.png" class="w-8 mx-auto">
         </button>
+        <div v-if="fetchingImages" class="mx-auto flex items-center justify-center mt-4">
+          <img class="h-12" src="../../assets/loading.svg">
+        </div>
         <ProfileImage
           v-for="image in this.$store.getters.getLoggedInUser.images"
           :key="image.id"
@@ -165,6 +168,7 @@ export default {
     locationUpdateSuccess: false,
     settingsFetched: false,
     fetching: false,
+    fetchingImages: false,
   }),
   computed: {
     getShow() {
@@ -205,6 +209,7 @@ export default {
     },
     async selectFile() {
       this.image.error = '';
+      this.fetchingImages = true;
       const allowedTypes = ['image/jpeg', 'image/png', 'image/gif'];
       const file = this.$refs.file.files[0];
 
@@ -225,6 +230,7 @@ export default {
       }
       const user = await this.$http.get(`/users/${this.$store.getters.getLoggedInUser.id}`);
       await this.$store.dispatch('login', user.data);
+      this.fetchingImages = false;
     },
     async deleteImage(...args) {
       const [imageId] = args;
