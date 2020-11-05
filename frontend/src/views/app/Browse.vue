@@ -2,6 +2,9 @@
   <!-- eslint-disable max-len -->
   <div class="mx-4 sm:mx-16 lg:mx-32">
     <section class="mx-auto">
+      <div v-if="!recommendationsAnalysisDone" class="flex items-center justify-center mt-32">
+        <img class="h-36" src="../../assets/loading.svg">
+      </div>
       <Recommendations
         v-if="recommendationsAnalysisDone"
         v-bind:title="'Potential matches'"
