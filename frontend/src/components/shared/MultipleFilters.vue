@@ -5,7 +5,7 @@
     <h1 class="text-md text-left opacity-50 mb-4">{{ info }}</h1>
     <div class="h-48 w-auto overflow-scroll rounded-md border border-gray-300 bg-white">
       <h1 v-for="(option, index) in options" :key="option + index + option"
-          v-bind:class="{'sort-dropdown-option': true, 'text-lg': true, 'border-b': index !== options.length - 1, 'capitalize': true,
+          v-bind:class="{'sort-dropdown-option': true, 'text-base': true, 'border-b': index !== options.length - 1, 'capitalize': true,
           'font-extrabold': selectedFilters.indexOf(option) !== -1, 'text-gray-matcha': selectedFilters.indexOf(option) !== -1}"
           v-on:click="select(option)">
         {{option}}

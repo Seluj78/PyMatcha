@@ -1,7 +1,10 @@
 <template>
   <!-- eslint-disable max-len -->
   <div class="w-full md:w-auto md:mx-16 lg:mx-32 relative md:flex items-start h-auto md:mb-16">
-    <section class="w-auto md:max-w-xss md:shadow-md md:rounded-md">
+    <div v-if="!settingsFetched" class="mx-auto flex items-center justify-center mt-32">
+      <img class="h-36" src="../../assets/loading.svg">
+    </div>
+    <section v-if="settingsFetched" class="w-auto md:max-w-xss md:shadow-md md:rounded-md">
       <div class="w-full md:hidden h-1 bg-white-matcha"></div>
       <div class="md:border-b profile-card text-wrap p-16 md:py-8 flex flex-col w-full md:rounded-t-md">
         <div class="mx-auto overflow-hidden w-48 h-48 md:w-24 md:h-24 rounded-full">
@@ -26,7 +29,7 @@
         <MenuButton v-on:click.native="showSetting('profile')" v-bind:class="{'md:px-8':true, 'md:bg-purple-200': getShow === 'profile'}" v-bind:text="'Profile'"></MenuButton>
       </div>
     </section>
-    <section v-if="getShow === 'account'" class="flex flex-col items-center z-10 absolute bg-white-matcha px-8 md:pb-8 w-full top-0 left-0 h-full md:h-auto md:ml-4 md:relative md:shadow-md md:rounded-md">
+    <section v-if="getShow === 'account' && settingsFetched" class="flex flex-col items-center z-10 absolute bg-white-matcha px-8 md:pb-8 w-full top-0 left-0 h-full md:h-auto md:ml-4 md:relative md:shadow-md md:rounded-md">
       <SectionHeader v-bind:name="'account'" v-on:click.native="closeSetting()"></SectionHeader>
       <AccountInput
         v-bind:name="'First Name'"
@@ -49,7 +52,7 @@
         v-bind:type="'password'"
         v-bind:currentValuePassed="''"></AccountInput>
     </section>
-    <section v-if="getShow === 'profile'" class="flex flex-col items-start z-10 absolute bg-white-matcha w-full top-0 left-0 md:ml-4 md:relative md:shadow-md md:rounded-md">
+    <section v-if="getShow === 'profile' && settingsFetched" class="flex flex-col items-start z-10 absolute bg-white-matcha w-full top-0 left-0 md:ml-4 md:relative md:shadow-md md:rounded-md">
       <div class="px-8 w-full">
         <SectionHeader class="mx-auto" v-bind:name="'profile'" v-on:click.native="closeSetting()"></SectionHeader>
       </div>
@@ -104,18 +107,24 @@
       <div class="text-center px-8 py-8 border-t border-gray-300 w-full">
         <h1 class="inline-block mr-3 font-bold text-gray-matcha leading-none">Location</h1>
         <h1 class="text-md font-normal opacity-50 text-gray-matcha mx-auto pb-2 max-w-sm">If you refused sharing location, it will be approximated from your computer address </h1>
-        <h1 v-if="!locationUpdateSuccess" class="mx-auto onboarding-sub-container-content-button-outline max-w-sm border font-normal mt-2 px-2 cursor-pointer" v-on:click="updateLocation()">Update current location</h1>
-        <h1 v-else class="mx-auto onboarding-sub-container-content-button-outline max-w-sm border font-normal mt-2 px-2 cursor-pointer text-green-500">Success</h1>
+        <h1 v-if="!locationUpdateSuccess && !fetching" class="mx-auto onboarding-sub-container-content-button-outline max-w-sm border font-normal mt-2 px-2 cursor-pointer" v-on:click="updateLocation()">Update current location</h1>
+        <h1 v-if="locationUpdateSuccess && !fetching" class="mx-auto onboarding-sub-container-content-button-outline max-w-sm border font-normal mt-2 px-2 cursor-pointer text-green-500">Success</h1>
+        <div v-if="fetching" class="mx-auto flex items-center justify-center mt-4">
+          <img class="h-12" src="../../assets/loading.svg">
+        </div>
       </div>
       <div class="text-center py-8 w-full px-8 border-t border-gray-300">
         <h1 class="font-bold text-gray-matcha">Images<span class="text-md font-normal ml-2 opacity-50 text-gray-matcha">{{this.$store.getters.getLoggedInUser.images.length}} / 5</span></h1>
         <div class="auth-sub-container-error mt-8" v-if="image.error">
           <h1 class="auth-sub-container-error-message">{{image.error}}</h1>
         </div>
-        <button v-if="this.$store.getters.getLoggedInUser.images.length < 6" class="overflow-hidden relative onboarding-sub-container-content-button-outline border w-full max-w-sm my-4">
+        <button v-if="this.$store.getters.getLoggedInUser.images.length < 5 && !fetchingImages" class="overflow-hidden relative onboarding-sub-container-content-button-outline border w-full max-w-sm my-4">
           <input style="padding-left: 100%;" class="cursor-pointer opacity-0 absolute top-0 left-0 w-full h-full rounded-md" type="file" v-on:change="selectFile()" ref="file">
           <img src="../../assets/onboarding/cloudPurple.png" class="w-8 mx-auto">
         </button>
+        <div v-if="fetchingImages" class="mx-auto flex items-center justify-center mt-4">
+          <img class="h-12" src="../../assets/loading.svg">
+        </div>
         <ProfileImage
           v-for="image in this.$store.getters.getLoggedInUser.images"
           :key="image.id"
@@ -157,6 +166,9 @@ export default {
       error: null,
     },
     locationUpdateSuccess: false,
+    settingsFetched: false,
+    fetching: false,
+    fetchingImages: false,
   }),
   computed: {
     getShow() {
@@ -165,6 +177,7 @@ export default {
   },
   methods: {
     async updateLocation() {
+      this.fetching = true;
       navigator.geolocation.getCurrentPosition(
         this.locationAllowed,
         this.locationDenied,
@@ -176,6 +189,7 @@ export default {
       const { longitude } = position.coords;
       const locationData = { lat: latitude, lng: longitude, ip: '0.0.0.0' };
       await this.$http.put('/profile/edit/geolocation', locationData);
+      this.fetching = false;
       this.locationUpdateSuccess = true;
       setTimeout(() => {
         this.locationUpdateSuccess = false;
@@ -187,6 +201,7 @@ export default {
       const { ip } = ipRequest;
       const locationData = { ip };
       await this.$http.put('/profile/edit/geolocation', locationData);
+      this.fetching = false;
       this.locationUpdateSuccess = true;
       setTimeout(() => {
         this.locationUpdateSuccess = false;
@@ -194,6 +209,7 @@ export default {
     },
     async selectFile() {
       this.image.error = '';
+      this.fetchingImages = true;
       const allowedTypes = ['image/jpeg', 'image/png', 'image/gif'];
       const file = this.$refs.file.files[0];
 
@@ -214,6 +230,7 @@ export default {
       }
       const user = await this.$http.get(`/users/${this.$store.getters.getLoggedInUser.id}`);
       await this.$store.dispatch('login', user.data);
+      this.fetchingImages = false;
     },
     async deleteImage(...args) {
       const [imageId] = args;
@@ -288,6 +305,7 @@ export default {
     }
     const userViewsReceivedRequest = await this.$http.get('/history/viewed/me');
     this.userViewsReceived = userViewsReceivedRequest.data.viewed_me.length;
+    this.settingsFetched = true;
   },
 };
 </script>

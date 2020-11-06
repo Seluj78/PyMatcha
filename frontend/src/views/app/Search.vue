@@ -1,6 +1,9 @@
 <template>
   <!-- eslint-disable max-len -->
   <div class="mx-4 sm:mx-16 lg:mx-32">
+    <div v-if="!recommendationsAnalysisDone && !sliderValuesFetched" class="mx-auto flex items-center justify-center mt-32">
+      <img class="h-36" src="../../assets/loading.svg">
+    </div>
     <section v-if="recommendationsAnalysisDone" class="mx-auto">
       <div class="sort-button rounded-md text-lg lg:text-2xl w-24 ml-auto" v-on:click="searchAgain()">
         <h1 class="noSelect capitalize">←</h1>
@@ -13,30 +16,30 @@
     <section v-on:click="setError(null)"
              v-if="!recommendationsAnalysisDone && sliderValuesFetched"
              class="flex flex-col my-8 md:my-12">
-        <div><img src="../../assets/search.png" class="w-20 mb-4 mx-auto"></div>
-        <div>
-          <FilterSlider
-            v-bind:min="sliders.age.min"
-            v-bind:max="sliders.age.max"
-            v-bind:name="'age'"
-            v-on:save-filter="saveFilter"></FilterSlider>
-          <FilterSlider
-            v-bind:min="1"
-            v-bind:max="2000"
-            v-bind:unit="'km'"
-            v-bind:oneHandle="true"
-            v-bind:name="'distance'"
-            v-on:save-filter="saveFilter"></FilterSlider>
-          <FilterSlider
-            v-bind:min="sliders.popularity.min"
-            v-bind:max="sliders.popularity.max"
-            v-bind:unit="'pts'"
-            v-bind:name="'popularity'"
-            v-on:save-filter="saveFilter"></FilterSlider>
-        </div>
-        <div>
-          <MultipleFilters
-            v-bind:options="[
+      <div><img src="../../assets/search.png" class="w-20 mb-4 mx-auto"></div>
+      <div>
+        <FilterSlider
+          v-bind:min="sliders.age.min"
+          v-bind:max="sliders.age.max"
+          v-bind:name="'age'"
+          v-on:save-filter="saveFilter"></FilterSlider>
+        <FilterSlider
+          v-bind:min="1"
+          v-bind:max="2000"
+          v-bind:unit="'km'"
+          v-bind:oneHandle="true"
+          v-bind:name="'distance'"
+          v-on:save-filter="saveFilter"></FilterSlider>
+        <FilterSlider
+          v-bind:min="sliders.popularity.min"
+          v-bind:max="sliders.popularity.max"
+          v-bind:unit="'pts'"
+          v-bind:name="'popularity'"
+          v-on:save-filter="saveFilter"></FilterSlider>
+      </div>
+      <div>
+        <MultipleFilters
+          v-bind:options="[
             'swimming', 'wine', 'reading', 'foodie', 'netflix', 'music', 'yoga', 'golf',
             'photography', 'baking', 'shopping', 'outdoors', 'art', 'travel', 'hiking',
             'running', 'volunteering', 'cycling', 'climbing', 'tea', 'fishing', 'soccer',
@@ -47,14 +50,17 @@
             'language exchange', 'sports', 'comedy', 'fashion', 'disney', 'vlogging',
             'astrology', 'board games', 'craft beer', 'coffee', 'writer',
           ]"
-            v-bind:name="'interests'"
-            v-bind:info="'If no selected, all are accounted.'"
-            v-on:save-filter-multiple="saveFilterMultiple"></MultipleFilters>
-        </div>
+          v-bind:name="'interests'"
+          v-bind:info="'If no selected, all are accounted.'"
+          v-on:save-filter-multiple="saveFilterMultiple"></MultipleFilters>
+      </div>
       <div class="auth-sub-container-error mx-auto max-w-md" v-if="error"><h1 class="auth-sub-container-error-message">{{ error }}</h1></div>
       <div class="mx-auto w-full max-w-md">
-        <h1 v-on:click="search()" class="onboarding-sub-container-content-button-outline w-48 text-lg font-normal max-w-full bg-purple-matcha w-full text-white-matcha mx-auto">
+        <h1 v-if="!submitted" v-on:click="search()" class="onboarding-sub-container-content-button-outline w-48 text-lg font-normal max-w-full bg-purple-matcha w-full text-white-matcha mx-auto">
           Search</h1>
+        <div v-else class="flex items-center justify-center mt-4">
+          <img class="h-12" src="../../assets/loading.svg">
+        </div>
       </div>
     </section>
   </div>
@@ -103,6 +109,7 @@ export default {
     },
     recommendationsAnalysisDone: false,
     error: null,
+    submitted: false,
   }),
   methods: {
     saveFilter(...range) {
@@ -122,15 +129,21 @@ export default {
       const sliderRangesRequest = await this.$http.get('/search/values');
       const values = sliderRangesRequest.data.search_minmax;
       this.sliders.age.min = values.min_age;
+      this.filters.age.min = values.min_age;
       if (this.sliders.age.min < 18) {
         this.sliders.age.min = 18;
+        this.filters.age.min = 18;
       }
       this.sliders.age.max = values.max_age;
+      this.filters.age.max = values.max_age;
       this.sliders.popularity.min = values.min_score;
+      this.filters.popularity.min = values.min_score;
       this.sliders.popularity.max = values.max_score;
+      this.filters.popularity.max = values.max_score;
       this.sliderValuesFetched = true;
     },
     async search() {
+      this.submitted = true;
       const searchRequest = await this.$http.post('/search', {
         min_age: this.filters.age.min,
         max_age: this.filters.age.max,
@@ -154,6 +167,7 @@ export default {
       }
       this.recommendations = searchRequest.data.search_results;
       if (this.recommendations.length === 0) {
+        this.submitted = false;
         this.setError('0 profiles found. Please, try expanding your search criteria.');
         return;
       }
@@ -169,6 +183,7 @@ export default {
           this.recommendations[i].interests.push(interests[j].name);
         }
       }
+      this.submitted = false;
       this.recommendationsAnalysisDone = true;
       this.scrollToTop();
     },
