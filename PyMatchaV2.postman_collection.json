@@ -5347,7 +5347,7 @@
 									"});",
 									"",
 									"tests[\"Success is true\"] = response.success == true",
-									"tests[\"Message is correct\"] = response.message == \"Unliked user 1500.\""
+									"tests[\"Message is correct\"] = response.message == \"Unliked user.\""
 								],
 								"type": "text/javascript"
 							}
@@ -5539,7 +5539,7 @@
 									"});",
 									"",
 									"tests[\"Success is true\"] = response.success == true",
-									"tests[\"Message is correct\"] = response.message == \"Unliked user 1500.\""
+									"tests[\"Message is correct\"] = response.message == \"Unliked 1500.\""
 								],
 								"type": "text/javascript"
 							}
@@ -5872,7 +5872,7 @@
 									"    pm.response.to.have.status(200);",
 									"});",
 									"",
-									"tests[\"Message is correct\"] = response.message == \"Message successfully sent to 1500.\""
+									"tests[\"Message is correct\"] = response.message == \"Message successfully sent.\""
 								],
 								"type": "text/javascript"
 							}
@@ -7230,162 +7230,162 @@
 	],
 	"variable": [
 		{
-			"id": "e811fee2-10bd-4e63-b886-cc1946705856",
+			"id": "a6a2b7c3-cd3e-4179-8d2b-1724aff57eee",
 			"key": "host",
 			"value": "http://127.0.0.1:5000"
 		},
 		{
-			"id": "ba122eb7-71df-47a8-841d-91b6bfd89387",
+			"id": "43e9d8f9-31ef-4993-abac-1b558f3053eb",
 			"key": "access_token",
 			"value": ""
 		},
 		{
-			"id": "98193ebc-fa83-4f44-8147-13de73d3b3f0",
+			"id": "0c88edfb-5b11-43ca-b1b2-bc9fc3c7994f",
 			"key": "refresh_token",
 			"value": ""
 		},
 		{
-			"id": "3bfdbc11-e9cc-4d04-9b8e-8a67fee432dc",
+			"id": "025c7f0f-7137-44e1-8b8c-017322b4094d",
 			"key": "debug_token",
 			"value": "xX69jules69Xx"
 		},
 		{
-			"id": "c8ec10d4-a851-4299-bff0-b4aca2002b30",
+			"id": "02a671eb-ef1b-4a57-9313-b206d273c8a8",
 			"key": "id",
 			"value": "1541"
 		},
 		{
-			"id": "b1cf2f86-7dbd-45d2-869f-dc04eed95b62",
+			"id": "22c3f093-d48e-4d83-af05-e53483dff3c0",
 			"key": "first_name",
 			"value": "Jules"
 		},
 		{
-			"id": "474bcbe8-f836-4aae-adb2-5a00812d72a8",
+			"id": "61487c1c-3778-4afd-8385-e6c77400c024",
 			"key": "last_name",
 			"value": "Lasne"
 		},
 		{
-			"id": "f11e06b0-aac6-4560-9b9e-cbbe67bbe8f7",
+			"id": "d1f844e0-8833-49c4-9072-c50f8bf79ead",
 			"key": "email",
 			"value": "jules.lasne@example.org"
 		},
 		{
-			"id": "1866dd97-53c0-4d4f-a4cf-4c387cf3175b",
+			"id": "aa76e1ef-5f53-4259-a1ef-e2a50d6ab34c",
 			"key": "username",
 			"value": "seluj78"
 		},
 		{
-			"id": "448f5dcd-7274-4762-8868-4c7e3b02f556",
+			"id": "6efc8ff0-825e-4d1a-8082-30349ea7444d",
 			"key": "password",
 			"value": "dolphin"
 		},
 		{
-			"id": "2cc1fe19-2966-4d6b-8ca7-37f4d220e07e",
+			"id": "386f46d8-a848-4f60-a3b9-dde6811352f2",
 			"key": "orientation",
 			"value": "heterosexual"
 		},
 		{
-			"id": "cb817277-16e2-45da-bc32-e06e27e3ff2e",
+			"id": "d4e91e2b-afba-4472-9fd0-25041a2638c0",
 			"key": "gender",
 			"value": "male"
 		},
 		{
-			"id": "64e3e105-500a-47e2-a12f-a47ef51d4506",
+			"id": "829d7f92-9e16-4f6d-bd29-3572f27167b3",
 			"key": "bio",
 			"value": "Phasellus vel tortor vel elit scelerisque accumsan vel nec nunc. Ut condimentum vestibulum sapien non dictum. Vestibulum ac eleifend mi. Curabitur dictum vestibulum ex at placerat. Pellentesque odio mi, condimentum et sollicitudin at, finibus non leo. Aenean sed pulvinar nulla, nec tincidunt felis. Aenean nibh elit, aliquam sit amet lobortis et, pellentesque ut orci. Curabitur placerat sem id ex laoreet imperdiet. Curabitur dictum ac urna feugiat viverra. Vivamus nec pulvinar urna. Suspendisse vel ultrices est. Sed malesuada est vel orci venenatis scelerisque. Phasellus ultrices dignissim sapien, at mattis tellus mattis pulvinar. Sed ut euismod velit, id fermentum leo."
 		},
 		{
-			"id": "525b237e-bc49-402f-83a2-75bc35f2ae40",
+			"id": "9742b659-f38c-46a1-b29f-afb3bc0f27a4",
 			"key": "birthdate",
 			"value": "06/04/1998"
 		},
 		{
-			"id": "1dafa785-b449-46b6-b2a4-bda80ba08a6e",
+			"id": "47e9ae0f-f0bb-49b3-826a-cce2a6cec19c",
 			"key": "first_name2",
 			"value": "Félix"
 		},
 		{
-			"id": "2279c155-e988-4222-9c16-5bd2e636ae27",
+			"id": "6b3928a0-6481-4eef-a240-4b591eaa8c8f",
 			"key": "last_name2",
 			"value": "Ensal"
 		},
 		{
-			"id": "3751b96e-4798-4d77-9bf1-5730126e2ece",
+			"id": "3e1ae71f-9bc4-4d8c-920c-18e002eb0b69",
 			"key": "username2",
 			"value": "Ufree"
 		},
 		{
-			"id": "84449713-bd71-4871-8ef9-7b02093c96ea",
+			"id": "7762af79-59cc-4e61-bb66-47194e892f07",
 			"key": "bio2",
 			"value": "Donec quis porttitor ante, ac pulvinar nulla. Vivamus dignissim, ipsum ultricies interdum suscipit, risus tellus auctor mi, eu auctor metus sem quis urna. In maximus placerat ipsum, nec sodales elit aliquet sed. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae; Phasellus malesuada velit felis, non volutpat ex bibendum at. Maecenas aliquet sodales quam at consequat. Sed faucibus consequat tempor. Fusce consequat eu sem non tempus. Duis dapibus nunc vel tempus semper. Pellentesque dignissim tellus odio, vel luctus ipsum suscipit quis. Curabitur id erat at quam varius fermentum non in massa."
 		},
 		{
-			"id": "647dfa7b-eb67-4f21-b4cc-fe6d19cda8f4",
+			"id": "601cfd2d-cd3b-43da-977e-10edcedc2ab2",
 			"key": "gender2",
 			"value": "other"
 		},
 		{
-			"id": "11b66034-8c20-4679-8e1c-64ed3ad5b96a",
+			"id": "2fee9c5f-e5b6-4f0c-84b9-caaad726bed8",
 			"key": "orientation2",
 			"value": "bisexual"
 		},
 		{
-			"id": "1ca9a540-000f-4a74-8df6-0ebc2e03bddf",
+			"id": "9783f66c-7cf9-4ae5-8d32-32ca4b8375e4",
 			"key": "birthdate2",
 			"value": "25/06/2000"
 		},
 		{
-			"id": "9ee76a1e-4855-43e0-9218-259454c756b3",
+			"id": "656c4fda-1655-4401-96c8-367e7b13645b",
 			"key": "email2",
 			"value": "felix.ensal@example.org"
 		},
 		{
-			"id": "4ac76d74-a031-4d8c-9cac-dd540b5728a1",
+			"id": "08e6c005-abd0-4f7d-8879-2aea26e8171f",
 			"key": "password2",
 			"value": "dolphin2"
 		},
 		{
-			"id": "9302899f-a618-4ff4-814a-535005eed81b",
+			"id": "e58172f8-c29d-4c88-894a-045849d1a9f6",
 			"key": "ip",
 			"value": "90.108.46.63"
 		},
 		{
-			"id": "6374e52f-9724-4ec8-81c8-e9b1ae0a20ca",
+			"id": "80c79a3d-b90e-46ff-9bce-8b764b98dc2c",
 			"key": "lat",
 			"value": "49.5271"
 		},
 		{
-			"id": "3f58f617-2dba-4989-8da2-aec28eacafcf",
+			"id": "38205576-6daf-4e16-ab98-1afdedf83d5f",
 			"key": "lng",
 			"value": "1.1885"
 		},
 		{
-			"id": "2f2d737c-c260-47db-8f3b-c225a7d32de1",
+			"id": "55cc3936-4a14-4fea-9c36-e6d4128ca3b0",
 			"key": "my_msg_id",
 			"value": "-1"
 		},
 		{
-			"id": "0de03435-37c2-4813-838e-0de40c36b7ce",
+			"id": "741bb372-fca5-40d5-b84c-424377892903",
 			"key": "to_me_msg_id",
 			"value": "-1"
 		},
 		{
-			"id": "8afb1dc0-c9d0-460e-bce5-a6047420f732",
+			"id": "5a818806-db26-43c6-afd0-adf0d4d2e248",
 			"key": "other_msg_id",
 			"value": "-1"
 		},
 		{
-			"id": "bcbb4d24-0bb9-476e-9dbc-7ac99436d5ae",
+			"id": "546df5b0-3bc6-495f-8c7e-eda012a5fbbf",
 			"key": "user_access_token",
 			"value": ""
 		},
 		{
-			"id": "a612edb9-36c3-4d77-8de4-07d5a00254d4",
+			"id": "6919d56d-49ef-4ad1-8ce0-f12b666a947e",
 			"key": "user_refresh_token",
 			"value": ""
 		},
 		{
-			"id": "f6b87f6a-3ad5-4beb-980c-20a3d7645c2f",
+			"id": "7d2048ef-769d-4ae3-ae0e-a8e1922cf296",
 			"key": "notif_id",
 			"value": ""
 		}
