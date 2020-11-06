@@ -36,11 +36,10 @@ auth_register_bp = Blueprint("auth_register", __name__)
 @auth_register_bp.route("/auth/register", methods=["POST"])
 @validate_params(REQUIRED_KEYS_USER_CREATION)
 def api_create_user():
-    current_app.logger.debug("/auth/register -> Call")
     data = request.get_json()
     data["email"] = data["email"].lower()
     try:
-        current_app.logger.debug("Trying to register new user {}, {}".format(data["email"], data["username"]))
+        current_app.logger.debug("Trying to register new user")
         new_user = User.register(
             email=data["email"],
             username=data["username"],
@@ -56,4 +55,5 @@ def api_create_user():
         link = FRONTEND_EMAIL_CONFIRMATION_URL + token
         rendered_html = render_template("confirm_email.html", link=link)
         send_mail_html.delay(dest=data["email"], subject="Confirm your email on PyMatcha", html=rendered_html)
+        current_app.logger.info("Registered new user successfully.")
         return SuccessOutputMessage("email", new_user.email, "New user successfully created.")

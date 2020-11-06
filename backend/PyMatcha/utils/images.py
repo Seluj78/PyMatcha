@@ -1,3 +1,4 @@
+import logging
 import os
 from io import BytesIO
 
@@ -16,7 +17,9 @@ def upload_image(bytesio_img: BytesIO, username: str):
     try:
         Image.open(bytesio_img).convert("RGB").save(path)
     except UnidentifiedImageError:
+        logging.error(f"Fixed passed is of wrong format for user {username}")
         raise BadRequestError("Wrong file format. This isn't an image")
     uploaded_image = imgur_client.upload_image(path=path, title=username)
     os.remove(path)
+    logging.debug(f"Uploaded image for user {username}.")
     return uploaded_image.link

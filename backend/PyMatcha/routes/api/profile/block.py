@@ -17,6 +17,7 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 """
 from flask import Blueprint
+from flask import current_app
 from flask_jwt_extended import current_user
 from flask_jwt_extended import jwt_required
 from PyMatcha.models.block import Block
@@ -36,11 +37,14 @@ def block_profile(uid):
     except NotFoundError:
         raise NotFoundError(f"User {uid} not found.")
     if current_user.id == u.id:
+        current_app.logger.info(f"User {current_user.id} tried to block itself")
         raise BadRequestError("Cannot block yourself.")
     if not Block.get_multi(blocker_id=current_user.id, blocked_id=u.id):
         Block.create(blocker_id=current_user.id, blocked_id=u.id)
+        current_app.logger.info(f"Block successfull from {current_user.id} to {u.id}")
         return Success(f"Successfully blocked {u.id}.")
     else:
+        current_app.logger.info(f"{current_user.id} already blocked {u.id}")
         raise BadRequestError("You already blocked this user.")
 
 
@@ -53,7 +57,9 @@ def unblock_profile(uid):
         raise NotFoundError(f"User {uid} not found.")
     block = Block.get_multi(blocker_id=current_user.id, blocked_id=u.id)
     if not block:
+        current_app.logger.info(f"{current_user.id} tried to unblock {u.id} but never blocked it first")
         raise BadRequestError("You didn't block this user.")
     else:
         block.delete()
+        current_app.logger.info(f"Unblock successfull from {current_user.id} to {u.id}")
         return Success("Unblock successful.")

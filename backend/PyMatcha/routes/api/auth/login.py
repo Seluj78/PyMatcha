@@ -45,22 +45,22 @@ auth_login_bp = Blueprint("auth_login", __name__)
 @auth_login_bp.route("/auth/login", methods=["POST"])
 @validate_params(REQUIRED_KEYS_LOGIN)
 def auth_login():
-    current_app.logger.debug("/auth/login -> Call")
     data = request.get_json()
     username = data["username"]
     password = data["password"]
     try:
         u = get_user(username)
     except NotFoundError:
-        current_app.logger.debug("/auth/login -> User not found")
+        current_app.logger.debug("User not found for login")
         raise UnauthorizedError("Incorrect username or password.")
     if not check_password(u.password, password):
-        current_app.logger.debug("/auth/login -> Password invalid")
+        current_app.logger.debug("Password invalid for login")
         raise UnauthorizedError("Incorrect username or password.")
 
     if not u.is_confirmed:
-        current_app.logger.debug("/auth/login -> User is trying to login unconfirmed")
+        current_app.logger.debug("User is trying to login unconfirmed")
         raise UnauthorizedError("User needs to be confirmed first.", "Try again when you have confirmed your email.")
+    current_app.logger.debug(f"Creating token for {u.id}")
     access_token = create_access_token(identity=u.get_jwt_info(), fresh=True)
     refresh_token = create_refresh_token(identity=u.get_jwt_info())
     access_jti = get_jti(access_token)
@@ -69,7 +69,7 @@ def auth_login():
     redis.set("is_revoked_jti:" + access_jti, "false", ACCESS_TOKEN_EXPIRES * 1.2)
     redis.set("is_revoked_jti:" + refresh_jti, "false", REFRESH_TOKEN_EXPIRES * 1.2)
 
-    current_app.logger.debug("/auth/login -> Returning access token for user {}".format(username))
+    current_app.logger.debug("Returning access token for user {}".format(username))
     u.is_online = True
     u.dt_lastseen = datetime.datetime.utcnow()
     u.save()
@@ -81,6 +81,7 @@ def auth_login():
 @jwt_refresh_token_required
 def refresh():
     current_user = get_jwt_identity()
+    current_app.logger.info(f"Refreshing token for {current_user['id']}")
     access_token = create_access_token(identity=current_user)
     access_jti = get_jti(encoded_token=access_token)
     redis.set("is_revoked_jti:" + access_jti, "false", ACCESS_TOKEN_EXPIRES * 1.2)
@@ -97,4 +98,5 @@ def logout():
     refresh_jti = get_jti(refresh_token)
     redis.set("is_revoked_jti:" + access_jti, "true", ACCESS_TOKEN_EXPIRES * 1.2)
     redis.set("is_revoked_jti:" + refresh_jti, "true", REFRESH_TOKEN_EXPIRES * 1.2)
+    current_app.logger.info(f"Revoked tokens with jtis {access_jti}, {refresh_jti}")
     return Success("Logout successful.")

@@ -17,6 +17,7 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 """
 from flask import Blueprint
+from flask import current_app
 from flask import request
 from flask_jwt_extended import current_user
 from flask_jwt_extended import jwt_required
@@ -49,5 +50,5 @@ def report_profile(uid):
 
     details = None
     Report.create(reporter_id=current_user.id, reported_id=u.id, reason=reason, details=details)
-
+    current_app.logger.info(f"Report created from {current_user.id} to {u.id}")
     return Success(f"Report created on user {u.id}.")

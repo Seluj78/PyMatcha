@@ -1,6 +1,7 @@
 from io import BytesIO
 
 from flask import Blueprint
+from flask import current_app
 from flask import request
 from flask_jwt_extended import current_user
 from flask_jwt_extended import jwt_required
@@ -38,6 +39,7 @@ def add_image_profile():
                 except BadRequestError as e:
                     raise e
                 Image.create(current_user.id, link, is_primary=True)
+                current_app.logger.info(f"Added primary image for {current_user.id}")
                 return SuccessOutput("image", link)
             else:
                 raise BadRequestError("There already is a primary image for user {}.".format(current_user.id))
@@ -56,6 +58,7 @@ def add_image_profile():
             except BadRequestError as e:
                 raise e
             Image.create(current_user.id, link, is_primary=False)
+            current_app.logger.info(f"Added image for {current_user.id}")
             return SuccessOutput("image", link)
     else:
         raise ValueError("NO FILE")
@@ -68,6 +71,7 @@ def delete_image_profile(image_id):
     if not image:
         raise NotFoundError(f"Image not found for user {current_user.id}.")
     image.delete()
+    current_app.logger.info(f"Deleted image for {current_user.id}")
     return SuccessDeleted("Image successfully deleted.")
 
 
@@ -83,6 +87,7 @@ def change_main_image(image_id):
         current_main_image.save()
     image.is_primary = True
     image.save()
+    current_app.logger.info(f"Modified profile picture for {current_user.id}")
     return Success("Profile picture successfully modified.")
 
 

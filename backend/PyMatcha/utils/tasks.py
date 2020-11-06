@@ -1,5 +1,6 @@
 import datetime
 import json
+import logging
 from math import ceil
 
 from PyMatcha import celery
@@ -69,6 +70,7 @@ def update_heat_scores():
         if score < 0:
             score = 0
         user.heat_score = score
+        logging.debug(f"Setting score of {score} for user {user.id}")
         user.save()
     return "Successfully updated heat scores."
 
@@ -84,6 +86,7 @@ def take_users_offline():
             went_offline_count += 1
         else:
             stayed_online_count += 1
+    logging.debug(f"{stayed_online_count} stayed online and {went_offline_count} went offline.")
     return f"{stayed_online_count} stayed online and {went_offline_count} went offline."
 
 
@@ -93,6 +96,7 @@ def update_user_recommendations():
     for user_to_update in User.get_multis(is_bot=False):
         create_user_recommendations(user_to_update)
         count += 1
+    logging.debug(f"Successfully updated recommendations for {count} users.")
     return f"Successfully updated recommendations for {count} users."
 
 
@@ -105,6 +109,7 @@ def reset_superlikes():
             user.superlikes_reset_dt = None
             user.save()
             count += 1
+    logging.debug(f"Reset superlikes for {count} users")
     return f"Reset superlikes for {count} users"
 
 
@@ -169,5 +174,5 @@ def bot_respond_to_message(bot_id: int, from_id: int, message_content: str):
         type="message",
         link_to=f"conversation/{bot_user.id}",
     )
-
+    logging.debug(f"Bot {bot_id} successfully replied to {from_id}")
     return f"Bot {bot_id} successfully replied to {from_id}"

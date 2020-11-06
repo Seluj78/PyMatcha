@@ -23,6 +23,7 @@ from datetime import datetime
 from typing import Dict
 from typing import Optional
 
+from flask import current_app
 from PyMatcha.utils import create_notifications_table
 from PyMatcha.utils.orm import Field
 from PyMatcha.utils.orm import Model
@@ -61,6 +62,7 @@ class Notification(Model):
             return None
         if not dt_received:
             dt_received = datetime.utcnow()
+        current_app.logger.debug(f"Creating notification for user {user_id} from {trigger_id} with type {type}")
         new_notif = Notification(
             user_id=user_id, content=content, type=type, link_to=link_to, is_seen=is_seen, dt_received=dt_received
         )

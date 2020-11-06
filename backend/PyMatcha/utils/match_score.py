@@ -1,3 +1,4 @@
+import logging
 from typing import List
 from typing import Optional
 
@@ -14,7 +15,9 @@ def _get_distance(geohash_1: str, geohash_2: str) -> Optional[float]:
     except TypeError:
         return None
     else:
-        return distance(coords_1, coords_2).kilometers
+        dst = distance(coords_1, coords_2).kilometers
+        logging.debug(f"Distance between {geohash_1} and {geohash_2} is {dst}")
+        return dst
 
 
 def _get_common_tags(tag_list_1: list, tag_list_2: list) -> List[str]:

@@ -2,6 +2,7 @@ from datetime import datetime
 from datetime import timedelta
 
 from flask import Blueprint
+from flask import current_app
 from flask import request
 from flask_jwt_extended import current_user
 from flask_jwt_extended import jwt_required
@@ -50,6 +51,7 @@ def like_profile(uid):
     Like.create(liker_id=current_user.id, liked_id=u.id, is_superlike=is_superlike)
 
     if u.already_likes(current_user.id):
+        current_app.logger.debug(f"Creating match between user {current_user.id} and {u.id}")
         Match.create(user_1=current_user.id, user_2=u.id)
         Notification.create(
             trigger_id=current_user.id,
@@ -75,6 +77,7 @@ def like_profile(uid):
         return Success("It's a match !")
 
     if is_superlike:
+        current_app.logger.debug(f"Creating superlike between user {current_user.id} and {u.id}")
         Notification.create(
             trigger_id=current_user.id,
             user_id=u.id,
@@ -84,6 +87,7 @@ def like_profile(uid):
         )
         return Success("Superliked user.")
     else:
+        current_app.logger.debug(f"Creating like between user {current_user.id} and {u.id}")
         Notification.create(
             trigger_id=current_user.id,
             user_id=u.id,
@@ -106,15 +110,17 @@ def unlike_profile(uid):
     if not current_user.already_likes(u.id):
         raise BadRequestError("You never liked this person in the first place.")
     Like.get_multi(liked_id=u.id, liker_id=current_user.id).delete()
+    current_app.logger.debug(f"Deleting like between user {current_user.id} and {u.id}")
 
     m1 = Match.get_multi(user_1=u.id, user_2=current_user.id)
     m2 = Match.get_multi(user_1=current_user.id, user_2=u.id)
 
     if m1:
+        current_app.logger.debug(f"Deleting match between user {current_user.id} and {u.id}")
         m1.delete()
     elif m2:
+        current_app.logger.debug(f"Deleting match between user {current_user.id} and {u.id}")
         m2.delete()
-
     Notification.create(
         trigger_id=current_user.id,
         user_id=u.id,

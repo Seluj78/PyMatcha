@@ -42,55 +42,51 @@ auth_password_bp = Blueprint("auth_password", __name__)
 @auth_password_bp.route("/auth/password/forgot", methods=["POST"])
 @validate_params(REQUIRED_KEYS_PASSWORD_FORGOT)
 def forgot_password():
-    current_app.logger.debug("/auth/password/forgot -> Call")
     data = request.get_json()
     try:
         get_user(data["email"])
     except NotFoundError:
-        current_app.logger.debug("/auth/password/forgot -> User {} not found, no email sent".format(data["email"]))
+        current_app.logger.debug("User not found, no email sent")
         pass
     else:
         token = generate_confirmation_token(email=data["email"], token_type="reset")
         link = FRONTEND_PASSWORD_RESET_URL + token
         rendered_html = render_template("password_reset.html", link=link)
-        current_app.logger.debug("/auth/password/forgot -> Sending worker request to send email")
+        current_app.logger.debug("Sending worker request to send email")
         send_mail_html.delay(dest=data["email"], subject="Reset your password on PyMatcha", html=rendered_html)
-    current_app.logger.debug(
-        "/auth/password/forgot -> Password reset mail sent successfully for user {}".format(data["email"])
-    )
+    current_app.logger.debug("Password reset mail sent successfully for user.")
     return Success("Password reset mail sent successfully if user exists in DB.")
 
 
 @auth_password_bp.route("/auth/password/reset", methods=["POST"])
 @validate_params(REQUIRED_KEYS_PASSWORD_RESET)
 def reset_password():
-    current_app.logger.debug("/auth/password/reset -> Call")
     data = request.get_json()
+    token = data["token"]
     try:
-        email, token_type = confirm_token(data["token"], expiration=7200)
+        email, token_type = confirm_token(token, expiration=7200)
     except (SignatureExpired, BadSignature) as e:
         if e == SignatureExpired:
-            current_app.logger.debug("/auth/password/reset -> Signature Expired")
+            current_app.logger.debug(f"Signature Expired for {token}")
             raise BadRequestError("Signature Expired.", "Request another password reset and try again.")
         else:
-            current_app.logger.debug("/auth/password/reset -> Bad Signature")
+            current_app.logger.debug(f"Bad Signature for {token}")
             raise BadRequestError("Bad Signature.", "Request another password reset and try again.")
     else:
         if token_type != "reset":
-            current_app.logger.debug("/auth/password/reset -> Wrong token type")
+            current_app.logger.debug(f"Wrong token type for {token}")
             raise BadRequestError("Wrong token type.")
         try:
             u = get_user(email)
         except NotFoundError:
-            current_app.logger.debug("/auth/password/reset -> User not found")
             raise NotFoundError("User not found.")
-        if u.previous_reset_token == data["token"]:
-            current_app.logger.debug("/auth/password/reset -> Token already used")
+        if u.previous_reset_token == token:
+            current_app.logger.debug("Token already used")
             raise BadRequestError("Token already used", "Please request a new one.")
         u.password = hash_password(data["password"])
-        u.previous_reset_token = data["token"]
+        u.previous_reset_token = token
         u.save()
-        current_app.logger.debug("/auth/password/reset -> Password reset successfully")
+        current_app.logger.debug("Password reset successfully")
         return Success("Password reset successful.")
 
 
@@ -98,22 +94,22 @@ def reset_password():
 @validate_params({"token": str})
 def check_token_validity():
     data = request.get_json()
+    token = data["token"]
     try:
-        email, token_type = confirm_token(data["token"], expiration=7200)
+        email, token_type = confirm_token(token, expiration=7200)
     except (SignatureExpired, BadSignature) as e:
         if e == SignatureExpired:
-            current_app.logger.debug("/auth/password/reset -> Signature Expired")
+            current_app.logger.debug(f"Signature Expired for {token}")
             raise BadRequestError("Signature Expired.", "Request another password reset and try again.")
         else:
-            current_app.logger.debug("/auth/password/reset -> Bad Signature")
+            current_app.logger.debug(f"Bad Signature for {token}")
             raise BadRequestError("Bad Signature.", "Request another password reset and try again.")
     else:
         try:
             u = get_user(email)
         except NotFoundError:
-            current_app.logger.debug("/auth/password/reset -> User not found")
             raise NotFoundError("User not found.")
-        if u.previous_reset_token == data["token"]:
-            current_app.logger.debug("/auth/password/reset -> Token already used")
+        if u.previous_reset_token == token:
+            current_app.logger.debug("Token already used")
             raise BadRequestError("Token already used", "Please request a new one.")
         return Success("Reset token is correct.")
