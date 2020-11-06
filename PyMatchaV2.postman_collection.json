@@ -1017,7 +1017,7 @@
 											"tests[\"JSON return code is 400\"] = response.code == 400",
 											"",
 											"tests[\"success is true\"] = response.success == false",
-											"tests[\"Message is correct\"] = response.error.message == \"Orientation must be one of 'heterosexual', 'homosexual', 'bisexual', 'other'\"",
+											"tests[\"Message is correct\"] = response.error.message == \"Orientation must be one of 'heterosexual', 'homosexual', 'bisexual' or 'other'.\"",
 											"tests[\"Error type is Bad Request\"] = response.error.type == \"BadRequestError\""
 										],
 										"type": "text/javascript"
@@ -1217,7 +1217,7 @@
 											"tests[\"JSON return code is 400\"] = response.code == 400",
 											"",
 											"tests[\"success is true\"] = response.success == false",
-											"tests[\"Message is correct\"] = response.error.message == \"Gender must be one of 'male', 'female', 'other'\"",
+											"tests[\"Message is correct\"] = response.error.message == \"Gender must be one of 'male', 'female' or 'other'.\"",
 											"tests[\"Error type is Bad Request\"] = response.error.type == \"BadRequestError\""
 										],
 										"type": "text/javascript"
@@ -1267,7 +1267,7 @@
 											"tests[\"JSON return code is 400\"] = response.code == 400",
 											"",
 											"tests[\"success is true\"] = response.success == false",
-											"tests[\"Message is correct\"] = response.error.message == \"Birthdate format must be %d/%m/%Y (day/month/year)\"",
+											"tests[\"Message is correct\"] = response.error.message == \"Birthdate format must be %d/%m/%Y (day/month/year).\"",
 											"tests[\"Error type is Bad Request\"] = response.error.type == \"BadRequestError\""
 										],
 										"type": "text/javascript"
@@ -1366,7 +1366,7 @@
 											"",
 											"",
 											"tests[\"success is true\"] = response.success == true",
-											"tests[\"Message is correct\"] = response.message == \"Profile completed !\"",
+											"tests[\"Message is correct\"] = response.message == \"Profile completed!\"",
 											""
 										],
 										"type": "text/javascript"
@@ -1416,7 +1416,7 @@
 											"tests[\"JSON return code is 400\"] = response.code == 400",
 											"",
 											"tests[\"success is true\"] = response.success == false",
-											"tests[\"Message is correct\"] = response.error.message == \"The user has already completed his profile\"",
+											"tests[\"Message is correct\"] = response.error.message == \"The user has already completed his profile.\"",
 											"tests[\"Error type is Bad Request\"] = response.error.type == \"BadRequestError\""
 										],
 										"type": "text/javascript"
@@ -2647,7 +2647,7 @@
 											"tests[\"JSON return code is 200\"] = response.code == 200",
 											"",
 											"tests[\"success is true\"] = response.success == true",
-											"tests[\"Message is correct\"] = response.message == \"Email sent for new email\"",
+											"tests[\"Message is correct\"] = response.message == \"Email sent for new email.\"",
 											""
 										],
 										"type": "text/javascript"
@@ -2835,7 +2835,7 @@
 											"tests[\"JSON return code is 400\"] = response.code == 400",
 											"",
 											"tests[\"success is false\"] = response.success == false",
-											"tests[\"Message is correct\"] = response.error.message == \"The new email is the same as the old one !\"",
+											"tests[\"Message is correct\"] = response.error.message == \"The new email is the same as the old one!\"",
 											"tests[\"Error type is Bad Request\"] = response.error.type == \"BadRequestError\""
 										],
 										"type": "text/javascript"
@@ -3912,21 +3912,9 @@
 							}
 						}
 					],
-					"protocolProfileBehavior": {
-						"disableBodyPruning": true
-					},
 					"request": {
 						"method": "GET",
 						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n    \"force\": false\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
 						"url": {
 							"raw": "{{host}}/recommendations",
 							"host": [
@@ -5359,7 +5347,7 @@
 									"});",
 									"",
 									"tests[\"Success is true\"] = response.success == true",
-									"tests[\"Message is correct\"] = response.message == \"Unliked user 1500.\""
+									"tests[\"Message is correct\"] = response.message == \"Unliked user.\""
 								],
 								"type": "text/javascript"
 							}
@@ -5551,7 +5539,7 @@
 									"});",
 									"",
 									"tests[\"Success is true\"] = response.success == true",
-									"tests[\"Message is correct\"] = response.message == \"Unliked user 1500.\""
+									"tests[\"Message is correct\"] = response.message == \"Unliked user.\""
 								],
 								"type": "text/javascript"
 							}
@@ -5884,7 +5872,7 @@
 									"    pm.response.to.have.status(200);",
 									"});",
 									"",
-									"tests[\"Message is correct\"] = response.message == \"Message successfully sent to 1500.\""
+									"tests[\"Message is correct\"] = response.message == \"Message successfully sent.\""
 								],
 								"type": "text/javascript"
 							}
@@ -6065,7 +6053,7 @@
 									"tests[\"Message is correct\"] = response.new_messages.length == 1",
 									"tests[\"New message content is correct\"] = response.new_messages[0].content == \"My Reply\"",
 									"tests[\"New message is_seen\"] = response.new_messages[0].is_seen == 0",
-									"tests[\"New message seen timestamp is null\"] = response.new_messages[0].dt_seen == null"
+									"tests[\"New message seen timestamp is null\"] = response.new_messages[0].seen_timestamp == null"
 								],
 								"type": "text/javascript"
 							}
@@ -7242,162 +7230,162 @@
 	],
 	"variable": [
 		{
-			"id": "de9d17be-f7ca-4a75-af2e-dcfd5d60609a",
+			"id": "3e50a45c-f7b6-4503-898e-7a2a319f21c6",
 			"key": "host",
 			"value": "http://127.0.0.1:5000"
 		},
 		{
-			"id": "0cd6ffc1-1c75-47c2-8d8d-f5125648afac",
+			"id": "df25c64c-7f48-448e-8505-a0b970f3db0c",
 			"key": "access_token",
 			"value": ""
 		},
 		{
-			"id": "ed3db240-4fad-45f5-8a7a-095a337c5816",
+			"id": "6b4cdb7c-f052-4235-aba4-300e8ea5a78a",
 			"key": "refresh_token",
 			"value": ""
 		},
 		{
-			"id": "821388fc-d8c6-4bbe-8646-2ab446976be9",
+			"id": "02e0ebf1-a832-49eb-a738-7817f6281e58",
 			"key": "debug_token",
 			"value": "xX69jules69Xx"
 		},
 		{
-			"id": "a10bcfc0-96f5-4e8e-84c4-076155ac6fbc",
+			"id": "2dcc1cbe-016f-4cd5-a595-d0a789158d39",
 			"key": "id",
 			"value": "1541"
 		},
 		{
-			"id": "47865117-86d5-457d-ab4b-be67216a58a7",
+			"id": "e8bb8541-cd39-456d-8f8a-6d974982c40b",
 			"key": "first_name",
 			"value": "Jules"
 		},
 		{
-			"id": "01bb833b-a658-48d5-a2cc-b76e1016bb90",
+			"id": "12ea98a3-1c9f-463d-b820-c9803ae9eaad",
 			"key": "last_name",
 			"value": "Lasne"
 		},
 		{
-			"id": "daa86e8b-d927-4bae-a05a-6b4b28f43712",
+			"id": "c4335ab4-917c-4b59-9f35-19f9f4476d92",
 			"key": "email",
 			"value": "jules.lasne@example.org"
 		},
 		{
-			"id": "192efd3a-7603-421c-be59-1fa2d8a9a0bb",
+			"id": "6bb86094-ebb6-4795-852a-7aa813c9548a",
 			"key": "username",
 			"value": "seluj78"
 		},
 		{
-			"id": "a78f5409-bfb0-45db-aa9c-b28d771ed2de",
+			"id": "66ad79d0-1da1-4c86-856f-68b8cb9b543f",
 			"key": "password",
 			"value": "dolphin"
 		},
 		{
-			"id": "bfcf2884-20c9-4ad9-b14f-82c6df4d248e",
+			"id": "2bfe0b20-7576-406d-925a-76ec05695a56",
 			"key": "orientation",
 			"value": "heterosexual"
 		},
 		{
-			"id": "db6ac697-a874-44a1-9157-e9d522bce9bc",
+			"id": "7e307fe3-ad69-42a4-851e-c6054e88f533",
 			"key": "gender",
 			"value": "male"
 		},
 		{
-			"id": "6e9c5155-e56d-408a-8211-8cdb37083737",
+			"id": "c30ca7ec-d669-4ca3-8736-9bfdcbb7492c",
 			"key": "bio",
 			"value": "Phasellus vel tortor vel elit scelerisque accumsan vel nec nunc. Ut condimentum vestibulum sapien non dictum. Vestibulum ac eleifend mi. Curabitur dictum vestibulum ex at placerat. Pellentesque odio mi, condimentum et sollicitudin at, finibus non leo. Aenean sed pulvinar nulla, nec tincidunt felis. Aenean nibh elit, aliquam sit amet lobortis et, pellentesque ut orci. Curabitur placerat sem id ex laoreet imperdiet. Curabitur dictum ac urna feugiat viverra. Vivamus nec pulvinar urna. Suspendisse vel ultrices est. Sed malesuada est vel orci venenatis scelerisque. Phasellus ultrices dignissim sapien, at mattis tellus mattis pulvinar. Sed ut euismod velit, id fermentum leo."
 		},
 		{
-			"id": "2de8e81c-9179-406d-8873-5aff4b739f54",
+			"id": "5df95083-a02d-42cc-adca-af2fc7f4a931",
 			"key": "birthdate",
 			"value": "06/04/1998"
 		},
 		{
-			"id": "7e1d9f45-350f-4d91-8a16-0eaa1abf8685",
+			"id": "95044a57-47d6-4de8-85f1-7263e0341f79",
 			"key": "first_name2",
 			"value": "Félix"
 		},
 		{
-			"id": "a19f2e27-d89a-443d-8d5f-b18dfa38a298",
+			"id": "d2aae104-3ac8-435d-b506-9085c84dbdad",
 			"key": "last_name2",
 			"value": "Ensal"
 		},
 		{
-			"id": "db1dfa44-09c4-4e85-9568-15ddfb78d7e7",
+			"id": "b6ff9c48-4fe5-4801-8349-7fdc764bf394",
 			"key": "username2",
 			"value": "Ufree"
 		},
 		{
-			"id": "bba960c3-9465-4b1c-90b2-8c0bba49091b",
+			"id": "9d9fb357-9866-4da3-bfff-cec077624a25",
 			"key": "bio2",
 			"value": "Donec quis porttitor ante, ac pulvinar nulla. Vivamus dignissim, ipsum ultricies interdum suscipit, risus tellus auctor mi, eu auctor metus sem quis urna. In maximus placerat ipsum, nec sodales elit aliquet sed. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae; Phasellus malesuada velit felis, non volutpat ex bibendum at. Maecenas aliquet sodales quam at consequat. Sed faucibus consequat tempor. Fusce consequat eu sem non tempus. Duis dapibus nunc vel tempus semper. Pellentesque dignissim tellus odio, vel luctus ipsum suscipit quis. Curabitur id erat at quam varius fermentum non in massa."
 		},
 		{
-			"id": "ebc5791e-9317-409b-9195-0c869829de4b",
+			"id": "3ad12943-7b1f-481f-b5a2-ead7d6402a58",
 			"key": "gender2",
 			"value": "other"
 		},
 		{
-			"id": "7ffd0db7-a926-4c8e-bfb5-3efb4ffa81ac",
+			"id": "f55b25d0-b708-47bd-a10f-922cb7b4f211",
 			"key": "orientation2",
 			"value": "bisexual"
 		},
 		{
-			"id": "75392ec7-f738-441d-af69-671b36a89b67",
+			"id": "6f90d87b-f468-4417-9481-2102220b89b0",
 			"key": "birthdate2",
 			"value": "25/06/2000"
 		},
 		{
-			"id": "5f247ade-3d4f-4b66-8e66-4949a809835a",
+			"id": "88b302d8-8018-457d-ae33-2ce511e3d4f5",
 			"key": "email2",
 			"value": "felix.ensal@example.org"
 		},
 		{
-			"id": "79fbeabd-8711-4b7e-a3ce-a2fff88216aa",
+			"id": "7e4aeab9-c234-4ee1-8d0c-0e30c12b79ea",
 			"key": "password2",
 			"value": "dolphin2"
 		},
 		{
-			"id": "010ca345-c7b8-4443-8996-5a0d1ddffa40",
+			"id": "95f78452-7269-45f9-9202-879adc7feb60",
 			"key": "ip",
 			"value": "90.108.46.63"
 		},
 		{
-			"id": "dcc0c64a-7c6d-48da-ad72-8f1259b12c70",
+			"id": "f8e0b102-6fa0-405c-b684-ed2976662d36",
 			"key": "lat",
 			"value": "49.5271"
 		},
 		{
-			"id": "a1f10ead-5858-4820-b474-93b50f9d7b59",
+			"id": "d088bed1-37fe-4edc-9110-5a6c1fdadb78",
 			"key": "lng",
 			"value": "1.1885"
 		},
 		{
-			"id": "ad61ddc7-cb2a-4fc7-ba25-ddb68a83a7a8",
+			"id": "f02f943b-b835-46ea-8f92-ec51ad160ed0",
 			"key": "my_msg_id",
 			"value": "-1"
 		},
 		{
-			"id": "cf98244b-d9b5-4f6b-969a-dea0bf631e93",
+			"id": "a5380797-19c0-4b69-8632-d7eac317ed6e",
 			"key": "to_me_msg_id",
 			"value": "-1"
 		},
 		{
-			"id": "bcd2370c-fee5-4f5c-aad8-ff80ccec2c8c",
+			"id": "7455c588-11dd-455d-b0d6-e9d1b051e0c9",
 			"key": "other_msg_id",
 			"value": "-1"
 		},
 		{
-			"id": "c3fef2db-d89f-4cab-8e93-9aa0f7746395",
+			"id": "4ec2e211-56dc-4c5a-8fa5-1bd65a276129",
 			"key": "user_access_token",
 			"value": ""
 		},
 		{
-			"id": "0e10a01a-fe4d-4d3b-865c-3e34bfb98003",
+			"id": "2f59a635-bacd-4d08-ad0d-44b3169b33d1",
 			"key": "user_refresh_token",
 			"value": ""
 		},
 		{
-			"id": "45055d3a-d126-443d-9c60-b41b65109fe7",
+			"id": "f674942a-f096-4139-9947-02af7849a610",
 			"key": "notif_id",
 			"value": ""
 		}

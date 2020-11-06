@@ -39,7 +39,7 @@ REQUIRED_PARAMS_COMPLETE_PROFILE = {"gender": str, "birthdate": str, "orientatio
 def complete_profile():
     if current_user.is_profile_completed:
         raise BadRequestError(
-            "The user has already completed his profile", "Go to your profile settings to edit your profile"
+            "The user has already completed his profile.", "Go to your profile settings to edit your profile."
         )
     data = request.get_json()
     orientation = data["orientation"]
@@ -51,7 +51,7 @@ def complete_profile():
     try:
         birthdate = datetime.datetime.strptime(birthdate, "%d/%m/%Y").date()
     except ValueError:
-        raise BadRequestError("Birthdate format must be %d/%m/%Y (day/month/year)")
+        raise BadRequestError("Birthdate format must be %d/%m/%Y (day/month/year).")
 
     if len(bio) <= 50:
         raise BadRequestError("Bio is too short.")
@@ -63,10 +63,10 @@ def complete_profile():
         raise BadRequestError("Duplicate tags.")
 
     if orientation not in ["heterosexual", "homosexual", "bisexual", "other"]:
-        raise BadRequestError("Orientation must be one of 'heterosexual', 'homosexual', 'bisexual', 'other'")
+        raise BadRequestError("Orientation must be one of 'heterosexual', 'homosexual', 'bisexual' or 'other'.")
 
     if gender not in ["male", "female", "other"]:
-        raise BadRequestError("Gender must be one of 'male', 'female', 'other'")
+        raise BadRequestError("Gender must be one of 'male', 'female' or 'other'.")
 
     today = datetime.datetime.utcnow()
 
@@ -84,4 +84,4 @@ def complete_profile():
     current_user.birthdate = birthdate
     current_user.save()
     redis.set(f"superlikes:{current_user.id}", 5)
-    return Success("Profile completed !")
+    return Success("Profile completed!")

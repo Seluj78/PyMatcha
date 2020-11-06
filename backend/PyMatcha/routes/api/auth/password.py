@@ -58,7 +58,7 @@ def forgot_password():
     current_app.logger.debug(
         "/auth/password/forgot -> Password reset mail sent successfully for user {}".format(data["email"])
     )
-    return Success("Password reset mail sent successfully if user exists in DB")
+    return Success("Password reset mail sent successfully if user exists in DB.")
 
 
 @auth_password_bp.route("/auth/password/reset", methods=["POST"])
@@ -116,4 +116,4 @@ def check_token_validity():
         if u.previous_reset_token == data["token"]:
             current_app.logger.debug("/auth/password/reset -> Token already used")
             raise BadRequestError("Token already used", "Please request a new one.")
-        return Success("Reset token is correct")
+        return Success("Reset token is correct.")

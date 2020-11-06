@@ -178,7 +178,7 @@ def edit_email():
     data = request.get_json()
     new_email = data["email"].lower()
     if current_user.email == new_email:
-        raise BadRequestError("The new email is the same as the old one !")
+        raise BadRequestError("The new email is the same as the old one!")
     current_user.email = new_email
     current_user.is_confirmed = False
     current_user.save()
@@ -186,7 +186,7 @@ def edit_email():
     link = FRONTEND_EMAIL_CONFIRMATION_URL + token
     rendered_html = render_template("confirm_email.html", link=link)
     send_mail_html.delay(dest=new_email, subject="Confirm your email on PyMatcha", html=rendered_html)
-    return Success("Email sent for new email")
+    return Success("Email sent for new email.")
 
 
 @profile_edit_bp.route("/profile/edit/password", methods=["PUT"])
@@ -204,7 +204,7 @@ def edit_password():
         dest=current_user.email,
         subject="Password change notification",
         body=f"Your password was changed at {datetime.datetime.utcnow()}."
-        f" If you believe it wasn't you, please change it immediatly",
+        f"If you believe it wasn't you, please change it immediatly!",
     )
     return Success("User password successfully updated.")
 

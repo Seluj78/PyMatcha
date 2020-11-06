@@ -39,7 +39,7 @@ def block_profile(uid):
         raise BadRequestError("Cannot block yourself.")
     if not Block.get_multi(blocker_id=current_user.id, blocked_id=u.id):
         Block.create(blocker_id=current_user.id, blocked_id=u.id)
-        return Success(f"Successfully blocked {u.email}.")
+        return Success(f"Successfully blocked {u.id}.")
     else:
         raise BadRequestError("You already blocked this user.")
 

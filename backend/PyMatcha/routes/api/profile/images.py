@@ -21,12 +21,12 @@ def add_image_profile():
     is_primary = request.args.get("is_primary", "false") == "true"
     # check if the post request has the file part
     if "file[]" not in request.files:
-        raise BadRequestError("No file body passed in request form data")
+        raise BadRequestError("No file body passed in request form data.")
     file = request.files["file[]"]
     # if user does not select file, browser also
     # submit an empty part without filename
     if file.filename == "":
-        raise BadRequestError("No file passed in request")
+        raise BadRequestError("No file passed in request.")
     if file:
         if is_primary:
             if not Image.get_multi(user_id=current_user.id, is_primary=True):
@@ -40,7 +40,7 @@ def add_image_profile():
                 Image.create(current_user.id, link, is_primary=True)
                 return SuccessOutput("image", link)
             else:
-                raise BadRequestError("There already is a primary image for user {}".format(current_user.id))
+                raise BadRequestError("There already is a primary image for user {}.".format(current_user.id))
         else:
             images = Image.get_multis(user_id=current_user.id, is_primary=False)
             if images:
@@ -48,7 +48,7 @@ def add_image_profile():
             else:
                 image_count = 0
             if image_count >= 4:
-                raise BadRequestError("There's already enough images for this account")
+                raise BadRequestError("There's already enough images for this account.")
             tmp_img = BytesIO()
             file.save(tmp_img)
             try:
@@ -66,7 +66,7 @@ def add_image_profile():
 def delete_image_profile(image_id):
     image = Image.get(id=image_id)
     if not image:
-        raise NotFoundError(f"Image not found for user {current_user.id}")
+        raise NotFoundError(f"Image not found for user {current_user.id}.")
     image.delete()
     return SuccessDeleted("Image successfully deleted.")
 
@@ -76,14 +76,14 @@ def delete_image_profile(image_id):
 def change_main_image(image_id):
     image = Image.get(id=image_id)
     if not image:
-        raise NotFoundError(f"Image not found for user {current_user.id}")
+        raise NotFoundError(f"Image not found for user {current_user.id}.")
     current_main_image = Image.get_multi(user_id=current_user.id, is_primary=True)
     if current_main_image:
         current_main_image.is_primary = False
         current_main_image.save()
     image.is_primary = True
     image.save()
-    return Success("Profile picture successfully modified")
+    return Success("Profile picture successfully modified.")
 
 
 @images_bp.route("/profile/images", methods=["GET"])

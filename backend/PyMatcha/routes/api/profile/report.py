@@ -50,4 +50,4 @@ def report_profile(uid):
     details = None
     Report.create(reporter_id=current_user.id, reported_id=u.id, reason=reason, details=details)
 
-    return Success(f"Report created on user {u.email}.")
+    return Success(f"Report created on user {u.id}.")

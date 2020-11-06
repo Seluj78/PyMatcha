@@ -37,7 +37,7 @@ def like_profile(uid):
     if is_superlike:
         if current_user.superlikes_counter <= 0:
             if current_user.superlikes_reset_dt < datetime.utcnow():
-                raise BadRequestError("Your superlikes are being restored, try again in a second")
+                raise BadRequestError("Your superlikes are being restored, try again in a few seconds.")
             else:
                 ta_format = timeago_format(current_user.superlikes_reset_dt, datetime.utcnow())
                 raise BadRequestError(f"No more superlikes today, come back {ta_format}")
@@ -123,4 +123,4 @@ def unlike_profile(uid):
         link_to=None,
     )
 
-    return Success(f"Unliked user {u.id}.")
+    return Success("Unliked user.")
