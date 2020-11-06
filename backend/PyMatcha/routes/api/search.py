@@ -2,6 +2,7 @@ import datetime
 import json
 
 from flask import Blueprint
+from flask import current_app
 from flask import request
 from flask_jwt_extended import current_user
 from flask_jwt_extended import jwt_required
@@ -37,6 +38,7 @@ def search():
     max_score = int(data["max_score"])
     max_distance = int(data["max_distance"])
     tags = data["tags"]
+    current_app.logger.info(f"Running search for user {current_user.id} with params {data}")
 
     today = datetime.datetime.utcnow()
 
@@ -103,4 +105,5 @@ def get_min_maxes_values():
     except TypeError:
         calc_search_min_max()
         minmax = json.loads(redis.get("search_minmax"))
+    current_app.logger.info(f"Returning min and max search values {minmax}")
     return SuccessOutput("search_minmax", minmax)

@@ -370,7 +370,6 @@ class Model(object):
 
     @classmethod
     def select_all(cls):
-        logging.debug("Getting all items from table {}".format(cls.table_name))
         temp = cls()
         with temp.db.cursor() as c:
             c.execute("""SELECT * FROM {}""".format(cls.table_name))
@@ -381,7 +380,6 @@ class Model(object):
 
     @classmethod
     def select_random(cls, count):
-        logging.debug(f"Getting {count} random entries from {cls.table_name}")
         temp = cls()
         with temp.db.cursor() as c:
             c.execute(
@@ -409,7 +407,6 @@ class Model(object):
 
         Returns list of instances on success and raises an error if the row count was 0
         """
-
         keys = []
         values = []
         for key, value in kwargs.items():

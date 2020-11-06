@@ -47,6 +47,7 @@ def _get_recommendations(bot_user: User, ignore_bots: bool):
         recommendations = redis.get(f"user_recommendations:{str(bot_user.id)}")
         if not recommendations:
             raise ValueError("Recommendations could not be calculated")
+    logging.debug(f"Calculated recommendations for bot {bot_user.id}")
     return json.loads(recommendations)
 
 
@@ -76,6 +77,7 @@ def _botaction_like(bot_user: User, recommendations):
         type="like",
         link_to=f"users/{bot_user.id}",
     )
+    logging.debug(f"Bot {bot_user.id} liked {user_to_like['id']}")
     if user_to_like.already_likes(bot_user.id):
         Match.create(user_1=bot_user.id, user_2=user_to_like.id)
         Notification.create(
@@ -85,6 +87,7 @@ def _botaction_like(bot_user: User, recommendations):
             type="match",
             link_to=f"conversation/{bot_user.id}",
         )
+        logging.debug(f"Bot {bot_user.id} matched {user_to_like['id']}")
 
 
 def botaction_unlike(bot_user: User):
@@ -94,6 +97,7 @@ def botaction_unlike(bot_user: User):
     except IndexError:
         return
     Like.get_multi(liker_id=bot_user.id, liked_id=id_to_unlike).delete()
+    logging.debug(f"Bot {bot_user.id} unliked {id_to_unlike}")
 
 
 def _botaction_view(bot_user: User, recommendations):
@@ -109,6 +113,7 @@ def _botaction_view(bot_user: User, recommendations):
         type="view",
         link_to=f"users/{bot_user.id}",
     )
+    logging.debug(f"Bot {bot_user.id} viewed {user_to_view['id']}")
 
 
 def _botaction_message_new_conversation(bot_user: User):
@@ -139,6 +144,7 @@ def _botaction_message_new_conversation(bot_user: User):
         type="message",
         link_to=f"conversation/{bot_user.id}",
     )
+    logging.debug(f"Bot {bot_user.id} messaged {other_user} for a new conversation")
 
 
 def _botaction_respond_to_unread(bot_user: User, chatbot):
@@ -161,6 +167,7 @@ def _botaction_respond_to_unread(bot_user: User, chatbot):
         type="message",
         link_to=f"conversation/{bot_user.id}",
     )
+    logging.debug(f"Bot {bot_user.id} messaged {message_to_reply.from_id} responding to unread")
 
 
 def _botaction_send_message_over_old_one(bot_user: User, chatbot):
@@ -183,6 +190,7 @@ def _botaction_send_message_over_old_one(bot_user: User, chatbot):
         type="message",
         link_to=f"conversation/{bot_user.id}",
     )
+    logging.debug(f"Bot {bot_user.id} messaged {message_to_reply.from_id} sending message over old one")
 
 
 def decide_bot_action(bot_user: User):

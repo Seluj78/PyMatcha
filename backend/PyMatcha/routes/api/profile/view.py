@@ -17,6 +17,7 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 """
 from flask import Blueprint
+from flask import current_app
 from flask_jwt_extended import current_user
 from flask_jwt_extended import jwt_required
 from PyMatcha.models.notification import Notification
@@ -53,5 +54,5 @@ def view_profile(uid):
         type="view",
         link_to=f"users/{current_user.id}",
     )
-
+    current_app.logger.info(f"Added view from {current_user.id} to profile {u.id}")
     return SuccessOutput("profile", user_dict)

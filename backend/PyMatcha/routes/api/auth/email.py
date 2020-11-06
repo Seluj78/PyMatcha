@@ -42,49 +42,46 @@ auth_email_bp = Blueprint("auth_email", __name__)
 
 @auth_email_bp.route("/auth/confirm/<token>", methods=["POST"])
 def confirm_email(token):
-    current_app.logger.debug("/auth/confirm/{} -> Call".format(token))
     try:
         email, token_type = confirm_token(token, expiration=7200)
     except (SignatureExpired, BadSignature) as e:
         if e == SignatureExpired:
-            current_app.logger.debug("/auth/confirm -> Signature Expired")
+            current_app.logger.debug(f"Signature Expired for token {token}")
             raise BadRequestError("Signature Expired.", "Request another email confirmation and try again.")
         else:
-            current_app.logger.debug("/auth/confirm -> Bad Expired")
+            current_app.logger.debug(f"Bad Expired for token {token}")
             raise BadRequestError("Bad Signature.", "Request another password reset and try again.")
     else:
         if token_type != "confirm":
-            current_app.logger.debug("/auth/confirm -> Wrong token type")
+            current_app.logger.debug(f"Wrong token type for token {token}")
             raise BadRequestError("Wrong token type.")
         try:
             u = get_user(email)
         except NotFoundError:
-            current_app.logger.debug("/auth/confirm -> User not found")
             raise NotFoundError("User not found.")
         if u.is_confirmed:
-            current_app.logger.debug("/auth/confirm -> User already confirmed")
+            current_app.logger.debug("User already confirmed")
             raise BadRequestError("Email already confirmed.", "")
         else:
             u.is_confirmed = True
             u.confirmed_on = datetime.datetime.utcnow()
             u.save()
-        current_app.logger.debug("/auth/confirm -> User {} confirmed.".format(u.id))
+        current_app.logger.debug(f"User {u.id} confirmed.")
         return Success("Confirmation successful.")
 
 
 @auth_email_bp.route("/auth/confirm/new", methods=["POST"])
 @validate_params(REQUIRED_KEYS_NEW_EMAIL_CONF)
 def request_new_email_conf():
-    current_app.logger.debug("/auth/confirm/new -> Call")
     data = request.get_json()
     email = data["email"]
     try:
         u = get_user(email)
     except NotFoundError:
-        current_app.logger.debug("/auth/confirm/new -> User not found")
+        pass
     else:
         if u.is_confirmed:
-            current_app.logger.debug("/auth/confirm/new -> User found, Already confirmed.")
+            current_app.logger.debug("Already confirmed.")
         else:
             current_app.logger.debug("/auth/confirm/new -> User found, sending new confirmation email")
             token = generate_confirmation_token(email=email, token_type="confirm")

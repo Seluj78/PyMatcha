@@ -31,24 +31,22 @@ user_bp = Blueprint("user", __name__)
 @user_bp.route("/users", methods=["GET"])
 @jwt_required
 def get_all_users():
-    current_app.logger.info("/users/ -> Call")
     user_list = []
     for u in User.select_all():
         user_list.append(u.to_dict())
-    current_app.logger.info("/users/ -> Returning all users list")
+    current_app.logger.info("Returning all users list")
     return jsonify(user_list)
 
 
 @user_bp.route("/users/<uid>", methods=["GET"])
 @jwt_required
 def get_one_user(uid):
-    current_app.logger.info("/users/{} -> Call".format(uid))
     try:
         u = get_user(uid)
     except NotFoundError:
-        raise NotFoundError("User {} not found".format(uid))
+        pass
     else:
-        current_app.logger.info("/users/{} -> Returning info on user {}".format(uid, uid))
+        current_app.logger.info(f"Returning info on user {uid}")
         return jsonify(u.to_dict())
 
 
@@ -58,4 +56,5 @@ def get_all_online_users():
     online_user_list = []
     for user in User.get_multis(is_online=True):
         online_user_list.append(user.to_dict())
+    current_app.logger.info("Returning list of online users")
     return jsonify(online_user_list)
