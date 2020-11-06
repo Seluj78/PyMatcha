@@ -71,7 +71,7 @@ def auth_login():
 
     current_app.logger.debug("/auth/login -> Returning access token for user {}".format(username))
     u.is_online = True
-    u.date_lastseen = datetime.datetime.utcnow()
+    u.dt_lastseen = datetime.datetime.utcnow()
     u.save()
     ret = {"access_token": access_token, "refresh_token": refresh_token, "is_profile_completed": u.is_profile_completed}
     return SuccessOutput("return", ret)

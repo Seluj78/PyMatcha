@@ -37,7 +37,7 @@ def jwt_user_callback(identity):
     with configure_scope() as scope:
         scope.user = {"email": user.email, "id": user.id, "username": user.username}
     user.is_online = True
-    user.date_lastseen = datetime.datetime.utcnow()
+    user.dt_lastseen = datetime.datetime.utcnow()
     user.save()
     return user
 

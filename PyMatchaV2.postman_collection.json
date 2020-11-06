@@ -6065,7 +6065,7 @@
 									"tests[\"Message is correct\"] = response.new_messages.length == 1",
 									"tests[\"New message content is correct\"] = response.new_messages[0].content == \"My Reply\"",
 									"tests[\"New message is_seen\"] = response.new_messages[0].is_seen == 0",
-									"tests[\"New message seen timestamp is null\"] = response.new_messages[0].seen_timestamp == null"
+									"tests[\"New message seen timestamp is null\"] = response.new_messages[0].dt_seen == null"
 								],
 								"type": "text/javascript"
 							}
