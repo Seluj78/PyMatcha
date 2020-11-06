@@ -3,8 +3,8 @@
     <div class="mb-8" ref="sliderDropdown">
       <div class="mx-auto flex w-full items-center mb-4 max-w-md">
         <div class="w-full flex justify-between">
-          <h1 class="text-xl text-purple-matcha capitalize">{{ name }}</h1>
-          <h1 class="text-xl text-purple-matcha">
+          <h1 class="text-base text-purple-matcha capitalize">{{ name }}</h1>
+          <h1 class="text-base text-purple-matcha">
             <span class="">{{this.slider.startMin}}<span v-if="oneHandle"> {{this.unit}}</span></span>
             <span v-if="!oneHandle"> to </span>
             <span v-if="!oneHandle" class="">{{this.slider.startMax}} {{this.unit}}</span></h1>
