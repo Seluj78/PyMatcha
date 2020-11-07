@@ -8,11 +8,13 @@ from chatterbot import ChatBot
 from chatterbot.trainers import ChatterBotCorpusTrainer
 from PyMatcha import redis
 from PyMatcha.models.like import Like
-from PyMatcha.models.match import Match
 from PyMatcha.models.message import Message
-from PyMatcha.models.notification import Notification
+from PyMatcha.models.user import get_user
 from PyMatcha.models.user import User
-from PyMatcha.models.view import View
+from PyMatcha.utils.action_notifs.like import do_like
+from PyMatcha.utils.action_notifs.like import do_match
+from PyMatcha.utils.action_notifs.message import do_message
+from PyMatcha.utils.action_notifs.view import do_view
 from PyMatcha.utils.recommendations import create_user_recommendations
 from PyMatcha.utils.static import BACKEND_ROOT
 from PyMatcha.utils.static import BOT_CONV_OPENERS
@@ -61,33 +63,11 @@ def _botaction_like(bot_user: User, recommendations):
     except IndexError:
         return
     user_to_like = User.get(id=user_to_like["id"])
-    View.create(profile_id=user_to_like.id, viewer_id=bot_user.id)
-    Notification.create(
-        trigger_id=bot_user.id,
-        user_id=user_to_like["id"],
-        content=f"{bot_user.first_name} just viewed your profile! Go check their profile out!",
-        type="view",
-        link_to=f"users/{bot_user.id}",
-    )
-    Like.create(liker_id=bot_user.id, liked_id=user_to_like.id)
-    Notification.create(
-        trigger_id=bot_user.id,
-        user_id=user_to_like.id,
-        content=f"{bot_user.first_name} liked you! Go check them out!",
-        type="like",
-        link_to=f"users/{bot_user.id}",
-    )
-    logging.debug(f"Bot {bot_user.id} liked {user_to_like['id']}")
+
+    do_view(viewer_user=bot_user, viewed_user_id=user_to_like["id"])
+    do_like(liker_user=bot_user, liked_user_id=user_to_like["id"])
     if user_to_like.already_likes(bot_user.id):
-        Match.create(user_1=bot_user.id, user_2=user_to_like.id)
-        Notification.create(
-            trigger_id=bot_user.id,
-            user_id=user_to_like.id,
-            content=f"You and {bot_user.first_name} matched!",
-            type="match",
-            link_to=f"conversation/{bot_user.id}",
-        )
-        logging.debug(f"Bot {bot_user.id} matched {user_to_like['id']}")
+        do_match(liker_user=bot_user, liked_user=get_user(user_to_like["id"]))
 
 
 def botaction_unlike(bot_user: User):
@@ -105,15 +85,7 @@ def _botaction_view(bot_user: User, recommendations):
         user_to_view = choice(recommendations)
     except IndexError:
         return
-    View.create(profile_id=user_to_view["id"], viewer_id=bot_user.id)
-    Notification.create(
-        trigger_id=bot_user.id,
-        user_id=user_to_view["id"],
-        content=f"{bot_user.first_name} just viewed your profile! Go check their profile out!",
-        type="view",
-        link_to=f"users/{bot_user.id}",
-    )
-    logging.debug(f"Bot {bot_user.id} viewed {user_to_view['id']}")
+    do_view(viewer_user=bot_user, viewed_user_id=user_to_view["id"])
 
 
 def _botaction_message_new_conversation(bot_user: User):
@@ -136,14 +108,8 @@ def _botaction_message_new_conversation(bot_user: User):
         other_user = match_to_open_conv.user_1
 
     content = choice(BOT_CONV_OPENERS)
-    bot_user.send_message(to_id=other_user, content=content)
-    Notification.create(
-        trigger_id=bot_user.id,
-        user_id=other_user,
-        content=f"{bot_user.first_name} said: {content}",
-        type="message",
-        link_to=f"conversation/{bot_user.id}",
-    )
+
+    do_message(from_user=bot_user, to_user=get_user(other_user), content=content)
     logging.debug(f"Bot {bot_user.id} messaged {other_user} for a new conversation")
 
 
@@ -159,14 +125,8 @@ def _botaction_respond_to_unread(bot_user: User, chatbot):
     except IndexError:
         return
     bot_reply = chatbot.get_response(message_to_reply.content)
-    bot_user.send_message(to_id=message_to_reply.from_id, content=bot_reply.text)
-    Notification.create(
-        trigger_id=bot_user.id,
-        user_id=message_to_reply.from_id,
-        content=f"{bot_user.first_name} said: {bot_reply.text}",
-        type="message",
-        link_to=f"conversation/{bot_user.id}",
-    )
+
+    do_message(from_user=bot_user, to_user=get_user(message_to_reply.from_id), content=bot_reply.text)
     logging.debug(f"Bot {bot_user.id} messaged {message_to_reply.from_id} responding to unread")
 
 
@@ -182,14 +142,8 @@ def _botaction_send_message_over_old_one(bot_user: User, chatbot):
         other_user = message_to_reply.to_id
 
     bot_reply = chatbot.get_response(".")
-    bot_user.send_message(to_id=other_user, content=bot_reply.text)
-    Notification.create(
-        trigger_id=bot_user.id,
-        user_id=message_to_reply.from_id,
-        content=f"{bot_user.first_name} said: {bot_reply.text}",
-        type="message",
-        link_to=f"conversation/{bot_user.id}",
-    )
+
+    do_message(from_user=bot_user, to_user=get_user(other_user), content=bot_reply.text)
     logging.debug(f"Bot {bot_user.id} messaged {message_to_reply.from_id} sending message over old one")
 
 

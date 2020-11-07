@@ -6,8 +6,8 @@ from math import ceil
 from PyMatcha import celery
 from PyMatcha import redis
 from PyMatcha.models.message import Message
-from PyMatcha.models.notification import Notification
 from PyMatcha.models.user import User
+from PyMatcha.utils.action_notifs.message import do_message
 from PyMatcha.utils.bot_actions import _prepare_chatbot
 from PyMatcha.utils.bot_actions import decide_bot_action
 from PyMatcha.utils.recommendations import create_user_recommendations
@@ -166,13 +166,7 @@ def bot_respond_to_message(bot_id: int, from_id: int, message_content: str):
 
     chatbot = _prepare_chatbot(bot_user.username)
     reply = chatbot.get_response(message_content)
-    bot_user.send_message(from_user.id, reply.text)
-    Notification.create(
-        trigger_id=bot_id,
-        user_id=from_id,
-        content=f"{bot_user.first_name} said: {reply.text}",
-        type="message",
-        link_to=f"conversation/{bot_user.id}",
-    )
+    do_message(from_user=bot_user, to_user=from_user, content=reply.text)
+
     logging.debug(f"Bot {bot_id} successfully replied to {from_id}")
     return f"Bot {bot_id} successfully replied to {from_id}"

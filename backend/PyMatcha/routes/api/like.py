@@ -2,14 +2,14 @@ from datetime import datetime
 from datetime import timedelta
 
 from flask import Blueprint
-from flask import current_app
 from flask import request
 from flask_jwt_extended import current_user
 from flask_jwt_extended import jwt_required
-from PyMatcha.models.like import Like
-from PyMatcha.models.match import Match
-from PyMatcha.models.notification import Notification
 from PyMatcha.models.user import get_user
+from PyMatcha.utils.action_notifs.like import do_like
+from PyMatcha.utils.action_notifs.like import do_match
+from PyMatcha.utils.action_notifs.like import do_superlike
+from PyMatcha.utils.action_notifs.like import do_unlike
 from PyMatcha.utils.decorators import validate_params
 from PyMatcha.utils.errors import BadRequestError
 from PyMatcha.utils.errors import NotFoundError
@@ -27,12 +27,12 @@ def like_profile(uid):
     is_superlike = request.get_json()["is_superlike"]
 
     try:
-        u = get_user(uid)
+        liked_user = get_user(uid)
     except NotFoundError:
         raise NotFoundError(f"User {uid} not found.")
-    if current_user.id == u.id:
+    if current_user.id == liked_user.id:
         raise BadRequestError("Cannot like yourself.")
-    if current_user.already_likes(u.id):
+    if current_user.already_likes(liked_user.id):
         raise BadRequestError("You already liked this person.")
 
     if is_superlike:
@@ -48,53 +48,18 @@ def like_profile(uid):
                 current_user.superlikes_reset_dt = datetime.utcnow() + timedelta(hours=12)
             current_user.save()
 
-    Like.create(liker_id=current_user.id, liked_id=u.id, is_superlike=is_superlike)
+    if is_superlike:
+        do_superlike(liker_user=current_user, liked_user_id=liked_user.id)
+    else:
+        do_like(liker_user=current_user, liked_user_id=liked_user.id)
 
-    if u.already_likes(current_user.id):
-        current_app.logger.debug(f"Creating match between user {current_user.id} and {u.id}")
-        Match.create(user_1=current_user.id, user_2=u.id)
-        Notification.create(
-            trigger_id=current_user.id,
-            user_id=u.id,
-            content=f"{current_user.first_name} liked you! Go check them out!",
-            type="like",
-            link_to=f"users/{current_user.id}",
-        )
-        Notification.create(
-            trigger_id=current_user.id,
-            user_id=u.id,
-            content=f"You and {current_user.first_name} matched!",
-            type="match",
-            link_to=f"conversation/{current_user.id}",
-        )
-        Notification.create(
-            trigger_id=u.id,
-            user_id=current_user.id,
-            content=f"You and {u.first_name} matched!",
-            type="match",
-            link_to=f"conversation/{u.id}",
-        )
+    if liked_user.already_likes(current_user.id):
+        do_match(liker_user=current_user, liked_user=liked_user)
         return Success("It's a match !")
 
     if is_superlike:
-        current_app.logger.debug(f"Creating superlike between user {current_user.id} and {u.id}")
-        Notification.create(
-            trigger_id=current_user.id,
-            user_id=u.id,
-            content=f"{current_user.first_name} superliked you 😏! Go check them out!",
-            type="superlike",
-            link_to=f"users/{current_user.id}",
-        )
         return Success("Superliked user.")
     else:
-        current_app.logger.debug(f"Creating like between user {current_user.id} and {u.id}")
-        Notification.create(
-            trigger_id=current_user.id,
-            user_id=u.id,
-            content=f"{current_user.first_name} liked you! Go check them out!",
-            type="like",
-            link_to=f"users/{current_user.id}",
-        )
         return Success("Liked user.")
 
 
@@ -102,31 +67,13 @@ def like_profile(uid):
 @jwt_required
 def unlike_profile(uid):
     try:
-        u = get_user(uid)
+        unliked_user = get_user(uid)
     except NotFoundError:
         raise NotFoundError(f"User {uid} not found.")
-    if current_user.id == u.id:
+    if current_user.id == unliked_user.id:
         raise BadRequestError("Cannot unlike yourself.")
-    if not current_user.already_likes(u.id):
+    if not current_user.already_likes(unliked_user.id):
         raise BadRequestError("You never liked this person in the first place.")
-    Like.get_multi(liked_id=u.id, liker_id=current_user.id).delete()
-    current_app.logger.debug(f"Deleting like between user {current_user.id} and {u.id}")
-
-    m1 = Match.get_multi(user_1=u.id, user_2=current_user.id)
-    m2 = Match.get_multi(user_1=current_user.id, user_2=u.id)
-
-    if m1:
-        current_app.logger.debug(f"Deleting match between user {current_user.id} and {u.id}")
-        m1.delete()
-    elif m2:
-        current_app.logger.debug(f"Deleting match between user {current_user.id} and {u.id}")
-        m2.delete()
-    Notification.create(
-        trigger_id=current_user.id,
-        user_id=u.id,
-        content=f"{current_user.first_name} unliked you.",
-        type="unlike",
-        link_to=None,
-    )
+    do_unlike(current_user, unliked_user.id)
 
     return Success("Unliked user.")
