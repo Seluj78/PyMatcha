@@ -3378,7 +3378,7 @@
 											"",
 											"tests[\"success is true\"] = response.success == true",
 											"tests[\"Viewed list is empty\"] = response.viewed.length == 1",
-											"tests[\"Viewed n1 is correct\"] = response.viewed[0].profile_id == 500"
+											"tests[\"Viewed n1 is correct\"] = response.viewed[0].id == 500"
 										],
 										"type": "text/javascript"
 									}
