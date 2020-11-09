@@ -24,6 +24,7 @@ from PyMatcha.models.user import get_user
 from PyMatcha.models.user import User
 from PyMatcha.utils.errors import NotFoundError
 
+
 user_bp = Blueprint("user", __name__)
 
 
