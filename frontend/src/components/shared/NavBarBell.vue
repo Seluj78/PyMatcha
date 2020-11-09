@@ -150,7 +150,7 @@ export default {
   async beforeMount() {
     await this.fetchNotifications();
     await this.newNotificationCheck();
-    this.fetchNotificationsIntervalId = setInterval(this.fetchNewNotifications, 5000);
+    this.fetchNotificationsIntervalId = setInterval(this.fetchNewNotifications, 10000);
     this.notificationsFetched = true;
   },
   beforeDestroy() {

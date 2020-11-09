@@ -4,7 +4,7 @@
     <div v-if="!historyFetched" class="mx-auto flex items-center justify-center mt-32">
       <img class="h-36" src="../../assets/loading.svg">
     </div>
-    <section v-else class="mx-auto mt-4">
+    <section v-bind:class="{'mx-auto': true, 'mt-4': true, 'invisible': !historyFetched}">
       <div class="flex items-center justify-center md:justify-start w-full mb-4">
         <h1
           class="text-3xl sm:text-5xl my-4 inline-block text-center leading-none onboarding-sub-container-content-heading">
