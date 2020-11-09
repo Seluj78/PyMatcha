@@ -32,6 +32,12 @@ export default {
       this.$router.go(-1);
     },
   },
+  watch: {
+    async $route() {
+      const userRequest = await this.$http.get(`/profile/view/${this.$route.params.id}`);
+      this.user = userRequest.data.profile;
+    },
+  },
   async beforeMount() {
     const userRequest = await this.$http.get(`/profile/view/${this.$route.params.id}`);
     this.user = userRequest.data.profile;
