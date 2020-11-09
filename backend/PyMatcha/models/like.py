@@ -38,7 +38,7 @@ class Like(Model):
 
     @staticmethod
     def create(
-        liker_id: int, liked_id: int, is_superlike: str = False, dt_liked: Optional[datetime.datetime] = None
+        liker_id: int, liked_id: int, is_superlike: bool = False, dt_liked: Optional[datetime.datetime] = None
     ) -> Like:
         if not dt_liked:
             dt_liked = datetime.datetime.utcnow()

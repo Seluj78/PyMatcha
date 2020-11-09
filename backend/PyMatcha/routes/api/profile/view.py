@@ -17,12 +17,10 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 """
 from flask import Blueprint
-from flask import current_app
 from flask_jwt_extended import current_user
 from flask_jwt_extended import jwt_required
-from PyMatcha.models.notification import Notification
 from PyMatcha.models.user import get_user
-from PyMatcha.models.view import View
+from PyMatcha.utils.action_notifs.view import do_view
 from PyMatcha.utils.errors import BadRequestError
 from PyMatcha.utils.errors import NotFoundError
 from PyMatcha.utils.match_score import _get_distance
@@ -35,24 +33,14 @@ profile_view_bp = Blueprint("profile_view", __name__)
 @jwt_required
 def view_profile(uid):
     try:
-        u = get_user(uid)
+        viewed_user = get_user(uid)
     except NotFoundError:
         raise NotFoundError(f"User {uid} not found.")
-
-    if current_user.id == u.id:
+    if current_user.id == viewed_user.id:
         raise BadRequestError("Cannot view yourself.")
-    View.create(profile_id=u.id, viewer_id=current_user.id)
+    do_view(viewer_user=current_user, viewed_user_id=viewed_user.id)
 
-    user_dict = u.to_dict()
+    user_dict = viewed_user.to_dict()
     # TODO: Update swagger with this
-    user_dict["distance"] = _get_distance(current_user.geohash, u.geohash)
-
-    Notification.create(
-        trigger_id=current_user.id,
-        user_id=u.id,
-        content=f"{current_user.first_name} just viewed your profile! Go check their profile out!",
-        type="view",
-        link_to=f"users/{current_user.id}",
-    )
-    current_app.logger.info(f"Added view from {current_user.id} to profile {u.id}")
+    user_dict["distance"] = _get_distance(current_user.geohash, viewed_user.geohash)
     return SuccessOutput("profile", user_dict)

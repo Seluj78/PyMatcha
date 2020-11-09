@@ -24,8 +24,9 @@ from flask import request
 from flask_jwt_extended import current_user
 from flask_jwt_extended import jwt_required
 from PyMatcha.models.message import Message
-from PyMatcha.models.notification import Notification
 from PyMatcha.models.user import get_user
+from PyMatcha.utils.action_notifs.message import do_like_message
+from PyMatcha.utils.action_notifs.message import do_message
 from PyMatcha.utils.decorators import validate_params
 from PyMatcha.utils.errors import BadRequestError
 from PyMatcha.utils.errors import NotFoundError
@@ -34,7 +35,6 @@ from PyMatcha.utils.success import SuccessOutput
 from PyMatcha.utils.success import SuccessOutputMessage
 from PyMatcha.utils.tasks import bot_respond_to_message
 from timeago import format as timeago_format
-
 
 REQUIRED_KEYS_NEW_MESSAGE = {"to_uid": str, "content": str}
 
@@ -74,18 +74,10 @@ def send_message():
 
     if current_user.id == to_user.id:
         raise BadRequestError("Cannot send a message to yourself.")
-    current_app.logger.info(f"Sending message between {current_user.id} and {to_uid}")
-    current_user.send_message(to_id=to_user.id, content=content)
+
+    do_message(from_user=current_user, to_user=to_user, content=content)
 
     new_message = Message.get_multis(to_id=to_user.id, from_id=current_user.id)[-1]
-
-    Notification.create(
-        trigger_id=current_user.id,
-        user_id=to_user.id,
-        content=f"{current_user.first_name} said: {content}",
-        type="message",
-        link_to=f"conversation/{current_user.id}",
-    )
 
     if to_user.is_bot:
         new_message.is_seen = True
@@ -142,16 +134,8 @@ def like_message(message_id):
         raise BadRequestError("Cannot like a message that isn't destined to you.")
     if message.is_liked:
         raise BadRequestError("Message is already liked.")
-    current_app.logger.debug(f"Liking message {message_id}")
-    message.is_liked = True
-    message.save()
-    Notification.create(
-        trigger_id=current_user.id,
-        user_id=message.from_id,
-        content=f"{current_user.first_name} liked you message!",
-        type="message_like",
-        link_to=f"conversation/{current_user.id}",
-    )
+
+    do_like_message(message=message, liker=current_user, to_id=message.from_id)
     return Success(f"Liked message {message_id}.")
 
 
