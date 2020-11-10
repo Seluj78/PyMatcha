@@ -85,6 +85,23 @@ export default {
     chatWithUserId: null,
     fetchingDone: false,
   }),
+  watch: {
+    messages: {
+      handler() {
+        const len = this.messages.length;
+        const messagedIds = [];
+        for (let i = 0; i < len; i += 1) {
+          messagedIds.push(this.messages[i].with_user.id);
+        }
+        let i = this.matches.length;
+        while (i--) {
+          if (messagedIds.indexOf(this.matches[i].id) !== -1) {
+            this.matches.splice(i, 1);
+          }
+        }
+      },
+    },
+  },
   methods: {
     async fetchMatch(user1, user2) {
       if (this.$store.getters.getLoggedInUser.id === user1) {
