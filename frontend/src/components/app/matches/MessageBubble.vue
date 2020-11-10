@@ -22,7 +22,7 @@
     <img v-if="message.to_id === loggedInUserId && message.is_liked"
          src="../../../assets/heartGreen.png" class="w-6 ml-2 inline-block absolute heart"
          v-on:dblclick="likeMessage(message.id, message.is_liked)">
-    <h1 v-if="last" class="text-gray-600">{{getSeenMessage(message.is_seen, message.dt_seen_ago)}}</h1>
+    <h1 v-if="last && message.to_id !== loggedInUserId" class="text-gray-600">{{getSeenMessage(message.is_seen, message.dt_seen_ago)}}</h1>
   </div>
 </template>
 

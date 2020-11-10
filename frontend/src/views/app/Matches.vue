@@ -5,7 +5,7 @@
       <img class="h-36" src="../../assets/loading.svg">
     </div>
     <section v-if="fetchingDone" class="mx-auto relative md:flex md:items-start md:justify-center">
-      <div class="md:w-full md:max-w-xs md:shadow-md md:rounded-md md:p-8 md:flex md:flex-col md:justify-start">
+      <div v-if="(isSmallScreen && !chatWithUserId) || !isSmallScreen" class="sideBar md:w-full md:max-w-xs md:shadow-md md:rounded-md md:p-8 md:flex md:flex-col md:justify-start">
         <div class="mt-8 sm:mt-0">
           <div v-if="matches.length">
             <h1 class="text-xl md:text-base text-gray-matcha font-bold">Matches</h1>
@@ -26,7 +26,7 @@
         <div class="mt-8">
           <div v-if="messages.length">
             <h1 class="text-xl md:text-base text-gray-matcha text-left font-bold">Messages</h1>
-            <div class="overflow-scroll md:h-64 mt-4">
+            <div class="overflow-scroll messageBox mt-4">
               <Message v-on:chat="chat" v-for="message in messages" :key="message.with_user.id" v-bind:message="message"></Message>
             </div>
           </div>
@@ -67,6 +67,7 @@
 <script>
 /* eslint-disable max-len */
 /* eslint-disable no-await-in-loop */
+/* eslint-disable no-plusplus */
 
 import Match from '@/components/app/matches/Match.vue';
 import Chat from '@/components/app/matches/Chat.vue';
@@ -83,7 +84,25 @@ export default {
     messages: [],
     chatWithUserId: null,
     fetchingDone: false,
+    isSmallScreen: false,
   }),
+  watch: {
+    messages: {
+      handler() {
+        const len = this.messages.length;
+        const messagedIds = [];
+        for (let i = 0; i < len; i += 1) {
+          messagedIds.push(this.messages[i].with_user.id);
+        }
+        let i = this.matches.length;
+        while (i--) {
+          if (messagedIds.indexOf(this.matches[i].id) !== -1) {
+            this.matches.splice(i, 1);
+          }
+        }
+      },
+    },
+  },
   methods: {
     async fetchMatch(user1, user2) {
       if (this.$store.getters.getLoggedInUser.id === user1) {
@@ -116,9 +135,49 @@ export default {
         }
       }
     },
+    async filterOutUnlikedPeople() {
+      let i = this.messages.length;
+      const { sent } = this.$store.getters.getLoggedInUser.likes;
+      const likedIds = [];
+      for (let j = 0; j < sent.length; j += 1) {
+        likedIds.push(sent[j].liked_id);
+      }
+      while (i--) {
+        if (likedIds.indexOf(this.messages[i].with_user.id) === -1) {
+          this.messages.splice(i, 1);
+        }
+      }
+      i = this.matches.length;
+      while (i--) {
+        if (likedIds.indexOf(this.matches[i].id) === -1) {
+          this.matches.splice(i, 1);
+        }
+      }
+    },
+    filterOutBlockedPeople() {
+      const { blocks } = this.$store.getters.getLoggedInUser;
+      const blockedIds = [];
+      for (let j = 0; j < blocks.length; j += 1) {
+        blockedIds.push(blocks[j].blocked_id);
+      }
+      let i = this.messages.length;
+      while (i--) {
+        if (blockedIds.indexOf(this.messages[i].with_user.id) !== -1) {
+          this.messages.splice(i, 1);
+        }
+      }
+      i = this.matches.length;
+      while (i--) {
+        if (blockedIds.indexOf(this.matches[i].id) !== -1) {
+          this.matches.splice(i, 1);
+        }
+      }
+    },
     async fetchMessages() {
       const messagesRequest = await this.$http.get('/conversations');
-      this.messages = messagesRequest.data.conversations;
+      let messages = messagesRequest.data.conversations;
+      messages = messages.reverse();
+      this.messages = messages;
     },
     async chat(...args) {
       const [id] = args;
@@ -135,13 +194,19 @@ export default {
           this.chatWithUserId = this.messages[0].with_user.id;
         }
       }
+      this.isSmallScreen = window.innerWidth < 768;
     },
     async fetchData() {
       window.addEventListener('resize', this.openMessageOnMd);
       await this.fetchMessages();
       await this.fetchMatches();
+      await this.filterOutUnlikedPeople();
+      await this.filterOutBlockedPeople();
       if (window.innerWidth >= 768 && this.messages.length) {
         this.chatWithUserId = this.messages[0].with_user.id;
+      }
+      if (window.innerWidth < 768) {
+        this.isSmallScreen = true;
       }
       this.fetchingDone = true;
     },
@@ -161,3 +226,17 @@ export default {
   },
 };
 </script>
+
+<style scoped>
+@screen md {
+  .sideBar {
+    max-height: 85vh;
+  }
+}
+
+@screen md {
+  .messageBox {
+    max-height: 32rem;
+  }
+}
+</style>
