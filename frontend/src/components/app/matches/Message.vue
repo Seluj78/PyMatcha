@@ -63,7 +63,7 @@ export default {
   computed: {
     getMessage() {
       if (this.message.last_message_content.length > 20) {
-        return `${this.message.last_message_content.substring(1, 20)}...`;
+        return `${this.message.last_message_content.substring(0, 20)}...`;
       }
       return this.message.last_message_content;
     },
