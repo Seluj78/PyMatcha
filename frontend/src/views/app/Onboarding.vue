@@ -103,7 +103,6 @@ import Textblock from '@/components/app/onboarding/Textblock.vue';
 import Location from '@/components/app/onboarding/Location.vue';
 import SettingUp from '@/components/app/onboarding/SettingUp.vue';
 import Vue from 'vue';
-import Browse from '@/views/app/Browse.vue';
 
 export default {
   components: {
@@ -139,7 +138,7 @@ export default {
         const recommendationsRequest = await this.$http.get('/recommendations');
         const recommendationsFromSettingUp = recommendationsRequest.data.recommendations;
         await this.$store.dispatch('profileCompleted');
-        await this.$router.push({ name: Browse, params: { recommendationsFromSettingUp } });
+        await this.$router.push({ name: 'Browse', params: { recommendationsFromSettingUp } });
       }
       if (this.slideCurrent < this.slideCount) {
         if (this.slideCurrent === 4 && this.userUploadedImagesCount) {
