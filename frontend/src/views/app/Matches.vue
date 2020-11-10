@@ -67,6 +67,7 @@
 <script>
 /* eslint-disable max-len */
 /* eslint-disable no-await-in-loop */
+/* eslint-disable no-plusplus */
 
 import Match from '@/components/app/matches/Match.vue';
 import Chat from '@/components/app/matches/Chat.vue';
@@ -116,6 +117,44 @@ export default {
         }
       }
     },
+    async filterOutUnlikedPeople() {
+      let i = this.messages.length;
+      const { sent } = this.$store.getters.getLoggedInUser.likes;
+      const likedIds = [];
+      for (let j = 0; j < sent.length; j += 1) {
+        likedIds.push(sent[j].liked_id);
+      }
+      while (i--) {
+        if (likedIds.indexOf(this.messages[i].with_user.id) === -1) {
+          this.messages.splice(i, 1);
+        }
+      }
+      i = this.matches.length;
+      while (i--) {
+        if (likedIds.indexOf(this.matches[i].id) === -1) {
+          this.matches.splice(i, 1);
+        }
+      }
+    },
+    filterOutBlockedPeople() {
+      const { blocks } = this.$store.getters.getLoggedInUser;
+      const blockedIds = [];
+      for (let j = 0; j < blocks.length; j += 1) {
+        blockedIds.push(blocks[j].blocked_id);
+      }
+      let i = this.messages.length;
+      while (i--) {
+        if (blockedIds.indexOf(this.messages[i].with_user.id) !== -1) {
+          this.messages.splice(i, 1);
+        }
+      }
+      i = this.matches.length;
+      while (i--) {
+        if (blockedIds.indexOf(this.matches[i].id) !== -1) {
+          this.matches.splice(i, 1);
+        }
+      }
+    },
     async fetchMessages() {
       const messagesRequest = await this.$http.get('/conversations');
       this.messages = messagesRequest.data.conversations;
@@ -140,6 +179,8 @@ export default {
       window.addEventListener('resize', this.openMessageOnMd);
       await this.fetchMessages();
       await this.fetchMatches();
+      await this.filterOutUnlikedPeople();
+      await this.filterOutBlockedPeople();
       if (window.innerWidth >= 768 && this.messages.length) {
         this.chatWithUserId = this.messages[0].with_user.id;
       }
