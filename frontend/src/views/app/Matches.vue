@@ -174,7 +174,9 @@ export default {
     },
     async fetchMessages() {
       const messagesRequest = await this.$http.get('/conversations');
-      this.messages = messagesRequest.data.conversations;
+      let messages = messagesRequest.data.conversations;
+      messages = messages.reverse();
+      this.messages = messages;
     },
     async chat(...args) {
       const [id] = args;
