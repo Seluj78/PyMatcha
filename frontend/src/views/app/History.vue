@@ -28,6 +28,7 @@
 
 <script>
 /* eslint-disable max-len */
+/* eslint-disable no-param-reassign */
 
 import HistoryRecommendations from '@/components/app/recommendations/HistoryRecommendations.vue';
 import DropdownDisplayChoiceHistory from '@/components/shared/DropdownDisplayChoiceHistory.vue';
@@ -59,6 +60,7 @@ export default {
     recommendationsAnalysisDone: false,
     filteredCount: null,
     historyFetched: false,
+    visitUser: false,
   }),
   methods: {
     async fetchUsers(request) {
@@ -126,13 +128,14 @@ export default {
       this.recommendationsAnalysis.interests = [];
       this.recommendationsAnalysisDone = false;
       this.historyFetched = false;
+      this.visitUser = false;
     },
-    updateHistory(...args) {
+    async updateHistory(...args) {
       const [key, value] = args;
       if (key === 'history') {
         this.browseAgain();
-        this.fetchUsers(value);
-        this.filteredCount = this.recommendations.count;
+        await this.fetchUsers(value);
+        this.filteredCount = this.recommendations.length;
       }
     },
     filteredCountSave(...args) {
@@ -144,11 +147,23 @@ export default {
     await this.fetchUsers('People I viewed');
     this.filteredCount = this.recommendations.length;
   },
+  async beforeRouteEnter(to, from, next) {
+    next(async (vm) => {
+      if (from.name !== 'Users' || !vm.visitUser) {
+        vm.browseAgain();
+        await vm.fetchUsers('People I viewed');
+        vm.$el.scrollTop = 0;
+      }
+      vm.prevRoute = from;
+    });
+  },
   deactivated() {
     if (!this.$route.path.startsWith('/users')) {
       this.browseAgain();
       this.fetchUsers('People I viewed');
       this.$el.scrollTop = 0;
+    } else {
+      this.visitUser = true;
     }
   },
 };
