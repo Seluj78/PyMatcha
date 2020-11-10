@@ -17,11 +17,11 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 """
 import datetime
+import logging
 
 import Geohash
 import requests
 from flask import Blueprint
-from flask import current_app
 from flask import render_template
 from flask import request
 from flask_jwt_extended import current_user
@@ -53,7 +53,7 @@ def edit_profile_first_name():
     first_name = data["first_name"]
     current_user.first_name = first_name
     current_user.save()
-    current_app.logger.info(f"Edited first name for {current_user.id}")
+    logging.info(f"Edited first name for {current_user.id}")
     return Success("First name successfully modified!")
 
 
@@ -67,7 +67,7 @@ def edit_profile_last_name():
     last_name = data["last_name"]
     current_user.last_name = last_name
     current_user.save()
-    current_app.logger.info(f"Edited last name for {current_user.id}")
+    logging.info(f"Edited last name for {current_user.id}")
     return Success("Last name successfully modified!")
 
 
@@ -87,7 +87,7 @@ def edit_profile_username():
         raise BadRequestError("Username taken.")
     current_user.username = username
     current_user.save()
-    current_app.logger.info(f"Edited username for {current_user.id}")
+    logging.info(f"Edited username for {current_user.id}")
     return Success("Username successfully modified!")
 
 
@@ -103,7 +103,7 @@ def edit_profile_bio():
         raise BadRequestError("Bio is too short.")
     current_user.bio = bio
     current_user.save()
-    current_app.logger.info(f"Edited bio for {current_user.id}")
+    logging.info(f"Edited bio for {current_user.id}")
     return Success("Bio successfully modified!")
 
 
@@ -119,7 +119,7 @@ def edit_profile_gender():
         raise BadRequestError("Gender must be male, female or other.")
     current_user.gender = gender
     current_user.save()
-    current_app.logger.info(f"Edited gender for {current_user.id}")
+    logging.info(f"Edited gender for {current_user.id}")
     return Success("Gender successfully modified!")
 
 
@@ -135,7 +135,7 @@ def edit_profile_orientation():
         raise BadRequestError("Orientation must be heterosexual, homosexual, bisexual or other.")
     current_user.orientation = orientation
     current_user.save()
-    current_app.logger.info(f"Edited orientation for {current_user.id}")
+    logging.info(f"Edited orientation for {current_user.id}")
     return Success("Orientation successfully modified!")
 
 
@@ -159,7 +159,7 @@ def edit_profile_birthdate():
         raise BadRequestError("You must be 18 years old or older.")
     current_user.birthdate = birthdate
     current_user.save()
-    current_app.logger.info(f"Edited birthdate for {current_user.id}")
+    logging.info(f"Edited birthdate for {current_user.id}")
     return Success("Birthdate successfully modified!")
 
 
@@ -176,7 +176,7 @@ def edit_profile_tags():
         t.delete()
     for tag in tags:
         Tag.create(name=tag, user_id=current_user.id)
-    current_app.logger.info(f"Edited tags for {current_user.id}")
+    logging.info(f"Edited tags for {current_user.id}")
     return Success("Tags successfully modified!")
 
 
@@ -195,7 +195,7 @@ def edit_email():
     link = FRONTEND_EMAIL_CONFIRMATION_URL + token
     rendered_html = render_template("confirm_email.html", link=link)
     send_mail_html.delay(dest=new_email, subject="Confirm your email on PyMatcha", html=rendered_html)
-    current_app.logger.info(f"Edited email for {current_user.id}")
+    logging.info(f"Edited email for {current_user.id}")
     return Success("Email sent for new email.")
 
 
@@ -216,7 +216,7 @@ def edit_password():
         body=f"Your password was changed at {datetime.datetime.utcnow()}."
         f"If you believe it wasn't you, please change it immediatly!",
     )
-    current_app.logger.info(f"Edited email for {current_user.id}")
+    logging.info(f"Edited email for {current_user.id}")
     return Success("User password successfully updated.")
 
 
@@ -243,5 +243,5 @@ def edit_geolocation():
         lng = response["longitude"]
         current_user.geohash = Geohash.encode(lat, lng)
     current_user.save()
-    current_app.logger.info(f"Edited geolocation for {current_user.id}")
+    logging.info(f"Edited geolocation for {current_user.id}")
     return Success("New location sucessfully saved.")

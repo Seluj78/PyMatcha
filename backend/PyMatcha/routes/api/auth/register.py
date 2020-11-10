@@ -16,8 +16,9 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 """
+import logging
+
 from flask import Blueprint
-from flask import current_app
 from flask import render_template
 from flask import request
 from PyMatcha.models.user import User
@@ -39,7 +40,7 @@ def api_create_user():
     data = request.get_json()
     data["email"] = data["email"].lower()
     try:
-        current_app.logger.debug("Trying to register new user")
+        logging.debug("Trying to register new user")
         new_user = User.register(
             email=data["email"],
             username=data["username"],
@@ -48,12 +49,12 @@ def api_create_user():
             last_name=data["last_name"],
         )
     except ConflictError as e:
-        current_app.logger.warning("Conflict error on user register: {}".format(e))
+        logging.warning("Conflict error on user register: {}".format(e))
         raise e
     else:
         token = generate_confirmation_token(email=data["email"], token_type="confirm")
         link = FRONTEND_EMAIL_CONFIRMATION_URL + token
         rendered_html = render_template("confirm_email.html", link=link)
         send_mail_html.delay(dest=data["email"], subject="Confirm your email on PyMatcha", html=rendered_html)
-        current_app.logger.info("Registered new user successfully.")
+        logging.info("Registered new user successfully.")
         return SuccessOutputMessage("email", new_user.email, "New user successfully created.")

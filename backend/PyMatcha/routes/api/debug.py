@@ -1,7 +1,7 @@
 import datetime
+import logging
 
 from flask import Blueprint
-from flask import current_app
 from flask import jsonify
 from flask import request
 from flask_jwt_extended import current_user
@@ -34,19 +34,19 @@ def debug_confirm_user(uid):
     """
     This route confirms a given user without having to send and receive an email
     """
-    current_app.logger.debug("/debug/users/confirm/{} -> Call".format(uid))
+    logging.debug("/debug/users/confirm/{} -> Call".format(uid))
     try:
         u = get_user(uid)
     except NotFoundError:
-        current_app.logger.debug("/debug/users/confirm -> User not found")
+        logging.debug("/debug/users/confirm -> User not found")
         raise NotFoundError("User {} not found".format(uid))
     if u.is_confirmed:
-        current_app.logger.debug("/debug/users/confirm -> User already confirmed")
+        logging.debug("/debug/users/confirm -> User already confirmed")
         return Success("User already confirmed.")
     u.is_confirmed = True
     u.confirmed_on = datetime.datetime.utcnow()
     u.save()
-    current_app.logger.debug("/debug/users/confirm -> User {} confirmed.".format(u.id))
+    logging.debug("/debug/users/confirm -> User {} confirmed.".format(u.id))
     return Success("User successfully confirmed.")
 
 

@@ -17,9 +17,9 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 """
 import datetime
+import logging
 
 from flask import Blueprint
-from flask import current_app
 from flask import render_template
 from flask import request
 from itsdangerous import BadSignature
@@ -46,27 +46,27 @@ def confirm_email(token):
         email, token_type = confirm_token(token, expiration=7200)
     except (SignatureExpired, BadSignature) as e:
         if e == SignatureExpired:
-            current_app.logger.debug(f"Signature Expired for token {token}")
+            logging.debug(f"Signature Expired for token {token}")
             raise BadRequestError("Signature Expired.", "Request another email confirmation and try again.")
         else:
-            current_app.logger.debug(f"Bad Expired for token {token}")
+            logging.debug(f"Bad Expired for token {token}")
             raise BadRequestError("Bad Signature.", "Request another password reset and try again.")
     else:
         if token_type != "confirm":
-            current_app.logger.debug(f"Wrong token type for token {token}")
+            logging.debug(f"Wrong token type for token {token}")
             raise BadRequestError("Wrong token type.")
         try:
             u = get_user(email)
         except NotFoundError:
             raise NotFoundError("User not found.")
         if u.is_confirmed:
-            current_app.logger.debug("User already confirmed")
+            logging.debug("User already confirmed")
             raise BadRequestError("Email already confirmed.", "")
         else:
             u.is_confirmed = True
             u.confirmed_on = datetime.datetime.utcnow()
             u.save()
-        current_app.logger.debug(f"User {u.id} confirmed.")
+        logging.debug(f"User {u.id} confirmed.")
         return Success("Confirmation successful.")
 
 
@@ -81,12 +81,12 @@ def request_new_email_conf():
         pass
     else:
         if u.is_confirmed:
-            current_app.logger.debug("Already confirmed.")
+            logging.debug("Already confirmed.")
         else:
-            current_app.logger.debug("/auth/confirm/new -> User found, sending new confirmation email")
+            logging.debug("/auth/confirm/new -> User found, sending new confirmation email")
             token = generate_confirmation_token(email=email, token_type="confirm")
             link = FRONTEND_EMAIL_CONFIRMATION_URL + token
             rendered_html = render_template("confirm_email.html", link=link)
             send_mail_html.delay(dest=data["email"], subject="Confirm your email on PyMatcha", html=rendered_html)
-    current_app.logger.debug("/auth/confirm/new -> New confirmation email sent if user exists in database")
+    logging.debug("/auth/confirm/new -> New confirmation email sent if user exists in database")
     return Success("New confirmation email sent if user exists in database and isn't already confirmed.")

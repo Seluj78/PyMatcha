@@ -7,4 +7,4 @@ ENV PYTHONDONTWRITEBYTECODE 1
 EXPOSE 5000
 ADD .env .
 RUN export $(cat .env | xargs)
-CMD exec gunicorn --chdir /www --bind :5000 --workers 1 --threads 1 PyMatcha:application
+CMD exec gunicorn --chdir /www --bind :5000 --workers 1 --threads 1 PyMatcha:application --log-level INFO

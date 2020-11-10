@@ -27,8 +27,7 @@ if __name__ == "__main__":
     # Default debug is true
     debug = bool(os.environ.get("FLASK_DEBUG", False))
 
-    if os.getenv("ENABLE_LOGGING"):
-        setup_logging()
+    setup_logging()
 
     # Runs the main loop
     application.run(host=os.getenv("FLASK_HOST", "0.0.0.0"), port=port, debug=debug)

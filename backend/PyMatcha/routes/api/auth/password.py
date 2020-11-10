@@ -16,8 +16,9 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 """
+import logging
+
 from flask import Blueprint
-from flask import current_app
 from flask import render_template
 from flask import request
 from itsdangerous import BadSignature
@@ -46,15 +47,15 @@ def forgot_password():
     try:
         get_user(data["email"])
     except NotFoundError:
-        current_app.logger.debug("User not found, no email sent")
+        logging.debug("User not found, no email sent")
         pass
     else:
         token = generate_confirmation_token(email=data["email"], token_type="reset")
         link = FRONTEND_PASSWORD_RESET_URL + token
         rendered_html = render_template("password_reset.html", link=link)
-        current_app.logger.debug("Sending worker request to send email")
+        logging.debug("Sending worker request to send email")
         send_mail_html.delay(dest=data["email"], subject="Reset your password on PyMatcha", html=rendered_html)
-    current_app.logger.debug("Password reset mail sent successfully for user.")
+    logging.debug("Password reset mail sent successfully for user.")
     return Success("Password reset mail sent successfully if user exists in DB.")
 
 
@@ -67,26 +68,26 @@ def reset_password():
         email, token_type = confirm_token(token, expiration=7200)
     except (SignatureExpired, BadSignature) as e:
         if e == SignatureExpired:
-            current_app.logger.debug(f"Signature Expired for {token}")
+            logging.debug(f"Signature Expired for {token}")
             raise BadRequestError("Signature Expired.", "Request another password reset and try again.")
         else:
-            current_app.logger.debug(f"Bad Signature for {token}")
+            logging.debug(f"Bad Signature for {token}")
             raise BadRequestError("Bad Signature.", "Request another password reset and try again.")
     else:
         if token_type != "reset":
-            current_app.logger.debug(f"Wrong token type for {token}")
+            logging.debug(f"Wrong token type for {token}")
             raise BadRequestError("Wrong token type.")
         try:
             u = get_user(email)
         except NotFoundError:
             raise NotFoundError("User not found.")
         if u.previous_reset_token == token:
-            current_app.logger.debug("Token already used")
+            logging.debug("Token already used")
             raise BadRequestError("Token already used", "Please request a new one.")
         u.password = hash_password(data["password"])
         u.previous_reset_token = token
         u.save()
-        current_app.logger.debug("Password reset successfully")
+        logging.debug("Password reset successfully")
         return Success("Password reset successful.")
 
 
@@ -99,10 +100,10 @@ def check_token_validity():
         email, token_type = confirm_token(token, expiration=7200)
     except (SignatureExpired, BadSignature) as e:
         if e == SignatureExpired:
-            current_app.logger.debug(f"Signature Expired for {token}")
+            logging.debug(f"Signature Expired for {token}")
             raise BadRequestError("Signature Expired.", "Request another password reset and try again.")
         else:
-            current_app.logger.debug(f"Bad Signature for {token}")
+            logging.debug(f"Bad Signature for {token}")
             raise BadRequestError("Bad Signature.", "Request another password reset and try again.")
     else:
         try:
@@ -110,6 +111,6 @@ def check_token_validity():
         except NotFoundError:
             raise NotFoundError("User not found.")
         if u.previous_reset_token == token:
-            current_app.logger.debug("Token already used")
+            logging.debug("Token already used")
             raise BadRequestError("Token already used", "Please request a new one.")
         return Success("Reset token is correct.")
