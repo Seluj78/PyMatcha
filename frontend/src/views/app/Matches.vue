@@ -5,7 +5,7 @@
       <img class="h-36" src="../../assets/loading.svg">
     </div>
     <section v-if="fetchingDone" class="mx-auto relative md:flex md:items-start md:justify-center">
-      <div class="md:w-full md:max-w-xs md:shadow-md md:rounded-md md:p-8 md:flex md:flex-col md:justify-start">
+      <div class="sideBar md:w-full md:max-w-xs md:shadow-md md:rounded-md md:p-8 md:flex md:flex-col md:justify-start">
         <div class="mt-8 sm:mt-0">
           <div v-if="matches.length">
             <h1 class="text-xl md:text-base text-gray-matcha font-bold">Matches</h1>
@@ -26,7 +26,7 @@
         <div class="mt-8">
           <div v-if="messages.length">
             <h1 class="text-xl md:text-base text-gray-matcha text-left font-bold">Messages</h1>
-            <div class="overflow-scroll md:h-64 mt-4">
+            <div class="overflow-scroll messageBox mt-4">
               <Message v-on:chat="chat" v-for="message in messages" :key="message.with_user.id" v-bind:message="message"></Message>
             </div>
           </div>
@@ -221,3 +221,17 @@ export default {
   },
 };
 </script>
+
+<style scoped>
+@screen md {
+  .sideBar {
+    max-height: 85vh;
+  }
+}
+
+@screen md {
+  .messageBox {
+    max-height: 32rem;
+  }
+}
+</style>
