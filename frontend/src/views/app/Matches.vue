@@ -5,7 +5,7 @@
       <img class="h-36" src="../../assets/loading.svg">
     </div>
     <section v-if="fetchingDone" class="mx-auto relative md:flex md:items-start md:justify-center">
-      <div class="sideBar md:w-full md:max-w-xs md:shadow-md md:rounded-md md:p-8 md:flex md:flex-col md:justify-start">
+      <div v-if="(isSmallScreen && !chatWithUserId) || !isSmallScreen" class="sideBar md:w-full md:max-w-xs md:shadow-md md:rounded-md md:p-8 md:flex md:flex-col md:justify-start">
         <div class="mt-8 sm:mt-0">
           <div v-if="matches.length">
             <h1 class="text-xl md:text-base text-gray-matcha font-bold">Matches</h1>
@@ -84,6 +84,7 @@ export default {
     messages: [],
     chatWithUserId: null,
     fetchingDone: false,
+    isSmallScreen: false,
   }),
   watch: {
     messages: {
@@ -193,6 +194,7 @@ export default {
           this.chatWithUserId = this.messages[0].with_user.id;
         }
       }
+      this.isSmallScreen = window.innerWidth < 768;
     },
     async fetchData() {
       window.addEventListener('resize', this.openMessageOnMd);
@@ -202,6 +204,9 @@ export default {
       await this.filterOutBlockedPeople();
       if (window.innerWidth >= 768 && this.messages.length) {
         this.chatWithUserId = this.messages[0].with_user.id;
+      }
+      if (window.innerWidth < 768) {
+        this.isSmallScreen = true;
       }
       this.fetchingDone = true;
     },
