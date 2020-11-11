@@ -223,6 +223,14 @@ export default {
   async beforeMount() {
     this.checkIfUserIsLiked();
     this.checkIfUserIsBlocked();
+    const interests = this.user.tags;
+    if (interests) {
+      for (let j = 0; j < interests.length; j += 1) {
+        this.userInterests.push(interests[j].name);
+      }
+    }
+  },
+  async mounted() {
     const sliderRangesRequest = await this.$http.get('/search/values');
     const maxScore = sliderRangesRequest.data.search_minmax.max_score;
     const sliderScore = document.getElementById('sliderScore');
@@ -232,12 +240,6 @@ export default {
       sliderScore.style.marginLeft = `${marginLeft}`;
     } else {
       sliderScore.style.marginLeft = `calc(${marginLeft} - ${sliderScoreWidth})`;
-    }
-    const interests = this.user.tags;
-    if (interests) {
-      for (let j = 0; j < interests.length; j += 1) {
-        this.userInterests.push(interests[j].name);
-      }
     }
   },
 };
