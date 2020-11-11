@@ -150,6 +150,9 @@ export default {
     filterOutBlockedUsers(recommendations) {
       let i = recommendations.length;
       const { blocks } = this.$store.getters.getLoggedInUser;
+      if (!blocks) {
+        return recommendations;
+      }
       let blockedIds = [];
       for (let j = 0; j < blocks.length; j += 1) {
         blockedIds.push(blocks[j].blocked_id);
