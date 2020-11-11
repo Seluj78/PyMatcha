@@ -17,9 +17,9 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 """
 import json
+import logging
 
 from flask import Blueprint
-from flask import current_app
 from flask import request
 from flask_jwt_extended import current_user
 from flask_jwt_extended import jwt_required
@@ -34,7 +34,7 @@ recommendations_bp = Blueprint("recommendations", __name__)
 @recommendations_bp.route("/recommendations", methods=["GET"])
 @jwt_required
 def get_recommendations():
-    current_app.logger.info(f"Getting recommendations for user {current_user.id}")
+    logging.info(f"Getting recommendations for user {current_user.id}")
     force = request.args.get("force", default=False, type=bool)
     recommendations = redis.get(f"user_recommendations:{str(current_user.id)}")
     if force or not recommendations:

@@ -272,12 +272,15 @@ class User(Model):
         return Like.get_multis(liker_id=self.id)
 
     def get_blocks(self):
+        logging.debug("Getting all blocks for user {}".format(self.id))
         return Block.get_multis(blocker_id=self.id)
 
     def get_all_notifications(self):
+        logging.debug("Getting all notifications for user {}".format(self.id))
         return Notification.get_multis(user_id=self.id)
 
     def get_unread_notifications(self):
+        logging.debug("Getting all unread notifications for user {}".format(self.id))
         return Notification.get_multis(user_id=self.id, is_seen=False)
 
     def already_likes(self, liked_id: int) -> bool:

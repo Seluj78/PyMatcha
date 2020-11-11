@@ -47,7 +47,6 @@ REQUIRED_ENV_VARS = [
     "FLASK_DEBUG",
     "FLASK_HOST",
     "FLASK_SECRET_KEY",
-    "ENABLE_LOGGING",
     "CELERY_BROKER_URL",
     "CELERY_RESULT_BACKEND",
     "DB_HOST",
@@ -69,7 +68,6 @@ for item in REQUIRED_ENV_VARS:
         raise EnvironmentError(f"{item} is not set in the server's environment or .env file. It is required.")
 
 from PyMatcha.utils.static import (
-    ENABLE_LOGGING,
     FLASK_SECRET_KEY,
     CELERY_RESULT_BACKEND,
     CELERY_BROKER_URL,
@@ -83,8 +81,7 @@ from PyMatcha.utils.static import (
     REDIS_HOST,
 )
 
-if ENABLE_LOGGING == "True":
-    setup_logging()
+setup_logging()
 
 sentry_sdk.init(
     dsn="https://bb17c14c99d448e2804bf2f105d4ec52@o450203.ingest.sentry.io/5434438",

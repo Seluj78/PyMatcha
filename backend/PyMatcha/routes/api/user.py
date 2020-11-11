@@ -16,8 +16,9 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 """
+import logging
+
 from flask import Blueprint
-from flask import current_app
 from flask import jsonify
 from flask_jwt_extended import jwt_required
 from PyMatcha.models.user import get_user
@@ -34,7 +35,7 @@ def get_all_users():
     user_list = []
     for u in User.select_all():
         user_list.append(u.to_dict())
-    current_app.logger.info("Returning all users list")
+    logging.info("Returning all users list")
     return jsonify(user_list)
 
 
@@ -46,7 +47,7 @@ def get_one_user(uid):
     except NotFoundError:
         pass
     else:
-        current_app.logger.info(f"Returning info on user {uid}")
+        logging.info(f"Returning info on user {uid}")
         return jsonify(u.to_dict())
 
 
@@ -56,5 +57,5 @@ def get_all_online_users():
     online_user_list = []
     for user in User.get_multis(is_online=True):
         online_user_list.append(user.to_dict())
-    current_app.logger.info("Returning list of online users")
+    logging.info("Returning list of online users")
     return jsonify(online_user_list)

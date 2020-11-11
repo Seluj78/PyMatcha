@@ -17,9 +17,9 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 """
 import datetime
+import logging
 
 from flask import Blueprint
-from flask import current_app
 from flask import request
 from flask_jwt_extended import current_user
 from flask_jwt_extended import jwt_required
@@ -56,7 +56,7 @@ def get_opened_conversations():
         }
         for c in conv_list
     ]
-    current_app.logger.info(f"Returning conversation list for user {current_user.id}")
+    logging.info(f"Returning conversation list for user {current_user.id}")
     return SuccessOutput("conversations", returned_list)
 
 
@@ -83,7 +83,7 @@ def send_message():
         new_message.is_seen = True
         new_message.dt_seen = datetime.datetime.utcnow()
         new_message.save()
-        current_app.logger.debug("Sending worker request to respond to message")
+        logging.debug("Sending worker request to respond to message")
         bot_respond_to_message.delay(bot_id=to_user.id, from_id=current_user.id, message_content=content)
     return SuccessOutputMessage("new_message", new_message.to_dict(), "Message successfully sent.")
 
@@ -99,7 +99,7 @@ def get_conversation_messsages(with_uid):
     if with_user.id == current_user.id:
         raise BadRequestError("Cannot get conversation with yourself. Get a life...")
 
-    current_app.logger.debug(f"Getting messages between {current_user.id} and {with_uid}")
+    logging.debug(f"Getting messages between {current_user.id} and {with_uid}")
     message_list = current_user.get_messages_with_user(with_user.id)
     message_list = [m.to_dict() for m in message_list]
     message_list = sorted(message_list, key=lambda item: item["dt_sent"])
@@ -114,7 +114,7 @@ def see_conversation_messages(with_uid):
     except NotFoundError:
         raise NotFoundError(f"With user {with_uid} not found.")
     unseen_messages = Message.get_multis(from_id=with_user.id, to_id=current_user.id, is_seen=False)
-    current_app.logger.debug(f"Setting all messages as seen between {current_user.id} and {with_uid}")
+    logging.debug(f"Setting all messages as seen between {current_user.id} and {with_uid}")
     for message in unseen_messages:
         message.is_seen = True
         message.dt_seen = datetime.datetime.utcnow()
@@ -151,7 +151,7 @@ def unlike_message(message_id):
         raise BadRequestError("Cannot unlike a message that isn't destined to you.")
     if not message.is_liked:
         raise BadRequestError("Message is already unliked.")
-    current_app.logger.debug(f"Unliking message {message_id}")
+    logging.debug(f"Unliking message {message_id}")
     message.is_liked = False
     message.save()
     return Success(f"Unliked message {message_id}.")
@@ -162,5 +162,5 @@ def unlike_message(message_id):
 def get_new_messages():
     message_list = Message.get_multis(to_id=current_user.id, is_seen=False)
     new_messages = [m.to_dict() for m in message_list]
-    current_app.logger.debug(f"Getting unseen messages for {current_user.id}")
+    logging.debug(f"Getting unseen messages for {current_user.id}")
     return SuccessOutput("new_messages", new_messages)

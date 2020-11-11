@@ -17,9 +17,9 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 """
 import datetime
+import logging
 
 from flask import Blueprint
-from flask import current_app
 from flask import request
 from flask_jwt_extended import current_user
 from flask_jwt_extended import jwt_required
@@ -39,7 +39,7 @@ REQUIRED_PARAMS_COMPLETE_PROFILE = {"gender": str, "birthdate": str, "orientatio
 @jwt_required
 def complete_profile():
     if current_user.is_profile_completed:
-        current_app.logger.info(f"User {current_user.id} already completed his profile")
+        logging.info(f"User {current_user.id} already completed his profile")
         raise BadRequestError(
             "The user has already completed his profile.", "Go to your profile settings to edit your profile."
         )
@@ -53,34 +53,34 @@ def complete_profile():
     try:
         birthdate = datetime.datetime.strptime(birthdate, "%d/%m/%Y").date()
     except ValueError:
-        current_app.logger.debug("Birthdate format incorrect.")
+        logging.debug("Birthdate format incorrect.")
         raise BadRequestError("Birthdate format must be %d/%m/%Y (day/month/year).")
 
     if len(bio) <= 50:
-        current_app.logger.debug("Bio is too short.")
+        logging.debug("Bio is too short.")
         raise BadRequestError("Bio is too short.")
 
     if len(tags) < 3:
-        current_app.logger.debug("At least 3 tags are required.")
+        logging.debug("At least 3 tags are required.")
         raise BadRequestError("At least 3 tags are required.")
 
     if len(tags) != len(set(tags)):
-        current_app.logger.debug("Duplicate tags.")
+        logging.debug("Duplicate tags.")
         raise BadRequestError("Duplicate tags.")
 
     if orientation not in ["heterosexual", "homosexual", "bisexual", "other"]:
-        current_app.logger.debug("Orientation is incorrect.")
+        logging.debug("Orientation is incorrect.")
         raise BadRequestError("Orientation must be one of 'heterosexual', 'homosexual', 'bisexual' or 'other'.")
 
     if gender not in ["male", "female", "other"]:
-        current_app.logger.debug("Gender is incorrect.")
+        logging.debug("Gender is incorrect.")
         raise BadRequestError("Gender must be one of 'male', 'female' or 'other'.")
 
     today = datetime.datetime.utcnow()
 
     age = today.year - birthdate.year - ((today.month, today.day) < (birthdate.month, birthdate.day))
     if age < 18:
-        current_app.logger.debug(f"{current_user.id} is < 18")
+        logging.debug(f"{current_user.id} is < 18")
         raise BadRequestError("You must be 18 years old or older.")
 
     for tag in tags:
@@ -93,5 +93,5 @@ def complete_profile():
     current_user.birthdate = birthdate
     current_user.save()
     redis.set(f"superlikes:{current_user.id}", 5)
-    current_app.logger.debug(f"Completed profile for {current_user.id}")
+    logging.debug(f"Completed profile for {current_user.id}")
     return Success("Profile completed!")
