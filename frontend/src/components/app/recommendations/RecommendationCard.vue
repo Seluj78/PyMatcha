@@ -28,6 +28,12 @@
 /* eslint-disable no-else-return */
 /* eslint-disable max-len */
 
+import imageMan1 from '../../../assets/recommendations/avatars/man1.png';
+import imageMan2 from '../../../assets/recommendations/avatars/man2.png';
+import imageWoman1 from '../../../assets/recommendations/avatars/woman1.png';
+import imageWoman2 from '../../../assets/recommendations/avatars/woman2.png';
+import imageOther from '../../../assets/recommendations/avatars/other.png';
+
 export default {
   props: ['recommendation'],
   methods: {
@@ -50,17 +56,17 @@ export default {
       if (this.recommendation.gender === 'male') {
         const number = Math.floor(Math.random() * 11);
         if (number % 2 === 0) {
-          return '../../../assets/recommendations/avatars/man1.png';
+          return imageMan1;
         }
-        return '../../../assets/recommendations/avatars/man2.png';
+        return imageMan2;
       } else if (this.recommendation.gender === 'female') {
         const number = Math.floor(Math.random() * 11);
         if (number % 2 === 0) {
-          return '../../../assets/recommendations/avatars/woman1.png';
+          return imageWoman1;
         }
-        return '../../../assets/recommendations/avatars/woman2.png';
+        return imageWoman2;
       }
-      return '../../../assets/recommendations/avatars/other.png';
+      return imageOther;
     },
   },
 };
