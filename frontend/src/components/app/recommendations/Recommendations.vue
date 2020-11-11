@@ -6,30 +6,35 @@
       {{recommendations.length}} {{title}}</h1>
     <div class="flex w-full items-stretch sm:items-center justify-center md:justify-start mb-12 relative">
       <Sort
-        v-bind:position="'left'"
+        v-if="recommendationsBackup.length > 1"
+        v-bind:position="getPosition('left')"
         v-bind:startingOption="'Closest'"
         v-bind:options="['Closest', 'Furthest', 'Youngest',
         'Oldest', 'Most popular', 'Least popular', 'Most common interests', 'Least common interests']"
         v-on:save-sort="saveSort"></Sort>
       <FilterSliderDropdown
+        v-if="recommendationsBackup.length > 1 && recommendationsAnalysis.age.min !== recommendationsAnalysis.age.max"
         v-bind:min="recommendationsAnalysis.age.min"
         v-bind:max="recommendationsAnalysis.age.max"
         v-bind:name="'age'"
         v-on:save-filter="saveFilter"></FilterSliderDropdown>
       <FilterSliderDropdown
+        v-if="recommendationsBackup.length > 1 && recommendationsAnalysis.distance.min !== recommendationsAnalysis.distance.max"
         v-bind:min="recommendationsAnalysis.distance.min"
         v-bind:max="recommendationsAnalysis.distance.max"
         v-bind:unit="'km'"
         v-bind:name="'distance'"
         v-on:save-filter="saveFilter"></FilterSliderDropdown>
       <FilterSliderDropdown
+        v-if="recommendationsBackup.length > 1 && recommendationsAnalysis.popularity.min !== recommendationsAnalysis.popularity.max"
         v-bind:min="recommendationsAnalysis.popularity.min"
         v-bind:max="recommendationsAnalysis.popularity.max"
         v-bind:unit="'pts'"
         v-bind:name="'popularity'"
         v-on:save-filter="saveFilter"></FilterSliderDropdown>
       <MultipleFiltersDropdown
-        v-bind:position="'right'"
+        v-if="recommendationsBackup.length > 1"
+        v-bind:position="getPosition('right')"
         v-bind:options="recommendationsAnalysis.interests"
         v-bind:name="'interests'"
         v-on:save-filter-multiple="saveFilterMultiple"></MultipleFiltersDropdown>
@@ -78,6 +83,15 @@ export default {
     },
   }),
   methods: {
+    getPosition(initialPosition) {
+      if (this.recommendationsBackup.length > 1
+        && this.recommendationsAnalysis.age.min !== this.recommendationsAnalysis.age.max
+        && this.recommendationsAnalysis.distance.min !== this.recommendationsAnalysis.distance.max
+        && this.recommendationsAnalysis.popularity.min !== this.recommendationsAnalysis.popularity.max) {
+        return initialPosition;
+      }
+      return null;
+    },
     saveSort(...args) {
       const [by] = args;
       this.sorting = by;
