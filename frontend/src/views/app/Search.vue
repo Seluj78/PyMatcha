@@ -99,7 +99,7 @@ export default {
       },
       distance: {
         min: 0,
-        max: null,
+        max: 1,
       },
       popularity: {
         min: null,

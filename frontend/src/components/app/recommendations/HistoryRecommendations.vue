@@ -13,7 +13,7 @@
       'relative': true}">
       <Sort
         v-if="recommendationsBackup.length > 1"
-        v-bind:position="'left'"
+        v-bind:position="getPosition('left')"
         v-bind:startingOption="'Closest'"
         v-bind:options="['Closest', 'Furthest', 'Youngest',
         'Oldest', 'Most popular', 'Least popular', 'Most common interests', 'Least common interests']"
@@ -40,7 +40,7 @@
         v-on:save-filter="saveFilter"></FilterSliderDropdown>
       <MultipleFiltersDropdown
         v-if="recommendationsBackup.length > 1"
-        v-bind:position="'right'"
+        v-bind:position="getPosition('right')"
         v-bind:options="recommendationsAnalysis.interests"
         v-bind:name="'interests'"
         v-on:save-filter-multiple="saveFilterMultiple"></MultipleFiltersDropdown>
@@ -93,6 +93,15 @@ export default {
     },
   }),
   methods: {
+    getPosition(initialPosition) {
+      if (this.recommendationsBackup.length > 1
+      && this.recommendationsAnalysis.age.min !== this.recommendationsAnalysis.age.max
+      && this.recommendationsAnalysis.distance.min !== this.recommendationsAnalysis.distance.max
+      && this.recommendationsAnalysis.popularity.min !== this.recommendationsAnalysis.popularity.max) {
+        return initialPosition;
+      }
+      return null;
+    },
     saveSort(...args) {
       const [by] = args;
       this.sorting = by;
