@@ -143,15 +143,12 @@ export default {
       this.filteredCount = count;
     },
   },
-  async created() {
-    await this.fetchUsers('People I viewed');
-    this.filteredCount = this.recommendations.length;
-  },
   async beforeRouteEnter(to, from, next) {
     next(async (vm) => {
       if (from.name !== 'Users' || !vm.visitUser) {
         vm.browseAgain();
         await vm.fetchUsers('People I viewed');
+        vm.filteredCount = vm.recommendations.length;
         vm.$el.scrollTop = 0;
       }
       vm.prevRoute = from;
