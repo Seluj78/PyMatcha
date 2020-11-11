@@ -28,10 +28,8 @@
 /* eslint-disable no-else-return */
 /* eslint-disable max-len */
 
-import imageMan1 from '../../../assets/recommendations/avatars/man1.png';
-import imageMan2 from '../../../assets/recommendations/avatars/man2.png';
-import imageWoman1 from '../../../assets/recommendations/avatars/woman1.png';
-import imageWoman2 from '../../../assets/recommendations/avatars/woman2.png';
+import imageMan from '../../../assets/recommendations/avatars/man1.png';
+import imageWoman from '../../../assets/recommendations/avatars/woman1.png';
 import imageOther from '../../../assets/recommendations/avatars/other.png';
 
 export default {
@@ -54,17 +52,9 @@ export default {
         return imageForShowcase;
       }
       if (this.recommendation.gender === 'male') {
-        const number = Math.floor(Math.random() * 11);
-        if (number % 2 === 0) {
-          return imageMan1;
-        }
-        return imageMan2;
+        return imageMan;
       } else if (this.recommendation.gender === 'female') {
-        const number = Math.floor(Math.random() * 11);
-        if (number % 2 === 0) {
-          return imageWoman1;
-        }
-        return imageWoman2;
+        return imageWoman;
       }
       return imageOther;
     },
