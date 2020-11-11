@@ -35,7 +35,7 @@
         class="px-4 py-1 border rounded-xl mr-2 mt-2 text-gray-600 text-sm">{{interest}}</h1>
       </div>
     </div>
-    <div class="text-center flex flex-col mx-auto p-8 border-b">
+    <div v-if="avatarsUploaded()" class="text-center flex flex-col mx-auto p-8 border-b">
       <LikeButton
         v-if="!likeButtons.superLikeClicked"
         v-bind:hasBeenClicked="likeButtons.likeClicked"
@@ -120,6 +120,10 @@ export default {
     blocked: false,
   }),
   methods: {
+    avatarsUploaded() {
+      return this.user.images.length > 0
+      && this.$store.getters.getLoggedInUser.images.length > 0;
+    },
     preferences() {
       if (this.user.orientation === 'heterosexual' && this.user.gender === 'male') {
         return 'women';
