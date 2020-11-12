@@ -79,7 +79,7 @@ Lauris and Jules started working on it at the begining of september and finished
 If you see commits before September, it's of an older version where Jules changed twice of frontend partner
 Here is a nice visual representation of the commits:
 
-gource
+[![Gource Video](https://img.youtube.com/vi/wi6zGENXwdo/0.jpg)](https://youtu.be/wi6zGENXwdo)
 
 ### How many lines of code
 As of Thu 12 Nov 11:40
