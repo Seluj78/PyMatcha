@@ -74,7 +74,33 @@ Here is a nice visual representation of the commits:
 gource
 
 ### How many lines of code
-cloc
+As of Thu 12 Nov 11:40
+```
+     637 text files.
+     624 unique files.                                          
+     164 files ignored.
+
+github.com/AlDanial/cloc v 1.88  T=1.68 s (333.3 files/s, 17377.3 lines/s)
+-------------------------------------------------------------------------------
+Language                     files          blank        comment           code
+-------------------------------------------------------------------------------
+JSON                           329              0              0           7924
+Python                         119           1560           2126           5633
+Vuejs Component                 53            146             91           4492
+YAML                             7             32             22           2531
+XML                             14              0              0           2042
+JavaScript                      21             44             35           1156
+CSS                              5             61              5            459
+HTML                             4              0             22            253
+SQL                              1             43             66            202
+Markdown                         4             42              0            139
+TOML                             1              3              5             21
+Dockerfile                       1             12              0             18
+SVG                              1              0              0              8
+-------------------------------------------------------------------------------
+SUM:                           560           1943           2372          24878
+-------------------------------------------------------------------------------
+```
 
 ### Features implemented
  - Feature list
