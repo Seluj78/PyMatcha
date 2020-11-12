@@ -35,7 +35,7 @@
         class="px-4 py-1 border rounded-xl mr-2 mt-2 text-gray-600 text-sm">{{interest}}</h1>
       </div>
     </div>
-    <div class="text-center flex flex-col mx-auto p-8 border-b">
+    <div v-if="avatarsUploaded()" class="text-center flex flex-col mx-auto p-8 border-b">
       <LikeButton
         v-if="!likeButtons.superLikeClicked"
         v-bind:hasBeenClicked="likeButtons.likeClicked"
@@ -120,6 +120,10 @@ export default {
     blocked: false,
   }),
   methods: {
+    avatarsUploaded() {
+      return this.user.images.length > 0
+      && this.$store.getters.getLoggedInUser.images.length > 0;
+    },
     preferences() {
       if (this.user.orientation === 'heterosexual' && this.user.gender === 'male') {
         return 'women';
@@ -219,6 +223,14 @@ export default {
   async beforeMount() {
     this.checkIfUserIsLiked();
     this.checkIfUserIsBlocked();
+    const interests = this.user.tags;
+    if (interests) {
+      for (let j = 0; j < interests.length; j += 1) {
+        this.userInterests.push(interests[j].name);
+      }
+    }
+  },
+  async mounted() {
     const sliderRangesRequest = await this.$http.get('/search/values');
     const maxScore = sliderRangesRequest.data.search_minmax.max_score;
     const sliderScore = document.getElementById('sliderScore');
@@ -228,12 +240,6 @@ export default {
       sliderScore.style.marginLeft = `${marginLeft}`;
     } else {
       sliderScore.style.marginLeft = `calc(${marginLeft} - ${sliderScoreWidth})`;
-    }
-    const interests = this.user.tags;
-    if (interests) {
-      for (let j = 0; j < interests.length; j += 1) {
-        this.userInterests.push(interests[j].name);
-      }
     }
   },
 };

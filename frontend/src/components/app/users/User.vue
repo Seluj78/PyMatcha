@@ -1,10 +1,13 @@
 <template>
   <!-- eslint-disable max-len -->
   <div class="sm:mx-16 lg:mx-32">
-    <div v-if="!user" class="mx-auto flex items-center justify-center mt-32">
+    <div v-if="error" class="mx-auto flex items-center justify-center mt-32">
+      {{error}}
+    </div>
+    <div v-if="!user && !error" class="mx-auto flex items-center justify-center mt-32">
       <img class="h-36" src="../../../assets/loading.svg">
     </div>
-    <section v-else class="mx-auto">
+    <section v-if="user && !error" class="mx-auto">
       <div v-on:click="goBack()" class="sort-button py-0 ml-auto rounded-md text-lg w-20 md:w-16 mr-4 sm:mr-0 mb-4">
         <h1 class="noSelect">←</h1>
       </div>
@@ -26,6 +29,7 @@ export default {
   },
   data: () => ({
     user: null,
+    error: null,
   }),
   methods: {
     goBack() {
@@ -39,8 +43,12 @@ export default {
     },
   },
   async beforeMount() {
-    const userRequest = await this.$http.get(`/profile/view/${this.$route.params.id}`);
-    this.user = userRequest.data.profile;
+    try {
+      const userRequest = await this.$http.get(`/profile/view/${this.$route.params.id}`);
+      this.user = userRequest.data.profile;
+    } catch (error) {
+      this.error = error.response.data.error.message;
+    }
   },
 };
 </script>

@@ -28,6 +28,10 @@
 /* eslint-disable no-else-return */
 /* eslint-disable max-len */
 
+import imageMan from '../../../assets/recommendations/avatars/man1.png';
+import imageWoman from '../../../assets/recommendations/avatars/woman1.png';
+import imageOther from '../../../assets/recommendations/avatars/other.png';
+
 export default {
   props: ['recommendation'],
   methods: {
@@ -48,19 +52,11 @@ export default {
         return imageForShowcase;
       }
       if (this.recommendation.gender === 'male') {
-        const number = Math.floor(Math.random() * 11);
-        if (number % 2 === 0) {
-          return '../../../assets/recommendations/avatars/man1.png';
-        }
-        return '../../../assets/recommendations/avatars/man2.png';
+        return imageMan;
       } else if (this.recommendation.gender === 'female') {
-        const number = Math.floor(Math.random() * 11);
-        if (number % 2 === 0) {
-          return '../../../assets/recommendations/avatars/woman1.png';
-        }
-        return '../../../assets/recommendations/avatars/woman2.png';
+        return imageWoman;
       }
-      return '../../../assets/recommendations/avatars/other.png';
+      return imageOther;
     },
   },
 };
