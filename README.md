@@ -64,7 +64,7 @@ celery -A PyMatcha.celery worker -E --loglevel=INFO -B --pool=threads
 ![History](https://github.com/seluj78/PyMatcha/blob/dev/screenshots/history.jpg?raw=true)
 ![Profile](https://github.com/seluj78/PyMatcha/blob/dev/screenshots/unmatched_profile.png?raw=true)
 ![Matched profile](https://github.com/seluj78/PyMatcha/blob/dev/screenshots/matched_profile.jpg?raw=true)
-![Matches and chat](https://github.com/seluj78/PyMatcha/blob/dev/screenshots/matches_chat.jpg?raw=true)
+![Matches and chat](https://github.com/seluj78/PyMatcha/blob/dev/screenshots/matches_chat.png?raw=true)
 
 ### How long did it take
 Lauris and Jules started working on it at the begining of september and finished on `XXX`.
