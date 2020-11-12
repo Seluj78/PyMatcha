@@ -55,7 +55,16 @@ celery -A PyMatcha.celery worker -E --loglevel=INFO -B --pool=threads
 ### The different services on the docker-compose:
 
 ### What does it look like
-
+![Home page](https://github.com/seluj78/PyMatcha/blob/dev/screenshots/home_page.jpg?raw=true)
+![Recommended profiles](https://github.com/seluj78/PyMatcha/blob/dev/screenshots/recommended_profiles.jpg?raw=true)
+![Search page](https://github.com/seluj78/PyMatcha/blob/dev/screenshots/search_page.png?raw=true)
+![Search no results](https://github.com/seluj78/PyMatcha/blob/dev/screenshots/search_no_results.png?raw=true)
+![Search results](https://github.com/seluj78/PyMatcha/blob/dev/screenshots/search_results.jpg?raw=true)
+![Profile settings](https://github.com/seluj78/PyMatcha/blob/dev/screenshots/profile_settings.png?raw=true)
+![History](https://github.com/seluj78/PyMatcha/blob/dev/screenshots/history.jpg?raw=true)
+![Profile](https://github.com/seluj78/PyMatcha/blob/dev/screenshots/unmatched_profile.png?raw=true)
+![Matched profile](https://github.com/seluj78/PyMatcha/blob/dev/screenshots/matched_profile.jpg?raw=true)
+![Matches and chat](https://github.com/seluj78/PyMatcha/blob/dev/screenshots/matches_chat.jpg?raw=true)
 
 ### How long did it take
 Lauris and Jules started working on it at the begining of september and finished on `XXX`.
