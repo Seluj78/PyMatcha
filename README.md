@@ -55,7 +55,7 @@ celery -A PyMatcha.celery worker -E --loglevel=INFO -B --pool=threads
 ### The different services on the docker-compose:
 
 ### What does it look like
-Screenshots here
+
 
 ### How long did it take
 Lauris and Jules started working on it at the begining of september and finished on `XXX`.
