@@ -15,7 +15,7 @@
  - [How long did it take](#how-long-did-it-take)
  - [How many lines of code](#how-many-lines-of-code)
  - [What are the features](#features-implemented)
- - [What are the bonuses](#bonuses-implemented)
+    - [What are the bonuses](#bonuses-implemented)
 
 ### Why ?
 Matcha is a [42](https://42.fr) school project aiming to teach how to make a dating website. Lauris and Jules chose to make it as close as it could be to a real production product.
@@ -53,6 +53,14 @@ celery -A PyMatcha.celery worker -E --loglevel=INFO -B --pool=threads
 `cd` in the frontend folder and run `yarn install` then `yarn run`
 
 ### The different services on the docker-compose:
+
+ - Backend on port `8080`
+ - Frontend on port `4242`
+ - Swagger doc on `9000`
+ - PHPMyAdmin for debug on `8183`
+ - Workers on internal port
+ - Redis on `6379`
+ - MySQL on internal port
 
 ### What does it look like
 ![Home page](https://github.com/seluj78/PyMatcha/blob/dev/screenshots/home_page.jpg?raw=true)
@@ -103,7 +111,29 @@ SUM:                           560           1943           2372          24878
 ```
 
 ### Features implemented
- - Feature list
+ - Sign-up and sign-in
+    - Forgot password email
+    - Resend confirmation email
+    - Registration process to add info on user
+ - Browse recommended users
+    - Filter them
+    - Sort them
+ - Search users
+    - Filter them
+    - Sort them
+ - Like and superlike a user
+ - Notifications for:
+    - Like
+    - Unlike
+    - Match
+    - Message
+  - Chat with instant replies
+  - Settings page where you can modify everything
+  - History page 
 
-### Bonuses implemented
- - Bonuses list
+#### Bonuses implemented
+ - Superlikes
+ - [CI/CD](https://github.com/Seluj78/PyMatcha/blob/dev/.travis.yml)
+ - [Postman API tests](https://github.com/Seluj78/PyMatcha/blob/dev/PyMatchaV2.postman_collection.json)
+ - Bots
+ - [Swagger API Documentation](https://github.com/Seluj78/PyMatcha/blob/dev/backend/schemas/swagger.yaml)
