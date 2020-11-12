@@ -1,7 +1,7 @@
 <template>
   <!-- eslint-disable max-len -->
   <div class="focus:outline-none ml-2 flex-1 sm:flex-none" @focusout="close" tabindex="0">
-    <div v-bind:class="{'filter-button': true, 'border-gray-matcha': !closed}" @click="toggle">
+    <div v-bind:class="{'filter-button': true, 'border-gray-matcha': !closed || (!startingOptions && selectedFilters.length)}" @click="toggle">
       <h1 v-bind:class="{ 'opacity-50': closed, 'noSelect': true, 'capitalize': true }">
         {{name}}</h1>
     </div>

@@ -1,7 +1,7 @@
 <template>
   <!-- eslint-disable max-len -->
   <div class="focus:outline-none ml-2 flex-1 sm:flex-none" @focusout="close" tabindex="1">
-    <div v-bind:class="{'filter-button': true, 'border-gray-matcha': !closed}" @click="toggle">
+    <div v-bind:class="{'filter-button': true, 'border-gray-matcha': !closed || currentRange !== slider.startRange}" @click="toggle">
       <h1 v-bind:class="{ 'opacity-50': closed, 'noSelect': true, 'capitalize': true }">{{name}}</h1>
     </div>
     <div ref="sliderDropdown" v-bind:class="{'slider-dropdown': true, 'hidden': closed}">
@@ -31,8 +31,14 @@ export default {
       max: null,
       start: null,
       step: 1,
+      startRange: null,
     },
   }),
+  computed: {
+    currentRange() {
+      return this.slider.startMax - this.slider.startMin;
+    },
+  },
   methods: {
     toggle() {
       this.closed = !this.closed;
@@ -57,6 +63,7 @@ export default {
     if (this.slider.min === this.slider.max) {
       this.slider.max += 1;
     }
+    this.slider.startRange = this.slider.startMax - this.slider.startMin;
     noUiSlider.create(this.$refs.slider, {
       start: [this.slider.startMin, this.slider.startMax],
       step: this.slider.step,
