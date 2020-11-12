@@ -11,11 +11,11 @@
       - [Workers](#workers)
       - [Frontend](#frontend)
  - [Services in docker-compose](#the-different-services-on-the-docker-compose)
- - [What does it look like]([what-does-it-look-like)
- - [How long did it take](how-long-did-it-take)
- - [How many lines of code](how-many-lines-of-code)
- - [What are the features](what-are-the-features)
- - [What are the bonuses](any-bonuses)
+ - [What does it look like](#what-does-it-look-like)
+ - [How long did it take](#how-long-did-it-take)
+ - [How many lines of code](#how-many-lines-of-code)
+ - [What are the features](#features-implemented)
+ - [What are the bonuses](#bonuses-implemented)
 
 ### Why ?
 Matcha is a [42](https://42.fr) school project aiming to teach how to make a dating website. Lauris and Jules chose to make it as close as it could be to a real production product.
@@ -54,21 +54,21 @@ celery -A PyMatcha.celery worker -E --loglevel=INFO -B --pool=threads
 
 ### The different services on the docker-compose:
 
-### What does it look like?
+### What does it look like
 Screenshots here
 
-### How long did it take?
+### How long did it take
 Lauris and Jules started working on it at the begining of september and finished on `XXX`.
 If you see commits before September, it's of an older version where Jules changed twice of frontend partner
 Here is a nice visual representation of the commits:
 
 gource
 
-### How many lines of code?
+### How many lines of code
 cloc
 
-### What are the features ?
+### Features implemented
  - Feature list
 
-### Any bonuses ?
+### Bonuses implemented
  - Bonuses list
