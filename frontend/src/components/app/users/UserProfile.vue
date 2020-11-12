@@ -11,6 +11,10 @@
     </div>
     <div class="text-center text-wrap p-8 mt-4 border-b">
       <h1 class="text-gray-matcha text-4xl font-bold mb-6">{{user.first_name}}, {{user.age}}</h1>
+      <div v-if="isMatched" class="flex items-center mt-2 text-left">
+        <img src="../../../assets/linkPurple.png" class="w-4 h-4 mr-2">
+        <h1 class="text-gray-600 text-purple-matcha">Matched</h1>
+      </div>
       <div v-if="!user.is_online" class="flex items-center mt-2 text-left">
         <img class="w-3 h-3 mr-2" src="../../../assets/recommendations/offline.png">
         <h1 class="text-gray-600">Last seen {{user.last_seen}}</h1>
@@ -118,6 +122,7 @@ export default {
     report: 'harassment',
     reported: false,
     blocked: false,
+    isMatched: false,
   }),
   methods: {
     avatarsUploaded() {
@@ -159,6 +164,7 @@ export default {
       }
       const user = await this.$http.get(`/users/${this.$store.getters.getLoggedInUser.id}`);
       await this.$store.dispatch('login', user.data);
+      this.checkIfUserIsMatched();
     },
     async buttonRevert(...args) {
       const [name] = args;
@@ -171,6 +177,7 @@ export default {
       }
       const user = await this.$http.get(`/users/${this.$store.getters.getLoggedInUser.id}`);
       await this.$store.dispatch('login', user.data);
+      this.checkIfUserIsMatched();
     },
     saveSingleChoice(...args) {
       const [key, value] = args;
@@ -207,6 +214,7 @@ export default {
           } else {
             this.likeButtons.likeClicked = true;
           }
+          return;
         }
       }
     },
@@ -219,10 +227,22 @@ export default {
         }
       }
     },
+    checkIfUserIsMatched() {
+      const likes = this.$store.getters.getLoggedInUser.likes.received;
+      for (let i = 0; i < likes.length; i += 1) {
+        if (likes[i].liker_id === this.user.id
+        && (this.likeButtons.superLikeClicked || this.likeButtons.likeClicked)) {
+          this.isMatched = true;
+          return;
+        }
+      }
+      this.isMatched = false;
+    },
   },
   async beforeMount() {
     this.checkIfUserIsLiked();
     this.checkIfUserIsBlocked();
+    this.checkIfUserIsMatched();
     const interests = this.user.tags;
     if (interests) {
       for (let j = 0; j < interests.length; j += 1) {
