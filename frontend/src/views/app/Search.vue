@@ -14,6 +14,7 @@
         v-bind:title="'Potential matches'"
         v-bind:recommendationsReceived="recommendations"
         v-bind:recommendationsAnalysis="filters"></Recommendations>
+      <ScrollUpButton></ScrollUpButton>
     </section>
     <div id="invisibleFooterSearch" class="h-4 w-full bg-white"></div>
     <section v-on:click="setError(null)"
@@ -74,6 +75,7 @@
 import FilterSlider from '@/components/shared/FilterSlider.vue';
 import MultipleFilters from '@/components/shared/MultipleFilters.vue';
 import Recommendations from '@/components/app/recommendations/Recommendations.vue';
+import ScrollUpButton from '@/components/shared/ScrollUpButton.vue';
 
 export default {
   name: 'Search',
@@ -81,6 +83,7 @@ export default {
     MultipleFilters,
     FilterSlider,
     Recommendations,
+    ScrollUpButton,
   },
   data: () => ({
     recommendations: [],

@@ -25,6 +25,7 @@
         v-bind:recommendationsReceived="recommendations"
         v-bind:recommendationsAnalysis="recommendationsAnalysis"></HistoryRecommendations>
       <div id="invisibleFooterHistory" class="h-4 w-full bg-white"></div>
+      <ScrollUpButton></ScrollUpButton>
     </section>
   </div>
 </template>
@@ -35,6 +36,7 @@
 
 import HistoryRecommendations from '@/components/app/recommendations/HistoryRecommendations.vue';
 import DropdownDisplayChoiceHistory from '@/components/shared/DropdownDisplayChoiceHistory.vue';
+import ScrollUpButton from '@/components/shared/ScrollUpButton.vue';
 
 export default {
   name: 'History',
@@ -42,6 +44,7 @@ export default {
   components: {
     HistoryRecommendations,
     DropdownDisplayChoiceHistory,
+    ScrollUpButton,
   },
   data: () => ({
     recommendations: [],

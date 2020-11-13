@@ -13,6 +13,7 @@
         v-bind:recommendationsReceived="recommendations"
         v-bind:recommendationsAnalysis="recommendationsAnalysis"></Recommendations>
       <div id="invisibleFooter" class="h-4 w-full bg-white"></div>
+      <ScrollUpButton></ScrollUpButton>
     </section>
   </div>
 </template>
@@ -21,12 +22,14 @@
 /* eslint-disable max-len */
 
 import Recommendations from '@/components/app/recommendations/Recommendations.vue';
+import ScrollUpButton from '@/components/shared/ScrollUpButton.vue';
 
 export default {
   name: 'Browse',
   props: ['recommendationsFromSettingUp'],
   components: {
     Recommendations,
+    ScrollUpButton,
   },
   data: () => ({
     recommendations: [],
