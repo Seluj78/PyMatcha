@@ -29,6 +29,19 @@ function loggedInRedirectBrowse(to, from, next) {
   }
 }
 
+function loggedInAndProfileCompleted(to, from, next) {
+  const loggedInUser = store.getters.getLoggedInUser;
+  if (loggedInUser) {
+    if (loggedInUser.is_profile_completed) {
+      next();
+    } else {
+      next('/onboarding');
+    }
+  } else {
+    next('/accounts/signin');
+  }
+}
+
 function notLoggedInRedirectLogin(to, from, next) {
   if (store.getters.getLoggedInUser) {
     next();
@@ -106,38 +119,38 @@ const routes = [
     path: '/browse',
     name: 'Browse',
     component: Browse,
-    beforeEnter: notLoggedInRedirectLogin,
+    beforeEnter: loggedInAndProfileCompleted,
     props: true,
   },
   {
     path: '/search',
     component: Search,
     name: 'Search',
-    beforeEnter: notLoggedInRedirectLogin,
+    beforeEnter: loggedInAndProfileCompleted,
   },
   {
     path: '/settings',
     component: Settings,
     name: 'Settings',
-    beforeEnter: notLoggedInRedirectLogin,
+    beforeEnter: loggedInAndProfileCompleted,
   },
   {
     path: '/users/:id',
     component: User,
     name: 'Users',
-    beforeEnter: notLoggedInRedirectLogin,
+    beforeEnter: loggedInAndProfileCompleted,
   },
   {
     path: '/history',
     component: History,
     name: 'History',
-    beforeEnter: notLoggedInRedirectLogin,
+    beforeEnter: loggedInAndProfileCompleted,
   },
   {
     path: '/matches',
     component: Matches,
     name: 'Matches',
-    beforeEnter: notLoggedInRedirectLogin,
+    beforeEnter: loggedInAndProfileCompleted,
   },
   {
     path: '/accounts/signout',
