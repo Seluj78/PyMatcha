@@ -1,6 +1,7 @@
 <template>
   <!-- eslint-disable max-len -->
   <div
+      v-if="index < showCount"
       v-on:click="viewUser(recommendation.id)"
       class="flex flex-col justify-end shadow-inner recommendation-card rounded-md cursor-pointer"
        v-bind:style="{
@@ -33,7 +34,7 @@ import imageWoman from '../../../assets/recommendations/avatars/woman1.png';
 import imageOther from '../../../assets/recommendations/avatars/other.png';
 
 export default {
-  props: ['recommendation'],
+  props: ['recommendation', 'index', 'showCount'],
   methods: {
     async viewUser(id) {
       await this.$router.push(`/users/${id}`);

@@ -7,9 +7,12 @@
       </div>
       <Recommendations
         v-if="recommendationsAnalysisDone"
+        v-bind:showCount="showCount"
+        v-on:reset-show-count="resetShowCount()"
         v-bind:title="'Potential matches'"
         v-bind:recommendationsReceived="recommendations"
         v-bind:recommendationsAnalysis="recommendationsAnalysis"></Recommendations>
+      <div id="invisibleFooter" class="h-4 w-full bg-white"></div>
     </section>
   </div>
 </template>
@@ -43,6 +46,7 @@ export default {
       interests: [],
     },
     recommendationsAnalysisDone: false,
+    showCount: 10,
   }),
   methods: {
     async fetchUsers() {
@@ -97,10 +101,28 @@ export default {
       this.recommendationsAnalysis.popularity.max = null;
       this.recommendationsAnalysis.interests = [];
       this.recommendationsAnalysisDone = false;
+      this.showCount = 10;
+    },
+    handleIntersect(entries) {
+      if (entries[0].isIntersecting) {
+        this.showCount += 10;
+      }
+    },
+    resetShowCount() {
+      this.showCount = 10;
     },
   },
   async created() {
     await this.fetchUsers();
+  },
+  mounted() {
+    const options = {
+      root: null,
+      rootMargins: '0px',
+      threshold: 0.5,
+    };
+    const observer = new IntersectionObserver(this.handleIntersect, options);
+    observer.observe(document.querySelector('#invisibleFooter'));
   },
   deactivated() {
     if (!this.$route.path.startsWith('/users')) {

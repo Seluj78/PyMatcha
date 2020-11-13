@@ -9,10 +9,13 @@
         <h1 class="noSelect capitalize">←</h1>
       </div>
       <Recommendations
+        v-bind:showCount="showCount"
+        v-on:reset-show-count="resetShowCount()"
         v-bind:title="'Potential matches'"
         v-bind:recommendationsReceived="recommendations"
         v-bind:recommendationsAnalysis="filters"></Recommendations>
     </section>
+    <div id="invisibleFooterSearch" class="h-4 w-full bg-white"></div>
     <section v-on:click="setError(null)"
              v-if="!recommendationsAnalysisDone && sliderValuesFetched"
              class="flex flex-col my-8 md:my-12">
@@ -110,6 +113,7 @@ export default {
     recommendationsAnalysisDone: false,
     error: null,
     submitted: false,
+    showCount: 10,
   }),
   methods: {
     saveFilter(...range) {
@@ -195,6 +199,7 @@ export default {
       this.filters.distance.max = null;
       this.filters.interests = [];
       this.recommendationsAnalysisDone = false;
+      this.showCount = 10;
     },
     setError(message) {
       this.error = message;
@@ -202,9 +207,24 @@ export default {
     scrollToTop() {
       window.scrollTo(0, 0);
     },
+    handleIntersect(entries) {
+      if (entries[0].isIntersecting && this.recommendationsAnalysisDone) {
+        this.showCount += 10;
+      }
+    },
+    resetShowCount() {
+      this.showCount = 10;
+    },
   },
   async mounted() {
     await this.fetchUsersOverfiew();
+    const options = {
+      root: null,
+      rootMargins: '0px',
+      threshold: 0.5,
+    };
+    const observer = new IntersectionObserver(this.handleIntersect, options);
+    observer.observe(document.querySelector('#invisibleFooterSearch'));
   },
   deactivated() {
     if (!this.$route.path.startsWith('/users')) {

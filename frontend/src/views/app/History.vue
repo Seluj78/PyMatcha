@@ -18,10 +18,13 @@
       </div>
       <HistoryRecommendations
         v-if="recommendationsAnalysisDone"
+        v-bind:showCount="showCount"
+        v-on:reset-show-count="resetShowCount()"
         v-on:filtered-count="filteredCountSave"
         v-bind:title="'Potential matches'"
         v-bind:recommendationsReceived="recommendations"
         v-bind:recommendationsAnalysis="recommendationsAnalysis"></HistoryRecommendations>
+      <div id="invisibleFooterHistory" class="h-4 w-full bg-white"></div>
     </section>
   </div>
 </template>
@@ -61,6 +64,7 @@ export default {
     filteredCount: null,
     historyFetched: false,
     visitUser: false,
+    showCount: 10,
   }),
   methods: {
     async fetchUsers(request) {
@@ -129,6 +133,7 @@ export default {
       this.recommendationsAnalysisDone = false;
       this.historyFetched = false;
       this.visitUser = false;
+      this.showCount = 10;
     },
     async updateHistory(...args) {
       const [key, value] = args;
@@ -142,6 +147,23 @@ export default {
       const [count] = args;
       this.filteredCount = count;
     },
+    handleIntersect(entries) {
+      if (entries[0].isIntersecting) {
+        this.showCount += 10;
+      }
+    },
+    resetShowCount() {
+      this.showCount = 10;
+    },
+  },
+  mounted() {
+    const options = {
+      root: null,
+      rootMargins: '0px',
+      threshold: 0.5,
+    };
+    const observer = new IntersectionObserver(this.handleIntersect, options);
+    observer.observe(document.querySelector('#invisibleFooterHistory'));
   },
   async beforeRouteEnter(to, from, next) {
     next(async (vm) => {
