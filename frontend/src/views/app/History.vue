@@ -4,7 +4,7 @@
     <div v-if="!historyFetched" class="mx-auto flex items-center justify-center mt-32">
       <img class="h-36" src="../../assets/loading.svg">
     </div>
-    <section v-bind:class="{'mx-auto': true, 'mt-4': true, 'invisible': !historyFetched}">
+    <section v-bind:class="{'mx-auto': true, 'mt-4': true, 'invisible': !historyFetched, 'relative': true,}">
       <div class="flex items-center justify-center md:justify-start w-full mb-4">
         <h1
           class="text-3xl sm:text-5xl my-4 inline-block text-center leading-none onboarding-sub-container-content-heading">
@@ -24,7 +24,7 @@
         v-bind:title="'Potential matches'"
         v-bind:recommendationsReceived="recommendations"
         v-bind:recommendationsAnalysis="recommendationsAnalysis"></HistoryRecommendations>
-      <div id="invisibleFooterHistory" class="h-4 w-full bg-white"></div>
+      <div id="invisibleFooterHistory" class="h-4 absolute bottom-0 w-full"></div>
       <ScrollUpButton></ScrollUpButton>
     </section>
   </div>

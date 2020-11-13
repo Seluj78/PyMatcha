@@ -1,7 +1,7 @@
 <template>
   <!-- eslint-disable max-len -->
   <div class="mx-4 sm:mx-16 lg:mx-32">
-    <section class="mx-auto">
+    <section class="mx-auto relative">
       <div v-if="!recommendationsAnalysisDone" class="flex items-center justify-center mt-32">
         <img class="h-36" src="../../assets/loading.svg">
       </div>
@@ -12,7 +12,7 @@
         v-bind:title="'Potential matches'"
         v-bind:recommendationsReceived="recommendations"
         v-bind:recommendationsAnalysis="recommendationsAnalysis"></Recommendations>
-      <div id="invisibleFooter" class="h-4 w-full bg-white"></div>
+      <div id="invisibleFooter" class="h-4 absolute bottom-0 w-full"></div>
       <ScrollUpButton></ScrollUpButton>
     </section>
   </div>

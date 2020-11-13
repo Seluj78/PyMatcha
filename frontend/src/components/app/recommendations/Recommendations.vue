@@ -1,6 +1,6 @@
 <template>
   <!-- eslint-disable max-len -->
-  <section class="sm:mb-16 lg:mb-32">
+  <section class="mb-4 sm:mb-16 lg:mb-32">
     <h1
       class="text-5xl my-4 text-center md:text-left leading-none onboarding-sub-container-content-heading">
       {{recommendations.length}} {{title}}</h1>

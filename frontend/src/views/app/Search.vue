@@ -1,6 +1,6 @@
 <template>
   <!-- eslint-disable max-len -->
-  <div class="mx-4 sm:mx-16 lg:mx-32">
+  <div class="mx-4 sm:mx-16 lg:mx-32 relative">
     <div v-if="!recommendationsAnalysisDone && !sliderValuesFetched" class="mx-auto flex items-center justify-center mt-32">
       <img class="h-36" src="../../assets/loading.svg">
     </div>
@@ -16,7 +16,8 @@
         v-bind:recommendationsAnalysis="filters"></Recommendations>
       <ScrollUpButton></ScrollUpButton>
     </section>
-    <div id="invisibleFooterSearch" class="h-4 w-full bg-white"></div>
+    <div id="invisibleFooterSearch"
+         v-bind:class="{'h-4': true, 'absolute': true, 'bottom-0': true, 'w-full': true, 'invisible': !recommendationsAnalysisDone}"></div>
     <section v-on:click="setError(null)"
              v-if="!recommendationsAnalysisDone && sliderValuesFetched"
              class="flex flex-col my-8 md:my-12">

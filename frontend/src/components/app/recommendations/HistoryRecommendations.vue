@@ -1,6 +1,6 @@
 <template>
   <!-- eslint-disable max-len -->
-  <section class="sm:mb-16 lg:mb-32">
+  <section class="mb-4 sm:mb-16 lg:mb-32">
     <div v-if="recommendationsBackup.length" v-bind:class="{
       'flex': true,
       'w-full': true,
