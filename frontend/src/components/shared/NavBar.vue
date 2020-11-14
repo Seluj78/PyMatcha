@@ -11,7 +11,7 @@
           </div>
         </router-link>
       </div>
-      <NavBarBell v-if="loggedIn"></NavBarBell>
+      <NavBarBell v-if="loggedIn && profileCompleted"></NavBarBell>
       <div id="burger" class="md:hidden">
         <button type="button" class="block text-gray-800 focus:outline-none" v-on:click="isOpen = !isOpen">
           <svg class="w-8 h-8 text-purple-matcha fill-current" viewBox="0 0 24 24">
@@ -26,11 +26,11 @@
         <router-link to="/accounts/signin" class="navigation-button-logged-in md:hover:bg-white-matcha md:hover:text-purple-matcha md:text-purple-matcha md:bg-white-matcha md:py-2 md:px-8 md:rounded-md mx-0">Sign In</router-link>
         <router-link to="/accounts/signup" class="navigation-button-logged-in md:hover:bg-purple-matcha md:hover:text-white-matcha md:text-white-matcha md:py-2 md:px-8">Get Started</router-link>
       </div>
-      <router-link v-if="loggedIn" to="/browse" v-bind:class="{'navigation-button-logged-in': true, 'font-black': currentRoute === 'Browse'}">Browse</router-link>
-      <router-link v-if="loggedIn" to="/search" v-bind:class="{'navigation-button-logged-in': true, 'font-black': currentRoute === 'Search'}">Search</router-link>
-      <router-link v-if="loggedIn" to="/matches" v-bind:class="{'navigation-button-logged-in': true, 'font-black': currentRoute === 'Matches'}">Matches</router-link>
-      <router-link v-if="loggedIn" to="/settings" v-bind:class="{'navigation-button-logged-in': true, 'font-black': currentRoute === 'Settings'}">Settings</router-link>
-      <router-link v-if="loggedIn" to="/history" v-bind:class="{'navigation-button-logged-in': true, 'font-black': currentRoute === 'History'}">History</router-link>
+      <router-link v-if="loggedIn && profileCompleted" to="/browse" v-bind:class="{'navigation-button-logged-in': true, 'font-black': currentRoute === 'Browse'}">Browse</router-link>
+      <router-link v-if="loggedIn && profileCompleted" to="/search" v-bind:class="{'navigation-button-logged-in': true, 'font-black': currentRoute === 'Search'}">Search</router-link>
+      <router-link v-if="loggedIn && profileCompleted" to="/matches" v-bind:class="{'navigation-button-logged-in': true, 'font-black': currentRoute === 'Matches'}">Matches</router-link>
+      <router-link v-if="loggedIn && profileCompleted" to="/settings" v-bind:class="{'navigation-button-logged-in': true, 'font-black': currentRoute === 'Settings'}">Settings</router-link>
+      <router-link v-if="loggedIn && profileCompleted" to="/history" v-bind:class="{'navigation-button-logged-in': true, 'font-black': currentRoute === 'History'}">History</router-link>
       <router-link v-if="loggedIn" to="/accounts/signout" class="navigation-button-logged-in">Exit</router-link>
     </div>
   </nav>
@@ -78,6 +78,9 @@ export default {
   computed: {
     loggedIn() {
       return this.$store.getters.getLoggedInUser;
+    },
+    profileCompleted() {
+      return this.$store.getters.getLoggedInUser.is_profile_completed;
     },
     currentRoute() {
       return this.route;
