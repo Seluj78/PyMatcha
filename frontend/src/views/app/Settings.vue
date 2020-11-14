@@ -24,9 +24,9 @@
         </div>
       </div>
       <div class="px-8 py-2 md:py-4 md:px-0 w-full">
-        <MenuButton v-on:click.native="showSetting('account')" v-bind:class="{'md:px-8':true, 'md:bg-purple-200': getShow === 'account'}" v-bind:text="'Account'"></MenuButton>
+        <MenuButton v-on:click.native="showSetting('account')" v-bind:class="{'md:px-8':true, 'md:bg-purple-matcha-menu-current': getShow === 'account'}" v-bind:text="'Account'"></MenuButton>
         <hr class="bg-gray-300 w-full md:hidden">
-        <MenuButton v-on:click.native="showSetting('profile')" v-bind:class="{'md:px-8':true, 'md:bg-purple-200': getShow === 'profile'}" v-bind:text="'Profile'"></MenuButton>
+        <MenuButton v-on:click.native="showSetting('profile')" v-bind:class="{'md:px-8':true, 'md:bg-purple-matcha-menu-current': getShow === 'profile'}" v-bind:text="'Profile'"></MenuButton>
       </div>
     </section>
     <section v-if="getShow === 'account' && settingsFetched" class="flex flex-col items-center z-10 absolute bg-white-matcha px-8 md:pb-8 w-full top-0 left-0 h-full md:h-auto md:ml-4 md:relative md:shadow-md md:rounded-md">

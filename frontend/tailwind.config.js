@@ -8,6 +8,8 @@ module.exports = {
     extend: {
       colors: {
         'purple-matcha' : '#6246EA',
+        'purple-matcha-menu-current': '#efedfd',
+        'purple-matcha-menu-hover': '#e0dafb',
         'white-matcha' : '#FFFFFE',
         'gray-matcha' : '#001858',
       },
