@@ -29,7 +29,7 @@ export default {
     async checkToken() {
       const { token } = this.$route.query;
       if (!token) {
-        await this.$router.push('/accounts/verify/error');
+        throw new Error('Invalid token');
       }
     },
     async verifyUser() {
