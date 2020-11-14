@@ -210,6 +210,7 @@ if application.debug:
 
 import PyMatcha.utils.tasks  # noqa
 import PyMatcha.utils.jwt_callbacks  # noqa
+from PyMatcha.utils.tasks import set_random_scores_for_bots
 
 
 @application.route("/")
@@ -242,3 +243,6 @@ def site_map():
         links.append(f"{methods} {url}".split("?")[0])
     # links is now a list of url, endpoint tuples
     return jsonify(links), 200
+
+
+set_random_scores_for_bots.delay()
