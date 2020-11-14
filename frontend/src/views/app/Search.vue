@@ -1,6 +1,6 @@
 <template>
   <!-- eslint-disable max-len -->
-  <div class="mx-4 sm:mx-16 lg:mx-32">
+  <div class="mx-4 sm:mx-16 lg:mx-32 relative">
     <div v-if="!recommendationsAnalysisDone && !sliderValuesFetched" class="mx-auto flex items-center justify-center mt-32">
       <img class="h-36" src="../../assets/loading.svg">
     </div>
@@ -9,10 +9,15 @@
         <h1 class="noSelect capitalize">←</h1>
       </div>
       <Recommendations
+        v-bind:showCount="showCount"
+        v-on:reset-show-count="resetShowCount()"
         v-bind:title="'Potential matches'"
         v-bind:recommendationsReceived="recommendations"
         v-bind:recommendationsAnalysis="filters"></Recommendations>
+      <ScrollUpButton></ScrollUpButton>
     </section>
+    <div id="invisibleFooterSearch"
+         v-bind:class="{'h-4': true, 'absolute': true, 'bottom-0': true, 'w-full': true, 'invisible': !recommendationsAnalysisDone}"></div>
     <section v-on:click="setError(null)"
              v-if="!recommendationsAnalysisDone && sliderValuesFetched"
              class="flex flex-col my-8 md:my-12">
@@ -71,6 +76,7 @@
 import FilterSlider from '@/components/shared/FilterSlider.vue';
 import MultipleFilters from '@/components/shared/MultipleFilters.vue';
 import Recommendations from '@/components/app/recommendations/Recommendations.vue';
+import ScrollUpButton from '@/components/shared/ScrollUpButton.vue';
 
 export default {
   name: 'Search',
@@ -78,6 +84,7 @@ export default {
     MultipleFilters,
     FilterSlider,
     Recommendations,
+    ScrollUpButton,
   },
   data: () => ({
     recommendations: [],
@@ -110,6 +117,7 @@ export default {
     recommendationsAnalysisDone: false,
     error: null,
     submitted: false,
+    showCount: 10,
   }),
   methods: {
     saveFilter(...range) {
@@ -195,6 +203,7 @@ export default {
       this.filters.distance.max = null;
       this.filters.interests = [];
       this.recommendationsAnalysisDone = false;
+      this.showCount = 10;
     },
     setError(message) {
       this.error = message;
@@ -202,9 +211,24 @@ export default {
     scrollToTop() {
       window.scrollTo(0, 0);
     },
+    handleIntersect(entries) {
+      if (entries[0].isIntersecting && this.recommendationsAnalysisDone) {
+        this.showCount += 10;
+      }
+    },
+    resetShowCount() {
+      this.showCount = 10;
+    },
   },
   async mounted() {
     await this.fetchUsersOverfiew();
+    const options = {
+      root: null,
+      rootMargins: '0px',
+      threshold: 0.5,
+    };
+    const observer = new IntersectionObserver(this.handleIntersect, options);
+    observer.observe(document.querySelector('#invisibleFooterSearch'));
   },
   deactivated() {
     if (!this.$route.path.startsWith('/users')) {

@@ -1,15 +1,19 @@
 <template>
   <!-- eslint-disable max-len -->
   <div class="mx-4 sm:mx-16 lg:mx-32">
-    <section class="mx-auto">
+    <section class="mx-auto relative">
       <div v-if="!recommendationsAnalysisDone" class="flex items-center justify-center mt-32">
         <img class="h-36" src="../../assets/loading.svg">
       </div>
       <Recommendations
         v-if="recommendationsAnalysisDone"
+        v-bind:showCount="showCount"
+        v-on:reset-show-count="resetShowCount()"
         v-bind:title="'Potential matches'"
         v-bind:recommendationsReceived="recommendations"
         v-bind:recommendationsAnalysis="recommendationsAnalysis"></Recommendations>
+      <div id="invisibleFooter" class="h-4 absolute bottom-0 w-full"></div>
+      <ScrollUpButton></ScrollUpButton>
     </section>
   </div>
 </template>
@@ -18,12 +22,14 @@
 /* eslint-disable max-len */
 
 import Recommendations from '@/components/app/recommendations/Recommendations.vue';
+import ScrollUpButton from '@/components/shared/ScrollUpButton.vue';
 
 export default {
   name: 'Browse',
   props: ['recommendationsFromSettingUp'],
   components: {
     Recommendations,
+    ScrollUpButton,
   },
   data: () => ({
     recommendations: [],
@@ -43,6 +49,7 @@ export default {
       interests: [],
     },
     recommendationsAnalysisDone: false,
+    showCount: 10,
   }),
   methods: {
     async fetchUsers() {
@@ -97,10 +104,28 @@ export default {
       this.recommendationsAnalysis.popularity.max = null;
       this.recommendationsAnalysis.interests = [];
       this.recommendationsAnalysisDone = false;
+      this.showCount = 10;
+    },
+    handleIntersect(entries) {
+      if (entries[0].isIntersecting) {
+        this.showCount += 10;
+      }
+    },
+    resetShowCount() {
+      this.showCount = 10;
     },
   },
   async created() {
     await this.fetchUsers();
+  },
+  mounted() {
+    const options = {
+      root: null,
+      rootMargins: '0px',
+      threshold: 0.5,
+    };
+    const observer = new IntersectionObserver(this.handleIntersect, options);
+    observer.observe(document.querySelector('#invisibleFooter'));
   },
   deactivated() {
     if (!this.$route.path.startsWith('/users')) {

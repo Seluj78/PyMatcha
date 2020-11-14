@@ -48,6 +48,8 @@
     <div v-if="recommendations.length" ref="recommendationCards" class="grid grid-cols-1 md:grid-cols-2 gap-2">
       <RecommendationCard
         v-for="(recommendation, index) in recommendations" :key="index"
+        v-bind:index="index"
+        v-bind:showCount="showCount"
         v-bind:recommendation="recommendation"></RecommendationCard>
     </div>
     <div class="text-center md:text-left px-4 md:px-0" v-if="!recommendations.length">
@@ -65,7 +67,7 @@ import RecommendationCard from '@/components/app/recommendations/RecommendationC
 import MultipleFiltersDropdown from '@/components/shared/MultipleFiltersDropdown.vue';
 
 export default {
-  props: ['title', 'recommendationsReceived', 'recommendationsAnalysis'],
+  props: ['title', 'recommendationsReceived', 'recommendationsAnalysis', 'showCount'],
   components: {
     Sort,
     RecommendationCard,
@@ -110,10 +112,12 @@ export default {
       const [name, min, max] = range;
       this.filters[name].min = min;
       this.filters[name].max = max;
+      this.$emit('reset-show-count');
     },
     saveFilterMultiple(...multiple) {
       const [name, filters] = multiple;
       this.filters[name] = filters;
+      this.$emit('reset-show-count');
     },
     sort(recommendations, by) {
       if (by === 'Closest') {

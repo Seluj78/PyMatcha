@@ -4,7 +4,7 @@
     <div v-if="!historyFetched" class="mx-auto flex items-center justify-center mt-32">
       <img class="h-36" src="../../assets/loading.svg">
     </div>
-    <section v-bind:class="{'mx-auto': true, 'mt-4': true, 'invisible': !historyFetched}">
+    <section v-bind:class="{'mx-auto': true, 'mt-4': true, 'invisible': !historyFetched, 'relative': true,}">
       <div class="flex items-center justify-center md:justify-start w-full mb-4">
         <h1
           class="text-3xl sm:text-5xl my-4 inline-block text-center leading-none onboarding-sub-container-content-heading">
@@ -18,10 +18,14 @@
       </div>
       <HistoryRecommendations
         v-if="recommendationsAnalysisDone"
+        v-bind:showCount="showCount"
+        v-on:reset-show-count="resetShowCount()"
         v-on:filtered-count="filteredCountSave"
         v-bind:title="'Potential matches'"
         v-bind:recommendationsReceived="recommendations"
         v-bind:recommendationsAnalysis="recommendationsAnalysis"></HistoryRecommendations>
+      <div id="invisibleFooterHistory" class="h-4 absolute bottom-0 w-full"></div>
+      <ScrollUpButton></ScrollUpButton>
     </section>
   </div>
 </template>
@@ -32,6 +36,7 @@
 
 import HistoryRecommendations from '@/components/app/recommendations/HistoryRecommendations.vue';
 import DropdownDisplayChoiceHistory from '@/components/shared/DropdownDisplayChoiceHistory.vue';
+import ScrollUpButton from '@/components/shared/ScrollUpButton.vue';
 
 export default {
   name: 'History',
@@ -39,6 +44,7 @@ export default {
   components: {
     HistoryRecommendations,
     DropdownDisplayChoiceHistory,
+    ScrollUpButton,
   },
   data: () => ({
     recommendations: [],
@@ -61,6 +67,7 @@ export default {
     filteredCount: null,
     historyFetched: false,
     visitUser: false,
+    showCount: 10,
   }),
   methods: {
     async fetchUsers(request) {
@@ -129,6 +136,7 @@ export default {
       this.recommendationsAnalysisDone = false;
       this.historyFetched = false;
       this.visitUser = false;
+      this.showCount = 10;
     },
     async updateHistory(...args) {
       const [key, value] = args;
@@ -142,6 +150,23 @@ export default {
       const [count] = args;
       this.filteredCount = count;
     },
+    handleIntersect(entries) {
+      if (entries[0].isIntersecting) {
+        this.showCount += 10;
+      }
+    },
+    resetShowCount() {
+      this.showCount = 10;
+    },
+  },
+  mounted() {
+    const options = {
+      root: null,
+      rootMargins: '0px',
+      threshold: 0.5,
+    };
+    const observer = new IntersectionObserver(this.handleIntersect, options);
+    observer.observe(document.querySelector('#invisibleFooterHistory'));
   },
   async beforeRouteEnter(to, from, next) {
     next(async (vm) => {
