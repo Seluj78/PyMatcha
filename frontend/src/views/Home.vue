@@ -44,7 +44,7 @@ flex flex-col justify-center md:rounded-tr-none md:rounded-br-none">
       </div>
     </div>
 
-    <div class="bg-white-matcha overflow-hidden relative shadow-lg rounded-lg py-32 px-8 mb-8 w-full flex flex-col justify-center lg:px-16">
+    <div class="bg-white-matcha overflow-hidden relative shadow-lg rounded-lg py-32 px-8 w-full flex flex-col justify-center lg:px-16">
       <h1 class="text-4xl md:text-6xl text-gray-matcha text-center font-bold leading-none z-10">It is your turn</h1>
       <h1 class="text-2xl text-gray-matcha text-center my-8 z-10">More than 4 million people matched</h1>
       <router-link class="button-purple z-10" to="/accounts/signup">Get started</router-link>
