@@ -1,6 +1,7 @@
 import datetime
 import json
 import logging
+import random
 from math import ceil
 
 from PyMatcha import celery
@@ -32,7 +33,7 @@ def setup_periodic_tasks(sender, **kwargs):
     sender.add_periodic_task(
         600, calc_search_min_max.s(), name="Update Minimum and Maximum scores and ages for search every 10 minutes"
     )
-    sender.add_periodic_task(180, random_bot_action.s(), name="Bots will do random actions")
+    sender.add_periodic_task(120, random_bot_action.s(), name="Bots will do random actions")
 
 
 @celery.task
@@ -170,3 +171,11 @@ def bot_respond_to_message(bot_id: int, from_id: int, message_content: str):
 
     logging.debug(f"Bot {bot_id} successfully replied to {from_id}")
     return f"Bot {bot_id} successfully replied to {from_id}"
+
+
+@celery.task
+def set_random_scores_for_bots():
+    for user in User.get_multis(is_bot=True):
+        user.heat_score = random.randint(0, 150)
+        user.save()
+    return "Successfully Added random scores to bot"
