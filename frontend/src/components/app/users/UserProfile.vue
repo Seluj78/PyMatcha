@@ -254,12 +254,14 @@ export default {
     const sliderRangesRequest = await this.$http.get('/search/values');
     const maxScore = sliderRangesRequest.data.search_minmax.max_score;
     const sliderScore = document.getElementById('sliderScore');
-    const sliderScoreWidth = `${sliderScore.getBoundingClientRect().width}px`;
-    const marginLeft = `${(this.user.heat_score / maxScore) * 100}%`;
-    if (this.user.heat_score / maxScore < 0.2) {
-      sliderScore.style.marginLeft = `${marginLeft}`;
-    } else {
-      sliderScore.style.marginLeft = `calc(${marginLeft} - ${sliderScoreWidth})`;
+    if (sliderScore) {
+      const sliderScoreWidth = `${sliderScore.getBoundingClientRect().width}px`;
+      const marginLeft = `${(this.user.heat_score / maxScore) * 100}%`;
+      if (this.user.heat_score / maxScore < 0.2) {
+        sliderScore.style.marginLeft = `${marginLeft}`;
+      } else {
+        sliderScore.style.marginLeft = `calc(${marginLeft} - ${sliderScoreWidth})`;
+      }
     }
   },
 };
