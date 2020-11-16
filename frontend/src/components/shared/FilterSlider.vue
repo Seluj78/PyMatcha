@@ -19,7 +19,7 @@ import noUiSlider from 'nouislider';
 import 'nouislider/distribute/nouislider.css';
 
 export default {
-  props: ['options', 'name', 'unit', 'min', 'max', 'oneHandle'],
+  props: ['options', 'name', 'unit', 'min', 'max', 'oneHandle', 'start'],
   data: () => ({
     slider: {
       startMin: null,
@@ -38,7 +38,7 @@ export default {
     this.slider.start = this.min;
     let start;
     if (this.oneHandle) {
-      start = 0;
+      start = this.start;
     } else {
       start = [this.slider.startMin, this.slider.startMax];
     }
