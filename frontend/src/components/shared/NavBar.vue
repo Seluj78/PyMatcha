@@ -4,7 +4,7 @@
   <nav v-if="showNavigationBar" class="md:flex md:justify-between md:items-center md:py-5">
     <div class="flex items-center justify-between px-5 py-3 md:p-0 w-full">
       <div id="logo">
-        <router-link to="/">
+        <router-link v-bind:to="getMatchaButtonRoute">
           <div class="flex justify-center items-center">
             <img src="../../assets/logo.png" class="h-6">
             <h1 v-if="!loggedIn" class="text-purple-matcha text-xl ml-2">Matcha</h1>
@@ -87,6 +87,12 @@ export default {
     },
     showNavigationBar() {
       return this.dontShowOn.indexOf(this.route) === -1;
+    },
+    getMatchaButtonRoute() {
+      if (!this.loggedIn) {
+        return '/';
+      }
+      return '/browse';
     },
   },
   beforeMount() {
