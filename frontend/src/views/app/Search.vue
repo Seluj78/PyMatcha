@@ -33,6 +33,7 @@
           v-bind:max="2000"
           v-bind:unit="'km'"
           v-bind:oneHandle="true"
+          v-bind:start="500"
           v-bind:name="'distance'"
           v-on:save-filter="saveFilter"></FilterSlider>
         <FilterSlider
