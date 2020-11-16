@@ -56,9 +56,7 @@ export default {
           } else {
             await this.$http.post('/profile/images?is_primary=false', formData);
           }
-        } catch (error) {
-          console.log(error);
-        }
+        } catch (error) {}
       }
     },
   },
@@ -73,7 +71,10 @@ export default {
       if (this.imagesUploaded.length === this.imageIndex) {
         return 'Continue';
       }
-      return 'Skip';
+      if (this.imageIndex === 1) {
+        return 'Skip';
+      }
+      return 'No more';
     },
   },
 };
