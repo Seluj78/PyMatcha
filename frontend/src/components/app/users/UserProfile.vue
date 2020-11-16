@@ -36,7 +36,17 @@
       <h1>{{user.bio}}</h1>
       <div class="flex flex-wrap justify-center mx-auto mt-6">
         <h1 v-for="(interest, index) in userInterests" :key="index"
-        class="px-4 py-1 border rounded-xl mr-2 mt-2 text-gray-600 text-sm">{{interest}}</h1>
+        v-bind:class="{
+          'px-4': true,
+          'py-1': true,
+          'border': !interest.common,
+          'border-2': interest.common,
+          'border-purple-matcha': interest.common,
+          'rounded-xl': true,
+          'mr-2': true,
+          'mt-2': true,
+          'text-gray-600': true,
+          'text-sm': true}">{{interest.name}}</h1>
       </div>
     </div>
     <div v-if="avatarsUploaded()" class="text-center flex flex-col mx-auto p-8 border-b">
@@ -244,9 +254,18 @@ export default {
     this.checkIfUserIsBlocked();
     this.checkIfUserIsMatched();
     const interests = this.user.tags;
+    const loggedInUserInterests = this.$store.getters.getLoggedInUser.tags;
+    const loggedInUserInterestsNames = [];
+    for (let k = 0; k < loggedInUserInterests.length; k += 1) {
+      loggedInUserInterestsNames.push(loggedInUserInterests[k].name);
+    }
     if (interests) {
       for (let j = 0; j < interests.length; j += 1) {
-        this.userInterests.push(interests[j].name);
+        if (loggedInUserInterestsNames.indexOf(interests[j].name) !== -1) {
+          this.userInterests.push({ name: interests[j].name, common: true });
+        } else {
+          this.userInterests.push({ name: interests[j].name, common: false });
+        }
       }
     }
   },
