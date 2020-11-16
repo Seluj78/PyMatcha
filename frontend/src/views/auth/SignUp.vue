@@ -48,9 +48,14 @@
         <h1 class="auth-sub-container-content-paragraph">Click confirmation link sent to {{formData.email}}</h1>
       </div>
     </div>
-    <div class="auth-sub-container-thinner mt-4">
+    <div v-if="!confirmationEmailSent" class="auth-sub-container-thinner mt-4">
       <div class="auth-sub-container-content">
         <h1 class="auth-sub-container-content-paragraph">Have an account? <router-link to="/accounts/signin" class="auth-sub-container-content-link">Sign in</router-link></h1>
+      </div>
+    </div>
+    <div v-else class="auth-sub-container-thinner mt-4">
+      <div class="auth-sub-container-content">
+        <h1 class="auth-sub-container-content-paragraph">Already verified? <router-link to="/accounts/signin" class="auth-sub-container-content-link">Sign in</router-link></h1>
       </div>
     </div>
   </div>
