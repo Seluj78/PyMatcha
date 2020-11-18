@@ -20,11 +20,13 @@ import logging
 
 from flask import Blueprint
 from flask import jsonify
+from flask_jwt_extended import current_user
 from flask_jwt_extended import jwt_required
 from PyMatcha.models.user import get_user
 from PyMatcha.models.user import User
 from PyMatcha.utils.errors import NotFoundError
-
+from PyMatcha.utils.match_score import _get_common_tags
+from PyMatcha.utils.match_score import _get_distance
 
 user_bp = Blueprint("user", __name__)
 
@@ -49,6 +51,25 @@ def get_one_user(uid):
     else:
         logging.info(f"Returning info on user {uid}")
         return jsonify(u.to_dict())
+
+
+@user_bp.route("/users/<uid>/recs", methods=["GET"])
+@jwt_required
+def get_one_user_recs_info(uid):
+    try:
+        u = get_user(uid)
+    except NotFoundError:
+        pass
+    else:
+        logging.info(f"Returning info on user {uid}")
+        user_dict = u.to_dict()
+        user_tags = [t.name for t in u.get_tags()]
+        current_user_tags = [t.name for t in current_user.get_tags()]
+        common_tags = _get_common_tags(current_user_tags, user_tags)
+        distance = _get_distance(current_user.geohash, u.geohash)
+        user_dict["distance"] = distance
+        user_dict["common_tags"] = common_tags
+        return jsonify(user_dict)
 
 
 @user_bp.route("/users/online", methods=["GET"])

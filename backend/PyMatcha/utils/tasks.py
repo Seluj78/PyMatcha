@@ -33,7 +33,7 @@ def setup_periodic_tasks(sender, **kwargs):
     sender.add_periodic_task(
         600, calc_search_min_max.s(), name="Update Minimum and Maximum scores and ages for search every 10 minutes"
     )
-    sender.add_periodic_task(120, random_bot_action.s(), name="Bots will do random actions")
+    sender.add_periodic_task(80, random_bot_action.s(), name="Bots will do random actions")
 
 
 @celery.task

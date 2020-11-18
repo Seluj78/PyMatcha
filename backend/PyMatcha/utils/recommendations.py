@@ -10,11 +10,6 @@ from PyMatcha.utils.match_score import _get_distance
 from PyMatcha.utils.match_score import _get_gender_query
 
 
-def default_date_converter(o):
-    if isinstance(o, datetime.datetime):
-        return o.__str__()
-
-
 def create_user_recommendations(user_to_update: User, ignore_bots: bool = False):
     logging.debug(f"Creating recommendations for user {user_to_update.id}")
     today = datetime.datetime.utcnow()
@@ -81,16 +76,14 @@ def create_user_recommendations(user_to_update: User, ignore_bots: bool = False)
 
         score += user.heat_score
 
-        d = {"score": score, "common_tags": common_tags, "distance": distance}
+        d = {"score": score}
         d.update(user.to_dict())
         user_to_update_recommendations.append(d)
     user_to_update_recommendations_sorted = sorted(
         user_to_update_recommendations, key=lambda x: x["score"], reverse=True
     )
     logging.debug(f"Recommendations for user {user_to_update.id}: Setting recommendations to redis")
-    redis.set(
-        f"user_recommendations:{str(user_to_update.id)}",
-        json.dumps(user_to_update_recommendations_sorted, default=default_date_converter),
-    )
+    user_ids = [user["id"] for user in user_to_update_recommendations_sorted]
+    redis.set(f"user_recommendations:{str(user_to_update.id)}", json.dumps(user_ids))
     logging.debug(f"Recommendations for user {user_to_update.id}: Setting expiry to redis")
     redis.expire(f"user_recommendations:{str(user_to_update.id)}", 3600)
