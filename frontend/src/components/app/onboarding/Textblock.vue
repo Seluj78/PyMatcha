@@ -4,6 +4,7 @@
     <h1 class="text-gray-matcha">{{slide.current}} / {{slide.count}}</h1>
     <h1 class="onboarding-sub-container-content-heading leading-none">Bio</h1>
     <p class="mt-2 text-gray-matcha">{{textareaLength}} / {{slide.maxTextareaLength}}</p>
+    <p class="mt-1 text-gray-matcha text-xs">Minimum {{slide.minTextareaLength}}</p>
     <div class="h-64 flex flex-col items-center justify-center w-full">
       <textarea
         autofocus

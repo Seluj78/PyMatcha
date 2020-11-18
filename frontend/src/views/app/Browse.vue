@@ -50,11 +50,13 @@ export default {
     },
     recommendationsAnalysisDone: false,
     showCount: 10,
+    firstTimeBrowsing: true,
   }),
   methods: {
     async fetchUsers() {
-      if (this.recommendationsFromSettingUp) {
+      if (this.firstTimeBrowsing && this.recommendationsFromSettingUp) {
         this.recommendations = this.recommendationsFromSettingUp;
+        this.firstTimeBrowsing = false;
       } else {
         const recommendationsRequest = await this.$http.get('/recommendations');
         this.recommendations = recommendationsRequest.data.recommendations;

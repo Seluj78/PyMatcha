@@ -87,6 +87,6 @@ def request_new_email_conf():
             token = generate_confirmation_token(email=email, token_type="confirm")
             link = FRONTEND_EMAIL_CONFIRMATION_URL + token
             rendered_html = render_template("confirm_email.html", link=link)
-            send_mail_html.delay(dest=data["email"], subject="Confirm your email on PyMatcha", html=rendered_html)
+            send_mail_html.delay(dest=data["email"], subject="Confirm your email on Matcha", html=rendered_html)
     logging.debug("/auth/confirm/new -> New confirmation email sent if user exists in database")
     return Success("New confirmation email sent if user exists in database and isn't already confirmed.")

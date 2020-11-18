@@ -10,12 +10,6 @@
       'background-size' :'cover',
       'background-image': 'url(' + getPrimaryImage() + ')'}">
     <div class="p-8 text-white">
-      <div class="flex items-center">
-        <img v-if="this.recommendation.is_online" class="w-3 h-3" src="../../../assets/recommendations/online.png">
-        <img v-else class="w-3 h-3" src="../../../assets/recommendations/offline.png">
-        <h1 v-if="this.recommendation.is_online" class="text-lg ml-2 leading-none">online</h1>
-        <h1 v-else class="text-lg ml-2 leading-none">offline</h1>
-      </div>
       <div class="flex items-end my-2">
         <h1 class="text-4xl font-bold leading-none">{{this.recommendation.first_name}}</h1>
         <h1 class="text-2xl ml-2 leading-none mb-1">{{this.recommendation.age}}</h1>
