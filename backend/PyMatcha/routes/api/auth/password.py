@@ -54,7 +54,7 @@ def forgot_password():
         link = FRONTEND_PASSWORD_RESET_URL + token
         rendered_html = render_template("password_reset.html", link=link)
         logging.debug("Sending worker request to send email")
-        send_mail_html.delay(dest=data["email"], subject="Reset your password on PyMatcha", html=rendered_html)
+        send_mail_html.delay(dest=data["email"], subject="Reset your password on Matcha", html=rendered_html)
     logging.debug("Password reset mail sent successfully for user.")
     return Success("Password reset mail sent successfully if user exists in DB.")
 

@@ -55,6 +55,6 @@ def api_create_user():
         token = generate_confirmation_token(email=data["email"], token_type="confirm")
         link = FRONTEND_EMAIL_CONFIRMATION_URL + token
         rendered_html = render_template("confirm_email.html", link=link)
-        send_mail_html.delay(dest=data["email"], subject="Confirm your email on PyMatcha", html=rendered_html)
+        send_mail_html.delay(dest=data["email"], subject="Confirm your email on Matcha", html=rendered_html)
         logging.info("Registered new user successfully.")
         return SuccessOutputMessage("email", new_user.email, "New user successfully created.")
