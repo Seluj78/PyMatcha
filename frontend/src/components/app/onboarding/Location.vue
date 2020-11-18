@@ -44,7 +44,7 @@ export default {
       this.$emit('next-slide');
     },
     async locationDenied() {
-      let ipRequest = await fetch('https://api.ipify.org?format=json');
+      let ipRequest = await fetch('https://cors-anywhere.herokuapp.com/https://api.ipify.org?format=json');
       ipRequest = await ipRequest.json();
       const { ip } = ipRequest;
       this.locationData = { ip };

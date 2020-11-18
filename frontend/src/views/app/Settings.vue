@@ -196,7 +196,7 @@ export default {
       }, 3000);
     },
     async locationDenied() {
-      let ipRequest = await fetch('https://api.ipify.org?format=json');
+      let ipRequest = await fetch('https://cors-anywhere.herokuapp.com/https://api.ipify.org?format=json');
       ipRequest = await ipRequest.json();
       const { ip } = ipRequest;
       const locationData = { ip };
