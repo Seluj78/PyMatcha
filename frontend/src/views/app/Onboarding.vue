@@ -95,6 +95,7 @@
 
 <script>
 /* eslint-disable  prefer-const */
+/* eslint-disable no-await-in-loop */
 import Introduction from '@/components/app/onboarding/Introduction.vue';
 import SingleChoice from '@/components/app/onboarding/SingleChoice.vue';
 import MultipleChoice from '@/components/app/onboarding/MultipleChoice.vue';
@@ -136,9 +137,15 @@ export default {
         await this.bus.$emit('send-user-location-to-backend');
         await this.$http.post('/profile/complete', this.userData);
         const recommendationsRequest = await this.$http.get('/recommendations');
-        const recommendationsFromSettingUp = recommendationsRequest.data.recommendations;
+        const recommendationIds = recommendationsRequest.data.recommendations;
+        const recommendationIdsCount = recommendationIds.length;
+        const recommendations = [];
+        for (let i = 0; i < recommendationIdsCount; i += 1) {
+          const userRequest = await this.$http.get(`/users/${recommendationIds[i]}/recs`);
+          recommendations.push(userRequest.data);
+        }
         await this.$store.dispatch('profileCompleted');
-        await this.$router.push({ name: 'Browse', params: { recommendationsFromSettingUp } });
+        await this.$router.push({ name: 'Browse', params: { recommendations } });
       }
       if (this.slideCurrent < this.slideCount) {
         if (this.slideCurrent === 4 && this.userUploadedImagesCount) {

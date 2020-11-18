@@ -20,6 +20,7 @@
 
 <script>
 /* eslint-disable max-len */
+/* eslint-disable no-await-in-loop */
 
 import Recommendations from '@/components/app/recommendations/Recommendations.vue';
 import ScrollUpButton from '@/components/shared/ScrollUpButton.vue';
@@ -59,7 +60,14 @@ export default {
         this.firstTimeBrowsing = false;
       } else {
         const recommendationsRequest = await this.$http.get('/recommendations');
-        this.recommendations = recommendationsRequest.data.recommendations;
+        const recommendationIds = recommendationsRequest.data.recommendations;
+        const recommendationIdsCount = recommendationIds.length;
+        const recommendations = [];
+        for (let i = 0; i < recommendationIdsCount; i += 1) {
+          const userRequest = await this.$http.get(`/users/${recommendationIds[i]}/recs`);
+          recommendations.push(userRequest.data);
+        }
+        this.recommendations = recommendations;
       }
       this.recommendations.sort((a, b) => a.distance - b.distance);
       for (let i = 0; i < this.recommendations.length; i += 1) {
