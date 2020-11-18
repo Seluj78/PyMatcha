@@ -23,8 +23,8 @@
     </div>
     <div id="links" v-on:click="openOnSmallerScreens()" v-bind:class="isOpen ? 'block' : 'hidden'" class="px-2 pb-5 text-center md:p-0 md:block md:flex md:items-center">
       <div v-if="!loggedIn" class="md:flex md:bg-purple-matcha md:border-2 md:border-purple-matcha md:rounded-lg">
-        <router-link to="/accounts/signin" class="navigation-button-logged-in md:hover:bg-white-matcha md:hover:text-purple-matcha md:text-purple-matcha md:bg-white-matcha md:py-2 md:px-8 md:rounded-md mx-0">Sign In</router-link>
-        <router-link to="/accounts/signup" class="navigation-button-logged-in md:hover:bg-purple-matcha md:hover:text-white-matcha md:text-white-matcha md:py-2 md:px-8">Get Started</router-link>
+        <router-link to="/accounts/signin" class="navigation-button-logged-in md:hover:bg-white-matcha md:hover:text-purple-matcha md:text-purple-matcha md:bg-white-matcha md:py-2 md:px-8 md:rounded-md mx-0 whitespace-no-wrap">Sign In</router-link>
+        <router-link to="/accounts/signup" class="navigation-button-logged-in md:hover:bg-purple-matcha md:hover:text-white-matcha md:text-white-matcha md:py-2 md:px-8 whitespace-no-wrap">Get Started</router-link>
       </div>
       <router-link v-if="loggedIn && profileCompleted" to="/browse" v-bind:class="{'navigation-button-logged-in': true, 'font-black': currentRoute === 'Browse'}">Browse</router-link>
       <router-link v-if="loggedIn && profileCompleted" to="/search" v-bind:class="{'navigation-button-logged-in': true, 'font-black': currentRoute === 'Search'}">Search</router-link>
