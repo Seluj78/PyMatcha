@@ -115,7 +115,7 @@
       </div>
       <div class="text-center py-8 w-full px-8 border-t border-gray-300">
         <h1 class="font-bold text-gray-matcha">Images<span class="text-md font-normal ml-2 opacity-50 text-gray-matcha">{{this.$store.getters.getLoggedInUser.images.length}} / 5</span></h1>
-        <div class="auth-sub-container-error mt-8" v-if="image.error">
+        <div class="auth-sub-container-error mt-8 mx-auto" v-if="image.error">
           <h1 class="auth-sub-container-error-message">{{image.error}}</h1>
         </div>
         <button v-if="this.$store.getters.getLoggedInUser.images.length < 5 && !fetchingImages" class="overflow-hidden relative onboarding-sub-container-content-button-outline border w-full max-w-sm my-4">
@@ -215,10 +215,12 @@ export default {
 
       if (!allowedTypes.includes(file.type)) {
         this.image.error = 'Only images allowed';
+        this.fetchingImages = false;
         return;
       }
       if (file.size > 2000000) {
         this.image.error = 'File too large';
+        this.fetchingImages = false;
         return;
       }
       const formData = new FormData();
