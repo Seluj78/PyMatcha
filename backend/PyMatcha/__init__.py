@@ -234,6 +234,7 @@ def site_map():
             amount=-1,
             token=-1,
             filename=-1,
+            n_id=-1,
         )
         methods = ""
         for m in rule.methods:

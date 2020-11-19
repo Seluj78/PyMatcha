@@ -137,3 +137,4 @@ SUM:                           560           1943           2372          24878
  - [Postman API tests](https://github.com/Seluj78/PyMatcha/blob/dev/PyMatchaV2.postman_collection.json)
  - Bots
  - [Swagger API Documentation](https://github.com/Seluj78/PyMatcha/blob/dev/backend/schemas/swagger.yaml)
+ - Backend Site map (:8080/site-map)
