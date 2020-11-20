@@ -153,6 +153,9 @@ export default {
     },
     async search() {
       this.submitted = true;
+      if (!this.filters.distance.max) {
+        this.filters.distance.max = 500;
+      }
       const searchRequest = await this.$http.post('/search', {
         min_age: this.filters.age.min,
         max_age: this.filters.age.max,
