@@ -137,6 +137,8 @@ export default {
         await this.$http.post('/profile/complete', this.userData);
         const recommendationsRequest = await this.$http.get('/recommendations');
         const recommendationsFromSettingUp = recommendationsRequest.data.recommendations;
+        const user = await this.$http.get(`/users/${this.$store.getters.getLoggedInUser.id}`);
+        await this.$store.dispatch('login', user.data);
         await this.$store.dispatch('profileCompleted');
         await this.$router.push({ name: 'Browse', params: { recommendationsFromSettingUp } });
       }
