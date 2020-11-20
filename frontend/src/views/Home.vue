@@ -4,7 +4,7 @@
     <section class="shadow-lg mb-8 h-full flex rounded-lg">
       <div class="intro bg-white-matcha rounded-lg w-full md:w-2/3
   flex flex-col justify-center md:rounded-tr-none md:rounded-br-none">
-        <div class="mx-auto text-center md:text-left">
+        <div class="mx-auto text-center md:text-left py-8 lg:py-0">
           <h1 class="text-5xl sm:text-6xl font-bold text-gray-matcha">Someone<br>
             is waiting<br>
             for you</h1>
