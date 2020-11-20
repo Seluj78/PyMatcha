@@ -130,7 +130,7 @@ export default {
     observer.observe(document.querySelector('#invisibleFooter'));
   },
   deactivated() {
-    if (!this.$route.path.startsWith('/users')) {
+    if (!this.$route.path.startsWith('/users') && !this.$route.path.startsWith('/accounts/signout')) {
       this.browseAgain();
       this.fetchUsers();
       this.$el.scrollTop = 0;

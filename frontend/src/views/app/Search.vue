@@ -235,7 +235,7 @@ export default {
     observer.observe(document.querySelector('#invisibleFooterSearch'));
   },
   deactivated() {
-    if (!this.$route.path.startsWith('/users')) {
+    if (!this.$route.path.startsWith('/users') && !this.$route.path.startsWith('/accounts/signout')) {
       this.searchAgain();
       this.fetchUsersOverfiew();
       this.$el.scrollTop = 0;
