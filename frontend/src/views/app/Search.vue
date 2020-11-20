@@ -20,7 +20,7 @@
          v-bind:class="{'h-4': true, 'absolute': true, 'bottom-0': true, 'w-full': true, 'invisible': !recommendationsAnalysisDone}"></div>
     <section v-on:click="setError(null)"
              v-if="!recommendationsAnalysisDone && sliderValuesFetched"
-             class="flex flex-col my-8 md:my-12">
+             class="flex flex-col my-8 md:my-12 mx-4">
       <div><img src="../../assets/search.png" class="w-20 mb-4 mx-auto"></div>
       <div>
         <FilterSlider
