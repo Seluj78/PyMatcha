@@ -18,6 +18,8 @@
       'h-48': notifications.length > 3,
       'absolute': true,
       'top-0': true,
+      'right-0': true,
+      'sm:right-auto': true,
       'mt-10': true,
       'z-50': true,
       'rounded-md': true}">
