@@ -51,7 +51,7 @@ export default {
       this.$emit('next-slide');
     },
     async sendLocation() {
-      await this.$http.put('/profile/edit/geolocation', this.locationData);
+      await this.$http.put('/profile/edit/geolocation', this.locationData, { accessTokenRequired: true });
     },
   },
   mounted() {

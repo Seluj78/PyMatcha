@@ -38,13 +38,13 @@ export default {
   },
   watch: {
     async $route() {
-      const userRequest = await this.$http.get(`/profile/view/${this.$route.params.id}`);
+      const userRequest = await this.$http.get(`/profile/view/${this.$route.params.id}`, { accessTokenRequired: true });
       this.user = userRequest.data.profile;
     },
   },
   async beforeMount() {
     try {
-      const userRequest = await this.$http.get(`/profile/view/${this.$route.params.id}`);
+      const userRequest = await this.$http.get(`/profile/view/${this.$route.params.id}`, { accessTokenRequired: true });
       this.user = userRequest.data.profile;
     } catch (error) {
       this.error = error.response.data.error.message;

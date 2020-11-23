@@ -56,10 +56,10 @@ export default {
       }
       if (!isLiked) {
         this.message.is_liked = true;
-        await this.$http.post(`/messages/like/${id}`);
+        await this.$http.post(`/messages/like/${id}`, null, { accessTokenRequired: true });
       } else {
         this.message.is_liked = false;
-        await this.$http.post(`/messages/unlike/${id}`);
+        await this.$http.post(`/messages/unlike/${id}`, null, { accessTokenRequired: true });
       }
     },
   },

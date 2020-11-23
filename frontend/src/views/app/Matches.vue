@@ -106,15 +106,15 @@ export default {
   methods: {
     async fetchMatch(user1, user2) {
       if (this.$store.getters.getLoggedInUser.id === user1) {
-        const userRequest = await this.$http.get(`/users/${user2}`);
+        const userRequest = await this.$http.get(`/users/${user2}`, { accessTokenRequired: true });
         this.matches.push(userRequest.data);
       } else {
-        const userRequest = await this.$http.get(`/users/${user1}`);
+        const userRequest = await this.$http.get(`/users/${user1}`, { accessTokenRequired: true });
         this.matches.push(userRequest.data);
       }
     },
     async fetchMatches() {
-      const matchesRequest = await this.$http.get('/matches');
+      const matchesRequest = await this.$http.get('/matches', { accessTokenRequired: true });
       const { matches } = matchesRequest.data;
       if (!this.messages.length) {
         for (let i = 0; i < matches.length; i += 1) {
@@ -174,7 +174,7 @@ export default {
       }
     },
     async fetchMessages() {
-      const messagesRequest = await this.$http.get('/conversations');
+      const messagesRequest = await this.$http.get('/conversations', { accessTokenRequired: true });
       let messages = messagesRequest.data.conversations;
       messages = messages.reverse();
       this.messages = messages;

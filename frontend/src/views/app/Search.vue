@@ -135,7 +135,7 @@ export default {
       this.filters[name] = filters;
     },
     async fetchUsersOverfiew() {
-      const sliderRangesRequest = await this.$http.get('/search/values');
+      const sliderRangesRequest = await this.$http.get('/search/values', { accessTokenRequired: true });
       const values = sliderRangesRequest.data.search_minmax;
       this.sliders.age.min = values.min_age;
       this.filters.age.min = values.min_age;
@@ -163,7 +163,7 @@ export default {
         max_score: this.filters.popularity.max,
         max_distance: this.filters.distance.max,
         tags: this.filters.interests,
-      });
+      }, { accessTokenRequired: true });
       if (this.filters.interests.length === 0) {
         this.filters.interests = [
           'swimming', 'wine', 'reading', 'foodie', 'netflix', 'music', 'yoga', 'golf',

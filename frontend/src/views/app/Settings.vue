@@ -188,7 +188,7 @@ export default {
       const { latitude } = position.coords;
       const { longitude } = position.coords;
       const locationData = { lat: latitude, lng: longitude, ip: '0.0.0.0' };
-      await this.$http.put('/profile/edit/geolocation', locationData);
+      await this.$http.put('/profile/edit/geolocation', locationData, { accessTokenRequired: true });
       this.fetching = false;
       this.locationUpdateSuccess = true;
       setTimeout(() => {
@@ -200,7 +200,7 @@ export default {
       ipRequest = await ipRequest.json();
       const { ip } = ipRequest;
       const locationData = { ip };
-      await this.$http.put('/profile/edit/geolocation', locationData);
+      await this.$http.put('/profile/edit/geolocation', locationData, { accessTokenRequired: true });
       this.fetching = false;
       this.locationUpdateSuccess = true;
       setTimeout(() => {
@@ -226,42 +226,42 @@ export default {
       const formData = new FormData();
       formData.append('file[]', file);
       if (this.$store.getters.getLoggedInUser.images.length) {
-        await this.$http.post('/profile/images?is_primary=false', formData);
+        await this.$http.post('/profile/images?is_primary=false', formData, { accessTokenRequired: true });
       } else {
-        await this.$http.post('/profile/images?is_primary=true', formData);
+        await this.$http.post('/profile/images?is_primary=true', formData, { accessTokenRequired: true });
       }
-      const user = await this.$http.get(`/users/${this.$store.getters.getLoggedInUser.id}`);
+      const user = await this.$http.get(`/users/${this.$store.getters.getLoggedInUser.id}`, { accessTokenRequired: true });
       await this.$store.dispatch('login', user.data);
       this.fetchingImages = false;
     },
     async deleteImage(...args) {
       const [imageId] = args;
-      await this.$http.delete(`/profile/images/${imageId}`);
-      const user = await this.$http.get(`/users/${this.$store.getters.getLoggedInUser.id}`);
+      await this.$http.delete(`/profile/images/${imageId}`, { accessTokenRequired: true });
+      const user = await this.$http.get(`/users/${this.$store.getters.getLoggedInUser.id}`, { accessTokenRequired: true });
       await this.$store.dispatch('login', user.data);
     },
     async makePrimaryImage(...args) {
       const [imageId] = args;
-      await this.$http.put(`/profile/images/${imageId}`);
-      const user = await this.$http.get(`/users/${this.$store.getters.getLoggedInUser.id}`);
+      await this.$http.put(`/profile/images/${imageId}`, null, { accessTokenRequired: true });
+      const user = await this.$http.get(`/users/${this.$store.getters.getLoggedInUser.id}`, { accessTokenRequired: true });
       await this.$store.dispatch('login', user.data);
     },
     async saveSingleChoice(...args) {
       const [key, value] = args;
       if (key === 'gender') {
-        await this.$http.patch('/profile/edit/gender', { gender: value });
+        await this.$http.patch('/profile/edit/gender', { gender: value }, { accessTokenRequired: true });
       } else if (key === 'sexuality') {
-        await this.$http.patch('/profile/edit/orientation', { orientation: value });
+        await this.$http.patch('/profile/edit/orientation', { orientation: value }, { accessTokenRequired: true });
       }
-      const user = await this.$http.get(`/users/${this.$store.getters.getLoggedInUser.id}`);
+      const user = await this.$http.get(`/users/${this.$store.getters.getLoggedInUser.id}`, { accessTokenRequired: true });
       await this.$store.dispatch('login', user.data);
     },
     async saveMultipleChoice(...args) {
       const [key, value] = args;
       if (key === 'interests') {
-        await this.$http.patch('/profile/edit/tags', { tags: value });
+        await this.$http.patch('/profile/edit/tags', { tags: value }, { accessTokenRequired: true });
       }
-      const user = await this.$http.get(`/users/${this.$store.getters.getLoggedInUser.id}`);
+      const user = await this.$http.get(`/users/${this.$store.getters.getLoggedInUser.id}`, { accessTokenRequired: true });
       await this.$store.dispatch('login', user.data);
     },
     showSetting(setting) {
@@ -299,13 +299,13 @@ export default {
     if (window.innerWidth >= 768) {
       this.show = 'profile';
     }
-    const user = await this.$http.get(`/users/${this.$store.getters.getLoggedInUser.id}`);
+    const user = await this.$http.get(`/users/${this.$store.getters.getLoggedInUser.id}`, { accessTokenRequired: true });
     await this.$store.dispatch('login', user.data);
     const tags = this.$store.getters.getLoggedInUser.tags;
     for (let i = 0; i < tags.length; i += 1) {
       this.userInterests.push(tags[i].name);
     }
-    const userViewsReceivedRequest = await this.$http.get('/history/viewed/me');
+    const userViewsReceivedRequest = await this.$http.get('/history/viewed/me', { accessTokenRequired: true });
     this.userViewsReceived = userViewsReceivedRequest.data.viewed_me.length;
     this.settingsFetched = true;
   },

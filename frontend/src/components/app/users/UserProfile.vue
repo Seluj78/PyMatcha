@@ -166,26 +166,26 @@ export default {
     async buttonClicked(...args) {
       const [name] = args;
       if (name === 'like') {
-        await this.$http.post(`/like/${this.user.id}`, { is_superlike: false });
+        await this.$http.post(`/like/${this.user.id}`, { is_superlike: false }, { accessTokenRequired: true });
         this.likeButtons.likeClicked = true;
       } else if (name === 'superLike') {
-        await this.$http.post(`/like/${this.user.id}`, { is_superlike: true });
+        await this.$http.post(`/like/${this.user.id}`, { is_superlike: true }, { accessTokenRequired: true });
         this.likeButtons.superLikeClicked = true;
       }
-      const user = await this.$http.get(`/users/${this.$store.getters.getLoggedInUser.id}`);
+      const user = await this.$http.get(`/users/${this.$store.getters.getLoggedInUser.id}`, { accessTokenRequired: true });
       await this.$store.dispatch('login', user.data);
       this.checkIfUserIsMatched();
     },
     async buttonRevert(...args) {
       const [name] = args;
       if (name === 'like') {
-        await this.$http.post(`/unlike/${this.user.id}`, { is_superlike: false });
+        await this.$http.post(`/unlike/${this.user.id}`, { is_superlike: false }, { accessTokenRequired: true });
         this.likeButtons.likeClicked = false;
       } else if (name === 'superLike') {
-        await this.$http.post(`/unlike/${this.user.id}`, { is_superlike: true });
+        await this.$http.post(`/unlike/${this.user.id}`, { is_superlike: true }, { accessTokenRequired: true });
         this.likeButtons.superLikeClicked = false;
       }
-      const user = await this.$http.get(`/users/${this.$store.getters.getLoggedInUser.id}`);
+      const user = await this.$http.get(`/users/${this.$store.getters.getLoggedInUser.id}`, { accessTokenRequired: true });
       await this.$store.dispatch('login', user.data);
       this.checkIfUserIsMatched();
     },
@@ -196,22 +196,22 @@ export default {
       }
     },
     async makeReport() {
-      await this.$http.post(`/profile/report/${this.user.id}`, { reason: this.report });
+      await this.$http.post(`/profile/report/${this.user.id}`, { reason: this.report }, { accessTokenRequired: true });
       this.reported = true;
       setTimeout(() => {
         this.reported = false;
       }, 3000);
     },
     async block() {
-      await this.$http.post(`/profile/block/${this.user.id}`);
+      await this.$http.post(`/profile/block/${this.user.id}`, null, { accessTokenRequired: true });
       this.blocked = true;
-      const user = await this.$http.get(`/users/${this.$store.getters.getLoggedInUser.id}`);
+      const user = await this.$http.get(`/users/${this.$store.getters.getLoggedInUser.id}`, { accessTokenRequired: true });
       await this.$store.dispatch('login', user.data);
     },
     async unblock() {
-      await this.$http.post(`/profile/unblock/${this.user.id}`);
+      await this.$http.post(`/profile/unblock/${this.user.id}`, null, { accessTokenRequired: true });
       this.blocked = false;
-      const user = await this.$http.get(`/users/${this.$store.getters.getLoggedInUser.id}`);
+      const user = await this.$http.get(`/users/${this.$store.getters.getLoggedInUser.id}`, { accessTokenRequired: true });
       await this.$store.dispatch('login', user.data);
     },
     checkIfUserIsLiked() {
@@ -270,7 +270,7 @@ export default {
     }
   },
   async mounted() {
-    const sliderRangesRequest = await this.$http.get('/search/values');
+    const sliderRangesRequest = await this.$http.get('/search/values', { accessTokenRequired: true });
     const maxScore = sliderRangesRequest.data.search_minmax.max_score;
     const sliderScore = document.getElementById('sliderScore');
     if (sliderScore) {

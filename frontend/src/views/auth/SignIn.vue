@@ -66,7 +66,7 @@ export default {
         localStorage.setItem(process.env.VUE_APP_ACCESS_TOKEN, response.data.return.access_token);
         localStorage.setItem(process.env.VUE_APP_REFRESH_TOKEN, response.data.return.refresh_token);
         const userId = this.getUserFromJwt(response.data.return.access_token).id;
-        const user = await this.$http.get(`/users/${userId}`);
+        const user = await this.$http.get(`/users/${userId}`, { accessTokenRequired: true });
         await this.$store.dispatch('login', user.data);
         if (response.data.return.is_profile_completed) {
           this.$router.push('/browse');
