@@ -33,6 +33,7 @@ from PyMatcha.models.user import get_user
 from PyMatcha.utils.decorators import validate_params
 from PyMatcha.utils.errors import NotFoundError
 from PyMatcha.utils.errors import UnauthorizedError
+from PyMatcha.utils.mail import send_mail_text
 from PyMatcha.utils.password import check_password
 from PyMatcha.utils.success import Success
 from PyMatcha.utils.success import SuccessOutput
@@ -73,6 +74,12 @@ def auth_login():
     u.is_online = True
     u.dt_lastseen = datetime.datetime.utcnow()
     u.save()
+    send_mail_text.delay(
+        dest=u.email,
+        subject="[Matcha] Login notification",
+        body=f"Someone logged in into your account at {datetime.datetime.utcnow()}."
+        f"If you believe it wasn't you, please change your password immediately!",
+    )
     ret = {"access_token": access_token, "refresh_token": refresh_token, "is_profile_completed": u.is_profile_completed}
     return SuccessOutput("return", ret)
 
