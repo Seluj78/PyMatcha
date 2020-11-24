@@ -74,7 +74,7 @@ def search():
                 continue
 
         distance = _get_distance(current_user.geohash, user.geohash)
-        if distance:
+        if distance is not None:
             if distance > max_distance:
                 if max_distance != -1:
                     continue
