@@ -15,17 +15,19 @@ Axios.interceptors.request.use(async function (config) {
     config.headers.Authorization = `Bearer ${getRefreshToken()}`;
   } else if (config.url === '/auth/access_revoke') {
     config.headers.Authorization = `Bearer ${getAccessToken()}`;
-  } else if (getAccessToken()) {
+  } else if (config.accessTokenRequired) {
     await handleAccessTokenExpiration();
     if (getAccessToken()) {
       config.headers.Authorization = `Bearer ${getAccessToken()}`;
     } else {
+      window.location.reload();
       return { headers: {}, method: config.method, url: '' };
     }
   }
   if (config.url.search('/profile/images') !== -1) {
     config.headers['Content-Type'] = 'multipart/form-data';
   }
+  delete config.accessTokenRequired;
   return config;
 }, function (error) {
   return Promise.reject(error);

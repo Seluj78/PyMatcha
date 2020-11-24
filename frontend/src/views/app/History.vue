@@ -72,19 +72,19 @@ export default {
   methods: {
     async fetchUsers(request) {
       if (request === 'People I viewed') {
-        const recommendationsRequest = await this.$http.get('/history/viewed');
+        const recommendationsRequest = await this.$http.get('/history/viewed', { accessTokenRequired: true });
         this.recommendations = recommendationsRequest.data.viewed;
       } else if (request === 'People I liked') {
-        const recommendationsRequest = await this.$http.get('/history/liked');
+        const recommendationsRequest = await this.$http.get('/history/liked', { accessTokenRequired: true });
         this.recommendations = recommendationsRequest.data.liked;
       } else if (request === 'Who viewed me') {
-        const recommendationsRequest = await this.$http.get('/history/viewed/me');
+        const recommendationsRequest = await this.$http.get('/history/viewed/me', { accessTokenRequired: true });
         this.recommendations = recommendationsRequest.data.viewed_me;
       } else if (request === 'Who liked me') {
-        const recommendationsRequest = await this.$http.get('/history/liked/me');
+        const recommendationsRequest = await this.$http.get('/history/liked/me', { accessTokenRequired: true });
         this.recommendations = recommendationsRequest.data.liked_me;
       } else if (request === 'Whom I blocked') {
-        const recommendationsRequest = await this.$http.get('/history/blocked');
+        const recommendationsRequest = await this.$http.get('/history/blocked', { accessTokenRequired: true });
         this.recommendations = recommendationsRequest.data.blocked;
       }
       this.recommendations = Object.values(this.recommendations.reduce((acc, cur) => Object.assign(acc, { [cur.id]: cur }), {}));
@@ -180,7 +180,7 @@ export default {
     });
   },
   deactivated() {
-    if (!this.$route.path.startsWith('/users')) {
+    if (!this.$route.path.startsWith('/users') && !this.$route.path.startsWith('/accounts/signout')) {
       this.browseAgain();
       this.fetchUsers('People I viewed');
       this.$el.scrollTop = 0;

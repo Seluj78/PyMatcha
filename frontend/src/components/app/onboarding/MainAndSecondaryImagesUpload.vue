@@ -52,9 +52,9 @@ export default {
           const formData = new FormData();
           formData.append('file[]', this.imagesUploaded[i].content);
           if (i === 0) {
-            await this.$http.post('/profile/images?is_primary=true', formData);
+            await this.$http.post('/profile/images?is_primary=true', formData, { accessTokenRequired: true });
           } else {
-            await this.$http.post('/profile/images?is_primary=false', formData);
+            await this.$http.post('/profile/images?is_primary=false', formData, { accessTokenRequired: true });
           }
         } catch (error) {}
       }

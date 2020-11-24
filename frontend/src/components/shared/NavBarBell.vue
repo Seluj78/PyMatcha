@@ -18,6 +18,8 @@
       'h-48': notifications.length > 3,
       'absolute': true,
       'top-0': true,
+      'right-0': true,
+      'sm:right-auto': true,
       'mt-10': true,
       'z-50': true,
       'rounded-md': true}">
@@ -85,7 +87,7 @@ export default {
       const length = this.notifications.length;
       for (let i = 0; i < length; i += 1) {
         if (!this.notifications[i].is_seen) {
-          await this.$http.post(`/notifications/read/${this.notifications[i].id}`);
+          await this.$http.post(`/notifications/read/${this.notifications[i].id}`, null, { accessTokenRequired: true });
           this.notifications[i].is_seen = 1;
         }
       }
@@ -128,19 +130,19 @@ export default {
       }
     },
     async fetchNotifications() {
-      const notificationsRequest = await this.$http.get('/notifications');
+      const notificationsRequest = await this.$http.get('/notifications', { accessTokenRequired: true });
       this.notifications = notificationsRequest.data.notifications;
       this.notifications = this.notifications.reverse();
     },
     async newNotificationCheck() {
-      const notificationsRequest = await this.$http.get('/notifications/unread');
+      const notificationsRequest = await this.$http.get('/notifications/unread', { accessTokenRequired: true });
       const { notifications } = notificationsRequest.data;
       this.notify = notifications.length;
     },
     async fetchNewNotifications() {
-      const newNotificationsRequest = await this.$http.get('/notifications/unread');
+      const newNotificationsRequest = await this.$http.get('/notifications/unread', { accessTokenRequired: true });
       const newNotifications = newNotificationsRequest.data.notifications;
-      if (!newNotifications.length) {
+      if (!newNotifications || !newNotifications.length) {
         return;
       }
       await this.fetchNotifications();

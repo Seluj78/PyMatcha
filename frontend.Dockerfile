@@ -6,7 +6,10 @@ ENV PATH /frontend/node_modules/.bin:$PATH
 
 COPY frontend/package.json /frontend/package.json
 COPY frontend/yarn.lock /frontend/yarn.lock
+COPY ./frontend .
 
 RUN yarn install
 
-CMD ["yarn", "serve"]
+RUN yarn build
+
+CMD ["serve", "-s", "dist"]

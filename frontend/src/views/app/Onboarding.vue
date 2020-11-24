@@ -134,9 +134,11 @@ export default {
       if (this.slideCurrent === this.slideCount) {
         this.slideCurrent += 1;
         await this.bus.$emit('send-user-location-to-backend');
-        await this.$http.post('/profile/complete', this.userData);
-        const recommendationsRequest = await this.$http.get('/recommendations');
+        await this.$http.post('/profile/complete', this.userData, { accessTokenRequired: true });
+        const recommendationsRequest = await this.$http.get('/recommendations', { accessTokenRequired: true });
         const recommendationsFromSettingUp = recommendationsRequest.data.recommendations;
+        const user = await this.$http.get(`/users/${this.$store.getters.getLoggedInUser.id}`, { accessTokenRequired: true });
+        await this.$store.dispatch('login', user.data);
         await this.$store.dispatch('profileCompleted');
         await this.$router.push({ name: 'Browse', params: { recommendationsFromSettingUp } });
       }
@@ -172,7 +174,7 @@ export default {
     },
   },
   async beforeMount() {
-    const response = await this.$http.get('/profile/images');
+    const response = await this.$http.get('/profile/images', { accessTokenRequired: true });
     const { images } = response.data;
     this.userUploadedImagesCount = images.length;
   },

@@ -101,15 +101,15 @@ export default {
       const response = await this.$http.post('/messages/send', {
         to_uid: this.user.id.toString(),
         content: this.message,
-      });
+      }, { accessTokenRequired: true });
       this.messages.push(response.data.new_message);
       this.message = '';
       this.$emit('new-message');
       this.scrollChatToBottom();
     },
     async fetchNewMessages() {
-      await this.$http.post(`/messages/see/${this.chatWithUserId}`);
-      const messagesRequest = await this.$http.get(`/conversations/${this.chatWithUserId}`);
+      await this.$http.post(`/messages/see/${this.chatWithUserId}`, null, { accessTokenRequired: true });
+      const messagesRequest = await this.$http.get(`/conversations/${this.chatWithUserId}`, { accessTokenRequired: true });
       const newMessages = messagesRequest.data.messages;
       const oldMessageCount = this.messages.length;
       this.messages = newMessages;
@@ -121,11 +121,11 @@ export default {
       }
     },
     async prepareChatForNewUser() {
-      await this.$http.post(`/messages/see/${this.chatWithUserId}`);
-      const messagesRequest = await this.$http.get(`/conversations/${this.chatWithUserId}`);
+      await this.$http.post(`/messages/see/${this.chatWithUserId}`, null, { accessTokenRequired: true });
+      const messagesRequest = await this.$http.get(`/conversations/${this.chatWithUserId}`, { accessTokenRequired: true });
       this.messages = messagesRequest.data.messages;
       this.determineFirstMessagesOfTimespans(this.messages);
-      const userRequest = await this.$http.get(`/users/${this.chatWithUserId}`);
+      const userRequest = await this.$http.get(`/users/${this.chatWithUserId}`, { accessTokenRequired: true });
       this.user = userRequest.data;
       this.scrollChatToBottom();
     },

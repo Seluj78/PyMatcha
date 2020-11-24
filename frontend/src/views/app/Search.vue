@@ -20,7 +20,7 @@
          v-bind:class="{'h-4': true, 'absolute': true, 'bottom-0': true, 'w-full': true, 'invisible': !recommendationsAnalysisDone}"></div>
     <section v-on:click="setError(null)"
              v-if="!recommendationsAnalysisDone && sliderValuesFetched"
-             class="flex flex-col my-8 md:my-12">
+             class="flex flex-col my-8 md:my-12 mx-4">
       <div><img src="../../assets/search.png" class="w-20 mb-4 mx-auto"></div>
       <div>
         <FilterSlider
@@ -135,7 +135,7 @@ export default {
       this.filters[name] = filters;
     },
     async fetchUsersOverfiew() {
-      const sliderRangesRequest = await this.$http.get('/search/values');
+      const sliderRangesRequest = await this.$http.get('/search/values', { accessTokenRequired: true });
       const values = sliderRangesRequest.data.search_minmax;
       this.sliders.age.min = values.min_age;
       this.filters.age.min = values.min_age;
@@ -153,6 +153,9 @@ export default {
     },
     async search() {
       this.submitted = true;
+      if (!this.filters.distance.max) {
+        this.filters.distance.max = 500;
+      }
       const searchRequest = await this.$http.post('/search', {
         min_age: this.filters.age.min,
         max_age: this.filters.age.max,
@@ -160,7 +163,7 @@ export default {
         max_score: this.filters.popularity.max,
         max_distance: this.filters.distance.max,
         tags: this.filters.interests,
-      });
+      }, { accessTokenRequired: true });
       if (this.filters.interests.length === 0) {
         this.filters.interests = [
           'swimming', 'wine', 'reading', 'foodie', 'netflix', 'music', 'yoga', 'golf',
@@ -232,7 +235,7 @@ export default {
     observer.observe(document.querySelector('#invisibleFooterSearch'));
   },
   deactivated() {
-    if (!this.$route.path.startsWith('/users')) {
+    if (!this.$route.path.startsWith('/users') && !this.$route.path.startsWith('/accounts/signout')) {
       this.searchAgain();
       this.fetchUsersOverfiew();
       this.$el.scrollTop = 0;

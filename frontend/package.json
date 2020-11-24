@@ -16,6 +16,7 @@
     "jwt-decode": "^3.0.0",
     "nouislider": "^14.6.2",
     "secure-ls": "^1.2.6",
+    "serve": "^11.3.2",
     "tailwindcss": "^1.8.10",
     "vee-validate": "^3.4.1",
     "vue": "^2.6.11",

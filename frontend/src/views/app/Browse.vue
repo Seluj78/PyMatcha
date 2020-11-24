@@ -58,7 +58,7 @@ export default {
         this.recommendations = this.recommendationsFromSettingUp;
         this.firstTimeBrowsing = false;
       } else {
-        const recommendationsRequest = await this.$http.get('/recommendations');
+        const recommendationsRequest = await this.$http.get('/recommendations', { accessTokenRequired: true });
         this.recommendations = recommendationsRequest.data.recommendations;
       }
       this.recommendations.sort((a, b) => a.distance - b.distance);
@@ -130,7 +130,7 @@ export default {
     observer.observe(document.querySelector('#invisibleFooter'));
   },
   deactivated() {
-    if (!this.$route.path.startsWith('/users')) {
+    if (!this.$route.path.startsWith('/users') && !this.$route.path.startsWith('/accounts/signout')) {
       this.browseAgain();
       this.fetchUsers();
       this.$el.scrollTop = 0;

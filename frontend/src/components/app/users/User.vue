@@ -35,17 +35,28 @@ export default {
     goBack() {
       this.$router.go(-1);
     },
+    sortImages() {
+      const userImagesLength = this.user.images.length;
+      for (let i = 0; i < userImagesLength; i += 1) {
+        if (this.user.images[i].is_primary && i !== 0) {
+          this.user.images.splice(0, 0, this.user.images[i]);
+          this.user.images.splice(i + 1, 1);
+          return;
+        }
+      }
+    },
   },
   watch: {
     async $route() {
-      const userRequest = await this.$http.get(`/profile/view/${this.$route.params.id}`);
+      const userRequest = await this.$http.get(`/profile/view/${this.$route.params.id}`, { accessTokenRequired: true });
       this.user = userRequest.data.profile;
     },
   },
   async beforeMount() {
     try {
-      const userRequest = await this.$http.get(`/profile/view/${this.$route.params.id}`);
+      const userRequest = await this.$http.get(`/profile/view/${this.$route.params.id}`, { accessTokenRequired: true });
       this.user = userRequest.data.profile;
+      this.sortImages();
     } catch (error) {
       this.error = error.response.data.error.message;
     }

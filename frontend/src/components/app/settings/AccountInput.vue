@@ -85,25 +85,25 @@ export default {
       this.currentValueBackup = this.currentValue;
       try {
         if (this.type === 'firstName') {
-          await this.$http.patch('/profile/edit/first_name', { first_name: this.currentValue });
+          await this.$http.patch('/profile/edit/first_name', { first_name: this.currentValue }, { accessTokenRequired: true });
         } else if (this.type === 'lastName') {
-          await this.$http.patch('/profile/edit/last_name', { last_name: this.currentValue });
+          await this.$http.patch('/profile/edit/last_name', { last_name: this.currentValue }, { accessTokenRequired: true });
         } else if (this.type === 'email') {
-          await this.$http.put('/profile/edit/email', { email: this.currentValue });
+          await this.$http.put('/profile/edit/email', { email: this.currentValue }, { accessTokenRequired: true });
         } else if (this.type === 'username') {
-          await this.$http.patch('/profile/edit/username', { username: this.currentValue });
+          await this.$http.patch('/profile/edit/username', { username: this.currentValue }, { accessTokenRequired: true });
         } else if (this.type === 'bio') {
-          await this.$http.patch('/profile/edit/bio', { bio: this.currentValue });
+          await this.$http.patch('/profile/edit/bio', { bio: this.currentValue }, { accessTokenRequired: true });
         } else if (this.type === 'password') {
           await this.$http.put('/profile/edit/password', {
             old_password: this.passwordOld,
             new_password: this.currentValue,
-          });
+          }, { accessTokenRequired: true });
           this.currentValue = '';
           this.passwordRepeat = '';
           this.passwordOld = '';
         }
-        const user = await this.$http.get(`/users/${this.$store.getters.getLoggedInUser.id}`);
+        const user = await this.$http.get(`/users/${this.$store.getters.getLoggedInUser.id}`, { accessTokenRequired: true });
         await this.$store.dispatch('login', user.data);
       } catch (error) {
         this.error = error.response.data.error.message;
