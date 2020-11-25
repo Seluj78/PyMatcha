@@ -7,7 +7,7 @@
     <div v-if="!user && !error" class="mx-auto flex items-center justify-center mt-32">
       <img class="h-36" src="../../../assets/loading.svg">
     </div>
-    <section v-if="user && !error" class="mx-auto">
+    <section v-if="user && !error && imagesSorted" class="mx-auto">
       <div v-on:click="goBack()" class="sort-button py-0 ml-auto rounded-md text-lg w-20 md:w-16 mr-4 sm:mr-0 mb-4">
         <h1 class="noSelect">←</h1>
       </div>
@@ -30,6 +30,7 @@ export default {
   data: () => ({
     user: null,
     error: null,
+    imagesSorted: false,
   }),
   methods: {
     goBack() {
@@ -48,8 +49,12 @@ export default {
   },
   watch: {
     async $route() {
+      this.user = null;
+      this.imagesSorted = false;
       const userRequest = await this.$http.get(`/profile/view/${this.$route.params.id}`, { accessTokenRequired: true });
       this.user = userRequest.data.profile;
+      this.sortImages();
+      this.imagesSorted = true;
     },
   },
   async beforeMount() {
@@ -57,6 +62,7 @@ export default {
       const userRequest = await this.$http.get(`/profile/view/${this.$route.params.id}`, { accessTokenRequired: true });
       this.user = userRequest.data.profile;
       this.sortImages();
+      this.imagesSorted = true;
     } catch (error) {
       this.error = error.response.data.error.message;
     }
