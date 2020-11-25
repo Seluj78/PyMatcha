@@ -139,6 +139,7 @@
 <script>
 /* eslint-disable prefer-destructuring */
 /* eslint-disable prefer-const */
+/* eslint-disable no-await-in-loop */
 import MenuButton from '@/components/app/settings/MenuButton.vue';
 import SectionHeader from '@/components/app/settings/SectionHeader.vue';
 import AccountInput from '@/components/app/settings/AccountInput.vue';
@@ -235,10 +236,21 @@ export default {
       this.fetchingImages = false;
     },
     async deleteImage(...args) {
-      const [imageId] = args;
+      const [imageId, isPrimary] = args;
       await this.$http.delete(`/profile/images/${imageId}`, { accessTokenRequired: true });
-      const user = await this.$http.get(`/users/${this.$store.getters.getLoggedInUser.id}`, { accessTokenRequired: true });
-      await this.$store.dispatch('login', user.data);
+      const userImages = this.$store.getters.getLoggedInUser.images;
+      if (userImages.length > 1 && isPrimary) {
+        const len = userImages.length;
+        for (let i = 0; i < len; i += 1) {
+          if (userImages[i].id !== imageId) {
+            await this.makePrimaryImage([userImages[i].id]);
+            return;
+          }
+        }
+      } else {
+        const user = await this.$http.get(`/users/${this.$store.getters.getLoggedInUser.id}`, { accessTokenRequired: true });
+        await this.$store.dispatch('login', user.data);
+      }
     },
     async makePrimaryImage(...args) {
       const [imageId] = args;

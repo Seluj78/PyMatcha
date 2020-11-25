@@ -23,7 +23,7 @@ export default {
   methods: {
     async deleteImage(imageId) {
       this.showImageSettings = false;
-      this.$emit('delete-image', imageId);
+      this.$emit('delete-image', imageId, this.image.is_primary);
     },
     async makePrimaryImage(imageId) {
       this.showImageSettings = false;
