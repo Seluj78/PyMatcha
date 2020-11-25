@@ -16,6 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 """
+import datetime
 import logging
 
 from flask import Blueprint
@@ -31,6 +32,7 @@ from PyMatcha.utils.decorators import validate_params
 from PyMatcha.utils.errors import BadRequestError
 from PyMatcha.utils.errors import NotFoundError
 from PyMatcha.utils.mail import send_mail_html
+from PyMatcha.utils.mail import send_mail_text
 from PyMatcha.utils.static import FRONTEND_PASSWORD_RESET_URL
 from PyMatcha.utils.success import Success
 
@@ -87,6 +89,12 @@ def reset_password():
         u.password = hash_password(data["password"])
         u.previous_reset_token = token
         u.save()
+        send_mail_text.delay(
+            dest=u.email,
+            subject="[Matcha] Password change notification",
+            body=f"Your password was changed at {datetime.datetime.utcnow()}."
+            f"If you believe it wasn't you, please change it immediately!",
+        )
         logging.debug("Password reset successfully")
         return Success("Password reset successful.")
 

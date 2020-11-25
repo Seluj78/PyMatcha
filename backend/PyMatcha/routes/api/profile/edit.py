@@ -212,9 +212,9 @@ def edit_password():
     current_user.save()
     send_mail_text.delay(
         dest=current_user.email,
-        subject="Password change notification",
+        subject="[Matcha] Password change notification",
         body=f"Your password was changed at {datetime.datetime.utcnow()}."
-        f"If you believe it wasn't you, please change it immediatly!",
+        f"If you believe it wasn't you, please change it immediately!",
     )
     logging.info(f"Edited email for {current_user.id}")
     return Success("User password successfully updated.")

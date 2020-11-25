@@ -22,9 +22,16 @@ Matcha is a [42](https://42.fr) school project aiming to teach how to make a dat
 You can find the subject [here](https://github.com/Seluj78/PyMatcha/blob/dev/subject.pdf)
 
 ### Installation
+
+First of all, contact [Jules](https://github.com/seluj78) or [Lauris](https://github.com/supalarry) to get the env files.
+
+For more information, checkout [the backend .env.template](https://github.com/Seluj78/PyMatcha/blob/dev/.env.template) and [the frontend .env.template](https://github.com/Seluj78/PyMatcha/blob/dev/frontend/.env.template)
+
 #### For production
 You can simply download or git clone the project and, once inside of it, run `docker-compose up --build`.
+
 The website will be accessible on port `4242`.
+
 #### For developpment
 First of all, clone or download the repository, extract it if necessary then cd into it.
 
