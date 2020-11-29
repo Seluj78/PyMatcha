@@ -1,0 +1,116 @@
+version: '3.3'
+
+services:
+  mysql:
+    container_name: mysql
+    image: mysql
+    restart: always
+    environment:
+      MYSQL_USER: 'matcha'
+      MYSQL_PASSWORD: 'matcha'
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: pymatcha
+    env_file:
+      - .env.docker
+    volumes:
+      - ./mysql_dump:/docker-entrypoint-initdb.d
+    networks:
+      - mysql-net
+    healthcheck:
+      test: "/usr/bin/mysql --user=$DB_USER --password=$DB_PASSWORD --execute \"SHOW DATABASES;\""
+      interval: 3s
+      timeout: 1s
+      retries: 5
+
+  redis:
+    container_name: redis
+    image: redis:4.0.5-alpine
+    hostname: redis
+    ports:
+      - '6379:6379'
+    networks:
+      - redis-net
+    volumes:
+      - redis-data:/data
+
+  workers:
+    container_name: workers
+    image: docker.pkg.github.com/seluj78/pymatcha/pymatcha-workers:6ab4b5f1358d92d873ae5db94bc106a423fb94e6
+    env_file:
+      - .env.docker
+    volumes:
+      - backend:/backend
+    depends_on:
+      - redis
+      - mysql
+    links:
+      - redis
+    networks:
+      - redis-net
+      - mysql-net
+    restart: always
+
+  backend:
+    container_name: backend
+    image: docker.pkg.github.com/seluj78/pymatcha/pymatcha-backend:12d945a2cf7b7429febb29d37ff31b657f533626
+    restart: always
+    env_file:
+      - .env.docker
+    ports:
+      - "8080:5000"
+    volumes:
+      - backend:/backend
+    depends_on:
+      - mysql
+      - redis
+      - workers
+    links:
+      - mysql
+      - redis
+      - workers
+    networks:
+      - redis-net
+      - mysql-net
+      - backend-net
+
+  frontend:
+    container_name: frontend
+    image: docker.pkg.github.com/seluj78/pymatcha/pymatcha-frontend:6ab4b5f1358d92d873ae5db94bc106a423fb94e6
+    ports:
+      - '4242:5000'
+    networks:
+      - backend-net
+
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    container_name: dev_pma
+    links:
+      - mysql
+    environment:
+      PMA_HOST: mysql
+      PMA_PORT: 3306
+      PMA_ARBITRARY: 1
+    restart: always
+    ports:
+      - 8183:80
+    networks:
+      - mysql-net
+
+  swagger_ui:
+    container_name: docs
+    environment:
+    - API_URL=/swagger.yaml
+    image:   "swaggerapi/swagger-ui"
+    volumes: ["./backend/schemas/swagger.yaml:/usr/share/nginx/html/swagger.yaml"]
+    restart: always
+    ports:   ["9000:8080"]
+
+networks:
+  redis-net:
+  mysql-net:
+  backend-net:
+
+volumes:
+  redis-data:
+  mysql:
+  backend:

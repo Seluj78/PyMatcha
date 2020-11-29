@@ -32,6 +32,12 @@ You can simply download or git clone the project and, once inside of it, run `do
 
 The website will be accessible on port `4242`.
 
+If you do not want to build the containers yourself, you can use `docker-compose-gh.yml` instead:
+
+```bash
+docker-compose -f docker-compose-gh.yml up
+```
+
 #### For developpment
 First of all, clone or download the repository, extract it if necessary then cd into it.
 
