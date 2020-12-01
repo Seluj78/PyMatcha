@@ -10,7 +10,7 @@
   "dependencies": {
     "@sentry/browser": "^5.27.2",
     "@sentry/integrations": "^5.24.2",
-    "@sentry/tracing": "^5.27.2",
+    "@sentry/tracing": "^5.27.6",
     "axios": "^0.20.0",
     "core-js": "^3.6.5",
     "jwt-decode": "^3.0.0",
