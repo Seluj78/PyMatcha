@@ -18,7 +18,7 @@ redis==3.5.3
 itsdangerous==1.1.0
 cryptography==3.2.1
 
-flask_jwt_extended==3.24.1
+flask_jwt_extended==3.25.0
 
 flake8==3.8.4
 black==20.8b1
