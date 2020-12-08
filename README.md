@@ -1,6 +1,6 @@
 ![GitHub](https://img.shields.io/github/license/seluj78/pymatcha?style=for-the-badge) ![Travis (.com)](https://img.shields.io/travis/com/seluj78/pymatcha/dev?label=builds%20and%20tests&style=for-the-badge) ![GitHub code size in bytes](https://img.shields.io/github/languages/code-size/seluj78/pymatcha?style=for-the-badge) ![Libraries.io dependency status for GitHub repo](https://img.shields.io/librariesio/github/seluj78/pymatcha?style=for-the-badge)
 # PyMatcha
-#### Made by [Jules Lasne](https://github.com/seluj78) and [Lauris Skrauci](https://github.com/suppalarry) 
+#### Made by [Jules Lasne](https://github.com/seluj78) and [Lauris Skraucis](https://github.com/suppalarry) 
 
 ## Summary
  - [Why ?](#why)
@@ -76,7 +76,9 @@ celery -A PyMatcha.celery worker -E --loglevel=INFO -B --pool=threads
  - MySQL on internal port
 
 ### What does it look like
-![Home page](https://github.com/seluj78/PyMatcha/blob/dev/screenshots/home_page.jpg?raw=true)
+![Home page](https://i.imgur.com/fS5QMl2.jpeg)
+![Sign Up](https://i.imgur.com/YuHHG6D.png)
+![Onboarding](https://i.imgur.com/iOQQRKQ.png)
 ![Recommended profiles](https://github.com/seluj78/PyMatcha/blob/dev/screenshots/recommended_profiles.jpg?raw=true)
 ![Search page](https://github.com/seluj78/PyMatcha/blob/dev/screenshots/search_page.png?raw=true)
 ![Search no results](https://github.com/seluj78/PyMatcha/blob/dev/screenshots/search_no_results.png?raw=true)
@@ -85,7 +87,7 @@ celery -A PyMatcha.celery worker -E --loglevel=INFO -B --pool=threads
 ![History](https://github.com/seluj78/PyMatcha/blob/dev/screenshots/history.jpg?raw=true)
 ![Profile](https://github.com/seluj78/PyMatcha/blob/dev/screenshots/unmatched_profile.png?raw=true)
 ![Matched profile](https://github.com/seluj78/PyMatcha/blob/dev/screenshots/matched_profile.jpg?raw=true)
-![Matches and chat](https://github.com/seluj78/PyMatcha/blob/dev/screenshots/matches_chat.png?raw=true)
+![Matches and chat](https://i.imgur.com/bofiix9.png)
 
 ### How long did it take
 Lauris and Jules started working on it at the begining of september and finished on `XXX`.
