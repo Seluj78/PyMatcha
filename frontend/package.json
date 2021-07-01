@@ -18,7 +18,7 @@
     "secure-ls": "^1.2.6",
     "serve": "^11.3.2",
     "tailwindcss": "^1.8.10",
-    "vee-validate": "^3.4.1",
+    "vee-validate": "^3.4.10",
     "vue": "^2.6.11",
     "vue-router": "^3.4.6",
     "vuex": "^3.4.0",
