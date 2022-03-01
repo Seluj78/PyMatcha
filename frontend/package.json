@@ -8,7 +8,7 @@
     "lint": "vue-cli-service lint"
   },
   "dependencies": {
-    "@sentry/browser": "^5.27.2",
+    "@sentry/browser": "^6.18.1",
     "@sentry/integrations": "^5.24.2",
     "@sentry/tracing": "^5.27.2",
     "axios": "^0.20.0",
