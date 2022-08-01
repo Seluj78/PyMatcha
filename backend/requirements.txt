@@ -37,7 +37,7 @@ sentry-sdk==0.18.0
 
 randomuser==1.6
 pyimgur==0.6.0
-Pillow==8.0.1
+Pillow==9.2.0
 
 timeago==1.0.14
 
