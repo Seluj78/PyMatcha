@@ -39,7 +39,7 @@ randomuser==1.6
 pyimgur==0.6.0
 Pillow==8.0.1
 
-timeago==1.0.14
+timeago==1.0.16
 
 chatterbot==1.0.5
 chatterbot-corpus==1.2.0
