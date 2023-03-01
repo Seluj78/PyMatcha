@@ -21,7 +21,7 @@ cryptography==3.2.1
 flask_jwt_extended==3.24.1
 
 flake8==3.8.4
-black==20.8b1
+black==23.1.0
 pre-commit==2.8.2
 
 lorem==0.1.1
