@@ -3,13 +3,13 @@ repos:
     rev: v2.1.0
     hooks:
       - id: flake8
-  -   repo: https://github.com/ambv/black
-      rev: stable
+  -   repo: https://github.com/psf/black
+      rev: 24.10.0
       hooks:
       - id: black
         language_version: python3.7
-  -   repo: https://github.com/asottile/reorder_python_imports
-      rev: v1.9.0
+  -   repo: https://github.com/asottile/reorder-python-imports
+      rev: v3.14.0
       hooks:
       -   id: reorder-python-imports
           args: [--py3-plus]
